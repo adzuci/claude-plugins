@@ -8,7 +8,7 @@ This repo is a place to add [skills and plugins](https://code.claude.com/docs/en
 
 There are three places you can store Claude skills depending on your use case:
 
-1. **Here** — Either in [the claude-bootstrapper](https://github.com/apolloio/claude-bootstrapper/tree/main/skills) or this repo (`apolloio/skills`) is where we add shared skills and plugins; the repo can be used as a [private marketplace](https://code.claude.com/docs/en/plugin-marketplaces#private-repositories) so they’re available across Apollo.
+1. **Here** — Either in [the claude-bootstrapper](https://github.com/apolloio/claude-bootstrapper/tree/main/skills) or this repo (`apolloio/skills`) is where we add shared skills and plugins; this repo can be used as a [private marketplace](https://code.claude.com/docs/en/plugin-marketplaces#private-repositories) so they’re available across Apollo.
 
 2. **In repo-specific skill folders** — If a skill is only relevant to a specific repository, place it in that repo's `.claude/skills` directory. Examples:
    - [`apolloio/devops/.claude/skills`](https://github.com/apolloio/devops/tree/master/.claude/skills)
@@ -36,24 +36,19 @@ plugins/
                 SKILL.md
 ```
 
-## Try in Claude Code
+## How to use in Claude Code
 
-You can register this repository as a Claude Code plugin marketplace by running in Claude Code:
+1. **Add the marketplace** (one-time, in Claude Code):
+   ```
+   /plugin marketplace add apolloio/skills
+   ```
 
-```
-/plugin marketplace add apolloio/skills
-```
+2. **Install a plugin**  
+   - From the UI: **Browse and install plugins** → **apollo-skills** → **apollo-eng** → Install now  
+   - Or run: `/plugin install apollo-eng@apollo-skills`
 
-Then install a plugin:
-
-- **From the UI:** Browse and install plugins → **apollo-skills** → **apollo-eng** → Install now
-- **Or directly:**
-
-```
-/plugin install apollo-eng@apollo-skills
-```
-
-After installing, you can use the skill by mentioning it—e.g. “Use the pr-description skill to generate a PR description for my changes.”
+3. **Use a skill**  
+   Mention it in chat (e.g. “Use the pr-description skill to generate a PR description”) or run a command: `/apollo-eng:pr-description`
 
 Skills from this marketplace can also be used in Claude.ai and the API when those products support plugin marketplaces.
 
@@ -103,33 +98,11 @@ If you need a new plugin (e.g. a separate pack for product or infra):
 5. **Add or edit skills**  
    Use the steps in “Adding a new skill” above, with `<plugin-name>` = your new pack name. Replace or add skills under `plugins/<pack-name>/skills/`.
 
-## How to Use Plugins
-
-Inside Claude Code while working in a repo (e.g. `leadgenie`):
-
-**1. Add the marketplace**
-
-```
-/plugin marketplace add apolloio/skills
-```
-
-**2. Install the plugin**
-
-```
-/plugin install apollo-eng@apollo-skills
-```
-
-**3. Use a skill**
-
-```
-/apollo-eng:pr-description
-```
-
 Plugins namespace skill commands as `/plugin-name:skill-name`.
 
-### Prompting the marketplace in other repos
+### Suggesting this marketplace from other repos
 
-To have Claude Code suggest this marketplace when someone works in another repo (e.g. `leadgenie` or `devops`), add this to that repo’s `.claude/settings.json` (not in this repo):
+To have Claude Code suggest this marketplace when someone works in another repo (e.g. `leadgenie` or `devops`), add this to that repo’s `.claude/settings.json` (not in this repo). Check [Claude Code plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces) for the current schema:
 
 ```json
 {
@@ -144,7 +117,7 @@ To have Claude Code suggest this marketplace when someone works in another repo 
 }
 ```
 
-Then users can install plugins with `/plugin install apollo-eng@apollo-skills` when they trust that project.
+Then users can install plugins with `/plugin install apollo-eng@apollo-skills` from that project.
 
 ## References
 
