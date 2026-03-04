@@ -9,7 +9,7 @@ Review the current conversation to extract user preferences, corrections, and wo
 
 ## When to Activate
 
-- User says "learn from this chat", "learn from chat", or "/learn-from-chat"
+- User says "learn from this chat", "learn from chat", or "/apollo-eng:learn-from-chat"
 - User asks "what did you learn" or "create rules from our conversation"
 - User asks to "update your memory" based on the conversation
 
