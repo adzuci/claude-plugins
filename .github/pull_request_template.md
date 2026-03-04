@@ -16,7 +16,7 @@
 ## Checklist
 
 - [ ] Skill(s) follow the [Agent Skills spec](https://agentskills.io/specification) (frontmatter `name`, `description`)
-- [ ] If adding a **new plugin** (not just new skills to an existing plugin): registered in `.claude-plugin/marketplace.json`
+- [ ] If adding a **new plugin** it is registered in `.claude-plugin/marketplace.json`
 - [ ] README or docs updated if needed
 
 ## AI Tooling Contribution
