@@ -1,0 +1,14 @@
+{
+  "name": "apollo-skills",
+  "owner": { "name": "Apollo Eng Enablement" },
+  "metadata": {
+    "description": "Shared Claude Code skills and plugins for Apollo engineering"
+  },
+  "plugins": [
+    {
+      "name": "apollo-eng",
+      "source": "./plugins/apollo-eng",
+      "description": "Shared engineering skills for Apollo repos"
+    }
+  ]
+}
