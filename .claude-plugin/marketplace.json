@@ -6,8 +6,8 @@
   },
   "plugins": [
     {
-      "name": "apollo-eng-pack",
-      "source": "./plugins/apollo-eng-pack",
+      "name": "apollo-eng",
+      "source": "./plugins/apollo-eng",
       "description": "Shared engineering skills for Apollo repos"
     }
   ]
