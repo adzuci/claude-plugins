@@ -1,5 +1,5 @@
 ---
-name: security-review-idor
+name: security-review
 description: Perform security audit of Ruby controllers for IDOR vulnerabilities. Activate when user asks for security review, IDOR check, or authorization audit.
 ---
 
