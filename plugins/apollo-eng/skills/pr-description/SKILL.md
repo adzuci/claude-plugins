@@ -25,7 +25,7 @@ When the user only asks to commit (without PR creation):
 
 ## Important
 
-**ALWAYS read the repo's PR template first when it exists.** Common locations:
+**ALWAYS check for a PR template first.** Common locations:
 
 - `pull_request_template.md` (repository root)
 - `.github/PULL_REQUEST_TEMPLATE.md`
@@ -35,16 +35,34 @@ Never assume a hardcoded template — read the current file(s) for the repo you'
 
 ## Steps
 
-### 1. Read the PR Template
+### 1. Check for a PR Template
 
-If the repo has a PR template, read it to get the current format and required sections:
+Check whether the repo has a PR template:
 
 ```bash
-# Try common paths (adjust per repo)
+# Try common paths
+test -f pull_request_template.md && echo "found: pull_request_template.md" || \
+test -f .github/PULL_REQUEST_TEMPLATE.md && echo "found: .github/PULL_REQUEST_TEMPLATE.md" || \
+test -d .github/PULL_REQUEST_TEMPLATE && echo "found: .github/PULL_REQUEST_TEMPLATE/" || echo "none"
+```
+
+**If no template exists:** Tell the user the repo doesn't have a PR template and they should add one so PRs stay consistent. Point them to Apollo's example template as a reference:
+
+- **Reference template:** https://github.com/apolloio/leadgenie/blob/master/pull_request_template.md
+
+Suggest creating `pull_request_template.md` in the repo root (or `.github/PULL_REQUEST_TEMPLATE.md`) using that structure as a starting point. Do not proceed to fill a PR description until a template exists or the user explicitly asks for a one-off description without a template.
+
+**If a template exists:** Continue to the next step.
+
+### 2. Read the PR Template
+
+Read the template to get the current format and required sections:
+
+```bash
 cat pull_request_template.md 2>/dev/null || cat .github/PULL_REQUEST_TEMPLATE.md 2>/dev/null || true
 ```
 
-### 2. Analyze Code Changes
+### 3. Analyze Code Changes
 
 Determine the compare branch (often `origin/main` or `origin/master`), then:
 
@@ -57,13 +75,13 @@ git log origin/main...HEAD --oneline
 
 Use `origin/master` if that is the repo's default branch.
 
-### 3. Identify Change Types
+### 4. Identify Change Types
 
 - File additions, deletions, modifications
 - Change categories (feature, bugfix, refactor, chore, etc.)
 - If the repo uses ticket IDs (e.g. JIRA), try to extract from branch name or commit messages
 
-### 4. Fill All Template Sections
+### 5. Fill All Template Sections
 
 If the repo has a PR template, fill **every** section with accurate content. If there is no template, produce a clear description that includes:
 
@@ -75,7 +93,7 @@ If the repo has a PR template, fill **every** section with accurate content. If 
 
 **User-input sections:** If the template includes sections that require user input (e.g. impact scores, self-assessment), ask the user for those values instead of auto-filling.
 
-### 5. Show Draft for Review
+### 6. Show Draft for Review
 
 Before creating the PR, show the user a draft and ask for confirmation:
 
@@ -89,7 +107,7 @@ Would you like me to create the PR with this description, or would you like to m
 
 Wait for user approval before running `gh pr create`.
 
-### 6. Create PR with gh CLI
+### 7. Create PR with gh CLI
 
 Only after user approval. If a ticket ID was identified, prefix the title with `[TICKET-###]`; otherwise use a convention appropriate to the repo (e.g. `NOTICKET` or no prefix):
 
