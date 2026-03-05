@@ -30,7 +30,7 @@ There are three places you can store Claude skills depending on your use case:
 
 ## Repository Structure
 
-```
+```text
 .claude/
     settings.json
 .claude-plugin/
@@ -55,7 +55,8 @@ plugins/
 **When you work in this repo:** `.claude/settings.json` is configured so the **apollo-skills** marketplace is offered and **apollo-eng** is enabled for this project. The first time you open the repo, Claude Code may prompt you to add the marketplace; after you install the plugin once, it stays enabled here.
 
 1. **Add the marketplace** (one-time, in Claude Code):
-   ```
+
+   ```text
    /plugin marketplace add git@github.com:apolloio/skills
    ```
 
@@ -72,9 +73,11 @@ Skills from this marketplace can also be used in Claude.ai and the API when thos
 
 1. **Copy the skill template**
    Copy `template/skills/example/SKILL.md` to your plugin’s skills folder:
-   ```
+
+   ```text
    plugins/<plugin-name>/skills/<skill-name>/SKILL.md
    ```
+
    Example: `plugins/apollo-eng/skills/my-skill/SKILL.md`.
 
 2. **Set frontmatter**
@@ -100,6 +103,7 @@ If you need a new plugin (e.g. a separate pack for product or infra):
 
 3. **Register in the marketplace**
    In `.claude-plugin/marketplace.json`, add an entry to the `plugins` array:
+
    ```json
    {
      "name": "<pack-name>",

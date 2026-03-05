@@ -51,7 +51,7 @@ Check for:
 
 ### For Each Endpoint
 
-```
+```text
 ## Endpoint: POST /api/v1/contacts
 
 Authorization: ✅/❌

@@ -7,7 +7,7 @@ description: Generate product ship room posts for Slack announcements. Activate 
 
 Write product ship room posts for announcing features in Slack.
 
-### Style Guidelines
+## Style Guidelines
 
 Follow user's writing style for:
 
@@ -158,7 +158,7 @@ Do NOT write the post until you deeply understand the feature AND have clear pro
 
 Follow this structure (adapt sections as needed):
 
-```
+```text
 :rocket: *[Feature Name] - [Brief tagline]*
 
 [2-3 sentence intro with PRODUCT CONTEXT: problem statement, opportunity, or impact data + what shipped to address it]
