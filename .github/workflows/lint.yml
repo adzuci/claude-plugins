@@ -1,0 +1,30 @@
+name: Lint
+
+on:
+  pull_request:
+
+jobs:
+  markdownlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: "**/*.md"
+
+  skill-name-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check skill name matches directory
+        run: |
+          failed=0
+          for skill_md in plugins/*/skills/*/SKILL.md; do
+            dir_name=$(basename "$(dirname "$skill_md")")
+            name=$(grep -m1 '^name:' "$skill_md" | sed 's/name:[[:space:]]*//')
+            if [ "$dir_name" != "$name" ]; then
+              echo "MISMATCH: $skill_md — directory '$dir_name' != frontmatter name '$name'"
+              failed=1
+            fi
+          done
+          exit $failed
