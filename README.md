@@ -8,7 +8,7 @@ This repo is a place to add [skills and plugins](https://code.claude.com/docs/en
 
 There are three places you can store Claude skills depending on your use case:
 
-1. **Here** — Either in [the claude-bootstrapper](https://github.com/apolloio/claude-bootstrapper/tree/main/skills) or this repo (`apolloio/skills`) is where we add shared skills and plugins; this repo can be used as a [private marketplace](https://code.claude.com/docs/en/plugin-marketplaces#private-repositories) so they’re available across Apollo.
+1. **In our central skill repository** — This location is yet to be determined but could be in [the claude-bootstrapper repo](https://github.com/apolloio/claude-bootstrapper/tree/main/skills) or this repo; this repo can be used as a [private marketplace](https://code.claude.com/docs/en/plugin-marketplaces#private-repositories) so they’re available across Apollo.
 
 2. **In repo-specific skill folders** — If a skill is only relevant to a specific repository, place it in that repo's `.claude/skills` directory. Examples:
    - [`apolloio/devops/.claude/skills`](https://github.com/apolloio/devops/tree/master/.claude/skills)
