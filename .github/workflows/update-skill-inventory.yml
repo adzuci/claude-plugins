@@ -1,0 +1,25 @@
+name: Update skill inventory
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "plugins/**/SKILL.md"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate inventory table
+        run: python3 .github/scripts/update-skill-inventory.py
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff --staged --quiet || git commit -m "chore: update skill inventory [skip ci]" && git push

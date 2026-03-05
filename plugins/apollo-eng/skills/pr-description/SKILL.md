@@ -48,7 +48,7 @@ test -d .github/PULL_REQUEST_TEMPLATE && echo "found: .github/PULL_REQUEST_TEMPL
 
 **If no template exists:** Tell the user the repo doesn't have a PR template and they should add one so PRs stay consistent. Point them to Apollo's example template as a reference:
 
-- **Reference template:** https://github.com/apolloio/leadgenie/blob/master/pull_request_template.md
+- **Reference template:** <https://github.com/apolloio/leadgenie/blob/master/pull_request_template.md>
 
 Suggest creating `pull_request_template.md` in the repo root (or `.github/PULL_REQUEST_TEMPLATE.md`) using that structure as a starting point. Do not proceed to fill a PR description until a template exists or the user explicitly asks for a one-off description without a template.
 
@@ -97,7 +97,7 @@ If the repo has a PR template, fill **every** section with accurate content. If 
 
 Before creating the PR, show the user a draft and ask for confirmation:
 
-```
+```text
 Here's the draft PR description:
 
 [Show full PR body]
