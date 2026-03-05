@@ -1,10 +1,15 @@
 ---
-name: Plan from Jira
+name: plan-from-jira
 description: Fetches a Jira ticket using the Jira MCP, analyzes the requirements, and generates a structured implementation plan. Activate when the user provides a Jira issue key and asks to plan or implement it, says "plan from jira", "plan this ticket", or "create a plan for <TICKET-ID>".
-trigger: User provides a Jira ticket ID and asks to plan or implement it, or says "plan from jira" / "plan this ticket"
 ---
 
 > **Based on a skill originally written by Farhad.**
+
+## When to Activate
+
+- User provides a Jira issue key (e.g. `ENG-1234`) and asks to plan, implement, or start work
+- User says "plan from jira", "plan this ticket", or "create a plan for [ticket]"
+- User shares a Jira URL and asks what needs to be done
 
 # Instructions
 
@@ -44,7 +49,7 @@ Follow these steps when generating an implementation plan from a Jira ticket:
 3. **Check for an existing plan**: Look in the `.context/` folder for a file named `<TICKET-ID>_plan.md`.
    - If found, ask the user: **reuse** the existing plan, or **redo** it?
    - If reuse: display the existing plan and stop.
-   - If redo: ask for confirmation before overwriting — rename the old file to `<TICKET-ID>_plan.old.md` as a backup, then continue. Do not delete the original without explicit confirmation.
+   - If redo: keep the existing file for now and generate a fresh draft. Only after the user approves the new plan, rename the old file to `<TICKET-ID>_plan.old.md` as a backup and save the new one.
 
 4. **Fetch the ticket**: Use the `getJiraIssue` MCP tool to retrieve the ticket. Capture:
    - Title / summary
