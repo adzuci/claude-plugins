@@ -4,6 +4,8 @@ description: Fetches a Jira ticket using the Jira MCP, analyzes the requirements
 trigger: User provides a Jira ticket ID and asks to plan or implement it, or says "plan from jira" / "plan this ticket"
 ---
 
+> **Based on a skill originally written by Farhad.**
+
 # Instructions
 
 Follow these steps when generating an implementation plan from a Jira ticket:
@@ -31,36 +33,56 @@ Follow these steps when generating an implementation plan from a Jira ticket:
      >
      > Get an API token at https://id.atlassian.com/manage-profile/security/api-tokens, then re-run this skill.
 
-2. **Get the Jira ticket ID**: If not already provided, check the current git branch name (`git branch --show-current`) for a ticket key (e.g. `ENG-1234`). If still not found, ask the user.
+2. **Get the Jira ticket ID**: If not already provided, scan the current git branch name for a ticket key using the pattern `[A-Z][A-Z0-9]+-\d+` (matches keys like `ENG-123`, `APOLLO-456`, `ENGOPS-12`):
+   ```bash
+   git branch --show-current
+   ```
+   - If exactly one key is found, use it.
+   - If multiple keys are found, list them and ask the user which one to use.
+   - If no key is found, ask the user to provide one before continuing.
 
-3. **Check for an existing plan**: Look in the `.context/` folder for a file matching that ticket ID.
-   - If found, ask the user whether to use the existing plan or create a fresh one.
-   - If they choose to reuse it, display the existing plan and stop.
-   - If they choose to redo it, delete the existing file and continue.
+3. **Check for an existing plan**: Look in the `.context/` folder for a file named `<TICKET-ID>_plan.md`.
+   - If found, ask the user: **reuse** the existing plan, or **redo** it?
+   - If reuse: display the existing plan and stop.
+   - If redo: ask for confirmation before overwriting — rename the old file to `<TICKET-ID>_plan.old.md` as a backup, then continue. Do not delete the original without explicit confirmation.
 
-4. **Fetch the ticket**: Use the `getJiraIssue` MCP tool to retrieve the ticket details.
+4. **Fetch the ticket**: Use the `getJiraIssue` MCP tool to retrieve the ticket. Capture:
+   - Title / summary
+   - Description and acceptance criteria
+   - Priority, labels, components, and status
+   - Linked issue keys (subtasks, blocks, is blocked by)
 
-5. **Fetch linked issues**: If the ticket has linked subtasks or blocking issues, fetch each with `getJiraIssue` to understand the full scope.
+5. **Fetch linked issues**: Fetch linked issues with `getJiraIssue`, but with these constraints:
+   - Only fetch **subtasks** and **blocks / is blocked by** relationships by default. Skip "relates to" or "duplicates" links unless the user asks.
+   - Fetch at most **5 linked issues**. If more exist, list the remaining keys and ask the user which ones to include before fetching further.
 
-6. **Analyze the ticket**:
-   - Review the title and description.
-   - Extract acceptance criteria if present.
-   - Note relevant labels, priority, linked issues, and status.
+6. **Analyze the ticket** — check for:
+   - A clear goal or intended outcome
+   - Explicit acceptance criteria or requirements
+   - Impacted component hints (labels, components, stack references)
 
-7. **Assess completeness**:
-   - If the description is empty or too vague, summarize what is available and ask the user to fill in the gaps before continuing.
-   - If the description is sufficient, proceed.
+7. **Assess completeness** — a ticket is **sufficient** if it has all three: (a) clear goal, (b) acceptance criteria or explicit requirements, and (c) at least one component/area hint.
+   - If one or more are missing: produce a **draft plan with an Assumptions section** listing what you inferred, then ask 2–4 targeted questions to fill the gaps. Do not stop completely — a partial plan is more useful than nothing.
+   - If sufficient: proceed directly to codebase analysis.
 
-8. **Analyze the codebase**: Using Glob, Grep, and Read, identify files and patterns most relevant to the work. Be targeted — focus on what the ticket points to, not the entire codebase.
+8. **Analyze the codebase**: Using Glob, Grep, and Read, identify files and patterns most relevant to the work. Be targeted:
+   - Search for the ticket key in code, comments, and recent commits (sometimes referenced).
+   - Extract 3–5 keywords from the title and acceptance criteria; grep for those.
+   - Identify entry points first (API routes, feature flags, service boundaries) before scanning broad directories.
+   - Read at most **10 files** unless the user asks for deeper analysis.
 
 9. **Generate the plan**: Produce a structured markdown plan (see Output Format below) grounded in both the ticket content and the actual codebase.
 
-10. **Present the plan**: Show the draft plan to the user and ask for confirmation. **Do not write any files or make code changes before the user approves.**
+10. **Present the plan**: Show the draft plan to the user and ask for confirmation.
+    - **Do not write any files or make code changes before the user approves.**
+    - If the user requests edits, revise the plan and re-present it for confirmation.
+    - If the user approves, you may proceed to implementation or plan mode — but still make no code changes until they explicitly say to implement.
 
-11. **Save context** (optional): Ask the user if they want to save the plan for future reference.
-    - Default filename: `.context/PROJ-123_plan.md`
+11. **Save context** (default: ask): Ask the user if they want to save the plan. Default to **yes** unless they decline.
+    - Derive the filename from the actual ticket key: `.context/<TICKET-ID>_plan.md`
+    - Create `.context/` only after the user approves — consistent with the no-writes-before-approval rule.
 
-12. **Enter plan mode** (optional): If the user approves the plan, offer to enter plan mode to begin implementation.
+12. **Enter plan mode** (optional): Offer to enter Claude Code's plan mode to begin structured implementation. Plan mode lets you lay out tasks and get step-by-step approval before any code is written.
 
 # Output Format
 
@@ -69,6 +91,9 @@ Follow these steps when generating an implementation plan from a Jira ticket:
 
 ## Summary
 [1-3 sentence description of the goal and why it matters]
+
+## Assumptions
+[Only include if ticket was incomplete — list what you inferred and flag what needs confirmation]
 
 ## Affected Areas
 - `path/to/file` — [what changes here]
@@ -84,6 +109,8 @@ Follow these steps when generating an implementation plan from a Jira ticket:
 ## Suggested Tests
 - [test description]
 ```
+
+> Only include the **Assumptions** section when the ticket was incomplete. Omit it for well-specified tickets to keep the plan clean.
 
 # Example
 
@@ -120,4 +147,4 @@ Protect public API endpoints from abuse by enforcing per-user request limits. Th
 - Request exceeding limit returns 429 with `Retry-After` header
 - Limit resets after the window expires
 
-Does this match your understanding? Should I save this plan or proceed to implementation?
+Does this match your understanding? Should I save this plan to `.context/ENG-1234_plan.md`, or would you like any changes first?
