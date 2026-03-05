@@ -142,4 +142,4 @@ Then users can install plugins with `/plugin install apollo-eng@apollo-skills` f
 ## References
 
 - [Agent Skills specification](https://agentskills.io/specification) — Format and conventions for skill files
-- [Apollo Claude Skills Library](https://www.notion.so/apolloio/Claude-Skills-Library-2fbab2b3b4968002a11ad055663f0b05?source=copy_link) — Notion library of skills and ideas
+- [Apollo Claude Skills Library](https://www.notion.so/apolloio/Claude-Skills-Library-2fbab2b3b4968002a11ad055663f0b05?source=copy_link) — Notion library of Apollo skills and ideas
