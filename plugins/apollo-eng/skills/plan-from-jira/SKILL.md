@@ -5,13 +5,15 @@ description: Fetches a Jira ticket using the Jira MCP, analyzes the requirements
 
 > **Based on a skill originally written by Farhad.**
 
+# Plan From Jira
+
 ## When to Activate
 
 - User provides a Jira issue key (e.g. `ENG-1234`) and asks to plan, implement, or start work
 - User says "plan from jira", "plan this ticket", or "create a plan for [ticket]"
 - User shares a Jira URL and asks what needs to be done
 
-# Instructions
+## Instructions
 
 Follow these steps when generating an implementation plan from a Jira ticket:
 
