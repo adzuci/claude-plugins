@@ -36,12 +36,14 @@ Follow these steps when generating an implementation plan from a Jira ticket:
      > }
      > ```
      >
-     > Get an API token at https://id.atlassian.com/manage-profile/security/api-tokens, then re-run this skill.
+     > Get an API token at <https://id.atlassian.com/manage-profile/security/api-tokens>, then re-run this skill.
 
 2. **Get the Jira ticket ID**: If not already provided, scan the current git branch name for a ticket key using the pattern `[A-Z][A-Z0-9]+-\d+` (matches keys like `ENG-123`, `APOLLO-456`, `ENGOPS-12`):
+
    ```bash
    git branch --show-current
    ```
+
    - If exactly one key is found, use it.
    - If multiple keys are found, list them and ask the user which one to use.
    - If no key is found, ask the user to provide one before continuing.
@@ -129,14 +131,17 @@ Here's the implementation plan for **ENG-1234: Add rate limiting to the API**.
 # Plan: Add rate limiting to the API (ENG-1234)
 
 ## Summary
+
 Protect public API endpoints from abuse by enforcing per-user request limits. This prevents denial-of-service from misbehaving clients and ensures fair resource usage.
 
 ## Affected Areas
+
 - `app/middleware/rate_limit.rb` — new middleware to track and enforce limits
 - `config/routes.rb` — apply middleware to public endpoints
 - `spec/middleware/rate_limit_spec.rb` — new tests
 
 ## Implementation Steps
+
 1. Add `rack-attack` gem to `Gemfile`
 2. Create `app/middleware/rate_limit.rb` with per-IP and per-token limits
 3. Configure throttle rules matching acceptance criteria
@@ -144,10 +149,12 @@ Protect public API endpoints from abuse by enforcing per-user request limits. Th
 5. Return `429 Too Many Requests` with a `Retry-After` header on limit breach
 
 ## Edge Cases / Open Questions
+
 - Should authenticated users get a higher limit than anonymous requests?
 - What happens to in-flight requests when a limit is hit mid-burst?
 
 ## Suggested Tests
+
 - Request within limit returns 200
 - Request exceeding limit returns 429 with `Retry-After` header
 - Limit resets after the window expires
