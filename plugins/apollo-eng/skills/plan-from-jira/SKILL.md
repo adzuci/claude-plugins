@@ -119,7 +119,7 @@ Follow these steps when generating an implementation plan from a Jira ticket:
 
 > Only include the **Assumptions** section when the ticket was incomplete. Omit it for well-specified tickets to keep the plan clean.
 
-# Example
+## Example
 
 **User**: "Plan ENG-1234"
 
