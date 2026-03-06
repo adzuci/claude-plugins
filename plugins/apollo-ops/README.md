@@ -16,6 +16,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 | `/apollo-ops:kubernetes-specialist` | Kubernetes debugging and rollout specialist for Apollo's GKE clusters |
 | `/apollo-ops:grafana-observability` | Grafana dashboard design and alert quality specialist |
 | `/apollo-ops:incident-response` | Incident commander guide for Apollo production incidents |
+| `/apollo-ops:systematic-debugging` | Four-phase root-cause debugging methodology (investigate → pattern → hypothesize → implement) |
 
 ## Skill Stacking
 

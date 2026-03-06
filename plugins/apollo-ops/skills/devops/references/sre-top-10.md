@@ -128,7 +128,7 @@ ______________________________________________________________________
 
 **Apollo context**:
 
-- SEV1/SEV2: postmortem required within 5 business days
+- SEV1: postmortem required within 3 business days; SEV2: within 5 business days
 - Timeline format: `HH:MM UTC | Action | Owner`
 - Postmortem action items: categorize as prevent / detect / mitigate / process
 - `@oncall-xfn-team-devops`: primary escalation path for infrastructure incidents

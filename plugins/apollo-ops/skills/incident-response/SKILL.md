@@ -107,7 +107,7 @@ Do not resolve until all of the following are true:
 After resolution:
 
 - Send all-clear communication
-- Schedule postmortem (SEV1/SEV2: within 5 business days)
+- Schedule postmortem (SEV1: within 3 business days; SEV2: within 5 business days)
 - Archive timeline
 - Create follow-up tickets
 

@@ -167,6 +167,6 @@ Once installed, use Glean to search internal runbooks and postmortems and Atlass
 - [`references/sre-top-10.md`](references/sre-top-10.md) — 10 enforceable reliability modules with Apollo context
 - [`references/incident-framework.md`](references/incident-framework.md) — Incident decision tree and mitigation matrix
 - [`references/safe-mitigation.md`](references/safe-mitigation.md) — Safe production behavior checklist
-- [`references/production-readiness-checklist.md`](references/production-readiness-checklist.md) — Production readiness checklist (includes security review prompt)
+- [`references/production-readiness-checklist.md`](references/production-readiness-checklist.md) — Production readiness checklist
 - [`references/infrastructure-map.md`](references/infrastructure-map.md) — Apollo infrastructure topology, data flow, and Terraform patterns
 - [`references/elasticsearch-operations.md`](references/elasticsearch-operations.md) — ES cluster landscape, backup/restore workflows, and operational checklists
