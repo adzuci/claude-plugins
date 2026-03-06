@@ -95,26 +95,26 @@ Skills from this marketplace can also be used in Claude.ai and the API when thos
    Replace the placeholder with real instructions. You can add optional supporting files (e.g. `reference.md`, scripts) in the same skill directory.
 
 1. **If the skill lives in a new plugin**
-   Copy the whole `template/` folder to `plugins/<pack-name>/`, then follow “Adding a new plugin” below and register the plugin in `.claude-plugin/marketplace.json`.
+   Copy the whole `template/` folder to `plugins/<plugin-name>/`, then follow “Adding a new plugin” below and register the plugin in `.claude-plugin/marketplace.json`.
 
 ## Adding a new plugin
 
-If you need a new plugin (e.g. a separate pack for product or infra):
+If you need a new plugin (e.g. a separate plugin for product or infra):
 
 1. **Copy the template**
-   Copy the `template/` folder to `plugins/<pack-name>/` (e.g. `plugins/apollo-product-pack/`).
+   Copy the `template/` folder to `plugins/<plugin-name>/` (e.g. `plugins/apollo-product/`).
 
 1. **Edit the plugin manifest**
-   In `plugins/<pack-name>/.claude-plugin/plugin.json`, set `name`, `description`, and `version`.
+   In `plugins/<plugin-name>/.claude-plugin/plugin.json`, set `name`, `description`, and `version`.
 
 1. **Register in the marketplace**
    In `.claude-plugin/marketplace.json`, add an entry to the `plugins` array:
 
    ```json
    {
-     "name": "<pack-name>",
-     "source": "./plugins/<pack-name>",
-     "description": "Short description of the pack"
+     “name”: “<plugin-name>”,
+     “source”: “./plugins/<plugin-name>”,
+     “description”: “Short description of the plugin”
    }
    ```
 
@@ -122,7 +122,7 @@ If you need a new plugin (e.g. a separate pack for product or infra):
    From the repo root, run `claude plugin validate .` or in Claude Code run `/plugin validate .` to check the marketplace and plugin config.
 
 1. **Add or edit skills**
-   Use the steps in “Adding a new skill” above, with `<plugin-name>` = your new pack name. Replace or add skills under `plugins/<pack-name>/skills/`.
+   Use the steps in “Adding a new skill” above, with `<plugin-name>` = your new plugin name. Replace or add skills under `plugins/<plugin-name>/skills/`.
 
 Plugins namespace skill commands as `/plugin-name:skill-name`.
 
