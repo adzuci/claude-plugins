@@ -19,18 +19,18 @@ Skills in this plugin are for **general engineering workflows that apply across 
 - Workflow automation any engineer would use regardless of repo (PR descriptions, changelogs, ship posts)
 - Code review patterns that apply repo-agnostically (security, performance, accessibility)
 - Meta-skills about working with Claude (memory, learning, preferences)
-- Anything you'd want available whether you're in `leadgenie`, `deployments`, `webapp`, or any other repo
+- Anything you'd want available whether you're in `deployments`, `webapp`, or any other repo
 
 ## What does NOT belong in apollo-eng
 
 - **Infra or ops skills** → use `apollo-ops` instead
-- **Repo-specific knowledge** (e.g. a skill that knows about `leadgenie`'s domain model) → put it in that repo's `.claude/skills/` directory
+- **Repo-specific knowledge** (e.g. a skill that knows a specific repo's domain model) → put it in that repo's `.claude/skills/` directory
 - **Skills with heavy reference files that are only relevant in one context** — reference files load tokens at invocation time even when the skill isn't relevant to the current work
 - **Skills that require credentials or services not available in all repos**
 
 ## Token efficiency and trigger discipline
 
-`apollo-eng` is enabled by default in several Apollo repos (e.g. `deployments`, `leadgenie`). This means **every skill's `description` field is loaded into context on every Claude Code session** in those repos, whether or not the skill is relevant to the current task.
+`apollo-eng` is enabled by default in several Apollo repos (e.g. `deployments`). This means **every skill's `description` field is loaded into context on every Claude Code session** in those repos, whether or not the skill is relevant to the current task.
 
 ### What loads when
 
