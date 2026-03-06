@@ -16,16 +16,6 @@ Follow user's writing style for:
 - Technical depth
 - Emoji usage
 
-## When to Activate
-
-When the user asks to write or draft:
-
-- a ship post
-- a product ship room post
-- a product ship room Slack message
-- release notes
-- feature launch announcement
-
 ## Step 1: Gather Resources
 
 Start by offering the user a choice:

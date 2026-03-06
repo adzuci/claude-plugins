@@ -11,21 +11,6 @@ ______________________________________________________________________
 
 # MANDATORY 5-STEP WORKFLOW
 
-## CRITICAL WORKFLOW ENFORCEMENT
-
-| Step | Requirement | Enforcement |
-| -------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
-| **Step 1** | User MUST provide EXACT Bug Bash Notion URL | If missing, workflow MUST STOP immediately |
-| **Sequential** | Steps MUST be executed sequentially | Cannot skip or combine steps |
-| **Step 2** | ALL 5 required links (ERD, PRD, Figma, Jira, GitHub PR) | If ANY missing, MUST STOP and request from user |
-| **Step 3** | NO analysis begins | Until Step 2 validation passes completely |
-| **Step 4** | User must explicitly approve | With "UPLOAD TO NOTION" before Step 5 execution |
-| **Step 5A** | SAMPLE TEST CASE | MUST create ONE sample first and get approval |
-| **Step 5B** | User approval required | "APPROVED - PROCEED" before continuing |
-| **URL** | EXACT URL ENFORCEMENT | Feature field MUST contain EXACT Bug Bash URL (no variations) |
-
-______________________________________________________________________
-
 # STEP 1: EXTRACT DOCUMENTATION LINKS FROM BUG BASH PAGE
 
 ## MANDATORY BUG BASH URL VALIDATION - MUST COMPLETE FIRST

@@ -30,7 +30,7 @@ Skills in this plugin are for **general engineering workflows that apply across 
 
 ## Token efficiency and trigger discipline
 
-`apollo-eng` is enabled by default in several Apollo repos (e.g. `deployments`). This means **every skill's `description` field is loaded into context on every Claude Code session** in those repos, whether or not the skill is relevant to the current task.
+`apollo-eng` is enabled by default in several Apollo repos (e.g. `deployments`). This means **every skill's `description` field is loaded into context on every Claude Code session** in those repos, whether or not the skill is relevant to the current task. `apollo-ops` is opt-in (manually installed per-user), so its description cost is lower — but the same principles apply once installed.
 
 ### What loads when
 
@@ -50,7 +50,7 @@ description: Help with pull requests and code review.
 # Good — triggers only when the user explicitly asks
 description: Generate a clear PR title and description from the current branch's changes.
 Use when the user asks to fill the PR template, generate a PR description, prepare a PR,
-create a pull request, or before running gh pr create.
+or before running gh pr create.
 ```
 
 ### Use explicit trigger phrases
