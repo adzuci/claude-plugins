@@ -146,6 +146,20 @@ If no runbook exists yet, create a stub with: what the alert means, what to chec
 
 ---
 
+## Setup: Grafana MCP Server
+
+The Grafana MCP server gives Claude direct access to Apollo's Grafana instance — dashboards, alert rules, and datasources — without requiring you to navigate the UI or paste JSON.
+
+> **VPN required**: The Grafana MCP server is only reachable on the Apollo VPN. Connect before installing or using it.
+
+Install once per machine:
+
+```bash
+claude mcp add grafana https://grafana-mcp.ops-gcp.apollo.io/mcp --transport http --scope user
+```
+
+Once installed, Claude can query dashboards, inspect alert rule definitions, and surface panel queries directly during observability reviews and alert tuning sessions.
+
 ## References
 
 - [`references/alerting-guidelines.md`](references/alerting-guidelines.md) — Alert quality rules with Apollo-specific patterns

@@ -233,6 +233,20 @@ kubectl exec -it <pod-name> -n <namespace> -- cat /sys/fs/cgroup/cpu/cpu.stat | 
 - **ES index reset job**: runs as a Kubernetes Job in `preview-master` namespace on staging — this is expected and should not alarm
 - **Weekly staging refresh**: Saturday 17:00 UTC — ES restore job runs; this is normal and expected; do not declare as incident
 
+## Setup: GKE MCP Server
+
+The GKE MCP server gives Claude direct access to Apollo's clusters — pods, logs, events, and node stats — without requiring you to copy/paste `kubectl` output.
+
+> **VPN required**: The GKE MCP server is only reachable on the Apollo VPN. Connect before installing or using it.
+
+Install once per machine:
+
+```bash
+claude mcp add apollo_gke https://gke-mcp.ops-gcp.apollo.io/mcp --transport http --scope user
+```
+
+Once installed, Claude can call `mcp__apollo_gke__pods_list`, `mcp__apollo_gke__pods_log`, `mcp__apollo_gke__pods_top`, and related tools directly during debugging sessions instead of asking you to run commands manually.
+
 ## References
 
 - [`references/debugging-playbook.md`](references/debugging-playbook.md) — Step-by-step kubectl flows with exact commands

@@ -137,11 +137,36 @@ These are non-negotiable in any production context:
   - Check Redpanda consumer lag before Mongo schema changes (downstream consumers may be impacted)
   - Check `#eng-infrastructure-alerts` for prior context before declaring an issue novel
 
+## Setup: Required Tools and MCP Servers
+
+### Prerequisites
+
+```bash
+brew install gh
+gh auth login
+```
+
+> **VPN required**: The Glean, Atlassian, and other internal MCP servers are only reachable on the Apollo VPN. Connect before running `claude mcp add` or using these tools.
+
+### MCP Servers
+
+Install once per machine (`--scope user` persists across projects):
+
+```bash
+# Glean — internal knowledge search (Notion, Confluence, Slack, code)
+claude mcp add glean_default https://apollo-io-be.glean.com/mcp/default --transport http --scope user
+
+# Atlassian — Jira and Confluence read/write
+claude mcp add --transport sse -s user atlassian https://mcp.atlassian.com/v1/sse
+```
+
+Once installed, use Glean to search internal runbooks and postmortems and Atlassian to read/update Jira incidents without leaving Claude.
+
 ## References
 
 - [`references/sre-top-10.md`](references/sre-top-10.md) — 10 enforceable reliability modules with Apollo context
 - [`references/incident-framework.md`](references/incident-framework.md) — Incident decision tree and mitigation matrix
 - [`references/safe-mitigation.md`](references/safe-mitigation.md) — Safe production behavior checklist
-- [`references/design-review-checklist.md`](references/design-review-checklist.md) — Reliability design review checklist
+- [`references/production-readiness-checklist.md`](references/production-readiness-checklist.md) — Production readiness checklist (includes security review prompt)
 - [`references/infrastructure-map.md`](references/infrastructure-map.md) — Apollo infrastructure topology, data flow, and Terraform patterns
 - [`references/elasticsearch-operations.md`](references/elasticsearch-operations.md) — ES cluster landscape, backup/restore workflows, and operational checklists
