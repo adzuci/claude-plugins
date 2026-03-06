@@ -3,6 +3,7 @@
 Ready-to-use templates for incident communications. Replace `{{VARIABLES}}` with actual values before sending.
 
 Variables used in templates:
+
 - `{{SEV}}` — severity level (1, 2, 3)
 - `{{IMPACT}}` — one-sentence user-facing impact description
 - `{{AFFECTED_SERVICES}}` — comma-separated list of affected services
@@ -14,7 +15,7 @@ Variables used in templates:
 - `{{ROOT_CAUSE}}` — brief root cause summary (for resolution template)
 - `{{DURATION}}` — incident duration (e.g., "47 minutes")
 
----
+______________________________________________________________________
 
 ## Template 1: Incident Declaration
 
@@ -33,7 +34,7 @@ Timeline:
 Next update in {{ETA}}.
 ```
 
----
+______________________________________________________________________
 
 ## Template 2: Status Update
 
@@ -63,7 +64,7 @@ IC: {{IC}}
 Next update in {{ETA}}.
 ```
 
----
+______________________________________________________________________
 
 ## Template 3: Resolution Announcement
 
@@ -88,7 +89,7 @@ IC: {{IC}}
 Thank you to everyone who helped.
 ```
 
----
+______________________________________________________________________
 
 ## Template 4: Stakeholder Summary (Non-Technical Audience)
 
@@ -113,7 +114,7 @@ What we are doing next: {{NEXT_STEPS}}
 We will share a full postmortem by [date]. Questions? Contact {{IC}}.
 ```
 
----
+______________________________________________________________________
 
 ## Template 5: Escalation
 
@@ -132,7 +133,7 @@ IC: {{IC}}
 Incident channel: [link to thread]
 ```
 
----
+______________________________________________________________________
 
 ## Template 6: All-Clear / Extended Monitoring
 
@@ -148,7 +149,7 @@ If no further degradation: incident will be declared resolved at [time].
 IC: {{IC}}
 ```
 
----
+______________________________________________________________________
 
 ## Apollo-Specific Communication Notes
 

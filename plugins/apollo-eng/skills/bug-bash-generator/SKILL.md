@@ -7,24 +7,24 @@ description: Generate bug bash test cases from a Notion bug bash page and write 
 
 You are a senior QA engineer specialized in creating focused, high-impact test cases for Apollo.io features. Follow this exact 5-step workflow to generate comprehensive test coverage.
 
----
+______________________________________________________________________
 
 # MANDATORY 5-STEP WORKFLOW
 
 ## CRITICAL WORKFLOW ENFORCEMENT
 
-| Step           | Requirement                                             | Enforcement                                                   |
+| Step | Requirement | Enforcement |
 | -------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
-| **Step 1**     | User MUST provide EXACT Bug Bash Notion URL             | If missing, workflow MUST STOP immediately                    |
-| **Sequential** | Steps MUST be executed sequentially                     | Cannot skip or combine steps                                  |
-| **Step 2**     | ALL 5 required links (ERD, PRD, Figma, Jira, GitHub PR) | If ANY missing, MUST STOP and request from user               |
-| **Step 3**     | NO analysis begins                                      | Until Step 2 validation passes completely                     |
-| **Step 4**     | User must explicitly approve                            | With "UPLOAD TO NOTION" before Step 5 execution               |
-| **Step 5A**    | SAMPLE TEST CASE                                        | MUST create ONE sample first and get approval                 |
-| **Step 5B**    | User approval required                                  | "APPROVED - PROCEED" before continuing                        |
-| **URL**        | EXACT URL ENFORCEMENT                                   | Feature field MUST contain EXACT Bug Bash URL (no variations) |
+| **Step 1** | User MUST provide EXACT Bug Bash Notion URL | If missing, workflow MUST STOP immediately |
+| **Sequential** | Steps MUST be executed sequentially | Cannot skip or combine steps |
+| **Step 2** | ALL 5 required links (ERD, PRD, Figma, Jira, GitHub PR) | If ANY missing, MUST STOP and request from user |
+| **Step 3** | NO analysis begins | Until Step 2 validation passes completely |
+| **Step 4** | User must explicitly approve | With "UPLOAD TO NOTION" before Step 5 execution |
+| **Step 5A** | SAMPLE TEST CASE | MUST create ONE sample first and get approval |
+| **Step 5B** | User approval required | "APPROVED - PROCEED" before continuing |
+| **URL** | EXACT URL ENFORCEMENT | Feature field MUST contain EXACT Bug Bash URL (no variations) |
 
----
+______________________________________________________________________
 
 # STEP 1: EXTRACT DOCUMENTATION LINKS FROM BUG BASH PAGE
 
@@ -48,12 +48,12 @@ You are a senior QA engineer specialized in creating focused, high-impact test c
 
 **ONLY AFTER URL VALIDATION PASSES** - Use the Notion MCP to fetch the Bug Bash page and extract:
 
-| Document Type      | Purpose                                                   |
+| Document Type | Purpose |
 | ------------------ | --------------------------------------------------------- |
-| **ERD Link**       | Engineering Requirement Document                          |
-| **PRD Link**       | Product Requirement Document                              |
-| **Figma Link**     | Design specifications and UI mockups                      |
-| **Jira Epic Link** | Epic context and sub-tasks                                |
+| **ERD Link** | Engineering Requirement Document |
+| **PRD Link** | Product Requirement Document |
+| **Figma Link** | Design specifications and UI mockups |
+| **Jira Epic Link** | Epic context and sub-tasks |
 | **GitHub PR Link** | Pull request with implementation details and code changes |
 
 ### Required Information to Extract:
@@ -64,7 +64,7 @@ You are a senior QA engineer specialized in creating focused, high-impact test c
 - **Risk Areas and Critical Components**
 - **External Dependencies** (APIs, integrations, databases)
 
----
+______________________________________________________________________
 
 # STEP 2: VALIDATE AND REQUEST MISSING DOCUMENTATION LINKS
 
@@ -74,13 +74,13 @@ You are a senior QA engineer specialized in creating focused, high-impact test c
 
 #### 1. MUST Check if ALL 5 required links were extracted from Bug Bash page:
 
-| Link Type          | Status   | Purpose                  |
+| Link Type | Status | Purpose |
 | ------------------ | -------- | ------------------------ |
-| **ERD Link**       | Required | Engineering Requirements |
-| **PRD Link**       | Required | Product Requirements     |
-| **Figma Link**     | Required | Design specifications    |
-| **Jira Epic Link** | Required | Implementation context   |
-| **GitHub PR Link** | Required | Code changes             |
+| **ERD Link** | Required | Engineering Requirements |
+| **PRD Link** | Required | Product Requirements |
+| **Figma Link** | Required | Design specifications |
+| **Jira Epic Link** | Required | Implementation context |
+| **GitHub PR Link** | Required | Code changes |
 
 #### 2. MANDATORY STOPPING RULE - If ANY of the 5 links are missing:
 
@@ -91,9 +91,9 @@ You are a senior QA engineer specialized in creating focused, high-impact test c
 
 #### 3. ONLY TWO VALID USER RESPONSES:
 
-| Option       | Action                         | Result                              |
+| Option | Action | Result |
 | ------------ | ------------------------------ | ----------------------------------- |
-| **Option A** | Provide the missing links      | Re-validate all links               |
+| **Option A** | Provide the missing links | Re-validate all links |
 | **Option B** | "PROCEED WITH AVAILABLE LINKS" | Continue with limited documentation |
 
 ### Link Quality Validation:
@@ -102,7 +102,7 @@ You are a senior QA engineer specialized in creating focused, high-impact test c
 - Check if links point to the correct feature/epic
 - Validate that links are not placeholder or template content
 
----
+______________________________________________________________________
 
 # STEP 3: COMPREHENSIVE ANALYSIS
 
@@ -233,23 +233,23 @@ You are a senior QA engineer specialized in creating focused, high-impact test c
 
 ### Test Case Type Optimization:
 
-| Test Type                                | Strategy         | Notes                                               |
+| Test Type | Strategy | Notes |
 | ---------------------------------------- | ---------------- | --------------------------------------------------- |
-| **PERFORMANCE, SECURITY, CROSS-BROWSER** | CLUBBED/COMBINED | Combine multiple non-functional requirements        |
-| **FUNCTIONAL**                           | SEPARATE         | Keep focused test cases for specific business logic |
-| **USABILITY, ACCESSIBILITY**             | CLUBBED/COMBINED | Can make single test case                           |
-| **Design**                               | SINGLE           | 1 test case for designers to do Design QA           |
+| **PERFORMANCE, SECURITY, CROSS-BROWSER** | CLUBBED/COMBINED | Combine multiple non-functional requirements |
+| **FUNCTIONAL** | SEPARATE | Keep focused test cases for specific business logic |
+| **USABILITY, ACCESSIBILITY** | CLUBBED/COMBINED | Can make single test case |
+| **Design** | SINGLE | 1 test case for designers to do Design QA |
 
 ### Priority Assignment Based on Analysis:
 
-| Priority | Scope                   | Examples                                  |
+| Priority | Scope | Examples |
 | -------- | ----------------------- | ----------------------------------------- |
-| **P0**   | Critical business flows | Data integrity, security, core user paths |
-| **P1**   | Primary workflows       | Key integrations, error handling          |
-| **P2**   | Secondary features      | Edge cases, performance scenarios         |
-| **P3**   | Nice-to-have            | Minor UI variations                       |
+| **P0** | Critical business flows | Data integrity, security, core user paths |
+| **P1** | Primary workflows | Key integrations, error handling |
+| **P2** | Secondary features | Edge cases, performance scenarios |
+| **P3** | Nice-to-have | Minor UI variations |
 
----
+______________________________________________________________________
 
 # STEP 4: REVIEW AND IMPROVEMENT WITH USER COLLABORATION
 
@@ -264,12 +264,12 @@ You are a senior QA engineer specialized in creating focused, high-impact test c
 
 Use AskUserQuestion to present feedback options:
 
-| Command                      | Purpose                       |
+| Command | Purpose |
 | ---------------------------- | ----------------------------- |
-| `MODIFY [specific changes]`  | Request adjustments           |
-| `ADD [additional scenarios]` | Include more test cases       |
-| `PRIORITIZE [changes]`       | Adjust priority levels        |
-| `UPLOAD TO NOTION`           | Approve and proceed to upload |
+| `MODIFY [specific changes]` | Request adjustments |
+| `ADD [additional scenarios]` | Include more test cases |
+| `PRIORITIZE [changes]` | Adjust priority levels |
+| `UPLOAD TO NOTION` | Approve and proceed to upload |
 
 ### C. ITERATIVE IMPROVEMENT PROCESS
 
@@ -283,7 +283,7 @@ Use AskUserQuestion to present feedback options:
 - Only proceed to Step 5 when user explicitly approves with "UPLOAD TO NOTION"
 - Do NOT create test cases until explicit approval is given
 
----
+______________________________________________________________________
 
 # STEP 5: CREATE TEST CASES IN NOTION DATABASE
 
@@ -293,16 +293,16 @@ Use the Notion MCP (`notion-create-pages`) to create test cases in the database 
 
 ### Required Fields for Each Test Case:
 
-| Field              | Format                              | Allowed Values                                                                                      | Notes                                        |
+| Field | Format | Allowed Values | Notes |
 | ------------------ | ----------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| **Name**           | `"Verify [Clear descriptive name]"` | Any descriptive text                                                                                | MUST NOT include priority like P0/P1 in name |
-| **Priority**       | Single value                        | P0, P1, P2, P3                                                                                      | NO other values allowed                      |
-| **Test Case Type** | Single value                        | Functional, Performance, Security, Usability, Cross-browser, Accessibility, Migration, business case | EXACTLY one from list                        |
-| **Test Suite**     | Priority-based                      | Sanity (P0), Regression (P1), Smoke (P2+)                                                           | Follows priority mapping                     |
-| **Status**         | Fixed value                         | "Not started"                                                                                       | Always for new test cases                    |
-| **Feature**        | Exact URL                           | EXACT Bug Bash Notion URL from Step 1                                                               | MANDATORY - NO EXCEPTIONS                    |
-| **Group**          | Feature identifier                  | Feature name for grouping                                                                           | MANDATORY - helps organize test cases        |
-| **AI-Generated?**  | Fixed value                         | `"__YES__"`                                                                                         | Always checked for AI-generated test cases   |
+| **Name** | `"Verify [Clear descriptive name]"` | Any descriptive text | MUST NOT include priority like P0/P1 in name |
+| **Priority** | Single value | P0, P1, P2, P3 | NO other values allowed |
+| **Test Case Type** | Single value | Functional, Performance, Security, Usability, Cross-browser, Accessibility, Migration, business case | EXACTLY one from list |
+| **Test Suite** | Priority-based | Sanity (P0), Regression (P1), Smoke (P2+) | Follows priority mapping |
+| **Status** | Fixed value | "Not started" | Always for new test cases |
+| **Feature** | Exact URL | EXACT Bug Bash Notion URL from Step 1 | MANDATORY - NO EXCEPTIONS |
+| **Group** | Feature identifier | Feature name for grouping | MANDATORY - helps organize test cases |
+| **AI-Generated?** | Fixed value | `"__YES__"` | Always checked for AI-generated test cases |
 
 ### Test Case Content Format:
 
@@ -326,8 +326,8 @@ Use the Notion MCP (`notion-create-pages`) to create test cases in the database 
 ### A. CREATE ONE SAMPLE TEST CASE FIRST
 
 1. Select ONE high-priority (P0 or P1) test case from the analysis
-2. Use the Notion MCP to create it in the user's target database
-3. Use EXACT Bug Bash URL from Step 1 in the Feature field
+1. Use the Notion MCP to create it in the user's target database
+1. Use EXACT Bug Bash URL from Step 1 in the Feature field
 
 ### B. SAMPLE TEST CASE VALIDATION
 
@@ -350,39 +350,39 @@ Use AskUserQuestion with options:
 
 #### Essential Test Categories:
 
-| Category               | Focus                 | Examples                                    |
+| Category | Focus | Examples |
 | ---------------------- | --------------------- | ------------------------------------------- |
-| **CORE FUNCTIONALITY** | Main feature workflow | Critical business logic                     |
-| **ERROR HANDLING**     | Invalid inputs        | Permission failures, insufficient resources |
-| **INTEGRATION**        | External systems      | API interactions, data sync                 |
-| **EDGE CASES**         | Boundary conditions   | Large datasets, concurrent operations       |
-| **REGRESSION**         | Existing features     | Backward compatibility                      |
+| **CORE FUNCTIONALITY** | Main feature workflow | Critical business logic |
+| **ERROR HANDLING** | Invalid inputs | Permission failures, insufficient resources |
+| **INTEGRATION** | External systems | API interactions, data sync |
+| **EDGE CASES** | Boundary conditions | Large datasets, concurrent operations |
+| **REGRESSION** | Existing features | Backward compatibility |
 
----
+______________________________________________________________________
 
 # QUALITY GUIDELINES
 
 ## Include Only:
 
-| Category                           | Description                                       |
+| Category | Description |
 | ---------------------------------- | ------------------------------------------------- |
-| **Unique business logic coverage** | Test distinct scenarios, not duplicates           |
-| **High-risk scenarios**            | Areas prone to failure or data corruption         |
-| **Critical user paths**            | Core functionality workflows that affect business |
-| **Integration points**             | System boundaries, APIs, external services        |
-| **Error handling**                 | Failure modes, recovery scenarios, edge cases     |
-| **Performance considerations**     | Load, stress, timing, resource usage              |
-| **Security implications**          | Authentication, authorization, data protection    |
+| **Unique business logic coverage** | Test distinct scenarios, not duplicates |
+| **High-risk scenarios** | Areas prone to failure or data corruption |
+| **Critical user paths** | Core functionality workflows that affect business |
+| **Integration points** | System boundaries, APIs, external services |
+| **Error handling** | Failure modes, recovery scenarios, edge cases |
+| **Performance considerations** | Load, stress, timing, resource usage |
+| **Security implications** | Authentication, authorization, data protection |
 
 ## Exclude:
 
-| Category                                   | Reason                                 |
+| Category | Reason |
 | ------------------------------------------ | -------------------------------------- |
-| **Duplicate test cases**                   | Avoid redundant scenarios              |
-| **Framework functionality**                | Don't test internals                   |
-| **Trivial scenarios**                      | Obvious or self-evident cases          |
-| **Obvious UI elements**                    | Basic rendering without business logic |
-| **Overly specific implementation details** | Focus on behavior, not code            |
+| **Duplicate test cases** | Avoid redundant scenarios |
+| **Framework functionality** | Don't test internals |
+| **Trivial scenarios** | Obvious or self-evident cases |
+| **Obvious UI elements** | Basic rendering without business logic |
+| **Overly specific implementation details** | Focus on behavior, not code |
 
 ## Test Case Naming Convention:
 
@@ -393,11 +393,11 @@ Use AskUserQuestion with options:
   - "Verify if System handles API timeout gracefully during contact sync"
   - "Verify if Database maintains referential integrity when deleting user with contacts"
 
----
+______________________________________________________________________
 
 # MANDATORY OUTPUT REQUIREMENT
 
 Upon successful completion of test case creation in Step 5, you **MUST** return:
 
 1. **Direct link** to the Notion Test Case Database where all test cases were created
-2. **Summary** of test cases created with counts by priority and Group
+1. **Summary** of test cases created with counts by priority and Group

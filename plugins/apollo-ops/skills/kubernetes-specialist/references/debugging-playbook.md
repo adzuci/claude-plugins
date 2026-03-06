@@ -2,7 +2,7 @@
 
 Step-by-step kubectl flows for diagnosing pod and cluster issues. Follow each flow in order — do not skip steps.
 
----
+______________________________________________________________________
 
 ## Flow 1: Pod Status Investigation
 
@@ -18,12 +18,13 @@ kubectl describe pod <pod-name> -n <namespace>
 ```
 
 Key fields to read in `kubectl describe`:
+
 - **Status**: `Pending`, `Running`, `Succeeded`, `Failed`, `Unknown`
 - **Conditions**: `PodScheduled`, `Initialized`, `ContainersReady`, `Ready`
 - **Events**: scroll to the bottom — events are the most diagnostic field
 - **Last State**: shows exit code and reason for the previous container instance
 
----
+______________________________________________________________________
 
 ## Flow 2: Event Retrieval
 
@@ -53,7 +54,7 @@ Common event messages and what they mean:
 | `Evicted` | Node was under resource pressure; pod evicted |
 | `OOMKilling` | Container exceeded memory limit |
 
----
+______________________________________________________________________
 
 ## Flow 3: Log Retrieval
 
@@ -76,7 +77,7 @@ kubectl logs -n <namespace> -l app=<app-name> --all-containers
 
 Always check `--previous` for CrashLoopBackOff pods — the current container may have crashed before writing any logs.
 
----
+______________________________________________________________________
 
 ## Flow 4: CrashLoopBackOff Decision Tree
 
@@ -101,7 +102,7 @@ CrashLoopBackOff detected
     └── Check Init Containers → if init container failed → check init logs
 ```
 
----
+______________________________________________________________________
 
 ## Flow 5: OOMKilled Investigation
 
@@ -121,11 +122,12 @@ kubectl top pod -n <namespace> --sort-by=memory | head -20
 ```
 
 Decision:
+
 - **Memory at limit, not growing**: limit is too low → increase limit by 30-50%
 - **Memory growing without bound**: memory leak → do not just increase limit; investigate leak
 - **Memory spiky**: need higher headroom → increase limit, set request lower
 
----
+______________________________________________________________________
 
 ## Flow 6: Readiness Probe Failure Investigation
 
@@ -145,7 +147,7 @@ kubectl exec -it <pod-name> -n <namespace> -- curl -v http://localhost:<port>/<p
 kubectl describe pod <pod-name> -n <namespace> | grep -E "initialDelaySeconds|periodSeconds|failureThreshold"
 ```
 
----
+______________________________________________________________________
 
 ## Flow 7: Node Resource Pressure
 
@@ -165,11 +167,12 @@ kubectl describe node <node-name> | grep -A 20 "Allocated resources"
 ```
 
 Rules:
+
 - `MemoryPressure`: pods may be evicted; check for `Evicted` pods in namespace
 - `DiskPressure`: clean up unused images or increase disk; `kubectl get pods` for `Evicted` pods
 - Cordon before draining: `kubectl cordon <node-name>` prevents new scheduling without disrupting existing pods
 
----
+______________________________________________________________________
 
 ## Flow 8: Exec Into Container (Last Resort)
 

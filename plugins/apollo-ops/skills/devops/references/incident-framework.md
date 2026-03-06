@@ -2,26 +2,29 @@
 
 Use this framework to structure incident response from first signal to resolution.
 
----
+______________________________________________________________________
 
 ## Step 1: Is This an Incident?
 
 Answer these questions in order:
 
 1. **Is there active user impact?**
+
    - Yes → proceed to SEV classification
    - No → treat as production debugging (use devops debugging flow)
 
-2. **Is the impact growing, stable, or recovering?**
+1. **Is the impact growing, stable, or recovering?**
+
    - Growing → escalate SEV level, increase comms cadence
    - Stable → maintain current SEV, focus on mitigation
    - Recovering → verify trend before declaring resolved
 
-3. **Is this caused by a recent change?**
+1. **Is this caused by a recent change?**
+
    - Yes (deploy, config change, migration in last 2h) → rollback is first mitigation to consider
    - No → deeper investigation required before mitigation
 
----
+______________________________________________________________________
 
 ## Step 2: Classify Severity
 
@@ -32,7 +35,7 @@ Answer these questions in order:
 | SEV3 | Degraded service with workaround available | Investigate during business hours, notify team |
 | SEV4 | Minor issue, no user impact, cosmetic or edge case | Ticket + fix in next sprint |
 
----
+______________________________________________________________________
 
 ## Step 3: What SLO Is Breached or At Risk?
 
@@ -45,7 +48,7 @@ Identify the specific SLO:
 
 If no SLO is defined, treat the incident as SLO-defining evidence — document the observed baseline and use it to set a target post-incident.
 
----
+______________________________________________________________________
 
 ## Step 4: Error Budget Status
 
@@ -55,7 +58,7 @@ Determine error budget consumption:
 - **Budget at risk (50–80% consumed)**: fast mitigation, prioritize reliability work this sprint
 - **Budget exhausted (> 80% consumed)**: reliability work blocks feature work immediately after resolution
 
----
+______________________________________________________________________
 
 ## Step 5: Mitigation Decision Matrix
 
@@ -70,7 +73,7 @@ Determine error budget consumption:
 | ES cluster yellow/red | **Do not write, do not index** | Check shard allocation first |
 | Sidekiq queue growth | **Pause non-critical queues, scale workers** | Identify job causing backup first |
 
----
+______________________________________________________________________
 
 ## Step 6: Timeline Format
 
@@ -81,6 +84,7 @@ HH:MM UTC | [Action taken] | [Owner]
 ```
 
 Example:
+
 ```
 14:32 UTC | Incident declared SEV2, IC assigned | @alice
 14:35 UTC | Identified spike in 5xx errors on /api/sequences endpoint | @bob
@@ -91,7 +95,7 @@ Example:
 15:12 UTC | Incident resolved, SEV2 downgraded, postmortem scheduled | @alice
 ```
 
----
+______________________________________________________________________
 
 ## Step 7: Follow-Up Categorization
 

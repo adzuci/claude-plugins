@@ -1,8 +1,7 @@
----
-name: example
-description: Replace with description of the skill and when Claude should use it.
----
+______________________________________________________________________
+
+## name: example description: Replace with description of the skill and when Claude should use it.
 
 # Insert instructions below
 
-____
+______________________________________________________________________

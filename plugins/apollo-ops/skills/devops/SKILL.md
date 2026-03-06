@@ -106,12 +106,12 @@ Incidents are learning opportunities. Postmortems are blameless. Action items re
 For any production task, work through this sequence:
 
 1. **Define impact**: What is the user-facing effect? What SLO is affected?
-2. **Identify SLO at risk**: Which SLO window is breached or at risk? What is the current error budget status?
-3. **Assess error budget**: Is the error budget exhausted, at risk, or healthy? This determines urgency.
-4. **Determine mitigation**: Rollback / feature flag / hotfix / scale-up / no action. Prefer reversible.
-5. **Prefer reversible actions**: Feature flags over deploys. Rollback over hotfix. Scale-up over schema change during incidents.
-6. **Record timeline**: Every action gets a timestamp. Format: `HH:MM UTC | [Action] | [Owner]`
-7. **Document follow-ups**: Categorize as toil / bug / infra / process. Assign owners and due dates.
+1. **Identify SLO at risk**: Which SLO window is breached or at risk? What is the current error budget status?
+1. **Assess error budget**: Is the error budget exhausted, at risk, or healthy? This determines urgency.
+1. **Determine mitigation**: Rollback / feature flag / hotfix / scale-up / no action. Prefer reversible.
+1. **Prefer reversible actions**: Feature flags over deploys. Rollback over hotfix. Scale-up over schema change during incidents.
+1. **Record timeline**: Every action gets a timestamp. Format: `HH:MM UTC | [Action] | [Owner]`
+1. **Document follow-ups**: Categorize as toil / bug / infra / process. Assign owners and due dates.
 
 ## Delegation Rules
 

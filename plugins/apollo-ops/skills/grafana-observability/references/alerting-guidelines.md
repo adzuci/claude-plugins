@@ -2,7 +2,7 @@
 
 Alert quality rules for Apollo's Grafana alerting stack, with Apollo-specific patterns.
 
----
+______________________________________________________________________
 
 ## Core Rules
 
@@ -24,22 +24,25 @@ Test: "If this alert fires at 3am, what is the exact first step the on-call engi
 ### SLO burn rate alerts preferred over static thresholds
 
 **Static threshold**: "Alert if error rate > 2%"
+
 - Problem: 2% might be acceptable for one service and catastrophic for another
 
 **SLO burn rate**: "Alert if error budget is burning at 14.4x normal rate (1-hour window)"
+
 - 14.4x burn rate = error budget will be exhausted in 5 days (for 1-month window)
 - Adjust the multiplier based on alert sensitivity vs. noise tolerance
 
 ### Every alert must have a runbook link
 
 Required alert annotation fields:
+
 ```
 runbook: <URL>
 summary: <one-line description in user terms>
 description: <current metric value and context>
 ```
 
----
+______________________________________________________________________
 
 ## Severity Model
 
@@ -51,22 +54,22 @@ description: <current metric value and context>
 
 Do not route P3 alerts to `#incidents`. P3 noise in the incidents channel trains engineers to ignore it.
 
----
+______________________________________________________________________
 
 ## Alert Audit Process
 
 Run quarterly or whenever alert fatigue is reported:
 
 1. **Pull firing history**: last 30 days, alert name, fire count, duration, resolution
-2. **Rank by noise**: highest fire frequency = highest priority for audit
-3. **For each high-frequency alert, assess**:
+1. **Rank by noise**: highest fire frequency = highest priority for audit
+1. **For each high-frequency alert, assess**:
    - Mean time to resolve: < 5 min consistently → likely noisy
    - Correlation with actual user impact: < 50% → likely false positive
    - Most common resolution action: "nothing" or "silence" → should be removed
-4. **Actions per alert**: tune threshold, increase time window, demote severity, or remove
-5. **Document changes** with rationale — future engineers should understand why thresholds are set as they are
+1. **Actions per alert**: tune threshold, increase time window, demote severity, or remove
+1. **Document changes** with rationale — future engineers should understand why thresholds are set as they are
 
----
+______________________________________________________________________
 
 ## Apollo-Specific Alert Patterns
 
@@ -94,6 +97,7 @@ Known false positive: Saturday 17:00 UTC — staging ES restore job causes brief
 ### Sidekiq queue depth
 
 Alert on queue depth relative to baseline, not on absolute values:
+
 - Queue consistently processing → depth fluctuates around baseline (not alertable)
 - Queue growing without bound → depth increases monotonically (P2 alert)
 - Queue backed up to N jobs without movement in M minutes → P1 if critical queue
@@ -121,6 +125,7 @@ Recommended: alert on queue growth rate, not queue depth snapshot.
 ### `#eng-infrastructure-alerts` channel hygiene
 
 This channel receives a high volume of automated alerts. Before adding new alerts to this channel:
+
 - Review the existing alert volume to ensure new alerts are distinguishable
 - Use message formatting that includes severity, service name, and runbook link
 - Do not send P3 alerts or informational messages to this channel

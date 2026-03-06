@@ -27,6 +27,7 @@ Please provide an impact score (0-5 scale) for using AI Code Editor tools (e.g.,
 > Check exactly one per metric for each section
 
 - **ai_speed_boost_impact**
+
   - [ ] 0 — _Human-only, no AI assist_
   - [ ] 1 — _Light suggestions; manual flow._
   - [ ] 2 — _Minor speed-ups (fixes/snippets)._
@@ -35,6 +36,7 @@ Please provide an impact score (0-5 scale) for using AI Code Editor tools (e.g.,
   - [ ] 5 — _AI heavy-lift; I polished._
 
 - **ai_ideation_help_impact**
+
   - [ ] 0 — _No ideation help needed._
   - [ ] 1 — _Tiny spark; mostly my plan._
   - [ ] 2 — _A few useful ideas/unblocks._
@@ -46,10 +48,10 @@ Please provide an impact score (0-5 scale) for using AI Code Editor tools (e.g.,
 
 This section will be populated automatically by the AI Code Editor tools (e.g., Cursor, GitHub Copilot, Windsurf, etc.) assistant to summarize how project documentation/rule files guided its output.
 
-- **docs_used**: \__ [e.g., .cursor/rules/backend.mdc, .windsurf/rules/backend.md] (Comma-separated list of **repo-relative rule file paths that actually exist in the codebase**)_
+- **docs_used**: \_\_ [e.g., .cursor/rules/backend.mdc, .windsurf/rules/backend.md] (Comma-separated list of **repo-relative rule file paths that actually exist in the codebase**)\_
 
-- **docs_helpfulness_score**: \__ [e.g., 4] (0-5 numeric assessment of how useful the referenced docs were)_
+- **docs_helpfulness_score**: \_\_ [e.g., 4] (0-5 numeric assessment of how useful the referenced docs were)\_
 
-- **what_worked_well**: \__ [e.g., The backend-security rule clarified input validation pattern which saved time.]_
+- **what_worked_well**: \_\_ [e.g., The backend-security rule clarified input validation pattern which saved time.]\_
 
-- **gaps**: \__ [e.g., No rule for batch processing patterns, unclear lock duration convention.]_
+- **gaps**: \_\_ [e.g., No rule for batch processing patterns, unclear lock duration convention.]\_

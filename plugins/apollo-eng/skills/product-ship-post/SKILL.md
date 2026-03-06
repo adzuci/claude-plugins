@@ -59,8 +59,8 @@ Ask questions ONE AT A TIME. Wait for response before asking next question.
 #### Question sequence:
 
 1. **Feature summary**: "What's the feature called and what does it do in 1-2 sentences?"
-2. **Resources**: "Share any relevant links - GitHub PR(s), Notion doc, Jira ticket, Loom demo. Say 'skip' for any you don't have."
-3. **People to tag**: "Who should be mentioned? List names for each role (skip any that don't apply):
+1. **Resources**: "Share any relevant links - GitHub PR(s), Notion doc, Jira ticket, Loom demo. Say 'skip' for any you don't have."
+1. **People to tag**: "Who should be mentioned? List names for each role (skip any that don't apply):
    - Engineering:
    - Product:
    - Design:
@@ -68,9 +68,9 @@ Ask questions ONE AT A TIME. Wait for response before asking next question.
    - QA:
    - Special thanks:
    - For visibility:"
-4. **Feedback channel**: "Which Slack channel should people use for questions/feedback?"
-5. **What's next**: "Any planned follow-ups to mention? - or say 'skip' to omit this section."
-6. **Example post**: "Do you have a specific example post you want me to follow? (paste it or say 'use default')"
+1. **Feedback channel**: "Which Slack channel should people use for questions/feedback?"
+1. **What's next**: "Any planned follow-ups to mention? - or say 'skip' to omit this section."
+1. **Example post**: "Do you have a specific example post you want me to follow? (paste it or say 'use default')"
 
 #### Rules for the interview:
 
@@ -98,7 +98,7 @@ Before writing, you must be able to answer ALL of these:
 If you cannot answer all of these, you MUST either:
 
 1. Search deeper in the provided resources
-2. Ask the user directly: "I need more context on [X] to write a compelling intro. Can you explain [specific question]?"
+1. Ask the user directly: "I need more context on [X] to write a compelling intro. Can you explain [specific question]?"
 
 ### Product Context is REQUIRED
 

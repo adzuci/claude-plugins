@@ -2,7 +2,7 @@
 
 Rollout strategy selection guide with when-to-use guidance, configuration examples, and Apollo-specific notes.
 
----
+______________________________________________________________________
 
 ## Strategy Selection Guide
 
@@ -15,7 +15,7 @@ Rollout strategy selection guide with when-to-use guidance, configuration exampl
 
 **Default**: Use rolling update for most stateless service deploys. Escalate to canary or blue/green only when the change is risky.
 
----
+______________________________________________________________________
 
 ## Rolling Update
 
@@ -35,18 +35,20 @@ spec:
 For high-availability services: set `maxUnavailable: 0` and `maxSurge: 1` (or higher for faster rollout).
 
 **Verify rollout**:
+
 ```bash
 kubectl rollout status deployment/<name> -n <namespace>
 # Wait for: "deployment "<name>" successfully rolled out"
 ```
 
 **Rollback**:
+
 ```bash
 kubectl rollout undo deployment/<name> -n <namespace>
 kubectl rollout status deployment/<name> -n <namespace>
 ```
 
----
+______________________________________________________________________
 
 ## Blue/Green Deployment
 
@@ -68,7 +70,7 @@ kubectl patch service <svc-name> -n <namespace> \
 
 **Note**: Blue/green doubles resource consumption during the transition period. Ensure cluster capacity can absorb both deployments.
 
----
+______________________________________________________________________
 
 ## Canary Deployment
 
@@ -77,6 +79,7 @@ kubectl patch service <svc-name> -n <namespace> \
 **How it works**: A small percentage of replicas runs the new version. Monitor for errors and latency before promoting to full rollout.
 
 **Simple canary with replica count**:
+
 ```bash
 # Start canary: 1 of 10 pods runs new version = ~10% traffic
 # Existing deployment: 9 replicas of v1
@@ -92,13 +95,14 @@ kubectl delete deployment/<name>-canary -n <namespace>
 ```
 
 **Monitor during canary**:
+
 ```bash
 # Watch error rate per version in Grafana
 # Or check pod-level metrics:
 kubectl top pod -n <namespace> -l version=canary
 ```
 
----
+______________________________________________________________________
 
 ## Feature Flags
 
@@ -108,11 +112,12 @@ kubectl top pod -n <namespace> -l version=canary
 
 Apollo context: Check whether the service uses a feature flag system before deploying risky changes. If it does, prefer gating the feature with a flag and deploying first, then enabling the flag after confirming deploy health.
 
----
+______________________________________________________________________
 
 ## Rollback Procedures
 
 ### Deployment rollback
+
 ```bash
 # Rollback to previous revision
 kubectl rollout undo deployment/<name> -n <namespace>
@@ -133,6 +138,7 @@ kubectl get deployment/<name> -n <namespace> -o yaml | grep image:
 Rollbacks via `kubectl rollout undo` only revert the Deployment spec (image, env, etc.). ConfigMaps and Secrets are not versioned by default — you must reapply the previous version manually.
 
 If a ConfigMap change caused an incident:
+
 ```bash
 # Edit to revert to previous values
 kubectl edit configmap <name> -n <namespace>
@@ -140,7 +146,7 @@ kubectl edit configmap <name> -n <namespace>
 kubectl rollout restart deployment/<name> -n <namespace>
 ```
 
----
+______________________________________________________________________
 
 ## HPA Configuration
 
@@ -179,13 +185,14 @@ spec:
 **Requirements**: Resource requests must be set. Without `resources.requests.cpu`, the HPA cannot calculate utilization percentage.
 
 **Check HPA status**:
+
 ```bash
 kubectl get hpa -n <namespace>
 kubectl describe hpa <name> -n <namespace>
 # Look for: "AbleToScale" and "ScalingActive" conditions
 ```
 
----
+______________________________________________________________________
 
 ## Apollo-Specific Rollout Notes
 

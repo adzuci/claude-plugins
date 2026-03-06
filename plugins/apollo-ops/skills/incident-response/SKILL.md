@@ -20,13 +20,14 @@ Classify severity at declaration and re-evaluate as the incident evolves.
 
 **When in doubt, declare higher** and downgrade. Undeclaring a SEV1 is easier than escalating a SEV3 that turns out to be a SEV1. The cost of over-declaring is low.
 
----
+______________________________________________________________________
 
 ## Incident Commander Responsibilities
 
 The IC owns the room, not the fix.
 
 **IC responsibilities**:
+
 - Declare severity and communicate it to stakeholders
 - Assign roles: tech lead (owns the fix), comms lead (owns updates), scribe (owns timeline)
 - Drive the cadence: regular updates on schedule, no matter what
@@ -35,11 +36,12 @@ The IC owns the room, not the fix.
 - Ensure timeline is complete
 
 **IC does NOT**:
+
 - Debug the problem personally (this pulls IC into the weeds and breaks coordination)
 - Go silent while waiting for updates (communicate that you are waiting)
 - Apply production changes without the tech lead's input
 
----
+______________________________________________________________________
 
 ## Communications Cadence
 
@@ -52,7 +54,7 @@ The IC owns the room, not the fix.
 
 **Never go dark.** If there is no update to provide, send: "No change since last update. Still investigating. Next update in [N] minutes." Silence is worse than "no change."
 
----
+______________________________________________________________________
 
 ## Slack Update Structure
 
@@ -71,7 +73,7 @@ IC: @<ic-handle>
 
 See `references/comms-templates.md` for ready-to-use templates.
 
----
+______________________________________________________________________
 
 ## Timeline Format
 
@@ -84,12 +86,13 @@ HH:MM UTC | [Action] | [Owner]
 The scribe owns the timeline. Every action, decision, and status change gets a line. "Was investigating but nothing found" is also a valid timeline entry.
 
 **Minimum timeline entries**:
+
 - Incident declared
 - Each mitigation attempt (start and result)
 - Each significant new finding
 - Incident resolved
 
----
+______________________________________________________________________
 
 ## Resolution Criteria
 
@@ -102,12 +105,13 @@ Do not resolve until all of the following are true:
 - [ ] Monitoring window explicitly declared over
 
 After resolution:
+
 - Send all-clear communication
 - Schedule postmortem (SEV1/SEV2: within 5 business days)
 - Archive timeline
 - Create follow-up tickets
 
----
+______________________________________________________________________
 
 ## Postmortem Requirements
 
@@ -119,6 +123,7 @@ After resolution:
 | SEV4 | No | — |
 
 **Postmortem principles**:
+
 - Blameless: the goal is to understand the system, not to assign fault
 - Systems-focused: ask how the system allowed the failure, not who made the mistake
 - Action-oriented: every postmortem produces action items with owners and due dates
@@ -126,7 +131,7 @@ After resolution:
 
 See `references/postmortem-template.md` for the full template.
 
----
+______________________________________________________________________
 
 ## Escalation
 
@@ -134,7 +139,7 @@ See `references/postmortem-template.md` for the full template.
 - **Exec escalation**: SEV1 only — notify engineering leadership within 15 minutes of SEV1 declaration
 - **Vendor escalation**: for third-party service outages (e.g., GCP, Cloudflare) — open support ticket and post in incident channel
 
----
+______________________________________________________________________
 
 ## References
 

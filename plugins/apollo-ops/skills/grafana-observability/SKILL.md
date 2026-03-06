@@ -22,6 +22,7 @@ Static threshold: "Alert if error rate > 2%"
 SLO burn rate: "Alert if error budget is burning at a rate that will exhaust it within 1 hour"
 
 SLO burn rate alerts are better because:
+
 - They are calibrated to what actually matters (the SLO)
 - They are self-adjusting (a 2% error rate is critical for a 99.9% SLO, minor for a 95% SLO)
 - They distinguish between a brief spike and a sustained problem
@@ -29,30 +30,32 @@ SLO burn rate alerts are better because:
 ### The 3am test
 
 For every alert: if this fires at 3am, what exactly does the on-call engineer do?
+
 - If the answer is "nothing, just wait" → convert to a metric, not an alert
 - If the answer is "investigate but it's probably fine" → add a runbook, lower severity, or remove
 - If the answer is "take this specific action" → alert is valid; document the action in the runbook
 
----
+______________________________________________________________________
 
 ## Alert Fatigue Reduction
 
 ### Noise audit process
 
 1. Pull the last 30 days of alert firing history
-2. Rank by firing frequency
-3. For each high-frequency alert:
+1. Rank by firing frequency
+1. For each high-frequency alert:
    - What is the time-to-resolve? (Short TTR = noisy, not actionable)
    - What % result in actual user impact? (Low % = false positive)
    - What action is taken when it fires? (No action = not an alert)
-4. For each high-frequency alert, decide: tune, remove, or demote to lower severity
+1. For each high-frequency alert, decide: tune, remove, or demote to lower severity
 
 ### Actionability test
 
 Before adding any alert, answer all three:
+
 1. What does this alert mean in user-facing terms?
-2. What is the first action the on-call engineer takes?
-3. What is the runbook URL?
+1. What is the first action the on-call engineer takes?
+1. What is the runbook URL?
 
 If you cannot answer all three, do not add the alert.
 
@@ -66,21 +69,21 @@ If you cannot answer all three, do not add the alert.
 
 Every alert must have a severity. Do not add alerts without severity.
 
----
+______________________________________________________________________
 
 ## Triage Checklist (When an Alert Fires)
 
 Work through this before diving into root cause:
 
 1. **Latency**: Is p99 elevated? Which endpoints or operations?
-2. **Error rate**: Which error types? Which services or endpoints?
-3. **Saturation**: Are any resources at capacity? (CPU, memory, disk, connections)
-4. **Throughput**: Is traffic volume normal? Spike or drop?
-5. **Recent changes**: Deploys, config changes, migrations in last 2 hours?
+1. **Error rate**: Which error types? Which services or endpoints?
+1. **Saturation**: Are any resources at capacity? (CPU, memory, disk, connections)
+1. **Throughput**: Is traffic volume normal? Spike or drop?
+1. **Recent changes**: Deploys, config changes, migrations in last 2 hours?
 
 Check the Grafana dashboard annotations overlay — deploys and incidents should be annotated.
 
----
+______________________________________________________________________
 
 ## Dashboard Design Principles
 
@@ -121,6 +124,7 @@ All dashboards should show deploy annotations. This allows instant visual correl
 ### Variable templates
 
 Use dashboard variables for:
+
 - `$env`: production / staging
 - `$cluster`: GKE cluster name
 - `$namespace`: Kubernetes namespace
@@ -128,13 +132,14 @@ Use dashboard variables for:
 
 This allows one dashboard to cover multiple environments rather than duplicating dashboards.
 
----
+______________________________________________________________________
 
 ## Runbook Linking
 
 **Every alert must link to a runbook.** This is non-negotiable.
 
 The runbook link goes in the alert rule annotation:
+
 ```yaml
 annotations:
   runbook: "https://your-runbook-url/<service>/<alert-name>"
@@ -144,7 +149,7 @@ annotations:
 
 If no runbook exists yet, create a stub with: what the alert means, what to check first, who to escalate to. A stub runbook is better than no runbook.
 
----
+______________________________________________________________________
 
 ## Setup: Grafana MCP Server
 

@@ -2,7 +2,7 @@
 
 Use this checklist when reviewing any new service, feature, pipeline, or infrastructure change. Completing this checklist before launch is the cheapest reliability investment available.
 
----
+______________________________________________________________________
 
 ## 1. SLO Definition
 
@@ -15,7 +15,7 @@ Use this checklist when reviewing any new service, feature, pipeline, or infrast
 
 **If no SLOs are defined**: the service cannot be safely operated. Define them before launch or accept that reliability is undefined.
 
----
+______________________________________________________________________
 
 ## 2. Failure Mode Analysis
 
@@ -29,12 +29,13 @@ For each external dependency (database, queue, cache, third-party API):
 - [ ] Will failure cascade to upstream services?
 
 **Apollo-specific dependencies to check**:
+
 - Elasticsearch: what if cluster is yellow/red during indexing?
 - MongoDB: what if replication lag spikes during a read?
 - Redpanda: what if consumer lag grows unbounded?
 - Sidekiq: what if job queue depth exceeds worker capacity?
 
----
+______________________________________________________________________
 
 ## 3. Toil Assessment
 
@@ -44,7 +45,7 @@ For each external dependency (database, queue, cache, third-party API):
 - [ ] Are there any monitoring responses that require a human to take repetitive action?
 - [ ] Is there a plan to automate the highest-toil items within 2 sprints of launch?
 
----
+______________________________________________________________________
 
 ## 4. Observability Requirements
 
@@ -55,7 +56,7 @@ For each external dependency (database, queue, cache, third-party API):
 - [ ] Dashboard: USE method for infrastructure resources, RED method for service endpoints
 - [ ] Runbook: linked from every alert
 
----
+______________________________________________________________________
 
 ## 5. Rollout Strategy
 
@@ -65,12 +66,13 @@ For each external dependency (database, queue, cache, third-party API):
 - [ ] Is a feature flag available? → prefer feature flag over deploy for first exposure
 
 **Rollout order** (safest to riskiest):
-1. Feature flag (no deploy required, instant rollback)
-2. Canary (% traffic routing, gradual exposure)
-3. Blue/green (full traffic switch, fast rollback)
-4. Rolling update (default for low-risk stateless services)
 
----
+1. Feature flag (no deploy required, instant rollback)
+1. Canary (% traffic routing, gradual exposure)
+1. Blue/green (full traffic switch, fast rollback)
+1. Rolling update (default for low-risk stateless services)
+
+______________________________________________________________________
 
 ## 6. Rollback Plan
 
@@ -80,11 +82,12 @@ For each external dependency (database, queue, cache, third-party API):
 - [ ] Is the previous version still available in the image registry?
 - [ ] Are feature flags available to disable the new behavior without a deploy?
 
----
+______________________________________________________________________
 
 ## 7. Runbook Required?
 
 A runbook is required if any of the following are true:
+
 - [ ] The service has an on-call rotation or is paged on failure
 - [ ] Recovery requires non-obvious steps (not just "restart the pod")
 - [ ] The service interacts with data stores in ways that could cause data loss or corruption
@@ -92,7 +95,7 @@ A runbook is required if any of the following are true:
 
 Runbook minimum contents: what the service does, how to confirm it is healthy, how to restart it safely, who to escalate to.
 
----
+______________________________________________________________________
 
 ## 8. Apollo-Specific Patterns
 

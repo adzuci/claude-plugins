@@ -2,7 +2,7 @@
 
 Before applying any mitigation to a production system, work through this checklist. These rules apply during incidents and during normal maintenance windows.
 
----
+______________________________________________________________________
 
 ## Universal Rules
 
@@ -17,12 +17,13 @@ Before applying any change, state the rollback procedure out loud (or in the inc
 ### Prefer reversible over irreversible
 
 Order of preference (most reversible first):
+
 1. Feature flag off
-2. Rollback deploy
-3. Revert config change
-4. Scale adjustment
-5. Hotfix deploy
-6. Schema/data change (last resort, never mid-incident)
+1. Rollback deploy
+1. Revert config change
+1. Scale adjustment
+1. Hotfix deploy
+1. Schema/data change (last resort, never mid-incident)
 
 ### Validate before prod when possible
 
@@ -36,7 +37,7 @@ Every action in production gets a timestamp. Use `HH:MM UTC | Action | Owner`. T
 
 Choose the mitigation that affects the fewest services and systems. If you can fix a downstream service without touching the upstream, start there.
 
----
+______________________________________________________________________
 
 ## Apollo-Specific Checks
 
@@ -80,7 +81,7 @@ Choose the mitigation that affects the fewest services and systems. If you can f
 - Check recent deploys in the last 2 hours
 - Check Grafana for correlated changes in other services (annotation overlays)
 
----
+______________________________________________________________________
 
 ## What Never to Do Mid-Incident
 

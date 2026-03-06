@@ -2,7 +2,7 @@
 
 Guidelines for building Grafana dashboards that are useful during normal operation and invaluable during incidents.
 
----
+______________________________________________________________________
 
 ## Framework Selection
 
@@ -26,26 +26,27 @@ Apply RED to anything that processes requests or jobs.
 
 RED panels belong in: HTTP service dashboards, Sidekiq dashboards, consumer dashboards.
 
----
+______________________________________________________________________
 
 ## Dashboard Layout
 
 **Above the fold (immediately visible)**:
+
 1. Service health indicator (green/yellow/red status panel)
-2. RED metrics: request rate, error rate, p99 latency
-3. Active alerts panel (if using Grafana alerting)
+1. RED metrics: request rate, error rate, p99 latency
+1. Active alerts panel (if using Grafana alerting)
 
 **Middle (scroll to reach)**:
-4. Saturation metrics: CPU, memory, queue depth
-5. Dependency health: downstream service error rates
+4\. Saturation metrics: CPU, memory, queue depth
+5\. Dependency health: downstream service error rates
 
 **Below the fold (drill-down only)**:
-6. Internal state metrics: JVM heap, connection pool stats, shard counts
-7. Debug panels: raw log volume, specific error breakdowns
+6\. Internal state metrics: JVM heap, connection pool stats, shard counts
+7\. Debug panels: raw log volume, specific error breakdowns
 
 The above-the-fold zone should answer "is this service healthy right now?" in under 10 seconds.
 
----
+______________________________________________________________________
 
 ## Time Range Defaults
 
@@ -60,20 +61,21 @@ Set default time ranges that match how the dashboard is used:
 
 Set `auto-refresh` to off by default on historical dashboards, on for live incident dashboards (15s or 30s refresh).
 
----
+______________________________________________________________________
 
 ## Annotation Overlays
 
 Deploy annotations are required on all service dashboards. They allow instant visual correlation between a deploy and a metric change — the most common incident root cause.
 
 **Configure Grafana annotations datasource** to pull from your deployment event stream. Each annotation should include:
+
 - Deploy time
 - Service name and version
 - Deployer name (for follow-up)
 
 During incidents, look at the annotation overlay before hypothesizing a root cause. If the metric change correlates with a deploy annotation, rollback is the first mitigation to consider.
 
----
+______________________________________________________________________
 
 ## Variable Templates
 
@@ -89,7 +91,7 @@ $region     = <GCP region>
 
 Variables should cascade: selecting `$env=staging` should filter `$cluster` to staging clusters only.
 
----
+______________________________________________________________________
 
 ## Apollo-Specific Panel Guidance
 

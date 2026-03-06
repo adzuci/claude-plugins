@@ -2,7 +2,7 @@
 
 Apollo-specific infrastructure topology, data flow, ownership, and Terraform patterns for production operations.
 
----
+______________________________________________________________________
 
 ## Data Flow
 
@@ -50,13 +50,14 @@ Staging clusters: internal IPs in `10.129.x.x` range.
 - Present in staging; flushed via `FLUSHALL ASYNC` during the weekly staging refresh
 - Do not run `FLUSHALL` against prod
 
----
+______________________________________________________________________
 
 ## Terraform / devops Repo Structure
 
 Repo: `github.com/apolloio/devops`
 
 Key folders:
+
 - `terraform/` — all infrastructure-as-code
 - `ansible/` — configuration management (used for DB provisioning during staging refresh)
 
@@ -73,7 +74,7 @@ Terraform state stored in Terraform Cloud. Every folder containing a `terraform.
 
 When navigating the devops repo, check whether a folder follows V1 or V2 layout before proposing changes. Mixing the patterns in a single PR is a review red flag.
 
----
+______________________________________________________________________
 
 ## Ownership Model
 
@@ -88,7 +89,7 @@ ES sharding plan lives at `config/es_sharding_plan` in the `leadgenie` repo (Sea
 
 **Rule**: When an ES issue arises, identify the layer before paging. A red cluster is DevOps. A broken mapping is BE-Platform. A shard count discussion is Search Platform.
 
----
+______________________________________________________________________
 
 ## Operational Checklists
 
@@ -123,8 +124,8 @@ ES sharding plan lives at `config/es_sharding_plan` in the `leadgenie` repo (Sea
 When data appears stale, missing, or duplicated across services:
 
 1. **Check ES cluster health first** — red/yellow cluster can cause writes to be rejected silently
-2. **Check Redpanda consumer lag** — lag on a source connector means Mongo changes are not reaching downstream
-3. **Check Mongo oplog** — if the source connector has stalled, look for oplog overflow or connector errors
-4. **Check the specific cluster** — `mongo-contacts` issues affect contact search; `mongo-accounts` affects account search; etc.
-5. **Check `#eng-infrastructure-alerts`** — if there's an active alert for any of these, treat as known incident, not a new issue
-6. **Escalate**: data pipeline issues that span Mongo → Redpanda → ES involve DevOps (infra layer) + BE-Platform (app layer)
+1. **Check Redpanda consumer lag** — lag on a source connector means Mongo changes are not reaching downstream
+1. **Check Mongo oplog** — if the source connector has stalled, look for oplog overflow or connector errors
+1. **Check the specific cluster** — `mongo-contacts` issues affect contact search; `mongo-accounts` affects account search; etc.
+1. **Check `#eng-infrastructure-alerts`** — if there's an active alert for any of these, treat as known incident, not a new issue
+1. **Escalate**: data pipeline issues that span Mongo → Redpanda → ES involve DevOps (infra layer) + BE-Platform (app layer)

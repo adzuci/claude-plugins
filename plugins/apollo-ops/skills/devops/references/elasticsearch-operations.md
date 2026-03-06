@@ -2,7 +2,7 @@
 
 Apollo ES cluster landscape, backup/restore workflows, and operational checklists.
 
----
+______________________________________________________________________
 
 ## Cluster Landscape
 
@@ -27,7 +27,7 @@ Same cluster names (`main`, `activities`, `field-enrichment`, `custom-objects`).
 - Shard count decisions owned by Search Platform; shard plan at `config/es_sharding_plan` in `leadgenie` repo
 - Do not adjust shard counts without Search Platform sign-off
 
----
+______________________________________________________________________
 
 ## Authentication
 
@@ -35,7 +35,7 @@ Same cluster names (`main`, `activities`, `field-enrichment`, `custom-objects`).
 - Staging: workload identity federation (no static service account keys)
 - Prod: GCP service accounts
 
----
+______________________________________________________________________
 
 ## Backup Workflow
 
@@ -60,7 +60,7 @@ Same cluster names (`main`, `activities`, `field-enrichment`, `custom-objects`).
 - If cluster is yellow/red: snapshot API will refuse to run; resolve cluster health before retrying backup
 - GCS auth failures: check service account permissions for the prod ES service account; do not store new credentials in repo
 
----
+______________________________________________________________________
 
 ## Staging Refresh Workflow
 
@@ -82,7 +82,7 @@ Same cluster names (`main`, `activities`, `field-enrichment`, `custom-objects`).
 
 If the backup workflow fires a failure alert on **Saturday between 17:00–22:00 UTC**, check whether the staging refresh is mid-run before escalating. The refresh runs ES restores, which can cause snapshot operations to fail or timeout. This is expected. Wait for the refresh to complete and verify backup success on Sunday.
 
----
+______________________________________________________________________
 
 ## Operational Checklists
 
@@ -98,12 +98,12 @@ If the backup workflow fires a failure alert on **Saturday between 17:00–22:00
 ### Diagnosing ES Backup Failures
 
 1. **Is it Saturday 17:00–22:00 UTC?** → likely staging refresh interference; check refresh status before escalating
-2. **Which cluster failed?** → Check `#eng-infrastructure-alerts` for the cluster name
-3. **Check cluster health** on the failing cluster: red/yellow = backup will not run
-4. **Check GCS bucket accessibility** if cluster health is green: could be IAM or network issue
-5. **Check prior context**: is there a known incident for this cluster in Slack or PagerDuty?
-6. **Retry**: if cluster health resolves, manually trigger the backup workflow for the affected cluster
-7. **Escalate to DevOps** if: cluster is red, GCS auth is broken, or same cluster fails 2+ consecutive nights
+1. **Which cluster failed?** → Check `#eng-infrastructure-alerts` for the cluster name
+1. **Check cluster health** on the failing cluster: red/yellow = backup will not run
+1. **Check GCS bucket accessibility** if cluster health is green: could be IAM or network issue
+1. **Check prior context**: is there a known incident for this cluster in Slack or PagerDuty?
+1. **Retry**: if cluster health resolves, manually trigger the backup workflow for the affected cluster
+1. **Escalate to DevOps** if: cluster is red, GCS auth is broken, or same cluster fails 2+ consecutive nights
 
 ### ES Index Reset Job in `preview-master`
 
@@ -113,6 +113,7 @@ The ES index reset Kubernetes Job runs during the weekly staging refresh in the 
 **Unexpected**: Job fails (`status: Failed`), runs outside of Saturday, or appears in prod cluster namespaces.
 
 If the job is stuck or failing on staging:
+
 - Check job logs: `kubectl logs -n preview-master job/<job-name>`
 - Verify the ES restore (Step 3) completed successfully before the job ran — the index reset depends on restored data
 - If ES restore is still in progress, the job may have started too early; delete the failed job and re-run after restore
