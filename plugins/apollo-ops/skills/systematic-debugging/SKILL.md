@@ -39,9 +39,9 @@ Before proposing any fix, gather evidence:
 For each candidate cause:
 
 1. State a specific, falsifiable hypothesis
-2. Design the smallest possible test (single change, single component)
-3. Measure the result against the baseline
-4. If the hypothesis fails, return to Phase 2 before trying another fix
+1. Design the smallest possible test (single change, single component)
+1. Measure the result against the baseline
+1. If the hypothesis fails, return to Phase 2 before trying another fix
 
 **Never apply multiple changes simultaneously** — you lose the ability to attribute impact.
 
@@ -58,14 +58,14 @@ Only after root cause is confirmed:
 
 ## Apollo-Specific Diagnostics
 
-| Signal               | Where to look                                                   |
+| Signal | Where to look |
 | -------------------- | --------------------------------------------------------------- |
-| Pod crashes/OOMKilled | `kubectl describe pod`, `kubectl logs --previous`              |
-| ES degraded          | `GET /_cluster/health`, `GET /_cat/shards?v`                    |
-| Redpanda lag         | Grafana consumer lag dashboard, `rpk group describe`            |
-| Sidekiq failures     | Sidekiq web UI, `Sidekiq::Stats.new`, dead queue inspection     |
-| MongoDB slow ops     | Atlas Performance Advisor, `db.currentOp()`                     |
-| General latency      | Grafana RED dashboard for the service, distributed traces       |
+| Pod crashes/OOMKilled | `kubectl describe pod`, `kubectl logs --previous` |
+| ES degraded | `GET /_cluster/health`, `GET /_cat/shards?v` |
+| Redpanda lag | Grafana consumer lag dashboard, `rpk group describe` |
+| Sidekiq failures | Sidekiq web UI, `Sidekiq::Stats.new`, dead queue inspection |
+| MongoDB slow ops | Atlas Performance Advisor, `db.currentOp()` |
+| General latency | Grafana RED dashboard for the service, distributed traces |
 
 ## Red Flags — Return to Phase 1
 
