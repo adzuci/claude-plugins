@@ -21,6 +21,26 @@ claude plugin validate .
 
 Run this before committing. CI also runs it on every PR.
 
+## Formatting
+
+Install mdformat once:
+
+```bash
+pip install mdformat mdformat-frontmatter
+```
+
+Run it on any Markdown files you edit before committing:
+
+```bash
+# Format a specific file
+mdformat <file.md>
+
+# Format everything (run from repo root)
+mdformat .
+```
+
+CI runs `mdformat --check .` on every PR and will fail if files are not formatted.
+
 ## Git & PRs
 
 - Prefix commits with a ticket if one exists, otherwise keep messages concise

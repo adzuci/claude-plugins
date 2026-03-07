@@ -9,6 +9,11 @@
       "name": "apollo-eng",
       "source": "./plugins/apollo-eng",
       "description": "Shared engineering skills for Apollo repos"
+    },
+    {
+      "name": "apollo-ops",
+      "source": "./plugins/apollo-ops",
+      "description": "DevOps, SRE, and production reliability skills for Apollo engineers"
     }
   ]
 }

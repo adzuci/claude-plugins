@@ -10,15 +10,17 @@ There are three places you can store Claude skills depending on your use case:
 
 1. **In our central skill repository** — This location is yet to be determined but could be in [the claude-bootstrapper repo](https://github.com/apolloio/claude-bootstrapper/tree/main/skills) or this repo; this repo can be used as a [private marketplace](https://code.claude.com/docs/en/plugin-marketplaces#private-repositories) so they’re available across Apollo.
 
-2. **In repo-specific skill folders** — If a skill is only relevant to a specific repository, place it in that repo's `.claude/skills` directory. Examples:
+1. **In repo-specific skill folders** — If a skill is only relevant to a specific repository, place it in that repo's `.claude/skills` directory. Examples:
+
    - [`apolloio/devops/.claude/skills`](https://github.com/apolloio/devops/tree/master/.claude/skills)
    - [`apolloio/leadgenie/.claude/skills`](https://github.com/apolloio/leadgenie/tree/master/.claude/skills)
 
-3. **In `~/.claude/skills`** — For personal skills that are specific to your local development environment and not meant to be shared.
+1. **In `~/.claude/skills`** — For personal skills that are specific to your local development environment and not meant to be shared.
 
 ## Skills
 
 <!-- SKILL-INVENTORY-START -->
+
 | Plugin | Command | Description |
 | --- | --- | --- |
 | apollo-eng | `/apollo-eng:bug-bash-generator` | Generate bug bash test cases from a Notion bug bash page and write them to a Notion test case database. Activate when user asks to generate bug bash test cases, create bug bash tests, or mentions bug bash generation. |
@@ -27,6 +29,7 @@ There are three places you can store Claude skills depending on your use case:
 | apollo-eng | `/apollo-eng:pr-description` | Generate a clear PR title and description from the current branch's changes. Use when the user asks to fill the PR template, generate a PR description, prepare a PR, create a pull request, or before running gh pr create. |
 | apollo-eng | `/apollo-eng:product-ship-post` | Generate product ship room posts for Slack announcements. Activate when user asks to write a ship post, product ship room post, release notes, or feature launch announcement. |
 | apollo-eng | `/apollo-eng:security-review` | Perform security audit of Ruby controllers for IDOR vulnerabilities. Activate when user asks for security review, IDOR check, or authorization audit. |
+
 <!-- SKILL-INVENTORY-END -->
 
 ## Repository Structure
@@ -61,11 +64,12 @@ plugins/
    /plugin marketplace add git@github.com:apolloio/skills
    ```
 
-2. **Install a plugin**
+1. **Install a plugin**
+
    - From the UI: **Browse and install plugins** → **apollo-skills** → **apollo-eng** → Install now
    - Or run: `/plugin install apollo-eng@apollo-skills`
 
-3. **Use a skill**
+1. **Use a skill**
    Mention it in chat (e.g. “Use the pr-description skill to generate a PR description”) or run a command: `/apollo-eng:pr-description`
 
 Skills from this marketplace can also be used in Claude.ai and the API when those products support plugin marketplaces.
@@ -81,43 +85,44 @@ Skills from this marketplace can also be used in Claude.ai and the API when thos
 
    Example: `plugins/apollo-eng/skills/my-skill/SKILL.md`.
 
-2. **Set frontmatter**
+1. **Set frontmatter**
    In the YAML at the top of `SKILL.md`:
+
    - **name**: Lowercase, hyphenated (e.g. `my-skill`). This is the skill name users invoke.
    - **description**: One line describing *what* the skill does and *when* Claude should use it (include trigger terms so the agent can discover it).
 
-3. **Write the body**
+1. **Write the body**
    Replace the placeholder with real instructions. You can add optional supporting files (e.g. `reference.md`, scripts) in the same skill directory.
 
-4. **If the skill lives in a new plugin**
-   Copy the whole `template/` folder to `plugins/<pack-name>/`, then follow “Adding a new plugin” below and register the plugin in `.claude-plugin/marketplace.json`.
+1. **If the skill lives in a new plugin**
+   Copy the whole `template/` folder to `plugins/<plugin-name>/`, then follow “Adding a new plugin” below and register the plugin in `.claude-plugin/marketplace.json`.
 
 ## Adding a new plugin
 
-If you need a new plugin (e.g. a separate pack for product or infra):
+If you need a new plugin (e.g. a separate plugin for product or infra):
 
 1. **Copy the template**
-   Copy the `template/` folder to `plugins/<pack-name>/` (e.g. `plugins/apollo-product-pack/`).
+   Copy the `template/` folder to `plugins/<plugin-name>/` (e.g. `plugins/apollo-product/`).
 
-2. **Edit the plugin manifest**
-   In `plugins/<pack-name>/.claude-plugin/plugin.json`, set `name`, `description`, and `version`.
+1. **Edit the plugin manifest**
+   In `plugins/<plugin-name>/.claude-plugin/plugin.json`, set `name`, `description`, and `version`.
 
-3. **Register in the marketplace**
+1. **Register in the marketplace**
    In `.claude-plugin/marketplace.json`, add an entry to the `plugins` array:
 
    ```json
    {
-     "name": "<pack-name>",
-     "source": "./plugins/<pack-name>",
-     "description": "Short description of the pack"
+     “name”: “<plugin-name>”,
+     “source”: “./plugins/<plugin-name>”,
+     “description”: “Short description of the plugin”
    }
    ```
 
-4. **Validate**
+1. **Validate**
    From the repo root, run `claude plugin validate .` or in Claude Code run `/plugin validate .` to check the marketplace and plugin config.
 
-5. **Add or edit skills**
-   Use the steps in “Adding a new skill” above, with `<plugin-name>` = your new pack name. Replace or add skills under `plugins/<pack-name>/skills/`.
+1. **Add or edit skills**
+   Use the steps in “Adding a new skill” above, with `<plugin-name>` = your new plugin name. Replace or add skills under `plugins/<plugin-name>/skills/`.
 
 Plugins namespace skill commands as `/plugin-name:skill-name`.
 

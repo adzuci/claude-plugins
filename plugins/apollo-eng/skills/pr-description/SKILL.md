@@ -7,14 +7,6 @@ description: Generate a clear PR title and description from the current branch's
 
 Generate a PR description from the current branch's code changes using the repo's PR template when one exists.
 
-## When to Activate
-
-- User asks to "fill PR template" or "generate PR description"
-- User wants to "prepare PR" or "create pull request"
-- User mentions PR description or pull request template
-- User asks to "commit & create PR" or "push and create PR" or "submit PR"
-- **CRITICAL**: Before running `gh pr create` — invoke this skill first to populate the description
-
 ## Commit-Only Requests
 
 When the user only asks to commit (without PR creation):

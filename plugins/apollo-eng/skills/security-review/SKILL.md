@@ -71,8 +71,8 @@ Vulnerabilities:
 
 | Endpoint | Auth | Team Scope | IDOR Risk | Severity |
 | -------- | ---- | ---------- | --------- | -------- |
-| GET /x   | ✅   | ✅         | None      | -        |
-| POST /y  | ❌   | ❌         | Yes       | High     |
+| GET /x | ✅ | ✅ | None | - |
+| POST /y | ❌ | ❌ | Yes | High |
 
 ### Recommended Fixes
 

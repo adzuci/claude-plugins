@@ -12,6 +12,18 @@ jobs:
         with:
           globs: "**/*.md"
 
+  mdformat:
+    runs-on:
+      group: arc-scale-sets
+      labels: general-low
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - run: pip install mdformat mdformat-frontmatter
+      - run: mdformat --check .
+
   skill-name-check:
     runs-on: ubuntu-latest
     steps:
