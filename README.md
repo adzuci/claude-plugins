@@ -4,6 +4,48 @@ This repo is a place to add [skills and plugins](https://code.claude.com/docs/en
 
 **Note:** This repo is currently an experiment used to explore how we could potentially use plugins for [Claudathon — Build Claude Commands & Skills](https://www.notion.so/apolloio/Claudathon-Build-Claude-Commands-Skills-312ab2b3b4968076b5a7e32f8d8ef76f?source=copy_link).
 
+## How this repo works
+
+```mermaid
+flowchart TD
+    dev([Developer])
+
+    subgraph repo["apolloio/skills (this repo)"]
+        branch["adzuci/* branch\nAdd or edit SKILL.md"]
+        pr["Pull Request"]
+
+        subgraph ci_pr["CI — on pull_request"]
+            lint["Lint\n(markdownlint + mdformat)"]
+            validate["Validate\n(claude plugin validate)"]
+            namecheck["Skill name check\n(dir == frontmatter name)"]
+        end
+
+        merge["Merge to main"]
+
+        subgraph ci_main["CI — on push to main"]
+            inventory["Update skill inventory\n(README table auto-updated)"]
+            bump["Bump version\n(Conventional Commits → semver tag\n+ GitHub Release)"]
+        end
+
+        marketplace[".claude-plugin/marketplace.json\napollo-skills marketplace"]
+        plugins["plugins/\n  apollo-eng/\n  apollo-ops/"]
+    end
+
+    subgraph consumers["Consuming repos (e.g. leadgenie, devops)"]
+        settings[".claude/settings.json\nextraKnownMarketplaces"]
+        install["/plugin install apollo-eng@apollo-skills"]
+        skill["/apollo-eng:pr-description\n/apollo-ops:incident-response\netc."]
+    end
+
+    dev --> branch --> pr --> ci_pr
+    ci_pr --> merge --> ci_main
+    merge --> marketplace
+    merge --> plugins
+    marketplace --> consumers
+    plugins --> consumers
+    settings --> install --> skill
+```
+
 ## Where do skills go at Apollo?
 
 There are three places you can store Claude skills depending on your use case:
@@ -20,6 +62,7 @@ There are three places you can store Claude skills depending on your use case:
 ## Skills
 
 <!-- SKILL-INVENTORY-START -->
+
 | Plugin | Command | Description |
 | --- | --- | --- |
 | apollo-eng | `/apollo-eng:bug-bash-generator` | Generate bug bash test cases from a Notion bug bash page and write them to a Notion test case database. Activate when user asks to generate bug bash test cases, create bug bash tests, or mentions bug bash generation. |
@@ -33,6 +76,7 @@ There are three places you can store Claude skills depending on your use case:
 | apollo-ops | `/apollo-ops:incident-response` | Incident commander guide for Apollo production incidents. Activate when declaring or managing an incident, writing stakeholder communications, conducting a postmortem, or defining incident severity. |
 | apollo-ops | `/apollo-ops:kubernetes-specialist` | Kubernetes debugging and rollout specialist for Apollo's GKE clusters. Activate when debugging pod crashes, CrashLoopBackOff, OOMKilled, readiness or liveness failures, deployment rollouts, HPA scaling, or resource limit tuning. |
 | apollo-ops | `/apollo-ops:systematic-debugging` | Apply a four-phase root-cause debugging methodology to any production issue. Activate when the user is debugging a production problem, performance regression, or unexpected system behavior. |
+
 <!-- SKILL-INVENTORY-END -->
 
 ## Repository Structure
@@ -147,6 +191,23 @@ To have Claude Code suggest this marketplace when someone works in another repo 
 ```
 
 Then users can install plugins with `/plugin install apollo-eng@apollo-skills` from that project.
+
+## Versioning and releases
+
+This repo uses [Conventional Commits](https://www.conventionalcommits.org/) to drive automatic semver tagging via
+`.github/workflows/bump-version.yml`. On every push to `main` the workflow:
+
+1. Finds the latest `vMAJOR.MINOR.PATCH` tag.
+1. Scans commit subjects and bodies since that tag.
+1. Picks the highest-impact bump: **major** (`feat!:` or `BREAKING CHANGE`), **minor** (`feat:`), **patch** (`fix:` and other releasable types).
+1. Skips tagging entirely for non-releasing types: `chore`, `docs`, `ci`, `style`, `test`.
+1. Pushes an annotated tag and creates a GitHub Release with auto-generated notes.
+
+**To change the target branch:** open `.github/workflows/bump-version.yml` and edit the value under `on.push.branches` (it's marked with an inline comment).
+
+**Why not Release Please?** [Release Please](https://github.com/googleapis/release-please) was considered for the same Conventional Commits → semver flow. We kept the in-repo GitHub Action (bash in `.github/workflows/bump-version.yml`) to minimize dependencies and to release on every push to `main` with releasable commits, rather than via a separate release PR.
+
+**Branch convention:** feature branches use the prefix `adxuci/` (e.g. `adxuci/my-feature`) and are merged to `main` via pull request.
 
 ## References
 

@@ -1,0 +1,132 @@
+# bump-version.yml
+#
+# Conventional Commits → semver bump mapping:
+#
+#   MAJOR  feat!: drop support for Ruby 2   (breaking change via ! or BREAKING CHANGE footer)
+#   MINOR  feat: add new skill template      (new feature, backward-compatible)
+#   PATCH  fix: correct frontmatter parsing  (bug fix or any other conventional type)
+#
+# Non-releasing types (chore, docs, ci, style, test) produce no tag.
+#
+# Branch convention: feature work lives on adxuci/<name> branches and is
+# merged to main via pull request. This workflow fires only on pushes to main.
+# To target a different branch, change the value under `branches:` below.
+
+name: Bump Version
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    runs-on:
+      group: arc-scale-sets
+      labels: general-low
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout full history and tags
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Detect last tag and compute new version
+        id: version
+        shell: bash
+        run: |
+          # ── Find the latest semver tag ────────────────────────────────────────
+          LAST_TAG=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' \
+            --sort=-version:refname | head -n1)
+
+          if [ -z "$LAST_TAG" ]; then
+            LAST_TAG="v0.0.0"
+            # No prior tag → scan every commit on HEAD
+            COMMITS=$(git log --format="%s%n%b" HEAD)
+          else
+            COMMITS=$(git log --format="%s%n%b" "${LAST_TAG}..HEAD")
+          fi
+
+          echo "last_tag=${LAST_TAG}" >> "$GITHUB_OUTPUT"
+
+          # ── Debug: list commits being evaluated ──────────────────────────────
+          echo "=== Last tag: ${LAST_TAG} ==="
+          echo "=== Commits since last tag ==="
+          if [ -z "$LAST_TAG" ] || [ "$LAST_TAG" = "v0.0.0" ]; then
+            git log --oneline HEAD | head -40
+          else
+            git log --oneline "${LAST_TAG}..HEAD"
+          fi
+
+          # ── Exit early if nothing to evaluate ────────────────────────────────
+          if [ -z "$COMMITS" ]; then
+            echo "No commits since ${LAST_TAG}. Skipping bump."
+            echo "bump=none" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # ── Determine bump level ──────────────────────────────────────────────
+          BUMP="none"
+
+          # BREAKING CHANGE: ! after type/scope, or BREAKING CHANGE in footer
+          if echo "$COMMITS" | grep -qE '^[a-z]+(\([^)]+\))?!:' || \
+             echo "$COMMITS" | grep -qE '^BREAKING CHANGE'; then
+            BUMP="major"
+          # MINOR: feat or feat(scope)
+          elif echo "$COMMITS" | grep -qE '^feat(\([^)]+\))?:'; then
+            BUMP="minor"
+          # PATCH: fix, or any other conventional type that isn't non-releasing
+          elif echo "$COMMITS" | grep -qE '^(fix|refactor|perf|build|revert)(\([^)]+\))?:'; then
+            BUMP="patch"
+          fi
+
+          echo "=== Bump decision: ${BUMP} ==="
+          echo "bump=${BUMP}" >> "$GITHUB_OUTPUT"
+
+          # ── Parse current version ─────────────────────────────────────────────
+          VERSION="${LAST_TAG#v}"
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          MINOR=$(echo "$VERSION" | cut -d. -f2)
+          PATCH=$(echo "$VERSION" | cut -d. -f3)
+
+          case "$BUMP" in
+            major)
+              MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+            minor)
+              MINOR=$((MINOR + 1)); PATCH=0 ;;
+            patch)
+              PATCH=$((PATCH + 1)) ;;
+            none)
+              echo "No releasable commits. Skipping tag."
+              echo "new_tag=" >> "$GITHUB_OUTPUT"
+              exit 0 ;;
+          esac
+
+          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "=== New tag: ${NEW_TAG} ==="
+          echo "new_tag=${NEW_TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push annotated tag
+        if: steps.version.outputs.new_tag != ''
+        shell: bash
+        env:
+          NEW_TAG: ${{ steps.version.outputs.new_tag }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$NEW_TAG" -m "chore(release): ${NEW_TAG} [skip ci]"
+          git push origin "$NEW_TAG"
+
+      - name: Create GitHub Release
+        if: steps.version.outputs.new_tag != ''
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_TAG: ${{ steps.version.outputs.new_tag }}
+        run: |
+          gh release create "$NEW_TAG" \
+            --generate-notes \
+            --title "$NEW_TAG"

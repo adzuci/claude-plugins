@@ -43,7 +43,9 @@ CI runs `mdformat --check .` on every PR and will fail if files are not formatte
 
 ## Git & PRs
 
-- Prefix commits with a ticket if one exists, otherwise keep messages concise
+- **Branches**: Use the format `<user>/<ticket>-description-of-changes` (e.g. `adzuci/ABC-123-add-bump-version-workflow`).
+- **Commits**: Use Conventional Commits format (e.g. `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `test:`). Prefix with a ticket if one exists, otherwise keep messages concise.
+- Keep commit messages short, meaningful, and descriptive. Focus on the reason for the change and what it solves — do not list individual code changes (that information is in the diff).
 - Always run the `apollo-eng:pr-description` skill before creating a PR
 - The README skill inventory table is auto-updated by CI on merge — do not edit it manually
 
