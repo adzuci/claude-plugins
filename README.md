@@ -192,6 +192,14 @@ To have Claude Code suggest this marketplace when someone works in another repo 
 
 Then users can install plugins with `/plugin install apollo-eng@apollo-skills` from that project.
 
+To have specific plugins enabled automatically you can add something like this:
+
+```
+  "enabledPlugins": {
+    "apollo-eng@apollo-skills": true
+  }
+```
+
 ## Versioning and releases
 
 This repo uses [Conventional Commits](https://www.conventionalcommits.org/) to drive automatic semver tagging via
