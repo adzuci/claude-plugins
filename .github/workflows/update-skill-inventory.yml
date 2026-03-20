@@ -14,7 +14,7 @@ jobs:
   update-inventory:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Regenerate inventory table
         run: python3 .github/scripts/update-skill-inventory.py
       - name: Commit if changed
