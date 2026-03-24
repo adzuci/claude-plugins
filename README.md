@@ -1,6 +1,6 @@
 # skills
 
-This repo is a place to add [skills and plugins](https://code.claude.com/docs/en/plugins) for Claude Code. We may host it as a [private plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces#private-repositories) so teams can install and use these plugins across multiple repos.
+This repo is a place to add [skills and plugins](https://code.claude.com/docs/en/plugins) for Claude Code. We may host it as a [private plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces#private-repositories) so teams can install and use these plugins across multiple repos, including Cowork-oriented plugins for shared internal workflows.
 
 **Note:** This repo is currently an experiment used to explore how we could potentially use plugins for [Claudathon — Build Claude Commands & Skills](https://www.notion.so/apolloio/Claudathon-Build-Claude-Commands-Skills-312ab2b3b4968076b5a7e32f8d8ef76f?source=copy_link).
 
@@ -28,7 +28,7 @@ flowchart TD
         end
 
         marketplace[".claude-plugin/marketplace.json\napollo-skills marketplace"]
-        plugins["plugins/\n  apollo-eng/\n  apollo-ops/"]
+        plugins["plugins/\n  apollo-eng/\n  apollo-ops/\n  apollo-engineering-ops/\n  claudathon-submissions/\n  claudathon-cowork-submissions/"]
     end
 
     subgraph consumers["Consuming repos (e.g. leadgenie, devops)"]
@@ -71,6 +71,7 @@ There are three places you can store Claude skills depending on your use case:
 | apollo-eng | `/apollo-eng:pr-description` | Generate a clear PR title and description from the current branch's changes. Use when the user asks to fill the PR template, generate a PR description, prepare a PR, create a pull request, or before running gh pr create. |
 | apollo-eng | `/apollo-eng:product-ship-post` | Generate product ship room posts for Slack announcements. Activate when user asks to write a ship post, product ship room post, release notes, or feature launch announcement. |
 | apollo-eng | `/apollo-eng:security-review` | Perform security audit of Ruby controllers for IDOR vulnerabilities. Activate when user asks for security review, IDOR check, or authorization audit. |
+| apollo-engineering-ops | `/apollo-engineering-ops:learn-about-skills` | Explain how Cowork skills and plugins work in Apollo's shared skills marketplace. Use when the user asks how Cowork skills work, wants to browse or understand shared plugins, or wants help writing a new skill and opening a PR to add it to apolloio/skills. |
 | apollo-ops | `/apollo-ops:devops` | Apollo SRE orchestrator — apply reliability engineering to any production task. Activate when discussing incidents, reliability design reviews, production debugging, architecture proposals, alert tuning, performance regressions, or toil reduction. |
 | apollo-ops | `/apollo-ops:grafana-observability` | Grafana dashboard design and alert quality specialist. Activate when reviewing or creating Grafana dashboards, tuning alerts, reducing alert fatigue, designing SLO-based alerting, or conducting observability reviews. |
 | apollo-ops | `/apollo-ops:incident-response` | Incident commander guide for Apollo production incidents. Activate when declaring or managing an incident, writing stakeholder communications, conducting a postmortem, or defining incident severity. |
@@ -144,6 +145,23 @@ Skills from this marketplace can also be used in Claude.ai and the API when thos
 1. **If the skill lives in a new plugin**
    Copy the whole `template/` folder to `plugins/<plugin-name>/`, then follow “Adding a new plugin” below and register the plugin in `.claude-plugin/marketplace.json`.
 
+## Making Cowork skills
+
+Cowork skills in this repo use the same plugin structure as Claude Code skills: a plugin folder under `plugins/`, skill folders under `skills/`, and a `SKILL.md` file with trigger-focused frontmatter.
+
+When deciding whether to make a Cowork skill here:
+
+1. Put broadly useful Apollo workflows in a shared plugin in this repo.
+1. Put repo-specific workflows in that repo's local `.claude/skills` directory instead.
+1. Keep the `description` field explicit about both what the skill does and when it should activate.
+1. If the skill needs a new plugin, add its `.claude-plugin/plugin.json`, `README.md`, and marketplace entry at the same time.
+
+The `apollo-engineering-ops` plugin includes `/apollo-engineering-ops:learn-about-skills` as a simple example people can run to understand how shared Cowork skills work before writing one of their own.
+
+Some plugins should carry Cowork-oriented tags in the marketplace when they are mainly intended for Cowork surfaces. In practice, most plugins work in both clients because the format is the same. Skills-heavy plugins (`SKILL.md` files, connectors) tend to be Cowork-focused, while hooks, LSP servers, and code-oriented commands tend to be Claude Code-focused. The plugin system does not enforce a hard boundary; what matters is which components the plugin contains and which client surfaces them.
+
+Apollo could eventually split Cowork plugins into a separate repo to make plugin visibility easier to manage across clients and teams. For now, this repo remains the preferred central location for both Claude Code and Cowork-oriented plugins.
+
 ## Adding a new plugin
 
 If you need a new plugin (e.g. a separate plugin for product or infra):
@@ -159,9 +177,9 @@ If you need a new plugin (e.g. a separate plugin for product or infra):
 
    ```json
    {
-     “name”: “<plugin-name>”,
-     “source”: “./plugins/<plugin-name>”,
-     “description”: “Short description of the plugin”
+     "name": "<plugin-name>",
+     "source": "./plugins/<plugin-name>",
+     "description": "Short description of the plugin"
    }
    ```
 
@@ -194,11 +212,15 @@ Then users can install plugins with `/plugin install apollo-eng@apollo-skills` f
 
 To have specific plugins enabled automatically you can add something like this:
 
-```
+```json
   "enabledPlugins": {
     "apollo-eng@apollo-skills": true
   }
 ```
+
+## Managing plugin visibility in Claude Enterprise
+
+If you want different teams to see different plugins, have a Claude Enterprise owner manage which plugins are visible to which users in the org admin settings. Anthropic documents that flow here: <https://support.claude.com/en/articles/13837433-manage-cowork-plugins-for-your-organization#h_cef6a5f497>.
 
 ## Versioning and releases
 

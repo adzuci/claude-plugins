@@ -8,12 +8,37 @@
     {
       "name": "apollo-eng",
       "source": "./plugins/apollo-eng",
-      "description": "Shared engineering skills for Apollo repos"
+      "description": "Shared engineering skills for Apollo repos",
+      "category": "engineering",
+      "tags": ["claude-code", "engineering"]
     },
     {
       "name": "apollo-ops",
       "source": "./plugins/apollo-ops",
-      "description": "DevOps, SRE, and production reliability skills for Apollo engineers"
+      "description": "DevOps, SRE, and production reliability skills for Apollo engineers",
+      "category": "engineering",
+      "tags": ["claude-code", "operations"]
+    },
+    {
+      "name": "apollo-engineering-ops",
+      "source": "./plugins/apollo-engineering-ops",
+      "description": "Cowork-facing onboarding skills for learning and contributing Apollo marketplace skills",
+      "category": "engineering",
+      "tags": ["cowork", "engineering"]
+    },
+    {
+      "name": "claudathon-submissions",
+      "source": "./plugins/claudathon-submissions",
+      "description": "Reserved plugin space for Claude Code-oriented Claudathon submissions",
+      "category": "engineering",
+      "tags": ["claude-code", "claudathon"]
+    },
+    {
+      "name": "claudathon-cowork-submissions",
+      "source": "./plugins/claudathon-cowork-submissions",
+      "description": "Reserved plugin space for Cowork-oriented Claudathon submissions",
+      "category": "engineering",
+      "tags": ["cowork", "claudathon"]
     }
   ]
 }
