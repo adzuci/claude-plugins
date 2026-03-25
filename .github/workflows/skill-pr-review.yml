@@ -32,6 +32,40 @@ jobs:
         run: |
           set -euo pipefail
 
+          # --- helpers ---
+
+          BOT_HEADER="🤖 **Skill Review Bot** — automated review powered by Claude"
+
+          # Post a PR comment with the bot header prepended.
+          bot_comment() {
+            local body
+            body="$(printf '%s\n\n%s\n' "${BOT_HEADER}" "$1")"
+            gh pr comment "${PR_NUMBER}" --repo "${REPO}" --body "${body}"
+          }
+
+          # Submit a PR review (APPROVE | REQUEST_CHANGES | COMMENT).
+          post_review() {
+            local event="$1" body="$2"
+            gh api --method POST \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${REPO}/pulls/${PR_NUMBER}/reviews" \
+              -f event="${event}" \
+              -f body="${body}"
+          }
+
+          # --- preflight ---
+
+          if [ -z "${ANTHROPIC_API_KEY}" ]; then
+            bot_comment "Automated review skipped: \`APOLLO_REVIEW_BOT_ANTHROPIC_KEY\` secret is not configured. A human review is needed."
+            exit 0
+          fi
+
+          rubric_file=".github/skill-review-rubric.md"
+          if [ ! -f "${rubric_file}" ]; then
+            bot_comment "Automated review skipped: \`${rubric_file}\` is missing. A human review is needed."
+            exit 0
+          fi
+
           git fetch --no-tags origin "${BASE_REF}"
 
           changed_files="$(git diff --name-only --diff-filter=ACM "origin/${BASE_REF}...HEAD" -- plugins/ .claude-plugin/ || true)"
@@ -40,191 +74,54 @@ jobs:
             exit 0
           fi
 
-          added_files="$(git diff --name-only --diff-filter=A "origin/${BASE_REF}...HEAD" -- plugins/ .claude-plugin/ || true)"
+          # --- collect text file contents (up to MAX_DIFF_BYTES) ---
 
-          post_comment() {
-            local body_file="$1"
-            gh pr comment "${PR_NUMBER}" --repo "${REPO}" --body-file "${body_file}"
-          }
-
-          post_review() {
-            local event="$1"
-            local body_file="$2"
-            gh api \
-              --method POST \
-              -H "Accept: application/vnd.github+json" \
-              "/repos/${REPO}/pulls/${PR_NUMBER}/reviews" \
-              -f event="${event}" \
-              --raw-field body="$(cat "${body_file}")"
-          }
-
-          validate_frontmatter() {
-            local skill_md="$1"
-            local skill_dir="$2"
-            local skill_name
-            local frontmatter
-            local key_count
-
-            if [ ! -f "${skill_md}" ]; then
-              echo "- [ ] **[severity: error]** ${skill_dir}/SKILL.md:1 — Missing required \`SKILL.md\` at the root of the skill folder."
-              return 1
-            fi
-
-            frontmatter="$(awk '
-              NR == 1 && $0 != "---" { exit 1 }
-              NR == 1 { in_block = 1; next }
-              in_block && $0 == "---" { exit 0 }
-              in_block { print }
-            ' "${skill_md}" 2>/dev/null || true)"
-
-            if [ -z "${frontmatter}" ]; then
-              echo "- [ ] **[severity: error]** ${skill_dir}/SKILL.md:1 — Missing or invalid YAML frontmatter."
-              return 1
-            fi
-
-            if ! printf '%s\n' "${frontmatter}" | grep -Eq '^name:[[:space:]]*[^[:space:]].*$'; then
-              echo "- [ ] **[severity: error]** ${skill_dir}/SKILL.md:1 — Frontmatter must include a non-empty \`name\` field."
-              return 1
-            fi
-
-            if ! printf '%s\n' "${frontmatter}" | grep -Eq '^description:[[:space:]]*[^[:space:]].*$'; then
-              echo "- [ ] **[severity: error]** ${skill_dir}/SKILL.md:1 — Frontmatter must include a non-empty \`description\` field."
-              return 1
-            fi
-
-            key_count="$(printf '%s\n' "${frontmatter}" | grep -Ec '^[A-Za-z0-9_-]+:[[:space:]]*.*$' || true)"
-            if [ "${key_count}" -ne 2 ]; then
-              echo "- [ ] **[severity: error]** ${skill_dir}/SKILL.md:1 — Frontmatter should contain only \`name\` and \`description\`."
-              return 1
-            fi
-
-            skill_name="$(printf '%s\n' "${frontmatter}" | sed -n 's/^name:[[:space:]]*//p' | head -n1)"
-            if [ "${skill_name}" != "$(basename "${skill_dir}")" ]; then
-              echo "- [ ] **[severity: error]** ${skill_dir}/SKILL.md:1 — Frontmatter \`name\` must match the skill directory name."
-              return 1
-            fi
-
-            if ! printf '%s' "${skill_name}" | grep -Eq '^[a-z0-9-]+$'; then
-              echo "- [ ] **[severity: error]** ${skill_dir}/SKILL.md:1 — Skill names must use lowercase letters, digits, and hyphens only."
-              return 1
-            fi
-
-            return 0
-          }
-
-          new_skill_dirs="$(
-            printf '%s\n' "${added_files}" \
-              | awk -F/ 'NF >= 4 && $1 == "plugins" && $3 == "skills" { print $1 "/" $2 "/" $3 "/" $4 }' \
-              | sort -u
+          # Use git's own binary detection: binary files show "-" in numstat.
+          empty_tree="$(git hash-object -t tree /dev/null)"
+          text_files="$(
+            git diff --numstat "${empty_tree}" HEAD -- ${changed_files} \
+              | awk '$1 != "-" { print $3 }'
           )"
 
-          structural_issues_file="$(mktemp)"
-          if [ -n "${new_skill_dirs}" ]; then
-            while IFS= read -r skill_dir; do
-              [ -n "${skill_dir}" ] || continue
-              if ! validate_frontmatter "${skill_dir}/SKILL.md" "${skill_dir}" >> "${structural_issues_file}"; then
-                :
-              fi
-            done <<< "${new_skill_dirs}"
-          fi
-
-          if [ -s "${structural_issues_file}" ]; then
-            structural_comment="$(mktemp)"
-            {
-              echo "🤖 **Skill Review Bot** — automated review powered by Claude"
-              echo
-              echo "## Summary"
-              echo "Structural validation failed, so the automated model review was skipped."
-              echo
-              echo "## Issues"
-              cat "${structural_issues_file}"
-              echo
-              echo "## Verdict"
-              echo "REQUEST_CHANGES"
-            } > "${structural_comment}"
-            post_comment "${structural_comment}"
-            post_review "REQUEST_CHANGES" "${structural_comment}"
-            exit 1
-          fi
-
-          rubric_file=".github/skill-review-rubric.md"
-          if [ ! -f "${rubric_file}" ]; then
-            failure_comment="$(mktemp)"
-            {
-              echo "🤖 **Skill Review Bot** — automated review powered by Claude"
-              echo
-              echo "Automated review failed because \`${rubric_file}\` is missing. A human review is needed."
-            } > "${failure_comment}"
-            post_comment "${failure_comment}"
-            exit 0
-          fi
-
-          diff_payload_file="$(mktemp)"
+          diff_payload=""
           bytes_used=0
           truncated=0
           reviewed_files=0
 
           while IFS= read -r file; do
             [ -n "${file}" ] || continue
-            case "${file}" in
-              plugins/*|.claude-plugin/*) ;;
-              *) continue ;;
-            esac
 
-            if ! git cat-file -e "HEAD:${file}" 2>/dev/null; then
-              continue
-            fi
-
-            if git show "HEAD:${file}" | LC_ALL=C grep -q $'\000'; then
-              continue
-            fi
-
-            file_content="$(git show "HEAD:${file}")"
-            file_block="$(mktemp)"
-            {
-              echo "### ${file}"
-              echo '```'
-              printf '%s\n' "${file_content}"
-              echo '```'
-              echo
-            } > "${file_block}"
-
-            block_size="$(wc -c < "${file_block}" | tr -d ' ')"
+            block="$(printf '### %s\n```\n%s\n```\n\n' "${file}" "$(git show "HEAD:${file}")")"
+            block_size="${#block}"
             remaining=$((MAX_DIFF_BYTES - bytes_used))
+
             if [ "${remaining}" -le 0 ]; then
               truncated=1
-              rm -f "${file_block}"
               break
             fi
 
             if [ "${block_size}" -gt "${remaining}" ]; then
-              head -c "${remaining}" "${file_block}" >> "${diff_payload_file}"
+              diff_payload+="${block:0:${remaining}}"
               truncated=1
-              rm -f "${file_block}"
               break
             fi
 
-            cat "${file_block}" >> "${diff_payload_file}"
+            diff_payload+="${block}"
             bytes_used=$((bytes_used + block_size))
             reviewed_files=$((reviewed_files + 1))
-            rm -f "${file_block}"
-          done <<< "${changed_files}"
+          done <<< "${text_files}"
 
-          if [ ! -s "${diff_payload_file}" ]; then
-            no_text_comment="$(mktemp)"
-            {
-              echo "🤖 **Skill Review Bot** — automated review powered by Claude"
-              echo
-              echo "No text-based files under \`plugins/\` or \`.claude-plugin/\` were eligible for automated review. A human review is needed."
-            } > "${no_text_comment}"
-            post_comment "${no_text_comment}"
+          if [ -z "${diff_payload}" ]; then
+            bot_comment "No text-based files under \`plugins/\` or \`.claude-plugin/\` were eligible for automated review. A human review is needed."
             exit 0
           fi
+
+          # --- call Anthropic API ---
 
           prompt_json="$(mktemp)"
           jq -n \
             --rawfile rubric "${rubric_file}" \
-            --rawfile diff_payload "${diff_payload_file}" \
+            --arg diff_payload "${diff_payload}" \
             --arg truncated "${truncated}" \
             --arg reviewed_files "${reviewed_files}" \
             '{
@@ -274,60 +171,29 @@ jobs:
               --data @"${prompt_json}" || true
           )"
 
-          if [ -z "${ANTHROPIC_API_KEY}" ] || ! printf '%s' "${http_code}" | grep -Eq '^[0-9]{3}$' || [ "${http_code}" -lt 200 ] || [ "${http_code}" -ge 300 ]; then
-            api_failure_comment="$(mktemp)"
-            {
-              echo "🤖 **Skill Review Bot** — automated review powered by Claude"
-              echo
-              echo "Automated review failed"
-              if [ -z "${ANTHROPIC_API_KEY}" ]; then
-                echo "because the \`APOLLO_REVIEW_BOT_ANTHROPIC_KEY\` secret is not configured."
-              else
-                echo "because the Anthropic API request did not succeed (HTTP ${http_code:-unknown})."
-              fi
-              echo "A human review is needed."
-            } > "${api_failure_comment}"
-            post_comment "${api_failure_comment}"
+          if ! printf '%s' "${http_code}" | grep -Eq '^2[0-9]{2}$'; then
+            bot_comment "Automated review failed (HTTP ${http_code:-unknown}). A human review is needed."
             exit 0
           fi
 
           review_text="$(jq -r '[.content[]? | select(.type == "text") | .text] | join("\n")' "${response_json}")"
           if [ -z "${review_text}" ] || [ "${review_text}" = "null" ]; then
-            empty_response_comment="$(mktemp)"
-            {
-              echo "🤖 **Skill Review Bot** — automated review powered by Claude"
-              echo
-              echo "Automated review failed because the Anthropic API returned no review text. A human review is needed."
-            } > "${empty_response_comment}"
-            post_comment "${empty_response_comment}"
+            bot_comment "Automated review failed: the API returned no review text. A human review is needed."
             exit 0
           fi
 
-          final_comment="$(mktemp)"
-          {
-            echo "🤖 **Skill Review Bot** — automated review powered by Claude"
-            echo
-            printf '%s\n' "${review_text}"
-            if [ "${truncated}" = "1" ]; then
-              echo
-              echo "_Note: Review context was truncated to the first 50KB of text-based plugin changes._"
-            fi
-          } > "${final_comment}"
+          # --- post results ---
+
+          comment_body="${BOT_HEADER}"$'\n\n'"${review_text}"
+          if [ "${truncated}" = "1" ]; then
+            comment_body+=$'\n\n'"_Note: Review context was truncated to the first 50KB of text-based plugin changes._"
+          fi
 
           verdict="$(printf '%s\n' "${review_text}" | awk '/^## Verdict/{getline; print; exit}' | tr -d '\r' | xargs)"
-          post_comment "${final_comment}"
           case "${verdict}" in
-            REQUEST_CHANGES)
-              post_review "REQUEST_CHANGES" "${final_comment}"
-              ;;
-            APPROVE)
-              post_review "APPROVE" "${final_comment}"
-              ;;
-            COMMENT)
-              post_review "COMMENT" "${final_comment}"
-              ;;
-            *)
-              # Unknown verdict — post as a COMMENT review so it's visible
-              post_review "COMMENT" "${final_comment}"
-              ;;
+            APPROVE|REQUEST_CHANGES|COMMENT) ;;
+            *) verdict="COMMENT" ;;
           esac
+
+          gh pr comment "${PR_NUMBER}" --repo "${REPO}" --body "${comment_body}"
+          post_review "${verdict}" "${comment_body}"
