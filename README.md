@@ -1,4 +1,4 @@
-# skills
+# Skills
 
 This repo is a place to add [skills and plugins](https://code.claude.com/docs/en/plugins) for Claude Code. We may host it as a [private plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces#private-repositories) so teams can install and use these plugins across multiple repos, including Cowork-oriented plugins for shared internal workflows.
 
@@ -11,7 +11,7 @@ flowchart TD
     dev([Developer])
 
     subgraph repo["apolloio/skills (this repo)"]
-        branch["adzuci/* branch\nAdd or edit SKILL.md"]
+        branch["Feature branch\nAdd or edit SKILL.md"]
         pr["Pull Request"]
 
         subgraph ci_pr["CI — on pull_request"]
@@ -46,11 +46,11 @@ flowchart TD
     settings --> install --> skill
 ```
 
-## Where do skills go at Apollo?
+## Where Do Skills Go at Apollo?
 
 There are three places you can store Claude skills depending on your use case:
 
-1. **In our central skill repository** — This location is yet to be determined but could be in [the claude-bootstrapper repo](https://github.com/apolloio/claude-bootstrapper/tree/main/skills) or this repo; this repo can be used as a [private marketplace](https://code.claude.com/docs/en/plugin-marketplaces#private-repositories) so they’re available across Apollo.
+1. **In this central skill repository** — This repo is Apollo’s [private plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces#private-repositories), making shared skills available across all Apollo repos.
 
 1. **In repo-specific skill folders** — If a skill is only relevant to a specific repository, place it in that repo's `.claude/skills` directory. Examples:
 
@@ -59,9 +59,10 @@ There are three places you can store Claude skills depending on your use case:
 
 1. **In `~/.claude/skills`** — For personal skills that are specific to your local development environment and not meant to be shared.
 
-## Skills
+## Skill Inventory
 
 <!-- SKILL-INVENTORY-START -->
+
 | Plugin | Command | Description |
 | --- | --- | --- |
 | apollo-eng | `/apollo-eng:bug-bash-generator` | Generate bug bash test cases from a Notion bug bash page and write them to a Notion test case database. Activate when user asks to generate bug bash test cases, create bug bash tests, or mentions bug bash generation. |
@@ -76,6 +77,7 @@ There are three places you can store Claude skills depending on your use case:
 | apollo-ops | `/apollo-ops:incident-response` | Incident commander guide for Apollo production incidents. Activate when declaring or managing an incident, writing stakeholder communications, conducting a postmortem, or defining incident severity. |
 | apollo-ops | `/apollo-ops:kubernetes-specialist` | Kubernetes debugging and rollout specialist for Apollo's GKE clusters. Activate when debugging pod crashes, CrashLoopBackOff, OOMKilled, readiness or liveness failures, deployment rollouts, HPA scaling, or resource limit tuning. |
 | apollo-ops | `/apollo-ops:systematic-debugging` | Apply a four-phase root-cause debugging methodology to any production issue. Activate when the user is debugging a production problem, performance regression, or unexpected system behavior. |
+
 <!-- SKILL-INVENTORY-END -->
 
 ## Repository Structure
@@ -85,6 +87,10 @@ There are three places you can store Claude skills depending on your use case:
     settings.json
 .claude-plugin/
     marketplace.json
+.github/
+    workflows/          # CI: lint, validate, bump-version, skill-pr-review, update-skill-inventory
+    scripts/            # Helper scripts used by workflows
+    skill-review-rubric.md
 template/
     .claude-plugin/
         plugin.json
@@ -92,15 +98,17 @@ template/
         example/
             SKILL.md
 plugins/
-    apollo-eng/
+    apollo-eng/         # Shared engineering skills
         .claude-plugin/
             plugin.json
         skills/
             pr-description/
                 SKILL.md
+    apollo-ops/         # DevOps and SRE skills
+        ...
 ```
 
-## How to use in Claude Code
+## How to Use in Claude Code
 
 **When you work in this repo:** `.claude/settings.json` is configured so the **apollo-skills** marketplace is offered and **apollo-eng** is enabled for this project. The first time you open the repo, Claude Code may prompt you to add the marketplace; after you install the plugin once, it stays enabled here.
 
@@ -120,7 +128,39 @@ plugins/
 
 Skills from this marketplace can also be used in Claude.ai and the API when those products support plugin marketplaces.
 
-## Adding a new skill
+## Using Skills From Other AI Tools
+
+> [!WARNING]
+> **Token budget:** Each skill you load adds tokens to every request. Only load the skills you need for a session — loading many at once can significantly increase costs and reduce response quality.
+>
+> **These docs are experimental.** Windsurf and Cursor skill support is evolving quickly. If something below is wrong or has changed, please test it and update this section.
+
+### Windsurf
+
+Windsurf's [Cascade](https://docs.windsurf.com/windsurf/getting-started) supports Claude models. Individual BYOK users can add keys for Claude 4 Sonnet, Sonnet Thinking, Opus, or Opus Thinking from the model dropdown.
+
+**Setup:**
+
+1. Open Cascade in Windsurf.
+
+1. Choose a Claude model from the model dropdown.
+
+1. Place your skill file in one of these locations:
+
+   | Scope | Path |
+   | --- | --- |
+   | Workspace-local | `.windsurf/skills/<skill-name>/` |
+   | Claude-compatible (if Claude Code config reading is enabled) | `.claude/skills/<skill-name>/` or `~/.claude/skills/<skill-name>/` |
+
+Copy the `SKILL.md` file from this repo into the appropriate folder. Cascade will pick it up as context when you reference it.
+
+### Cursor
+
+Cursor loads skills from `.claude/skills/` for compatibility with Claude Code. Place any `SKILL.md` file there and Cursor will pick it up automatically — no extra configuration needed.
+
+See the [Cursor skills documentation](https://cursor.com/help/customization/skills) for the full reference.
+
+## Adding a New Skill
 
 1. **Copy the skill template**
    Copy `template/skills/example/SKILL.md` to your plugin’s skills folder:
@@ -143,7 +183,7 @@ Skills from this marketplace can also be used in Claude.ai and the API when thos
 1. **If the skill lives in a new plugin**
    Copy the whole `template/` folder to `plugins/<plugin-name>/`, then follow “Adding a new plugin” below and register the plugin in `.claude-plugin/marketplace.json`.
 
-## Making Cowork skills
+## Making Cowork Skills
 
 Cowork skills in this repo use the same plugin structure as Claude Code skills: a plugin folder under `plugins/`, skill folders under `skills/`, and a `SKILL.md` file with trigger-focused frontmatter.
 
@@ -160,7 +200,7 @@ Some plugins should carry Cowork-oriented tags in the marketplace when they are 
 
 Apollo could eventually split Cowork plugins into a separate repo to make plugin visibility easier to manage across clients and teams. For now, this repo remains the preferred central location for both Claude Code and Cowork-oriented plugins.
 
-## Adding a new plugin
+## Adding a New Plugin
 
 If you need a new plugin (e.g. a separate plugin for product or infra):
 
@@ -189,7 +229,7 @@ If you need a new plugin (e.g. a separate plugin for product or infra):
 
 Plugins namespace skill commands as `/plugin-name:skill-name`.
 
-### Suggesting this marketplace from other repos
+### Suggesting This Marketplace From Other Repos
 
 To have Claude Code suggest this marketplace when someone works in another repo (e.g. `leadgenie` or `devops`), add this to that repo’s `.claude/settings.json` (not in this repo). Check [Claude Code plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces) for the current schema:
 
@@ -220,7 +260,7 @@ To have specific plugins enabled automatically you can add something like this:
 
 If you want different teams to see different plugins, have a Claude Enterprise owner manage which plugins are visible to which users in the org admin settings. Anthropic documents that flow here: <https://support.claude.com/en/articles/13837433-manage-cowork-plugins-for-your-organization#h_cef6a5f497>.
 
-## Versioning and releases
+## Versioning and Releases
 
 This repo uses [Conventional Commits](https://www.conventionalcommits.org/) to drive automatic semver tagging via
 `.github/workflows/bump-version.yml`. On every push to `main` the workflow:
@@ -235,7 +275,7 @@ This repo uses [Conventional Commits](https://www.conventionalcommits.org/) to d
 
 **Why not Release Please?** [Release Please](https://github.com/googleapis/release-please) was considered for the same Conventional Commits → semver flow. We kept the in-repo GitHub Action (bash in `.github/workflows/bump-version.yml`) to minimize dependencies and to release on every push to `main` with releasable commits, rather than via a separate release PR.
 
-**Branch convention:** feature branches use the prefix `adxuci/` (e.g. `adxuci/my-feature`) and are merged to `main` via pull request.
+**Branch convention:** feature branches use the format `<user>/<ticket>-description` (e.g. `adzuci/ABC-123-add-bump-version-workflow`) and are merged to `main` via pull request.
 
 ## References
 

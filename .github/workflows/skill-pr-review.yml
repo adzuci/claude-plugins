@@ -2,9 +2,10 @@ name: Skill PR Review
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
     paths:
       - "plugins/**"
+      - ".claude-plugin/**"
 
 jobs:
   review-skill-pr:
@@ -31,15 +32,15 @@ jobs:
         run: |
           set -euo pipefail
 
-          git fetch --no-tags --depth=1 origin "${BASE_REF}"
+          git fetch --no-tags origin "${BASE_REF}"
 
-          changed_files="$(git diff --name-only --diff-filter=ACM "origin/${BASE_REF}...HEAD" -- plugins/ || true)"
+          changed_files="$(git diff --name-only --diff-filter=ACM "origin/${BASE_REF}...HEAD" -- plugins/ .claude-plugin/ || true)"
           if [ -z "${changed_files}" ]; then
             echo "No changed plugin files to review."
             exit 0
           fi
 
-          added_files="$(git diff --name-only --diff-filter=A "origin/${BASE_REF}...HEAD" -- plugins/ || true)"
+          added_files="$(git diff --name-only --diff-filter=A "origin/${BASE_REF}...HEAD" -- plugins/ .claude-plugin/ || true)"
 
           post_comment() {
             local body_file="$1"
@@ -166,7 +167,7 @@ jobs:
           while IFS= read -r file; do
             [ -n "${file}" ] || continue
             case "${file}" in
-              plugins/*) ;;
+              plugins/*|.claude-plugin/*) ;;
               *) continue ;;
             esac
 
@@ -214,7 +215,7 @@ jobs:
             {
               echo "🤖 **Skill Review Bot** — automated review powered by Claude"
               echo
-              echo "No text-based files under \`plugins/\` were eligible for automated review. A human review is needed."
+              echo "No text-based files under \`plugins/\` or \`.claude-plugin/\` were eligible for automated review. A human review is needed."
             } > "${no_text_comment}"
             post_comment "${no_text_comment}"
             exit 0
@@ -227,7 +228,7 @@ jobs:
             --arg truncated "${truncated}" \
             --arg reviewed_files "${reviewed_files}" \
             '{
-              model: "claude-sonnet-4-20250514",
+              model: "claude-opus-4-6",
               max_tokens: 1024,
               system: (
                 "You are reviewing a GitHub pull request that adds or updates skills in a marketplace.\n" +
@@ -319,6 +320,14 @@ jobs:
             REQUEST_CHANGES)
               post_review "REQUEST_CHANGES" "${final_comment}"
               ;;
+            APPROVE)
+              post_review "APPROVE" "${final_comment}"
+              ;;
+            COMMENT)
+              post_review "COMMENT" "${final_comment}"
+              ;;
             *)
+              # Unknown verdict — post as a COMMENT review so it's visible
+              post_review "COMMENT" "${final_comment}"
               ;;
           esac
