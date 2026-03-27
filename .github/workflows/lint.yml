@@ -8,7 +8,9 @@ on:
 
 jobs:
   markdownlint:
-    runs-on: ubuntu-latest
+    runs-on:
+      group: arc-scale-sets
+      labels: general-low
     steps:
       - uses: actions/checkout@v6
       - uses: DavidAnson/markdownlint-cli2-action@v16
@@ -28,7 +30,9 @@ jobs:
       - run: mdformat --check .
 
   skill-name-check:
-    runs-on: ubuntu-latest
+    runs-on:
+      group: arc-scale-sets
+      labels: general-low
     steps:
       - uses: actions/checkout@v6
       - name: Check skill name matches directory

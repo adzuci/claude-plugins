@@ -12,7 +12,9 @@ permissions:
 
 jobs:
   update-inventory:
-    runs-on: ubuntu-latest
+    runs-on:
+      group: arc-scale-sets
+      labels: general-low
     steps:
       - uses: actions/checkout@v6
       - name: Regenerate inventory table
