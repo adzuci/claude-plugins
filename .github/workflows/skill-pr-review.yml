@@ -195,5 +195,4 @@ jobs:
             *) verdict="COMMENT" ;;
           esac
 
-          gh pr comment "${PR_NUMBER}" --repo "${REPO}" --body "${comment_body}"
           post_review "${verdict}" "${comment_body}"
