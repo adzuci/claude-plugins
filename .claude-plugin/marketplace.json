@@ -17,7 +17,14 @@
       "source": "./plugins/apollo-eng-devops",
       "description": "DevOps, SRE, and production reliability skills for Apollo engineers",
       "category": "engineering",
-      "tags": ["claude-code", "operations"]
+      "tags": ["claude-code", "operations", "claudathon"]
+    },
+    {
+      "name": "apollo-data",
+      "source": "./plugins/apollo-data",
+      "description": "Analytics and data skills — Pokemon battle cards, metric intelligence, data team tools",
+      "category": "engineering",
+      "tags": ["claude-code", "operations", "claudathon"]
     },
     {
       "name": "apollo-eng-leadership",
