@@ -11,7 +11,7 @@ Teach the user how Apollo's shared skills marketplace works, then help them cont
 
 Start by explaining, in plain language:
 
-- A **plugin** is a named package of related skills, such as `apollo-eng` or `apollo-ops`
+- A **plugin** is a named package of related skills, such as `apollo-eng` or `apollo-eng-devops`
 - A **skill** is an individual workflow invoked inside a plugin, such as `/apollo-eng:pr-description`
 - This repo is a shared marketplace of plugins under `plugins/`
 - Each skill lives in its own folder and must include a `SKILL.md` with `name` and `description` frontmatter

@@ -35,12 +35,12 @@ apollo-eng    plan-from-jira
 apollo-eng    pr-description
 apollo-eng    product-ship-post
 apollo-eng    security-review
-apollo-ops    cursor-rules
-apollo-ops    devops
-apollo-ops    grafana-observability
-apollo-ops    incident-response
-apollo-ops    kubernetes-specialist
-apollo-ops    systematic-debugging
+apollo-eng-devops    cursor-rules
+apollo-eng-devops    devops
+apollo-eng-devops    grafana-observability
+apollo-eng-devops    incident-response
+apollo-eng-devops    kubernetes-specialist
+apollo-eng-devops    systematic-debugging
 ```
 
 Then ask:
@@ -48,7 +48,7 @@ Then ask:
 > Which skills would you like to export? You can say:
 >
 > - `all` — every skill above
-> - a plugin name like `apollo-eng` or `apollo-ops` — all skills in that plugin
+> - a plugin name like `apollo-eng` or `apollo-eng-devops` — all skills in that plugin
 > - specific skill names like `pr-description, incident-response`
 
 ## Step 3 — Ask for the target project directory
@@ -94,8 +94,8 @@ Print a summary:
 
   apollo-eng-pr-description.mdc
   apollo-eng-security-review.mdc
-  apollo-ops-incident-response.mdc
-  apollo-ops-systematic-debugging.mdc
+  apollo-eng-devops-incident-response.mdc
+  apollo-eng-devops-systematic-debugging.mdc
 
 To activate a rule manually in Cursor chat, type @rule-name.
 To make a rule always active, set alwaysApply: true in its frontmatter.

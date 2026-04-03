@@ -1,4 +1,4 @@
-# apollo-ops
+# apollo-eng-devops
 
 DevOps, SRE, and production reliability skills for Apollo engineers.
 
@@ -12,11 +12,11 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 
 | Invoke command | Purpose |
 |---|---|
-| `/apollo-ops:devops` | SRE devops — applies reliability engineering to any production task |
-| `/apollo-ops:kubernetes-specialist` | Kubernetes debugging and rollout specialist for Apollo's GKE clusters |
-| `/apollo-ops:grafana-observability` | Grafana dashboard design and alert quality specialist |
-| `/apollo-ops:incident-response` | Incident commander guide for Apollo production incidents |
-| `/apollo-ops:systematic-debugging` | Four-phase root-cause debugging methodology (investigate → pattern → hypothesize → implement) |
+| `/apollo-eng-devops:devops` | SRE devops — applies reliability engineering to any production task |
+| `/apollo-eng-devops:kubernetes-specialist` | Kubernetes debugging and rollout specialist for Apollo's GKE clusters |
+| `/apollo-eng-devops:grafana-observability` | Grafana dashboard design and alert quality specialist |
+| `/apollo-eng-devops:incident-response` | Incident commander guide for Apollo production incidents |
+| `/apollo-eng-devops:systematic-debugging` | Four-phase root-cause debugging methodology (investigate → pattern → hypothesize → implement) |
 
 ## Skill Stacking
 
@@ -51,10 +51,10 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 
 **`incident-response`** — Enable when declaring an incident, running a war room, writing stakeholder comms, or conducting a postmortem. Provides severity model, comms templates, and blameless postmortem structure.
 
-## How apollo-ops Complements apollo-eng
+## How apollo-eng-devops Complements apollo-eng
 
 `apollo-eng` skills help you **ship code**: PR descriptions, security reviews, release posts.
 
-`apollo-ops` skills help you **ship it safely**: SLOs, runbooks, incident command, reliability design reviews.
+`apollo-eng-devops` skills help you **ship it safely**: SLOs, runbooks, incident command, reliability design reviews.
 
-Use both together when launching a significant feature: `apollo-eng` for the PR, `apollo-ops` for the design review and rollout plan.
+Use both together when launching a significant feature: `apollo-eng` for the PR, `apollo-eng-devops` for the design review and rollout plan.

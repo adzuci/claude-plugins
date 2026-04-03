@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claude plugin:*)",
+      "Bash(mdformat plugins/apollo-eng/skills/token-efficiency-assessment/SKILL.md)",
+      "WebFetch(domain:www.notion.so)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(k\\) for k in d.get\\(''''mcpServers'''',{}\\)]\")",
+      "Bash(python3 -c \"import sys,json; print\\(json.dumps\\(json.load\\(sys.stdin\\), indent=2\\)\\)\")",
+      "mcp__claude_ai_Notion__notion-fetch",
+      "mcp__claude_ai_Notion__notion-update-data-source",
+      "mcp__claude_ai_Notion__notion-update-view",
+      "Bash(mdformat plugins/apollo-eng/skills/token-efficiency-assessment/SKILL.md plugins/apollo-eng/skills/token-efficiency-assessment/REFERENCES.md)",
+      "Bash(git config:*)",
+      "mcp__claude_ai_Notion__notion-create-pages",
+      "WebSearch",
+      "WebFetch(domain:anthropic.skilljar.com)",
+      "Bash(gh pr:*)",
+      "Bash(gh api:*)",
+      "Bash(mdformat plugins/apollo-eng/skills/token-efficiency-assessment/SKILL.md plugins/apollo-eng/skills/token-efficiency-assessment/references/references.md)",
+      "Bash(mdformat --check .)",
+      "Bash(mdformat --check plugins/apollo-eng/skills/token-efficiency-assessment/)",
+      "Bash(mdformat README.md)"
+    ]
+  }
+}
