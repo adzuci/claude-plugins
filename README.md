@@ -48,6 +48,13 @@ Apollo's shared [plugin marketplace](https://code.claude.com/docs/en/plugin-mark
 <!-- SKILL-INVENTORY-START -->
 | Plugin | Command | Description |
 | --- | --- | --- |
+| apollo-data | `/apollo-data:account-deep-dive` | Generate a comprehensive profile for a specific team/account combining revenue, credits, support, email, and events |
+| apollo-data | `/apollo-data:battle` | "Run a Pokemon-style battle between Apollo employees using Trainer Cards derived from real work activity. Activate when user says battle, pokemon, trainer card, fight, matchup, who would win, or /battle." |
+| apollo-data | `/apollo-data:credit-analysis` | Analyze credit utilization, consumption patterns, and monetization metrics |
+| apollo-data | `/apollo-data:data-catalog-search` | Search the governed data catalog to find the right tables and understand business terms |
+| apollo-data | `/apollo-data:metric-lookup` | Look up and execute pre-approved metric definitions from the Jarvis metric registry |
+| apollo-data | `/apollo-data:product-debrief` | Generate product area performance summaries covering adoption, retention, and key metrics |
+| apollo-data | `/apollo-data:weekly-insights` | Surface weekly strategic insights and recommendations for leadership |
 | apollo-eng | `/apollo-eng:bug-bash-generator` | Generate bug bash test cases from a Notion bug bash page and write them to a Notion test case database. Activate when user asks to generate bug bash test cases, create bug bash tests, or mentions bug bash generation. |
 | apollo-eng | `/apollo-eng:learn-from-chat` | Review the current conversation to identify user corrections, preferences, and patterns, then save them to Claude Code memory. Activate when the user says "learn from this chat", "learn from chat", "what did you learn", or "update your memory from this conversation". |
 | apollo-eng | `/apollo-eng:plan-from-jira` | Fetches a Jira ticket using the Jira MCP, analyzes the requirements, and generates a structured implementation plan. Activate when the user provides a Jira issue key and asks to plan or implement it, says "plan from jira", "plan this ticket", or "create a plan for <TICKET-ID>". |
