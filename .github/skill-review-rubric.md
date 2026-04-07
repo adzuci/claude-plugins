@@ -16,6 +16,11 @@ Frontmatter
 - Prefer trigger-rich wording with explicit user intents, contexts, or phrases that should activate the skill.
 - Flag vague descriptions that are too generic to trigger reliably.
 
+Descriptions — skill vs plugin
+
+- **Plugin descriptions** (in `plugin.json` and `marketplace.json`) are short catalog blurbs identifying the team and broad scope. Do not demand trigger-rich wording in plugin descriptions.
+- **Skill descriptions** (in `SKILL.md` frontmatter) are where activation triggers, user intents, and context phrases belong. Apply the trigger-richness checks only to skill-level descriptions.
+
 Structure
 
 - Expect the standard pattern: `SKILL.md` plus optional `scripts/`, `references/`, and `assets/`.
@@ -41,7 +46,8 @@ Instruction quality
 
 Security and safety
 
-- Flag embedded secrets, tokens, credentials, or private endpoints.
+- Flag embedded secrets (API keys, tokens, passwords, credentials).
+- Do NOT flag internal infrastructure references (Slack IDs, Grafana UIDs, GCS paths, internal URLs) — these are expected in an internal skills repo and are not secrets.
 - Flag instructions that exfiltrate data unnecessarily or send sensitive content to third parties without justification.
 - Flag obviously malicious, destructive, or unsafe automation patterns.
 
@@ -51,4 +57,11 @@ Review policy
 - Use severity `error` for structural breakage, unsafe content, or blockers.
 - Use severity `warning` for likely quality or trigger problems.
 - Use severity `suggestion` for polish and maintainability improvements.
-- If there are no meaningful issues, say so clearly and approve.
+
+Verdict rules
+
+Severity ranks error > warning > suggestion; the highest severity present determines the verdict.
+
+- **REQUEST_CHANGES** — use ONLY when at least one `error`-severity issue exists.
+- **COMMENT** — use when there are `warning`-severity issues but no errors.
+- **APPROVE** — use when there are no issues, or only `suggestion`-severity items.

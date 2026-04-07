@@ -1,3 +1,4 @@
+
 name: Skill PR Review
 
 on:
@@ -68,7 +69,9 @@ jobs:
 
           git fetch --no-tags origin "${BASE_REF}"
 
-          changed_files="$(git diff --name-only --diff-filter=ACM "origin/${BASE_REF}...HEAD" -- plugins/ .claude-plugin/ || true)"
+          added_files="$(git diff --name-only --diff-filter=A "origin/${BASE_REF}...HEAD" -- plugins/ .claude-plugin/ || true)"
+          modified_files="$(git diff --name-only --diff-filter=CM "origin/${BASE_REF}...HEAD" -- plugins/ .claude-plugin/ || true)"
+          changed_files="$(printf '%s\n%s' "${added_files}" "${modified_files}" | sed '/^$/d')"
           if [ -z "${changed_files}" ]; then
             echo "No changed plugin files to review."
             exit 0
@@ -88,10 +91,17 @@ jobs:
           truncated=0
           reviewed_files=0
 
+          is_added_file() {
+            printf '%s\n' "${added_files}" | grep -qxF "$1"
+          }
           while IFS= read -r file; do
             [ -n "${file}" ] || continue
-
-            block="$(printf '### %s\n```\n%s\n```\n\n' "${file}" "$(git show "HEAD:${file}")")"
+            if is_added_file "${file}"; then
+              block="$(printf '### %s (new file)\n```\n%s\n```\n\n' "${file}" "$(git show "HEAD:${file}")")"
+            else
+              file_diff="$(git diff "origin/${BASE_REF}...HEAD" -- "${file}")"
+              block="$(printf '### %s (modified)\n```diff\n%s\n```\n\n' "${file}" "${file_diff}")"
+            fi
             block_size="${#block}"
             remaining=$((MAX_DIFF_BYTES - bytes_used))
 
@@ -130,6 +140,7 @@ jobs:
             '{
               model: "claude-opus-4-6",
               max_tokens: 1024,
+              temperature: 0,
               system: (
                 "You are reviewing a GitHub pull request that adds or updates skills in a marketplace.\n" +
                 "Use this condensed rubric derived from the skill-creator guidance.\n\n" +
@@ -149,6 +160,7 @@ jobs:
                     "Review only the following changed files from plugins/.\n" +
                     "Ignore files not shown here.\n" +
                     "Skip binary-file concerns because binaries were excluded before this request.\n" +
+                    "New files are shown in full. Modified files are shown as unified diffs — review only the changed lines.\n" +
                     (
                       if $truncated == "1"
                       then "Note: The diff payload was truncated at 200KB, so not all changed files may be included.\n"
@@ -198,4 +210,18 @@ jobs:
             *) verdict="COMMENT" ;;
           esac
 
+          # Collect IDs of stale reviews BEFORE posting the new one
+          previous_review_ids="$(
+            gh api "/repos/${REPO}/pulls/${PR_NUMBER}/reviews" \
+              --jq '[.[] | select(.body | startswith("🤖 **Skill Review Bot**")) | .id] | .[]'
+          )" || true
+
           post_review "${verdict}" "${comment_body}"
+
+          # Dismiss old reviews after the new one is confirmed posted
+          for rid in ${previous_review_ids}; do
+            gh api --method PUT \
+              "/repos/${REPO}/pulls/${PR_NUMBER}/reviews/${rid}/dismissals" \
+              -f message="Superseded by updated review on latest push." \
+              -f event="DISMISS" 2>/dev/null || true
+          done
