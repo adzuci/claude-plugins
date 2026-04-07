@@ -46,6 +46,7 @@ Apollo's shared [plugin marketplace](https://code.claude.com/docs/en/plugin-mark
 ## Skill Inventory
 
 <!-- SKILL-INVENTORY-START -->
+
 | Plugin | Command | Description |
 | --- | --- | --- |
 | apollo-data | `/apollo-data:account-deep-dive` | Generate a comprehensive profile for a specific team/account combining revenue, credits, support, email, and events |
@@ -72,6 +73,7 @@ Apollo's shared [plugin marketplace](https://code.claude.com/docs/en/plugin-mark
 | apollo-eng-leadership | `/apollo-eng-leadership:learn-about-skills` | Explain how Cowork skills and plugins work in Apollo's shared skills marketplace. Use when the user asks how Cowork skills work, wants to browse or understand shared plugins, or wants help writing a new skill and opening a PR to add it to apolloio/skills. |
 | apollo-eng-leadership | `/apollo-eng-leadership:okr-report` | Generate an OKR status report for an engineering team. Activate when a manager asks for an OKR report, OKR status, quarterly progress, key results update, or says "okr report". |
 | apollo-eng-leadership | `/apollo-eng-leadership:sprint-planning` | Help prepare for sprint planning by summarizing carry-over work, team capacity, and suggested priorities. Activate when a manager asks to prepare for sprint planning, plan the next sprint, sprint prep, or says "sprint planning". |
+
 <!-- SKILL-INVENTORY-END -->
 
 ## Where Do Skills Go at Apollo?
