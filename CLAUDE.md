@@ -4,7 +4,7 @@ This file provides guidance to Claude Code when working in this repository.
 
 ## Repo Purpose
 
-This is Apollo's shared Claude Code skills marketplace. Skills live in `plugins/<plugin>/skills/<skill-name>/SKILL.md` and are installable via the `apollo-skills` private marketplace.
+This is Apollo's shared Claude Code skills marketplace. Skills live in `plugins/<plugin>/skills/<skill-name>/SKILL.md` and are installable via the `apollo-plugins` private marketplace.
 
 ## Adding a Skill
 
@@ -52,3 +52,9 @@ CI runs `mdformat --check .` on every PR and will fail if files are not formatte
 ## Self-Improvement
 
 When corrected, suggest an update to this file to prevent the same mistake again.
+
+## Skill routing
+
+When the user's request matches an available skill, ALWAYS invoke it using the Skill
+tool as your FIRST action. Do NOT answer directly, do NOT use other tools first.
+The skill has specialized workflows that produce better results than ad-hoc answers.

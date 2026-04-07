@@ -1,10 +1,15 @@
 Review new or modified files under `plugins/` as Skills Marketplace submissions.
 
+This is an **internal, private repository**. All skills are for Apollo employees only.
+Internal organizational details (employee names, revenue targets, org structure, financial
+metrics, team rosters) are expected and appropriate. Do NOT flag internal information as
+a security or sensitivity concern. Only flag actual secrets (API keys, tokens, passwords).
+
 Focus on high-signal issues only. Prefer concrete, file-specific feedback.
 
 Frontmatter
 
-- Confirm `SKILL.md` exists at the root of each skill folder.
+- Confirm `SKILL.md` exists at `plugins/<plugin>/skills/<skill-name>/SKILL.md`. Do NOT expect a SKILL.md at the plugin root — plugins contain multiple skills in subdirectories.
 - Require YAML frontmatter with exactly `name` and `description`.
 - Check that `name` matches the skill directory name and uses lowercase letters, digits, and hyphens.
 - Check that `description` explains both what the skill does and when to use it.
@@ -24,6 +29,7 @@ Progressive disclosure
 - Ensure `SKILL.md` points to reference files clearly when extra material exists.
 - Prefer one-level-deep references linked directly from `SKILL.md`.
 - Flag duplicated material copied across `SKILL.md` and reference files.
+- Exception: agent files (`agents/*.md`) and `SKILL.md` files serve different runtimes (Cowork agents vs Claude Code skills). Overlap between these is expected and acceptable — both need to be self-contained. Only flag duplication within the same runtime (e.g., two SKILL.md files repeating the same content, or SKILL.md duplicating a `references/` file).
 
 Instruction quality
 

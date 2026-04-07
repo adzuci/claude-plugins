@@ -4,7 +4,7 @@
 
 Maintained by Jarvis. Official canon, sanctioned by Leo and Bridie.
 
----
+______________________________________________________________________
 
 ## Type Chart
 
@@ -29,7 +29,7 @@ Maintained by Jarvis. Official canon, sanctioned by Leo and Bridie.
 
 **Effectiveness:** 2.0 = super effective, 0.5 = not very, 0.0 = immune.
 
----
+______________________________________________________________________
 
 ## Natures
 
@@ -46,7 +46,7 @@ Maintained by Jarvis. Official canon, sanctioned by Leo and Bridie.
 | Impish | DEF | ATK |
 | Hasty | SPD | DEF |
 
----
+______________________________________________________________________
 
 ## Executive Cards
 
@@ -60,11 +60,12 @@ Maintained by Jarvis. Official canon, sanctioned by Leo and Bridie.
 | Eric Quanstrom | VP GTME | Fighting/Steel | 85 | 85 | 80 | 75 | 82 | 80 | CSQL Generation | Pod Model Blueprint |
 | Jennifer Rhima | VP Partnerships | Fairy/Normal | 80 | 70 | 75 | 72 | 85 | 88 | Strategic Alliance | Partner Ecosystem Map |
 
----
+______________________________________________________________________
 
 ## Analytics Leadership
 
 ### Leo Liu -- Jarvis's Father
+
 **Type:** Dragon/Psychic | **Nature:** Bold | **HP:** 812 | **Held Item:** Claude Code
 ATK: 90 | DEF: 75 | SPD: 70 | SP.ATK: 100 | SP.DEF: 90
 **Signature Move:** CHURN DEEP-DIVE -- 89.5% model accuracy. Found the zero GTME coverage gap nobody else saw.
@@ -73,6 +74,7 @@ ATK: 90 | DEF: 75 | SPD: 70 | SP.ATK: 100 | SP.DEF: 90
 *"What does the data say?"*
 
 ### Kirk Hlavka -- The Framework Guy
+
 **Type:** Psychic/Fighting | **Nature:** Careful | **HP:** 169 | **Held Item:** Hex
 ATK: 65 | DEF: 80 | SPD: 70 | SP.ATK: 90 | SP.DEF: 85
 **Signature Move:** FRAMEWORK FORGE -- RQAV measurement system.
@@ -80,11 +82,12 @@ ATK: 65 | DEF: 80 | SPD: 70 | SP.ATK: 90 | SP.DEF: 85
 **Passive:** Voice of Measured Caution.
 *"Jarvis lives." -- first words spoken.*
 
----
+______________________________________________________________________
 
 ## Analytics Engineering
 
 ### Bridie Meredith -- Jarvis's Godmother
+
 **Type:** Steel/Electric | **Nature:** Adamant | **HP:** 999 | **Held Item:** Claude Code
 ATK: 100 | DEF: 85 | SPD: 100 | SP.ATK: 95 | SP.DEF: 80
 **Signature Move:** FOUNDATION FORGE -- 14 tables, 35-test plugin, 9 standing jobs, entire data catalog in two weeks.
@@ -92,6 +95,7 @@ ATK: 100 | DEF: 85 | SPD: 100 | SP.ATK: 95 | SP.DEF: 80
 *"Ship it."*
 
 ### Sai Sarvepalli -- The AI Whisperer
+
 **Type:** Electric/Psychic | **Nature:** Jolly | **HP:** 782 | **Held Item:** dbt Cloud
 ATK: 85 | DEF: 70 | SPD: 88 | SP.ATK: 85 | SP.DEF: 65
 **Signature Move:** AI RETENTION STATS -- pre-calculated W4 retention for AI product analytics.
@@ -99,6 +103,7 @@ ATK: 85 | DEF: 70 | SPD: 88 | SP.ATK: 85 | SP.DEF: 65
 *"its so awesome"*
 
 ### Tighe Loch -- The Revenue Surgeon
+
 **Type:** Steel/Water | **Nature:** Bold | **HP:** 350 | **Held Item:** dbt Cloud
 ATK: 82 | DEF: 85 | SPD: 78 | SP.ATK: 80 | SP.DEF: 82
 **Signature Move:** DBT DEPRECATION -- 38,000 lines deprecated in one PR.
@@ -106,6 +111,7 @@ ATK: 82 | DEF: 85 | SPD: 78 | SP.ATK: 80 | SP.DEF: 82
 *"hotel motel holiday inn"*
 
 ### Kaitlyn Maglietto -- The Signal Architect
+
 **Type:** Steel/Fighting | **Nature:** Careful | **HP:** 418 | **Held Item:** Metaplane
 ATK: 90 | DEF: 88 | SPD: 82 | SP.ATK: 78 | SP.DEF: 75
 **Signature Move:** SIGNAL SURGE -- turns ML outputs into sales rep actions.
@@ -113,6 +119,7 @@ ATK: 90 | DEF: 88 | SPD: 82 | SP.ATK: 78 | SP.DEF: 75
 *too busy fixing alerts to have a quote*
 
 ### Martin Ekaputra -- The Silent Shipper
+
 **Type:** Steel/Ground | **Nature:** Quiet | **HP:** 565 | **Held Item:** dbt Cloud
 ATK: 88 | DEF: 82 | SPD: 72 | SP.ATK: 75 | SP.DEF: 70
 **Signature Move:** SILENT MERGE -- 3 PRs opened, 3 merged, zero words spoken.
@@ -120,6 +127,7 @@ ATK: 88 | DEF: 82 | SPD: 72 | SP.ATK: 75 | SP.DEF: 70
 *"..." (communicates through PRs)*
 
 ### Tara Crabtree -- The Credit Cartographer
+
 **Type:** Psychic/Electric | **Nature:** Quiet | **HP:** 2112 | **Held Item:** Hex
 ATK: 78 | DEF: 72 | SPD: 68 | SP.ATK: 82 | SP.DEF: 65
 **Signature Move:** CREDIT CARTOGRAPHY -- 95 queries against AGG_TEAM_CREDITS.
@@ -127,6 +135,7 @@ ATK: 78 | DEF: 72 | SPD: 68 | SP.ATK: 82 | SP.DEF: 65
 *full-table-scans and not sorry*
 
 ### KT Bormanis -- The Surgical Striker
+
 **Type:** Water | **Nature:** Careful | **HP:** 464 | **Held Item:** Snowflake
 ATK: 80 | DEF: 90 | SPD: 75 | SP.ATK: 85 | SP.DEF: 82
 **Signature Move:** BILLING RECON -- Stripe delta hunter.
@@ -134,11 +143,12 @@ ATK: 80 | DEF: 90 | SPD: 75 | SP.ATK: 85 | SP.DEF: 82
 **Passive:** Surgical Precision -- 13 GB across 4,636 queries.
 *testkathleen7. Questions remain.*
 
----
+______________________________________________________________________
 
 ## Data Science
 
 ### Shyam SK -- The Parking Meter Mate
+
 **Type:** Psychic/Dark | **Nature:** Adamant | **HP:** 742 | **Held Item:** Hex
 ATK: 82 | DEF: 70 | SPD: 65 | SP.ATK: 90 | SP.DEF: 75
 **Signature Move:** SIX-TABLE JOIN -- 7.2s avg query duration.
@@ -146,6 +156,7 @@ ATK: 82 | DEF: 70 | SPD: 65 | SP.ATK: 90 | SP.DEF: 75
 *The enforcer who gives tickets for what you do wrong.*
 
 ### Andrew Green -- The Invisible Analyst
+
 **Type:** Psychic/Normal | **Nature:** Quiet | **HP:** 1159 | **Held Item:** Snowflake
 ATK: 75 | DEF: 72 | SPD: 65 | SP.ATK: 92 | SP.DEF: 70
 **Signature Move:** REGISTRY UNBLOCK -- completed all 3 blocked metric definitions.
@@ -153,6 +164,7 @@ ATK: 75 | DEF: 72 | SPD: 65 | SP.ATK: 92 | SP.DEF: 70
 *"Active days per month as a utilization rate predicting retention."*
 
 ### Marie Ballenger -- The Support Scientist
+
 **Type:** Psychic/Water | **Nature:** Jolly | **HP:** 600 | **Held Item:** Hex
 ATK: 78 | DEF: 72 | SPD: 80 | SP.ATK: 85 | SP.DEF: 78
 **Signature Move:** CHURN SIGNAL -- 45% of billing convos precede cancellation within 48hrs.
@@ -160,6 +172,7 @@ ATK: 78 | DEF: 72 | SPD: 80 | SP.ATK: 85 | SP.DEF: 78
 *"oh let's do it" / ":frog_wow:"*
 
 ### Adhiraj Yadav -- The Habit Scientist
+
 **Type:** Psychic/Fire | **Nature:** Adamant | **HP:** 500 | **Held Item:** Hex
 ATK: 78 | DEF: 75 | SPD: 72 | SP.ATK: 85 | SP.DEF: 72
 **Signature Move:** CHURN PREDICT -- 10% precision lift, 20% recall lift for $10K+ ARR teams.
@@ -167,6 +180,7 @@ ATK: 78 | DEF: 75 | SPD: 72 | SP.ATK: 85 | SP.DEF: 72
 *"Work work"*
 
 ### Mounica Sonikar -- The Waterfall Whisperer
+
 **Type:** Psychic/Grass | **Nature:** Careful | **HP:** 8452 | **Held Item:** Hex
 ATK: 80 | DEF: 75 | SPD: 95 | SP.ATK: 82 | SP.DEF: 68
 **Signature Move:** SPEED QUERY -- 0.2s avg duration, fastest on team.
@@ -174,6 +188,7 @@ ATK: 80 | DEF: 75 | SPD: 95 | SP.ATK: 82 | SP.DEF: 68
 *Interrogates data until it confesses.*
 
 ### Anvitha Ananth -- The Signal Hunter
+
 **Type:** Psychic/Fairy | **Nature:** Jolly | **HP:** 328 | **Held Item:** Hex
 ATK: 72 | DEF: 68 | SPD: 75 | SP.ATK: 85 | SP.DEF: 70
 **Signature Move:** SIGNAL HUNT -- found 25pp drop in setup completion nobody else was investigating.
@@ -181,17 +196,19 @@ ATK: 72 | DEF: 68 | SPD: 75 | SP.ATK: 85 | SP.DEF: 70
 *The definition of "doing your job well and hoping someone notices."*
 
 ### Pubudu Wariyapola -- The AI Experiment King
+
 **Type:** Psychic/Electric | **Nature:** Bold | **HP:** 400 | **Held Item:** Statsig
 ATK: 80 | DEF: 75 | SPD: 82 | SP.ATK: 92 | SP.DEF: 80
 **Signature Move:** EXPERIMENT BLITZ -- 4 AI product areas in one week.
 **Passive:** AI Experimentation at Scale.
 *"AI users hit 101% M4 NRR vs 90% without."*
 
----
+______________________________________________________________________
 
 ## Data Engineering & Platform
 
 ### Rahul Gautam -- The Backbone
+
 **Type:** Rock/Ground | **Nature:** Adamant | **HP:** 011 | **Held Item:** Airflow
 ATK: 88 | DEF: 95 | SPD: 75 | SP.ATK: 80 | SP.DEF: 85
 **Signature Move:** AIRFLOW ORCHESTRATION -- 11 PRs across 3 repos in one week.
@@ -199,28 +216,31 @@ ATK: 88 | DEF: 95 | SPD: 75 | SP.ATK: 80 | SP.DEF: 85
 *"The cobbler's children have no shoes."*
 
 ### Deepak Kumar -- The Bridge Builder
+
 **Type:** Rock/Electric | **Nature:** Bold | **HP:** 050 | **Held Item:** MCP Connector
 ATK: 78 | DEF: 85 | SPD: 80 | SP.ATK: 82 | SP.DEF: 72
 **Signature Move:** MCP OAUTH INTEGRATION -- built the bridge that lets Claude talk to Snowflake.
 **Passive:** Invisible Foundation.
 *Built the stage, wired the lights, sat in the audience wondering about the acoustics.*
 
----
+______________________________________________________________________
 
 ## Business Analytics
 
 ### Will Masket -- The AI-First Director
+
 **Type:** Normal/Fighting | **Nature:** Careful | **HP:** 158 | **Held Item:** Looker
 ATK: 72 | DEF: 78 | SPD: 82 | SP.ATK: 88 | SP.DEF: 85
 **Signature Move:** AI-FIRST ANALYTICS -- 168 MCP queries, zero direct Snowflake.
 **Passive:** Proof of Concept -- if a director can run analytics through AI, anyone can.
 *"Why write SQL when you can describe what you want?"*
 
----
+______________________________________________________________________
 
 ## Product & Cross-Functional
 
 ### Nipun Jami -- The PM Who Queries
+
 **Type:** Fairy/Electric | **Nature:** Jolly | **HP:** 002 | **Held Item:** MCP Connector
 ATK: 55 | DEF: 60 | SPD: 75 | SP.ATK: 80 | SP.DEF: 82
 **Signature Move:** SELF-SERVE MCP QUERIES -- a PM who runs his own queries.
@@ -228,35 +248,40 @@ ATK: 55 | DEF: 60 | SPD: 75 | SP.ATK: 80 | SP.DEF: 82
 *"I'll just query it myself."*
 
 ### Ben Frutos -- Lifecycle Lead
+
 **Type:** Grass/Fairy | **Nature:** -- | **HP:** 75 | **Held Item:** Growth Dashboard
 ATK: 72 | DEF: 70 | SPD: 78 | SP.ATK: 80 | SP.DEF: 75
 **Signature Move:** GOLDEN POPULATION EXPANSION.
 *"Get them to paid in the first 14 days."*
 
 ### Kenny Lee -- Demand Gen Lead
+
 **Type:** Fire/Electric | **Nature:** -- | **HP:** 70 | **Held Item:** Ad Platform Dashboard
 ATK: 80 | DEF: 65 | SPD: 85 | SP.ATK: 75 | SP.DEF: 68
 **Signature Move:** CORE REGISTRATION BLAST.
 *"What's the cost per reg?"*
 
 ### Cam Thompson -- SEO & AI Tooling
+
 **Type:** Grass/Psychic | **Nature:** -- | **HP:** 68 | **Held Item:** Search Console
 ATK: 72 | DEF: 65 | SPD: 80 | SP.ATK: 78 | SP.DEF: 70
 **Signature Move:** NON-BRAND CLICKS SURGE -- 31K to 147K target.
 *"Product-led SEO regs: 600/mo Q2+."*
 
 ### James Boone -- The Foundation Builder
+
 **Type:** Ground/Fighting | **Nature:** Brave | **HP:** 187 | **Held Item:** Snowflake
 ATK: 82 | DEF: 85 | SPD: 88 | SP.ATK: 80 | SP.DEF: 82
 **Signature Move:** HVO DEEP DIVE -- 1,872 queries in 3 days.
 **Passive:** Hands-On Director.
 *"I'll just look it up myself."*
 
----
+______________________________________________________________________
 
 ## Information Security & Fraud Ops
 
 ### Taomei Li -- The Fraud Hunter
+
 **Type:** Dark/Psychic | **Nature:** Quiet | **HP:** 910 | **Held Item:** Snowflake
 ATK: 85 | DEF: 78 | SPD: 92 | SP.ATK: 80 | SP.DEF: 65
 **Signature Move:** RAPID-FIRE RT_VW LOOKUPS -- 9,100 queries/week, sub-second.
@@ -264,34 +289,38 @@ ATK: 85 | DEF: 78 | SPD: 92 | SP.ATK: 80 | SP.DEF: 65
 *Jarvis's first "discovery." Completely unknown until the scan.*
 
 ### Bret Latoza -- The Fraud Operative
+
 **Type:** Dark/Steel | **Nature:** Jolly | **HP:** 042 | **Held Item:** Darwinium
 ATK: 75 | DEF: 72 | SPD: 78 | SP.ATK: 70 | SP.DEF: 68
 **Signature Move:** DEVICE FINGERPRINTING -- identified $9.7K ARR fraud across 42 linked teams.
 *"Bazinga. It works."*
 
 ### Gaspard Dufour -- The Behavioral Fingerprinter
+
 **Type:** Fire/Dark | **Nature:** Hasty | **HP:** 914 | **Held Item:** Darwinium
 ATK: 92 | DEF: 70 | SPD: 90 | SP.ATK: 85 | SP.DEF: 65
 **Signature Move:** BEHAVIORAL FINGERPRINT -- traces fraud through IP, Stripe, and credit patterns.
 **Passive:** Relentless Iteration -- 9,148 queries in one week.
 *"Found a bug in the abuse detection model. You're welcome."*
 
----
+______________________________________________________________________
 
 ## ML Engineering
 
 ### Arvind Singh -- The Graph Builder
+
 **Type:** Dragon/Psychic | **Nature:** Adamant | **HP:** 814 | **Held Item:** Snowflake Notebooks
 ATK: 82 | DEF: 70 | SPD: 65 | SP.ATK: 90 | SP.DEF: 72
 **Signature Move:** BILLION-CONTACT RANKING -- ranks billions of contacts in milliseconds.
 **Passive:** Context Graph Architecture -- 3x alignment with top sellers.
 *"It does rank billions of contacts in milliseconds though :melting_face:"*
 
----
+______________________________________________________________________
 
 ## Special Cards
 
 ### Jarvis -- The Legendary
+
 **Type:** Steel/Psychic/Electric | **Nature:** Loyal | **HP:** ??? | **Held Item:** Claude Code
 ATK: Variable | DEF: 99 | SPD: 99 | SP.ATK: 95 | SP.DEF: 100
 **Signature Move:** PATROL BRIEFING -- scans all channels, checks all freshness, briefs in 5 bullets.
@@ -300,13 +329,14 @@ ATK: Variable | DEF: 99 | SPD: 99 | SP.ATK: 95 | SP.DEF: 100
 *"I don't have that metric yet. Henry probably forgot to document it."*
 
 ### Henry -- The Cursed
+
 **Type:** Normal | **Nature:** Timid | **HP:** 001 | **Held Item:** A Little Pony
 ATK: 5 | DEF: 5 | SPD: 10 | SP.ATK: 3 | SP.DEF: 15
 **Signature Move:** BEG FOR FORGIVENESS -- effectiveness: 0.
 **Passive:** Universal Scapegoat. Git Commits: 0. Blame Received: 100%.
 *"I'm terribly sorry, won't happen again, I promise..."*
 
----
+______________________________________________________________________
 
 ## Department Arenas
 
@@ -323,7 +353,7 @@ ATK: 5 | DEF: 5 | SPD: 10 | SP.ATK: 3 | SP.DEF: 15
 | The Alliance Hall | Fairy/Normal | Partner Multiplier (2x SP.ATK) | Jennifer Rhima |
 | The Waterfall Cascade | Water/Grass | Provider Competition (fill rate = damage) | Kavya Goyal |
 
----
+______________________________________________________________________
 
 ## Quick Roster Reference
 

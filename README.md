@@ -1,5 +1,11 @@
 # Skills
 
+<!-- VERSION-START -->
+
+**Current version:** `v1.0.0`
+
+<!-- VERSION-END -->
+
 Apollo's shared [plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces#private-repositories) for Claude Code and Cowork. Install plugins to get reusable skills across any Apollo repo.
 
 **Questions?** Ask in [#xfn-team-devops](https://apollo-io.slack.com/archives/xfn-team-devops).
@@ -16,8 +22,8 @@ Apollo's shared [plugin marketplace](https://code.claude.com/docs/en/plugin-mark
 
 1. **Install a plugin**
 
-   - From the UI: **Browse and install plugins** → **apollo-skills** → pick a plugin → Install now
-   - Or run: `/plugin install apollo-eng@apollo-skills`
+   - From the UI: **Browse and install plugins** → **apollo-plugins** → pick a plugin → Install now
+   - Or run: `/plugin install apollo-eng@apollo-plugins`
 
 1. **Use a skill**
    Mention it in chat (e.g. "Use the pr-description skill to generate a PR description") or run the command directly: `/apollo-eng:pr-description`
@@ -32,7 +38,7 @@ Apollo's shared [plugin marketplace](https://code.claude.com/docs/en/plugin-mark
 
 1. Run `/plugin`
 
-1. Tab over to **Marketplaces** → **apollo-skills**
+1. Tab over to **Marketplaces** → **apollo-plugins**
 
 1. Select **Enable auto-update** while you are here
 
@@ -126,6 +132,17 @@ When making a Cowork skill:
 
 The `apollo-eng-leadership` plugin includes `/apollo-eng-leadership:learn-about-skills` as an example people can run to understand how shared Cowork skills work before writing their own.
 
+## Skills vs Agents
+
+Plugins can contain both **skills** (`skills/<name>/SKILL.md`) and **agents** (`agents/<name>.md`):
+
+- **Skill** — A step-by-step workflow Claude follows when invoked or auto-triggered. Write a skill when the task has defined steps and predictable output (e.g. `pr-description`, `incident-response`).
+- **Agent** — A persona with domain expertise that reasons across varied questions. Write an agent when the task is open-ended and advisory (e.g. `jarvis.md` for analytics, `data-engineer.md` for warehouse guidance).
+
+Many plugins use both: the agent defines expertise and guardrails, the skills define specific workflows that leverage that expertise.
+
+> **Note:** Plugins can also include [MCP server configs](https://modelcontextprotocol.io/), context files, scripts, and other assets. See the [plugin spec](https://agentskills.io/specification) for the full directory layout.
+
 ## Naming Conventions
 
 ### Plugins
@@ -186,7 +203,7 @@ To have Claude Code suggest this marketplace when someone works in another repo 
 ```json
 {
   "extraKnownMarketplaces": {
-    "apollo-skills": {
+    "apollo-plugins": {
       "source": {
         "source": "github",
         "repo": "apolloio/skills"
@@ -201,10 +218,14 @@ To auto-enable specific plugins in that repo:
 ```json
 {
   "enabledPlugins": {
-    "apollo-eng@apollo-skills": true
+    "apollo-eng@apollo-plugins": true
   }
 }
 ```
+
+### Auto-update
+
+This marketplace uses `"autoUpdate": true` so every engineer gets the latest skills automatically without running `claude plugin update`. For a fast-moving internal repo this is the right tradeoff: skill authors ship improvements and everyone benefits immediately. The accepted risk is that any commit merged to `main` takes effect on consumer machines at next sync — so branch protection, required reviews, and CI validation on `main` are load-bearing controls.
 
 See [Claude Code plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces) for the full schema.
 
@@ -241,13 +262,13 @@ flowchart TD
             bump["Bump version\n(Conventional Commits → semver tag\n+ GitHub Release)"]
         end
 
-        marketplace[".claude-plugin/marketplace.json\napollo-skills marketplace"]
+        marketplace[".claude-plugin/marketplace.json\napollo-plugins marketplace"]
         plugins["plugins/\n  apollo-eng/\n  apollo-eng-devops/\n  apollo-eng-leadership/"]
     end
 
     subgraph consumers["Consuming repos (e.g. leadgenie, devops)"]
         settings[".claude/settings.json\nextraKnownMarketplaces"]
-        install["/plugin install apollo-eng@apollo-skills"]
+        install["/plugin install apollo-eng@apollo-plugins"]
         skill["/apollo-eng:pr-description\n/apollo-eng-devops:incident-response\netc."]
     end
 

@@ -1,8 +1,8 @@
 {
-  "name": "apollo-skills",
-  "owner": { "name": "Apollo Eng Enablement" },
+  "name": "apollo-plugins",
+  "owner": { "name": "DevOps" },
   "metadata": {
-    "description": "Shared Claude Code skills and plugins for Apollo engineering"
+    "description": "Shared Claude Code skills and plugins"
   },
   "plugins": [
     {
@@ -32,6 +32,27 @@
       "description": "Cowork skills for engineering managers — OKR reporting, eng metrics, and planning",
       "category": "engineering",
       "tags": ["cowork", "leadership"]
+    },
+    {
+      "name": "apollo-gtm",
+      "source": "./plugins/apollo-gtm",
+      "description": "Go-to-market strategy, sales enablement, and demand generation",
+      "category": "gtm",
+      "tags": ["cowork", "gtm"]
+    },
+    {
+      "name": "apollo-it",
+      "source": "./plugins/apollo-it",
+      "description": "IT management, infrastructure, security, and support",
+      "category": "it",
+      "tags": ["cowork", "it"]
+    },
+    {
+      "name": "apollo-product",
+      "source": "./plugins/apollo-product",
+      "description": "Product management, roadmap, and lifecycle processes",
+      "category": "product",
+      "tags": ["cowork", "product"]
     }
   ]
 }

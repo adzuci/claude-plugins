@@ -16,34 +16,24 @@ description: Export Apollo skills as Cursor rules (.mdc files) into a project's 
 Check in this order and stop at the first match:
 
 1. The current working directory is the `apolloio/skills` repo (contains `plugins/` and `.claude-plugin/`)
-1. `~/.apollo-skills/` exists and contains `plugins/`
+1. `~/.apollo-plugins/` exists and contains `plugins/`
 1. Ask the user: "Where is your local clone of apolloio/skills? (or I can clone it for you)"
-   - If they want it cloned: `git clone git@github.com:apolloio/skills.git ~/.apollo-skills`
+   - If they want it cloned: `git clone git@github.com:apolloio/skills.git ~/.apollo-plugins`
 
 Store the resolved path as `SKILLS_REPO`.
 
 ## Step 2 — Show available skills and ask which to export
 
-List every skill found under `SKILLS_REPO/plugins/`:
+Dynamically enumerate skills from the filesystem:
 
-```
-Plugin        Skill
-──────────────────────────────────────────────
-apollo-eng    bug-bash-generator
-apollo-eng    learn-from-chat
-apollo-eng    plan-from-jira
-apollo-eng    pr-description
-apollo-eng    product-ship-post
-apollo-eng    security-review
-apollo-eng-devops    cursor-rules
-apollo-eng-devops    devops
-apollo-eng-devops    grafana-observability
-apollo-eng-devops    incident-response
-apollo-eng-devops    kubernetes-specialist
-apollo-eng-devops    systematic-debugging
+```bash
+find "$SKILLS_REPO/plugins" -path "*/skills/*/SKILL.md" \
+  | sed "s|$SKILLS_REPO/plugins/||; s|/skills/|  |; s|/SKILL.md||" \
+  | sort \
+  | column -t -s '  ' -N 'Plugin,Skill'
 ```
 
-Then ask:
+Display the output as a table, then ask:
 
 > Which skills would you like to export? You can say:
 >

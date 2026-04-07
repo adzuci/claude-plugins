@@ -39,8 +39,9 @@ jobs:
         shell: bash
         run: |
           # ── Find the latest semver tag ────────────────────────────────────────
+          # Use || true to suppress SIGPIPE (exit 141) when head closes the pipe
           LAST_TAG=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' \
-            --sort=-version:refname | head -n1)
+            --sort=-version:refname | head -n1 || true)
 
           if [ -z "$LAST_TAG" ]; then
             LAST_TAG="v0.0.0"
@@ -56,7 +57,7 @@ jobs:
           echo "=== Last tag: ${LAST_TAG} ==="
           echo "=== Commits since last tag ==="
           if [ -z "$LAST_TAG" ] || [ "$LAST_TAG" = "v0.0.0" ]; then
-            git log --oneline HEAD | head -40
+            git log --oneline HEAD | head -40 || true
           else
             git log --oneline "${LAST_TAG}..HEAD"
           fi
@@ -109,7 +110,7 @@ jobs:
           echo "=== New tag: ${NEW_TAG} ==="
           echo "new_tag=${NEW_TAG}" >> "$GITHUB_OUTPUT"
 
-      - name: Create and push annotated tag
+      - name: Update version in README
         if: steps.version.outputs.new_tag != ''
         shell: bash
         env:
@@ -117,6 +118,27 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          python3 -c "
+          import re, os
+          tag = os.environ['NEW_TAG']
+          text = open('README.md').read()
+          text = re.sub(
+              r'<!-- VERSION-START -->.*?<!-- VERSION-END -->',
+              f'<!-- VERSION-START -->\n\n**Current version:** \`{tag}\`\n\n<!-- VERSION-END -->',
+              text, flags=re.DOTALL)
+          open('README.md', 'w').write(text)
+          "
+          git add README.md
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(release): update README to ${NEW_TAG} [skip ci]"
+          git push origin main
+
+      - name: Create and push annotated tag
+        if: steps.version.outputs.new_tag != ''
+        shell: bash
+        env:
+          NEW_TAG: ${{ steps.version.outputs.new_tag }}
+        run: |
           git tag -a "$NEW_TAG" -m "chore(release): ${NEW_TAG} [skip ci]"
           git push origin "$NEW_TAG"
 

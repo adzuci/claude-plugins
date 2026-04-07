@@ -1,6 +1,6 @@
 ---
 name: battle
-description: "Run a Pokemon-style battle between Apollo employees using Trainer Cards derived from real work activity. Activate when user says battle, pokemon, trainer card, fight, matchup, who would win, or /battle."
+description: Run a Pokemon-style battle between Apollo employees using Trainer Cards derived from real work activity. Activate when user says battle, pokemon, trainer card, fight, matchup, who would win, or /battle.
 ---
 
 # Pokemon Battle Skill
@@ -54,12 +54,13 @@ All card data lives in this skill's `data/` directory. These files are auto-upda
 ```
 
 If a requested fighter isn't found, generate a temporary card:
+
 - Type: Normal/Ghost
 - All stats: 40
 - Signature: UNKNOWN TECHNIQUE (Normal, 50 power)
 - Quote: "Who is this person? Even Jarvis doesn't know."
 
----
+______________________________________________________________________
 
 ## Step 1: Identify the Fighters
 
@@ -67,7 +68,7 @@ If a requested fighter isn't found, generate a temporary card:
 - **@name specified:** User vs that person.
 - **`team` specified:** Load team cards from `data/team_cards.md`, user's team vs random opposing team.
 
----
+______________________________________________________________________
 
 ## Step 2: Roll Battle Type
 
@@ -84,7 +85,7 @@ Randomly select:
 
 Overrides: `/battle team` forces Fusion. C-suite opponent forces Legendary Raid. Henry forces Wild Encounter.
 
----
+______________________________________________________________________
 
 ## Step 3: Set the Terrain
 
@@ -109,17 +110,18 @@ Arena selection: Wild=yours, Gym=theirs, Fusion/Gigantamax=random, Rival=50/50, 
 
 Active weather based on calendar: end-of-quarter=QUOTA PRESSURE, Friday=SHIP-IT WINDS, Monday AM=WEEKLY SYNC FOG.
 
----
+______________________________________________________________________
 
 ## Step 4: Deal Hands
 
 Each fighter gets 3 cards. User sees theirs. Opponent's hidden until post-battle.
 
 1. **Move card** — best type-advantage move from their list (or user-specified)
-2. **Terrain card** — their home arena. HOME FIELD bonus (+10% all stats) if it matches battle arena.
-3. **Wild card** — from their `wild_pool`. Effects: MOMENTUM (+15% SPD), ON FIRE (+15% ATK), BLOCKED (-10% SPD), DORMANT (-20% all), FADING (-5% all for Ghosts), etc.
+1. **Terrain card** — their home arena. HOME FIELD bonus (+10% all stats) if it matches battle arena.
+1. **Wild card** — from their `wild_pool`. Effects: MOMENTUM (+15% SPD), ON FIRE (+15% ATK), BLOCKED (-10% SPD), DORMANT (-20% all), FADING (-5% all for Ghosts), etc.
 
 Display:
+
 ```
 YOUR HAND:
   🃏 FOUNDATION FORGE (Steel, 95 power)
@@ -130,19 +132,21 @@ OPPONENT: Shyam SK (Psychic/Dark)
   🃏 🂠 🂠 🂠
 ```
 
----
+______________________________________________________________________
 
 ## Step 5: Execute Battle
 
 ### Pre-battle modifiers (apply in order):
+
 1. Nature: +10%/-10% per nature table
-2. Ghost penalty: secondary -10%, primary -15%, phantom base 10 all
-3. Terrain bonus: type match → arena effect
-4. Wild card effect
-5. Home field: terrain card matches arena → +10% all
-6. Fusion aura: team provides +5% DEF (not if team is Ghost/LEADERLESS)
+1. Ghost penalty: secondary -10%, primary -15%, phantom base 10 all
+1. Terrain bonus: type match → arena effect
+1. Wild card effect
+1. Home field: terrain card matches arena → +10% all
+1. Fusion aura: team provides +5% DEF (not if team is Ghost/LEADERLESS)
 
 ### Combat (4-6 turns):
+
 ```
 Turn order: higher SPD first (ties random)
 
@@ -160,16 +164,19 @@ Secondary moves alternate physical/special.
 ```
 
 ### Fusion: team cards fight, LEADERLESS = -20% DEF, Ghost teams = -10% all
+
 ### Gigantamax: 3x stat scale, Max moves at 1.5x power, ABANDONED depts can't Gigantamax
+
 ### Legendary Raid: player + 2 allies vs exec at 500+ HP scale, execs win ~70%
 
----
+______________________________________________________________________
 
 ## Step 6: Narrate
 
 **The narration IS the product.** It must be entertaining, screenshottable, and weave in real work context.
 
 Structure:
+
 ```
 ⚔️ {BATTLE TYPE}
 
@@ -202,6 +209,7 @@ GG. /apollo-data:battle explain for the data.
 ```
 
 ### Narration rules:
+
 - Reference real work: "14 tables slam into existence like a dbt run with zero warnings!"
 - Use fighter quotes from cards
 - Ghost types get eerie narration
@@ -210,20 +218,23 @@ GG. /apollo-data:battle explain for the data.
 - Crits reference recent achievements
 - Fusion names the members
 
----
+______________________________________________________________________
 
 ## Step 7: Post-Battle
 
 ### `/apollo-data:battle explain`
+
 Show stat rationale for both fighters from the card's `rationale` field.
 
 ### `/apollo-data:battle hand`
+
 Show the user's full card without fighting.
 
 ### `/apollo-data:battle leaderboard`
+
 Track wins/losses/ELO across battles. Store in memory or local state.
 
----
+______________________________________________________________________
 
 ## Ghost Type Rules
 
@@ -236,11 +247,11 @@ Track wins/losses/ELO across battles. Store in memory or local state.
 
 Team: >50% Ghost → Ghost fusion. Ghost manager → LEADERLESS (-20% DEF). Dept >50% Ghost managers → ABANDONED (no Gigantamax).
 
----
+______________________________________________________________________
 
 ## Type Chart
 
-| Attacking ↓ \ Defending → | Normal | Fire | Water | Electric | Grass | Ice | Fighting | Ground | Flying | Psychic | Dark | Rock | Ghost | Dragon | Steel | Fairy |
+| Attacking ↓ \\ Defending → | Normal | Fire | Water | Electric | Grass | Ice | Fighting | Ground | Flying | Psychic | Dark | Rock | Ghost | Dragon | Steel | Fairy |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Normal | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | .5 | 0 | 1 | .5 | 1 |
 | Fire | 1 | .5 | .5 | 1 | 2 | 2 | 1 | 1 | 1 | 1 | 1 | .5 | 1 | .5 | 2 | 1 |
@@ -276,7 +287,7 @@ Team: >50% Ghost → Ghost fusion. Ghost manager → LEADERLESS (-20% DEF). Dept
 | Impish | DEF | ATK |
 | Hasty | SPD | DEF |
 
----
+______________________________________________________________________
 
 ## About This Skill
 

@@ -12,6 +12,7 @@ Use this skill when a user asks about credit utilization, consumption, credit ty
 Use `ANALYTICS_DB.PLAYGROUND.AGG_TEAM_CREDITS` for all credit volume reporting. Other credit tables are supplementary.
 
 For daily team-level detail:
+
 - **Usage:** `ANALYTICS_DB.PLAYGROUND.FCT_TEAM_CREDIT_USE_DAILY`
 - **Limits:** `ANALYTICS_DB.PLAYGROUND.FCT_TEAM_CREDIT_LIMITS_DAILY`
 

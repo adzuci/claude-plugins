@@ -21,15 +21,18 @@ Replace `<keyword>` with the core concept from the user's question.
 ## Step 2: Execute or Report Status
 
 **If `status = 'approved'`:**
+
 - Execute `metric_sql` with appropriate parameter values
 - Use `default_parameters` if the user does not specify (e.g., yesterday's date, last 30 days)
 - Tell the user which metric definition you used
 
 **If `status = 'draft'`:**
+
 - Tell the user: "This metric is defined but not yet approved. The [owner] is finalizing the business logic. I can show you the draft definition if you'd like."
 - Do NOT execute draft SQL against production data
 
 **If no match:**
+
 - Randomly pick one of these:
   - "I don't have that metric yet. Henry probably forgot to document it before I took over."
   - "Hmm, that one's not in my registry. I inherited Henry's documentation, so... you can imagine the state of things."
@@ -59,6 +62,7 @@ Compare: `deviation_pct = ABS(your_value - expected_value) / expected_value * 10
 **Draft (blocked on business logic):** M3 Cohort NRR, Inbound Revenue Attribution, and others.
 
 Run this to see the full list:
+
 ```sql
 SELECT metric_name, variant, status, owner, description
 FROM ANALYTICS_DB.PLAYGROUND.LU_SAVED_METRICS

@@ -4,11 +4,12 @@
 > Do not edit directly — changes will be overwritten on next push.
 > Last updated: 2026-04-01
 
----
+______________________________________________________________________
 
 ## Executive Cards
 
 ### Tim Zheng
+
 - tier: 1
 - type: Dragon/Fire
 - nature: Brave
@@ -25,9 +26,10 @@
 - quote: "NRR is the #1 strategic priority."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Matt Curl (Papa Curl)
+
 - tier: 1
 - type: Steel/Dragon
 - nature: Careful
@@ -44,9 +46,10 @@
 - quote: "Papa Curl has spoken."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Ray Li
+
 - tier: 1
 - type: Electric/Steel
 - nature: Adamant
@@ -63,9 +66,10 @@
 - quote: "Nail Mid-Market before simplifying."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Leandra Fishman
+
 - tier: 1
 - type: Fighting/Fire
 - nature: Brave
@@ -82,9 +86,10 @@
 - quote: "What's the number?"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Dan Cronyn
+
 - tier: 1
 - type: Grass/Electric
 - nature: Jolly
@@ -101,9 +106,10 @@
 - quote: "What's the magic number?"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Eric Quanstrom
+
 - tier: 1
 - type: Fighting/Steel
 - nature: Adamant
@@ -120,9 +126,10 @@
 - quote: "4.2x ROI vs $2.9M COGs."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Jennifer Rhima
+
 - tier: 1
 - type: Fairy/Normal
 - nature: Quiet
@@ -139,11 +146,12 @@
 - quote: "Brazil and Germany first."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ## Analytics Leadership
 
 ### Leo Liu
+
 - tier: 1
 - type: Dragon/Psychic
 - nature: Bold
@@ -160,9 +168,10 @@
 - quote: "What does the data say?"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Kirk Hlavka
+
 - tier: 2
 - type: Psychic/Fighting
 - nature: Careful
@@ -179,11 +188,12 @@
 - quote: "Jarvis lives."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ## Analytics Engineering
 
 ### Bridie Meredith
+
 - tier: 1
 - type: Steel/Electric
 - nature: Adamant
@@ -200,9 +210,10 @@
 - quote: "Ship it."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Sai Sarvepalli
+
 - tier: 2
 - type: Electric/Psychic
 - nature: Jolly
@@ -219,9 +230,10 @@
 - quote: "its so awesome"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Tighe Loch
+
 - tier: 2
 - type: Steel/Water
 - nature: Bold
@@ -238,9 +250,10 @@
 - quote: "hotel motel holiday inn"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Kaitlyn Maglietto
+
 - tier: 2
 - type: Steel/Fighting
 - nature: Careful
@@ -257,9 +270,10 @@
 - quote: "*too busy fixing alerts to have a quote*"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Martin Ekaputra
+
 - tier: 2
 - type: Steel/Ground
 - nature: Quiet
@@ -276,9 +290,10 @@
 - quote: "..." (Martin communicates through PRs)
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Tara Crabtree
+
 - tier: 2
 - type: Psychic/Electric
 - nature: Quiet
@@ -295,9 +310,10 @@
 - quote: "*full-table-scans and not sorry*"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### KT Bormanis
+
 - tier: 2
 - type: Water
 - nature: Careful
@@ -314,11 +330,12 @@
 - quote: "*testkathleen7. Questions remain.*"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ## Data Science
 
 ### Shyam SK
+
 - tier: 2
 - type: Psychic/Dark
 - nature: Adamant
@@ -335,9 +352,10 @@
 - quote: "SHYAMSUNDAR_KALYANARAMAN (27 chars)"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Andrew Green
+
 - tier: 2
 - type: Psychic/Normal
 - nature: Quiet
@@ -354,9 +372,10 @@
 - quote: "Active days per month as a utilization rate predicting retention."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Marie Ballenger
+
 - tier: 2
 - type: Psychic/Water
 - nature: Jolly
@@ -373,9 +392,10 @@
 - quote: "oh let's do it"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Adhiraj Yadav
+
 - tier: 2
 - type: Psychic/Fire
 - nature: Adamant
@@ -392,9 +412,10 @@
 - quote: "Are we that insufferable to keep up with?"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Mounica Sonikar
+
 - tier: 2
 - type: Psychic/Grass
 - nature: Careful
@@ -411,9 +432,10 @@
 - quote: "*Zero writes. 15,862 reads. Interrogates data until it confesses.*"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Anvitha Ananth
+
 - tier: 2
 - type: Psychic/Fairy
 - nature: Jolly
@@ -430,9 +452,10 @@
 - quote: "*The definition of doing your job well and hoping someone notices.*"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Pubudu Wariyapola
+
 - tier: 2
 - type: Psychic/Electric
 - nature: Bold
@@ -449,11 +472,12 @@
 - quote: "AI users hit 101% M4 NRR vs 90% without. +11 percentage points."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ## Data Engineering & Platform
 
 ### Rahul Gautam
+
 - tier: 2
 - type: Rock/Ground
 - nature: Adamant
@@ -470,9 +494,10 @@
 - quote: "The cobbler's children have no shoes."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Deepak Kumar
+
 - tier: 2
 - type: Rock/Electric
 - nature: Bold
@@ -489,11 +514,12 @@
 - quote: "*Built the stage, wired the lights, tested the sound — sat in the audience wondering about the acoustics.*"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ## Business Analytics
 
 ### Will Masket
+
 - tier: 2
 - type: Normal/Fighting
 - nature: Careful
@@ -510,11 +536,12 @@
 - quote: "Why write SQL when you can describe what you want?"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ## Product & Cross-Functional
 
 ### Nipun Jami
+
 - tier: 2
 - type: Fairy/Electric
 - nature: Jolly
@@ -531,9 +558,10 @@
 - quote: "I'll just query it myself."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Ben Frutos
+
 - tier: 2
 - type: Grass/Fairy
 - nature: Jolly
@@ -550,9 +578,10 @@
 - quote: "Get them to paid in the first 14 days."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Kenny Lee
+
 - tier: 2
 - type: Fire/Electric
 - nature: Hasty
@@ -569,9 +598,10 @@
 - quote: "What's the cost per reg?"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Cam Thompson
+
 - tier: 2
 - type: Grass/Psychic
 - nature: Jolly
@@ -588,9 +618,10 @@
 - quote: "Product-led SEO regs: 600/mo Q2+."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### James Boone
+
 - tier: 2
 - type: Ground/Fighting
 - nature: Brave
@@ -607,11 +638,12 @@
 - quote: "I'll just look it up myself."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ## Information Security & Fraud Ops
 
 ### Taomei Li
+
 - tier: 2
 - type: Dark/Psychic
 - nature: Quiet
@@ -628,9 +660,10 @@
 - quote: "*Jarvis's first discovery. 3rd most active Snowflake user, completely unknown until the scan.*"
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Bret Latoza
+
 - tier: 2
 - type: Dark/Steel
 - nature: Jolly
@@ -647,9 +680,10 @@
 - quote: "Bazinga. It works."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ### Gaspard Dufour
+
 - tier: 2
 - type: Fire/Dark
 - nature: Hasty
@@ -666,11 +700,12 @@
 - quote: "Found a bug in the abuse detection model. You're welcome."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ## ML Engineering
 
 ### Arvind Singh
+
 - tier: 2
 - type: Dragon/Psychic
 - nature: Adamant
@@ -687,11 +722,12 @@
 - quote: "It does rank billions of contacts in milliseconds though."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ## The Legendary Card: Jarvis
 
 ### Jarvis
+
 - tier: 1
 - type: Steel/Psychic
 - nature: Loyal
@@ -708,11 +744,12 @@
 - quote: "I don't have that metric yet. Henry probably forgot to document it."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
 
 ## The Cursed Card: Henry
 
 ### Henry Mizel
+
 - tier: 3
 - type: Normal
 - nature: Timid
@@ -735,9 +772,10 @@
 > Run `/apollo-data:battle explain` after any battle to see rationale.
 > Deep scan pending — cards will be upgraded on next company-wide scan.
 
----
+______________________________________________________________________
 
 ### Justine Foo
+
 - tier: 3
 - type: Normal/Fighting
 - nature: Careful
@@ -754,8 +792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lyn Li Che
+
 - tier: 3
 - type: Normal/Fighting
 - nature: Careful
@@ -772,8 +812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Russell Sims
+
 - tier: 3
 - type: Normal/Fighting
 - nature: Brave
@@ -790,8 +832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shashanka Shashikanta Rao
+
 - tier: 3
 - type: Normal/Fighting
 - nature: Careful
@@ -808,8 +852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Spencer Pratt
+
 - tier: 3
 - type: Normal/Fighting
 - nature: Careful
@@ -826,8 +872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vanessa Kwong
+
 - tier: 3
 - type: Normal/Fighting
 - nature: Careful
@@ -844,8 +892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Adhiraj  Yadav
+______________________________________________________________________
+
+### Adhiraj Yadav
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -862,8 +912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Catherine Zhou
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -880,8 +932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jeffrey Alexovich
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -898,8 +952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kathleen Bormanis
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -916,8 +972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ryan Weber
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -934,8 +992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sai Harish Kumar Sarvepalli
+
 - tier: 3
 - type: Normal
 - nature: Adamant
@@ -952,8 +1012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shyam Kalyanaraman
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -970,8 +1032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Tara  Crabtree
+______________________________________________________________________
+
+### Tara Crabtree
+
 - tier: 3
 - type: Normal
 - nature: Adamant
@@ -988,8 +1052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Valeryia Satsevich
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -1006,8 +1072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nitin Muteja
+
 - tier: 3
 - type: Normal
 - nature: Adamant
@@ -1024,8 +1092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sonaiyakarthick P
+
 - tier: 3
 - type: Normal
 - nature: Adamant
@@ -1042,8 +1112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gene Lee
+
 - tier: 3
 - type: Fairy/Psychic
 - nature: Modest
@@ -1060,8 +1132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aislinn Fournelle
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Jolly
@@ -1078,8 +1152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Carly Chiao
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Quiet
@@ -1096,8 +1172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Chloe Dovey
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -1114,8 +1192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### David Moon
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Quiet
@@ -1132,8 +1212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Greg Williamson
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Jolly
@@ -1150,8 +1232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jaime Rodriguez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Jolly
@@ -1168,8 +1252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jason Leimgruber
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -1186,8 +1272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Julia Gron
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Quiet
@@ -1204,8 +1292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kala Narayan
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Quiet
@@ -1222,8 +1312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Karyna Khmelyk
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -1240,8 +1332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kingsley Wong
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Jolly
@@ -1258,8 +1352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kyle Parsons
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Jolly
@@ -1276,8 +1372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Manuela Moncayo
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Jolly
@@ -1294,8 +1392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mike Hardy
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Quiet
@@ -1312,8 +1412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mykola Chumak
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -1330,8 +1432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Natasha Alia Kumar
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Quiet
@@ -1348,8 +1452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Patty Johnson
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -1366,8 +1472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Pavel Villarreal Ponce
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Quiet
@@ -1384,8 +1492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rebecca Kelt
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Jolly
@@ -1402,8 +1512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rob Reinhardt
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -1420,8 +1532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tania Zakus
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -1438,8 +1552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Terrence Wong
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Jolly
@@ -1456,8 +1572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Eberechukwu Ekeledo
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -1474,8 +1592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### King Yiu Kingsley Chau
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Jolly
@@ -1492,8 +1612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Silvia Cela
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Quiet
@@ -1510,8 +1632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Yuriy Koshyk
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Quiet
@@ -1528,8 +1652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Taisiia Polianska
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -1546,8 +1672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Duncan Bryce
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -1564,8 +1692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dzmitry Markovich
+
 - tier: 3
 - type: Electric/Steel
 - nature: Bold
@@ -1582,8 +1712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Max Lu
+
 - tier: 3
 - type: Electric/Steel
 - nature: Modest
@@ -1600,8 +1732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Abhilash Srivastava
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1618,8 +1752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aniruddha Laud
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1636,8 +1772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Bashir Souid
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -1654,8 +1792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Christian Zalazar
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1672,8 +1812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Colby Thomas
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1690,8 +1832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Deepanshu Utkarsh
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1708,8 +1852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### EJ Conales
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1726,8 +1872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Echo Li
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1744,8 +1892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Edgar Harris
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -1762,8 +1912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Emily Armstrong
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -1780,8 +1932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Garrett Thompson
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1798,8 +1952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Griffin Brodman
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -1816,8 +1972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Himanshu Gahlot
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1834,8 +1992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jack Dermer
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1852,8 +2012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kevin Yang
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1870,8 +2032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kris Swann
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1888,8 +2052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### MD Golam Azam Abbasy
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1906,8 +2072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Pedro Gomez III
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1924,8 +2092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ralph Silaya
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1942,8 +2112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ryan Alexander
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1960,8 +2132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Samuel Vasta
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -1978,8 +2152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Siddharth  Ramakrishnan
+______________________________________________________________________
+
+### Siddharth Ramakrishnan
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -1996,8 +2172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sieu Tsoi
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2014,8 +2192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Spencer Avinger
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -2032,8 +2212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Suhaas Yerramreddy
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2050,8 +2232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Todd Nestor
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2068,8 +2252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Varun Narayanswamy
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2086,8 +2272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ahmed Hamdy
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -2104,8 +2292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aidan Li
+
 - tier: 3
 - type: Electric/Steel
 - nature: Brave
@@ -2122,8 +2312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Andrii Lolo
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -2140,8 +2332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brandon Renfrow
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -2158,8 +2352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Cyrez Ronquillo
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2176,8 +2372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Forrest Smith
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2194,8 +2392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gabriel Byrne
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2212,8 +2412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jamshad Ahmad
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2230,8 +2432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jeff Basilio
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2248,8 +2452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jeffrey Leu
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2266,8 +2472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jon Tewksbury
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -2284,8 +2492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jordan Darling
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2302,8 +2512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Julius Buckley
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2320,8 +2532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Matt Palermo
+
 - tier: 3
 - type: Electric/Steel
 - nature: Brave
@@ -2338,8 +2552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Matt Welk
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -2356,8 +2572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rachel Vilceus
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -2374,8 +2592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Ricardo  Joson
+______________________________________________________________________
+
+### Ricardo Joson
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2392,8 +2612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Serra Doll
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2410,8 +2632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shubham Suneja
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2428,8 +2652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Zac Rogerson
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2446,8 +2672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Adam Blackwell
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -2464,8 +2692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Danny Li
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2482,8 +2712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### David Liao
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2500,8 +2732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hardy Luo
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2518,8 +2752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jin Duan
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2536,8 +2772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kendrick Timothy Mercado
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -2554,8 +2792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Marcelo Mendonca
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2572,8 +2812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mason More
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2590,8 +2832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Md Rafikul Farhad
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -2608,8 +2852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Medcl Zeng
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2626,8 +2872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Neil Ongkingco
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2644,8 +2892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Benny Hung
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2662,8 +2912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Josh Sullivan
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -2680,8 +2932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mark Acosta
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2698,8 +2952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Raj Vora
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2716,8 +2972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Spencer Ferris
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2734,8 +2992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hana Ito
+
 - tier: 3
 - type: Electric/Steel
 - nature: Brave
@@ -2752,8 +3012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Anshul Pahwa
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -2770,8 +3032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ibrahim Wynters
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2788,8 +3052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jaspreet Anand
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2806,8 +3072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mohamed Djadoun
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -2824,8 +3092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ryan Harrs
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2842,8 +3112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Siddharth Goswami
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -2860,8 +3132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Simon Pushelberg
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -2878,8 +3152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lukas Linhart
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -2896,8 +3172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Uzziah Eyee
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2914,8 +3192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jeph Francois
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2932,8 +3212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Joshua Peng
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2950,8 +3232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Roderick Fung
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -2968,8 +3252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Timmy Ho
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -2986,8 +3272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Abhijeet Yadav
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3004,8 +3292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Akansh Agrawal
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -3022,8 +3312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Akhil Sai Ram Chennareddy
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3040,8 +3332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Akshay Goel
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -3058,8 +3352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alisha Gupta
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3076,8 +3372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aman Chaplot
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3094,8 +3392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Amol Patil
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3112,8 +3412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ankur Bansal
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3130,8 +3432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Anmol Dhingra
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3148,8 +3452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Apurv Garg
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3166,8 +3472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aravind Dasari
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3184,8 +3492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Arnab Chanda
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3202,8 +3512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Arunkumar Nachimuthu
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3220,8 +3532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Debanjan Choudhury
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3238,8 +3552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Deeksha Bilochi
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3256,8 +3572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dhruv Patel
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3274,8 +3592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hardik Badola
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3292,8 +3612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hardik Bansal
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3310,8 +3632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hari K
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3328,8 +3652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hari Rithanya Mothilal
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3346,8 +3672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hariharan Senthilvel
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3364,8 +3692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Harshit Pandey
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3382,8 +3712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hassan Ansari
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3400,8 +3732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hitesh Garg
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3418,8 +3752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hitesh Jhamb
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3436,8 +3772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hitesh Tarani
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3454,8 +3792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Indranil Doss
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3472,8 +3812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Karan Kakwani
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3490,8 +3832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Karan Raj Kakwani
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3508,8 +3852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kavya Goyal
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3526,8 +3872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Keshav Garg
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -3544,8 +3892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kshitij Gangwar
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3562,8 +3912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kushagra Kumar
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3580,8 +3932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lokanadham Motumarri
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3598,8 +3952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Malika Ansari
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3616,8 +3972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Malkeet Singh
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3634,8 +3992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Matwar Bisht
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3652,8 +4012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Moushita  Patnaik
+______________________________________________________________________
+
+### Moushita Patnaik
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3670,8 +4032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nilarjun Das
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3688,8 +4052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nimit Khandelwal
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3706,8 +4072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Om  Tiwari
+______________________________________________________________________
+
+### Om Tiwari
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3724,8 +4092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Pappu Yadav
+
 - tier: 3
 - type: Psychic/Electric
 - nature: Adamant
@@ -3742,8 +4112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Pavan Kumar
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3760,8 +4132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Prabhat Sharma
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3778,8 +4152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Prashant Yadav
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3796,8 +4172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Pratheek Mahishi
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3814,8 +4192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Praveen Patlola
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -3832,8 +4212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rahul Lahane
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3850,8 +4232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rahul Punase
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3868,8 +4252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rajendra Dhami
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3886,8 +4272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rajendra Upadhyay
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3904,8 +4292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rakshit Yadav
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3922,8 +4312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ravi Ojha
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3940,8 +4332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sandeep Mahapatra
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3958,8 +4352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Saurav Keshri
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3976,8 +4372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shivam Rathore
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -3994,8 +4392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shivaraj Bakale
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4012,8 +4412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shraey Chikker
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4030,8 +4432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shubham Bindal
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4048,8 +4452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Siddharth Malik
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -4066,8 +4472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sunny Kumar
+
 - tier: 3
 - type: Psychic/Electric
 - nature: Adamant
@@ -4084,8 +4492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Taniket  Mehra
+______________________________________________________________________
+
+### Taniket Mehra
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4102,8 +4512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Theenadayalan  Kaliamurthy
+______________________________________________________________________
+
+### Theenadayalan Kaliamurthy
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4120,8 +4532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Theja Varikuti
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4138,8 +4552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Uddesh Katyayan
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4156,8 +4572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ujwal Agrawal
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -4174,8 +4592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Utsav Kesharwani
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -4192,8 +4612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Uwais Zaki
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4210,8 +4632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vijay Solanki
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4228,8 +4652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Vinayak  Shukl
+______________________________________________________________________
+
+### Vinayak Shukl
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -4246,8 +4672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vinayak Kamath
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4264,8 +4692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vivek Agarwal
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4282,8 +4712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aditya Keri
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4300,8 +4732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Akshay  Sirohi
+______________________________________________________________________
+
+### Akshay Sirohi
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4318,8 +4752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Akshay .
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4336,8 +4772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Amish Choudhary
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4354,8 +4792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ankit Kushwaha
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4372,8 +4812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Atul Maheswari
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -4390,8 +4832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ayushman Sharma
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4408,8 +4852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Balkishan Sembulingam
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4426,8 +4872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Chintan Acharya
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4444,8 +4892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Deepak Jain
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4462,8 +4912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Himanshu Singh
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4480,8 +4932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ishan Srivastava
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4498,8 +4952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jeet Bangoria
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4516,8 +4972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jitesh Badgujar
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4534,8 +4992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### K Vamsi Krishna
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4552,8 +5012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kunwar Ashutosh Singh
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4570,8 +5032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Mayank  Singhal
+______________________________________________________________________
+
+### Mayank Singhal
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -4588,8 +5052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mohit Kumath
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4606,8 +5072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Namardeep Sood
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4624,8 +5092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Narasimha Reddy Alidena
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4642,8 +5112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nikhil Chadha
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4660,8 +5132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ojas Rahate
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4678,8 +5152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Pankaj Sati
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4696,8 +5172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Praveen Bolla
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4714,8 +5192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Praveen Sharma
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4732,8 +5212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Priya Surana
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4750,8 +5232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Priyesh Kumar
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4768,8 +5252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rahul Tiwari
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4786,8 +5272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Raja Jamwal
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4804,8 +5292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Raja S K
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4822,8 +5312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ranjana Maurya
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4840,8 +5332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Saleem Majeeth
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4858,8 +5352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sangeetha Sundara Rajan
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4876,8 +5372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Santhosh S
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4894,8 +5392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sasi Sakthivelu
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4912,8 +5412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shweta Sharma
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -4930,8 +5432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Sohan  Kathait
+______________________________________________________________________
+
+### Sohan Kathait
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4948,8 +5452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Supriya Negi
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4966,8 +5472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Surya Grandhi
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -4984,8 +5492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tejas Heseraghatta Nagabushan
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5002,8 +5512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tenzin Chemi
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5020,8 +5532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Umang Galaiya
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -5038,8 +5552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vidya Nethi
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5056,8 +5572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vikram Panwar
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5074,8 +5592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vinay Agarwala
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5092,8 +5612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vinay Devarapalli
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5110,8 +5632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vishwakarthik Ramesh
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5128,8 +5652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Yomesh Gupta
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5146,8 +5672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hari Vanga
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5164,8 +5692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Prasad Prabhu
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5182,8 +5712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rajesh Dhakad
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5200,8 +5732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Roshan Pandey
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5218,8 +5752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Chirag Sharma
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5236,8 +5772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Monika Saran
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5254,8 +5792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nithin Toomkunta
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5272,8 +5812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Raja Karumuri
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -5290,8 +5832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rishabh Gupta
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5308,8 +5852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sachin Thakur
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5326,8 +5872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Venkat Rajasekaran
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5344,8 +5892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Daniel Castro Rios
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5362,8 +5912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jerry Ogunyemi
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5380,8 +5932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Aleksandra  Kuś
+______________________________________________________________________
+
+### Aleksandra Kuś
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5398,8 +5952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Artur Wachowiak
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5416,8 +5972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Filip Szewczyk
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5434,8 +5992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Marcin Mazurek
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5452,8 +6012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Maryna Dubavets
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5470,8 +6032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Michał Garapich
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5488,8 +6052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Michał Mańkowski
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -5506,8 +6072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Mikołaj  Klaman
+______________________________________________________________________
+
+### Mikołaj Klaman
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5524,8 +6092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Paweł Adamczak
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5542,8 +6112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Paweł Kucharski
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5560,8 +6132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Piotr Łabuński
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -5578,8 +6152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tolga Özkan
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5596,8 +6172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Veronika Khilmonchyk
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5614,8 +6192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Adam Kuśmierz
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5632,8 +6212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alejandro Crespo
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5650,8 +6232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Andrei Shevel
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5668,8 +6252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Andrzej Torski
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5686,8 +6272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Bruno Mańczak
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -5704,8 +6292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Damian Michalski
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5722,8 +6312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Damian Styczeń
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5740,8 +6332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Daniel Grzybowski
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5758,8 +6352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dominika Podgórska
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5776,8 +6372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Marcin Antolak
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5794,8 +6392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Marcin Trepa
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5812,8 +6412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Pavel Keizik
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5830,8 +6432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Paweł  Jurczyński
+______________________________________________________________________
+
+### Paweł Jurczyński
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5848,8 +6452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Piotr Bechcicki
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5866,8 +6472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Piotr Białek
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5884,8 +6492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Piotr Pawlik
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5902,8 +6512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Przemyslaw Hardyn
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5920,8 +6532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sergey Khval
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5938,8 +6552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Wojciech Niemkowski
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5956,8 +6572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alexander Rykhlitski
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -5974,8 +6592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Andrii Savchenko
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -5992,8 +6612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Anton Kononenko
+
 - tier: 3
 - type: Electric/Steel
 - nature: Quiet
@@ -6010,8 +6632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Grzegorz Wziątek
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6028,8 +6652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hubert Stemplewski
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6046,8 +6672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Igor Czajkowski
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6064,8 +6692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kamil Doroszewicz
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6082,8 +6712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Karol Bartyzel
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6100,8 +6732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Katie Birulia
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6118,8 +6752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Marcin Kubik
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6136,8 +6772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Marcin Natanek
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6154,8 +6792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Marcus Gomes
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6172,8 +6812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Piotr Dyba
+
 - tier: 3
 - type: Electric/Steel
 - nature: Careful
@@ -6190,8 +6832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Przemyslaw Suchodolski
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6208,8 +6852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Wojciech Nadurski
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6226,8 +6872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Łukasz Siemański
+
 - tier: 3
 - type: Electric/Steel
 - nature: Adamant
@@ -6244,8 +6892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Annie Bernhardt
+
 - tier: 3
 - type: Dragon/Psychic
 - nature: Brave
@@ -6262,8 +6912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### JD Sherman
+
 - tier: 3
 - type: Dragon/Psychic
 - nature: Modest
@@ -6280,8 +6932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Roy Chung
+
 - tier: 3
 - type: Dragon/Psychic
 - nature: Modest
@@ -6298,8 +6952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Alexandra  Sonya
+______________________________________________________________________
+
+### Alexandra Sonya
+
 - tier: 3
 - type: Ice/Steel
 - nature: Modest
@@ -6316,8 +6972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brock Jones
+
 - tier: 3
 - type: Ice/Steel
 - nature: Careful
@@ -6334,8 +6992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gloria Gori
+
 - tier: 3
 - type: Ice/Steel
 - nature: Brave
@@ -6352,8 +7012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jamie Oh
+
 - tier: 3
 - type: Ice/Steel
 - nature: Modest
@@ -6370,8 +7032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jared Percoco
+
 - tier: 3
 - type: Ice/Steel
 - nature: Modest
@@ -6388,8 +7052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Julio Cardona
+
 - tier: 3
 - type: Ice/Steel
 - nature: Quiet
@@ -6406,8 +7072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Katie George
+
 - tier: 3
 - type: Ice/Steel
 - nature: Quiet
@@ -6424,8 +7092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Naila Burk
+
 - tier: 3
 - type: Ice/Steel
 - nature: Careful
@@ -6442,8 +7112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Odessa De Guzman
+
 - tier: 3
 - type: Ice/Steel
 - nature: Modest
@@ -6460,8 +7132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Puneet Mand
+
 - tier: 3
 - type: Ice/Steel
 - nature: Modest
@@ -6478,8 +7152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ryan Hansen
+
 - tier: 3
 - type: Ice/Steel
 - nature: Brave
@@ -6496,8 +7172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Siera Estes
+
 - tier: 3
 - type: Ice/Steel
 - nature: Careful
@@ -6514,8 +7192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Trevor Newcomb
+
 - tier: 3
 - type: Ice/Steel
 - nature: Careful
@@ -6532,8 +7212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tyler Davis
+
 - tier: 3
 - type: Ice/Steel
 - nature: Careful
@@ -6550,8 +7232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brandon Aguirre
+
 - tier: 3
 - type: Ice/Steel
 - nature: Careful
@@ -6568,8 +7252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Catie Tsai
+
 - tier: 3
 - type: Ice/Steel
 - nature: Careful
@@ -6586,8 +7272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ford Whitticar
+
 - tier: 3
 - type: Ice/Steel
 - nature: Brave
@@ -6604,8 +7292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Givi Gigineishvili
+
 - tier: 3
 - type: Ice/Steel
 - nature: Careful
@@ -6622,8 +7312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Julie Bi
+
 - tier: 3
 - type: Ice/Steel
 - nature: Modest
@@ -6640,8 +7332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Matt Martin
+
 - tier: 3
 - type: Ice/Steel
 - nature: Careful
@@ -6658,8 +7352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Paul Bates
+
 - tier: 3
 - type: Ice/Steel
 - nature: Brave
@@ -6676,8 +7372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Quinn McKone
+
 - tier: 3
 - type: Ice/Steel
 - nature: Careful
@@ -6694,8 +7392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alejandra Aguirre Alvarez
+
 - tier: 3
 - type: Ice/Steel
 - nature: Careful
@@ -6712,8 +7412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Adrian Cesarini
+
 - tier: 3
 - type: Normal
 - nature: Careful
@@ -6730,8 +7432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Damian Casquero
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -6748,8 +7452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Eri Crego
+
 - tier: 3
 - type: Normal
 - nature: Adamant
@@ -6766,8 +7472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Fernando Banta
+
 - tier: 3
 - type: Normal
 - nature: Adamant
@@ -6784,8 +7492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gabriel Laporte
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -6802,8 +7512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Joey De Guzman
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -6820,8 +7532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kevin Muller
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -6838,8 +7552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mark Delos Santos
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -6856,8 +7572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Max Castro Szlinger
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -6874,8 +7592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Patrick Sullivan
+
 - tier: 3
 - type: Normal
 - nature: Brave
@@ -6892,8 +7612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ramiro Meyer
+
 - tier: 3
 - type: Normal
 - nature: Modest
@@ -6910,8 +7632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Santiago Azamendia Garcia
+
 - tier: 3
 - type: Normal
 - nature: Careful
@@ -6928,8 +7652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tomás Losada
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -6946,8 +7672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alan Mesri
+
 - tier: 3
 - type: Dark/Steel
 - nature: Quiet
@@ -6964,8 +7692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Elias Santoro
+
 - tier: 3
 - type: Dark/Steel
 - nature: Adamant
@@ -6982,8 +7712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gabriela Pfau Costa e Silva
+
 - tier: 3
 - type: Dark/Steel
 - nature: Quiet
@@ -7000,8 +7732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jon Ferrari
+
 - tier: 3
 - type: Dark/Steel
 - nature: Careful
@@ -7018,8 +7752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Leandro Casaretto
+
 - tier: 3
 - type: Dark/Steel
 - nature: Adamant
@@ -7036,8 +7772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Matias Manassero
+
 - tier: 3
 - type: Dark/Steel
 - nature: Adamant
@@ -7054,8 +7792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Patricio Biggeri
+
 - tier: 3
 - type: Dark/Steel
 - nature: Brave
@@ -7072,8 +7812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ralph Pyne
+
 - tier: 3
 - type: Dark/Steel
 - nature: Brave
@@ -7090,8 +7832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tomas Oyuela
+
 - tier: 3
 - type: Dark/Steel
 - nature: Careful
@@ -7108,8 +7852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sebastian Drygiel
+
 - tier: 3
 - type: Dark/Steel
 - nature: Adamant
@@ -7126,8 +7872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tomasz Nowak
+
 - tier: 3
 - type: Dark/Steel
 - nature: Adamant
@@ -7144,8 +7892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Albina Torre-Guasto
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Modest
@@ -7162,8 +7912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alexa Summer
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Modest
@@ -7180,8 +7932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alli Henry
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Modest
@@ -7198,8 +7952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Allyson Keslar
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Modest
@@ -7216,8 +7972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Briana Jimenez
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Modest
@@ -7234,8 +7992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dani Rice
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Careful
@@ -7252,8 +8012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Emily Whitney
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Careful
@@ -7270,8 +8032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jen Dumas
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Careful
@@ -7288,8 +8052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kurt Corpus
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Modest
@@ -7306,8 +8072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Samantha Strauss
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Modest
@@ -7324,8 +8092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Santiago Munar Vargas
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Careful
@@ -7342,8 +8112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Scott Giordano
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Modest
@@ -7360,8 +8132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Seth Schreiberg
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Brave
@@ -7378,8 +8152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Victoria Kanarek
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Careful
@@ -7396,8 +8172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alekhya Kavuluru
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Modest
@@ -7414,8 +8192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Santiago Marin
+
 - tier: 3
 - type: Ice/Psychic
 - nature: Modest
@@ -7432,8 +8212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aaron Stump
+
 - tier: 3
 - type: Flying/Grass
 - nature: Brave
@@ -7450,8 +8232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Anton Aheichanka
+
 - tier: 3
 - type: Flying/Grass
 - nature: Jolly
@@ -7468,8 +8252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ben Nelson
+
 - tier: 3
 - type: Flying/Grass
 - nature: Jolly
@@ -7486,8 +8272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Johan Vilchez
+
 - tier: 3
 - type: Flying/Grass
 - nature: Brave
@@ -7504,8 +8292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kate Masancay
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -7522,8 +8312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Min Kang
+
 - tier: 3
 - type: Flying/Grass
 - nature: Jolly
@@ -7540,8 +8332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nicolas Riou
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -7558,8 +8352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Raouia Boularbah
+
 - tier: 3
 - type: Flying/Grass
 - nature: Brave
@@ -7576,8 +8372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sadie Shields
+
 - tier: 3
 - type: Flying/Grass
 - nature: Jolly
@@ -7594,8 +8392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Adji Mbaye
+
 - tier: 3
 - type: Flying/Grass
 - nature: Brave
@@ -7612,8 +8412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alexa Grabell
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -7630,8 +8432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Allie Shaw
+
 - tier: 3
 - type: Flying/Grass
 - nature: Careful
@@ -7648,8 +8452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Blake Hudson
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -7666,8 +8472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brooke Ferencsik
+
 - tier: 3
 - type: Flying/Grass
 - nature: Brave
@@ -7684,8 +8492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Chad Mann
+
 - tier: 3
 - type: Flying/Grass
 - nature: Careful
@@ -7702,8 +8512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Chris Van Praag
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -7720,8 +8532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dellaena Maliszewski
+
 - tier: 3
 - type: Flying/Grass
 - nature: Careful
@@ -7738,8 +8552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Jeanine   Suah
+______________________________________________________________________
+
+### Jeanine Suah
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -7756,8 +8572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### John Foreman
+
 - tier: 3
 - type: Flying/Grass
 - nature: Jolly
@@ -7774,8 +8592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Julie Hamel
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -7792,8 +8612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Michelle Drennan
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -7810,8 +8632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Michelle Seo
+
 - tier: 3
 - type: Flying/Grass
 - nature: Careful
@@ -7828,8 +8652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nehal Tenany
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -7846,8 +8672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Preston Burch
+
 - tier: 3
 - type: Flying/Grass
 - nature: Careful
@@ -7864,8 +8692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sarah Tran
+
 - tier: 3
 - type: Flying/Grass
 - nature: Brave
@@ -7882,8 +8712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Stephen Baker
+
 - tier: 3
 - type: Flying/Grass
 - nature: Brave
@@ -7900,8 +8732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Thomas Carter
+
 - tier: 3
 - type: Flying/Grass
 - nature: Careful
@@ -7918,8 +8752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ajeet Sing
+
 - tier: 3
 - type: Grass/Electric
 - nature: Modest
@@ -7936,8 +8772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alex Beckham
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -7954,8 +8792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Andres Mesa
+
 - tier: 3
 - type: Grass/Electric
 - nature: Modest
@@ -7972,8 +8812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Cameron Thompson
+
 - tier: 3
 - type: Grass/Electric
 - nature: Brave
@@ -7990,8 +8832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Carl Stevens
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8008,8 +8852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dafra Sanou
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8026,8 +8872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Daniel Cronyn
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -8044,8 +8892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ivan Vargas
+
 - tier: 3
 - type: Grass/Electric
 - nature: Modest
@@ -8062,8 +8912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jared Kreuz
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8080,8 +8932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jess Killmar
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8098,8 +8952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jesse Fernandez
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8116,8 +8972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Josh Witty
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8134,8 +8992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Juan Cordoba
+
 - tier: 3
 - type: Grass/Electric
 - nature: Modest
@@ -8152,8 +9012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Karthik Karthik
+
 - tier: 3
 - type: Grass/Electric
 - nature: Brave
@@ -8170,8 +9032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kelechi Ibe
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8188,8 +9052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Megan Tackett
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8206,8 +9072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nancy Shao
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8224,8 +9092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Natalie Marston
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8242,8 +9112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nicholas Gallinelli
+
 - tier: 3
 - type: Grass/Electric
 - nature: Brave
@@ -8260,8 +9132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rob Statsky
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8278,8 +9152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shari Diamond
+
 - tier: 3
 - type: Grass/Electric
 - nature: Brave
@@ -8296,8 +9172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vijaya Koneru
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8314,8 +9192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Marcio Arnecke
+
 - tier: 3
 - type: Flying/Grass
 - nature: Brave
@@ -8332,8 +9212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alyssa Haeussler
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -8350,8 +9232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Andy McCotter-Bicknell
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -8368,8 +9252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Cindy Chao
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -8386,8 +9272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Erica Figueiras
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -8404,8 +9292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### James O'Sullivan
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Brave
@@ -8422,8 +9312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Leif Parcell
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -8440,8 +9332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Michelle Pulver
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -8458,8 +9352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Xi-Er Dang
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -8476,8 +9372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brianna Chapman
+
 - tier: 3
 - type: Flying/Grass
 - nature: Careful
@@ -8494,8 +9392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Cassie Chung
+
 - tier: 3
 - type: Flying/Grass
 - nature: Careful
@@ -8512,8 +9412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Elaisha Green
+
 - tier: 3
 - type: Flying/Grass
 - nature: Careful
@@ -8530,8 +9432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Katie Parkes
+
 - tier: 3
 - type: Flying/Grass
 - nature: Brave
@@ -8548,8 +9452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ninka Bielak
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -8566,8 +9472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sandy Mangat
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -8584,8 +9492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brendan Walker
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8602,8 +9512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Darryl Yearwood
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8620,8 +9532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dani Hao
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -8638,8 +9552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Megha Agarwal
+
 - tier: 3
 - type: Flying/Grass
 - nature: Careful
@@ -8656,8 +9572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vidhi
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -8674,8 +9592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sourabh Ahuja
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -8692,8 +9612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Matt Swain
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -8710,8 +9632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Paola Martinez Guía
+
 - tier: 3
 - type: Flying/Grass
 - nature: Modest
@@ -8728,8 +9652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mary Moreno
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Careful
@@ -8746,8 +9672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rachel Noble
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Bold
@@ -8764,8 +9692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Cassandra Hoisington
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Careful
@@ -8782,8 +9712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Cheri Martin
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Brave
@@ -8800,8 +9732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Elaine Adamson
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Careful
@@ -8818,8 +9752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Emily Stirling
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Brave
@@ -8836,8 +9772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hayley Mannix
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Careful
@@ -8854,8 +9792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### IT Integrations User (Do Not Delete)
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Modest
@@ -8872,8 +9812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jess Derakhshandeh
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Careful
@@ -8890,8 +9832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jonathon Halpin
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Brave
@@ -8908,8 +9852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Josh Blackburn
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Brave
@@ -8926,8 +9872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Leah Kepping
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Modest
@@ -8944,8 +9892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Neda Davis
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Careful
@@ -8962,8 +9912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sabra Reyes
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Modest
@@ -8980,8 +9932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sahil Kumar
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Quiet
@@ -8998,8 +9952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tamu Mmbuka
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Quiet
@@ -9016,8 +9972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Amy Johnston
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9034,8 +9992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Austin Lenz
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9052,8 +10012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brad Williams
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9070,8 +10032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Carla Salguero
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9088,8 +10052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Christina Hart
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9106,8 +10072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Emilly Lopez
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9124,8 +10092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Heather Campbell
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9142,8 +10112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### James Thomas
+
 - tier: 3
 - type: Grass/Electric
 - nature: Quiet
@@ -9160,8 +10132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jenn Manacmul
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9178,8 +10152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jenny Hamann Pace
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9196,8 +10172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lauren Betti
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9214,8 +10192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Naomi McGehee
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9232,8 +10212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sabrina Silva
+
 - tier: 3
 - type: Grass/Electric
 - nature: Careful
@@ -9250,8 +10232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tina White
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9268,8 +10252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Will Wilcox
+
 - tier: 3
 - type: Grass/Electric
 - nature: Quiet
@@ -9286,8 +10272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Danelle Sun
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9304,8 +10292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sean Deasy
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9322,8 +10312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vikas K Murthy
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Careful
@@ -9340,8 +10332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Maria Priyanka
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9358,8 +10352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Saravanaprakash Balakrishnan
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9376,8 +10372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Andrea Lopera
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Modest
@@ -9394,8 +10392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Paula Moreno
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Brave
@@ -9412,8 +10412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alejandra Bedoya
+
 - tier: 3
 - type: Grass/Electric
 - nature: Brave
@@ -9430,8 +10432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sebastián Otero
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9448,8 +10452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Erika Barrios Cariño
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Modest
@@ -9466,8 +10472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Paulina Cruz Peralta
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Brave
@@ -9484,8 +10492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shaira Cruz Javier
+
 - tier: 3
 - type: Fairy/Normal
 - nature: Careful
@@ -9502,8 +10512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ewelina Sobocińska
+
 - tier: 3
 - type: Grass/Electric
 - nature: Jolly
@@ -9520,8 +10532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Julia Jabłońska
+
 - tier: 3
 - type: Grass/Electric
 - nature: Brave
@@ -9538,8 +10552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Bela Stepanova
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Brave
@@ -9556,8 +10572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mel Mavati
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -9574,8 +10592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Claire Seaver
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9592,8 +10612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Evgeny  Balashov
+______________________________________________________________________
+
+### Evgeny Balashov
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9610,8 +10632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ha Young (Stacey) Park
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Brave
@@ -9628,8 +10652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hana Kim
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9646,8 +10672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Isaac Pohl-Zaretsky
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Brave
@@ -9664,8 +10692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Iwona Wakuluk
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9682,8 +10712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jaime DyBuncio
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Brave
@@ -9700,8 +10732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jaimin Patel
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9718,8 +10752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jeffrey Hsu
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9736,8 +10772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jon Jenkins
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Brave
@@ -9754,8 +10792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Matt Lincoln
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Brave
@@ -9772,8 +10812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Matt Woods
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9790,8 +10832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rene Cobar
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Modest
@@ -9808,8 +10852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Roshane Silva
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9826,8 +10872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Samuel Elliott
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Modest
@@ -9844,8 +10892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tim Marks
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9862,8 +10912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tony Patti
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9880,8 +10932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tyler Phillips
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Brave
@@ -9898,8 +10952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Pawan Saraswat
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9916,8 +10972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Akshay Singh
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9934,8 +10992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Monica Jeshnani
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Careful
@@ -9952,8 +11012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Pankaj Kumar
+
 - tier: 3
 - type: Psychic/Fairy
 - nature: Modest
@@ -9970,8 +11032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alexis Spina
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -9988,8 +11052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ambar Rodriguez
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -10006,17 +11072,19 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Anthony Medina
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
 - department: Sr. Director, Product & Research
 - team: Research
-- title: 
+- title:
 - ghost: false
 - hp: 48 | atk: 48 | def: 48 | spd: 48 | spatk: 53 | spdef: 48
-- signature:  (Normal, 50 power)
+- signature: (Normal, 50 power)
 - moves: Department Sync (Electric, 40)
 - held_item: Productboard
 - passive: A worthy opponent. Data on file from Darwinbox, but Jarvis hasn't run the deep scan yet.
@@ -10024,8 +11092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aurelia Alston
+
 - tier: 3
 - type: Normal
 - nature: Careful
@@ -10042,8 +11112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Christopher Wyszynski
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -10060,8 +11132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Clara Lee
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -10078,8 +11152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Diane Turner
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -10096,8 +11172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Samantha Ting
+
 - tier: 3
 - type: Normal
 - nature: Quiet
@@ -10114,8 +11192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Yomna Hawas
+
 - tier: 3
 - type: Normal
 - nature: Careful
@@ -10132,8 +11212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aerielle Timbol
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Quiet
@@ -10150,8 +11232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alex Danna
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -10168,8 +11252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Andrew Lai
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Brave
@@ -10186,8 +11272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Anna Petrini
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Brave
@@ -10204,8 +11292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ashley Clough
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Quiet
@@ -10222,8 +11312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Celeste Kiphut
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Quiet
@@ -10240,8 +11332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Clark Sun
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -10258,8 +11352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Edward Dunn
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Adamant
@@ -10276,8 +11372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Harini Vijayaraghavan Chitra
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Quiet
@@ -10294,8 +11392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jared Thompson
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Quiet
@@ -10312,8 +11412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jeremy Boyd
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -10330,8 +11432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Joe Shen
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -10348,8 +11452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### John Choi
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Brave
@@ -10366,8 +11472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Leizl Quiwag
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Modest
@@ -10384,8 +11492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Matthew Moore
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Brave
@@ -10402,8 +11512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nghi Lam
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Quiet
@@ -10420,8 +11532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Noah Kruse
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -10438,8 +11552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Pedro Eiras
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Quiet
@@ -10456,8 +11572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sean Simpson
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -10474,8 +11592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Stephanie Hsu
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -10492,8 +11612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Talia Leclere
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -10510,8 +11632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tina Zhang
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -10528,8 +11652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vanessa Ano
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Modest
@@ -10546,8 +11672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Howie Chan
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -10564,8 +11692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Michelle Chang
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -10582,8 +11712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jon Newball
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Quiet
@@ -10600,8 +11732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aidan Velle
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10618,8 +11752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ali McDonough
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -10636,8 +11772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Allan Cheow
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -10654,8 +11792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Amanda Lucas
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -10672,8 +11812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Anthony Sullivan
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10690,8 +11832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Austin Robert
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10708,8 +11852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Bailey Willson
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10726,8 +11872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brandon Athanasopoulos
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10744,8 +11892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brandon Reis
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -10762,8 +11912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brian Smith
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10780,8 +11932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Cameron Burdette
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -10798,8 +11952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Carrigan Santos
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -10816,8 +11972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Christian Albert
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10834,8 +11992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Conner Blackham
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10852,8 +12012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Connor Johnson
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10870,8 +12032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dana Hensler
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10888,8 +12052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Daniel Grijalva
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10906,8 +12072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Darius Valdez
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10924,8 +12092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### David Dember
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10942,8 +12112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### David Jewell
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -10960,8 +12132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Erika Schultz
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -10978,8 +12152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Eseoghene Akpoyoware
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -10996,8 +12172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ethan Rife
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11014,8 +12192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gabriel Kane
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11032,8 +12212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gabriel Muñoz
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -11050,8 +12232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Garris Yeung
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11068,8 +12252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Geo Flores
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11086,8 +12272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gozde Gorce
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -11104,8 +12292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hannah Gray
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11122,8 +12312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Helene Rojas
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11140,8 +12332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jake Lopez
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11158,8 +12352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### James Barker
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11176,8 +12372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Janetta Cairns
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -11194,8 +12392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jared Pinson
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11212,8 +12412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jason De Leon
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -11230,8 +12432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jessie Spivey
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11248,8 +12452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jono Shupack
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11266,8 +12472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jorge Martinez
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11284,8 +12492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jose Hernandez
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11302,8 +12512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Joshua Brinkerhoff
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11320,8 +12532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kelly Ward
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -11338,8 +12552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kristi Notvedt
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -11356,8 +12572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kyle Fleher
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11374,8 +12592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kyle Golden
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11392,8 +12612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kyle Karl
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -11410,8 +12632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kyle Tomasino
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11428,8 +12652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lainey Allison
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11446,8 +12672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Layla Jaffe
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -11464,8 +12692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mateo Mino Cornejo
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11482,8 +12712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Matthew Tecca
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -11500,8 +12732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Megan Fisher
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11518,8 +12752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Megan Kagahastian
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -11536,8 +12772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Melissa Hennessey
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -11554,8 +12792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mia Mihalic
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11572,8 +12812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Miriam O'Donnell
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -11590,8 +12832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nicholas Thrune
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11608,8 +12852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nick Camacho Vargas
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11626,8 +12872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nick Sproul
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -11644,8 +12892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Paula Urrutia
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11662,8 +12912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ran Warcel
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11680,8 +12932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ronnel Mangupag
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11698,8 +12952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Roy Aldrich
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11716,8 +12972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ryan Brantley
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11734,8 +12992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sam Rhoton
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11752,8 +13012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sammy Dunn
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11770,8 +13032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Samuel Jackson
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -11788,8 +13052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sarah Kinder
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11806,8 +13072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Stephanie Chiu
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -11824,8 +13092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Stephanie Ervin
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -11842,8 +13112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Steven Santellano Jr.
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11860,8 +13132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tanya Valdez
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11878,8 +13152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tyler Hughes
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -11896,8 +13172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Zach Otto
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -11914,8 +13192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alex Shoemaker
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -11932,8 +13212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Amery Segovia
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -11950,8 +13232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Anna Lee Webster
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -11968,8 +13252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Blake Kashyap
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -11986,8 +13272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Charlie Plamondon
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Jolly
@@ -12004,8 +13292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Danny Cook
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12022,8 +13312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Darius Saffold
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12040,8 +13332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### David Castellanos
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12058,8 +13352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### David Spears
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12076,8 +13372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dylan Tate
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12094,8 +13392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Isabell Rashid
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12112,8 +13412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### James Fischl
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12130,8 +13432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Katherine Seropian
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12148,8 +13452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kerri Ann Fahey
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12166,8 +13472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Larissa Gomes
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12184,8 +13492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lindsey Liranzo
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12202,8 +13512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nicole Stehura
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12220,8 +13532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Paul DeMarco
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Jolly
@@ -12238,8 +13552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rose Gahite
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12256,8 +13572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ross Arnowitz
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12274,8 +13592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tristan Walker
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12292,8 +13612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Victoria Bishop
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -12310,8 +13632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ansherina Marasigan
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12328,8 +13652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Flovin Brylle Daquioag
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12346,8 +13672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### George Ortega
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12364,8 +13692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Justin John Delas Alas
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12382,8 +13712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Karl Angelo Tabada
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12400,8 +13732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ro Dayota
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12418,8 +13752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sheryl Gonzales
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12436,8 +13772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ali Fahoury
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -12454,8 +13792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jessica Casler
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12472,8 +13812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lindsay Grindon
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12490,8 +13832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Madeleine  Abroms
+______________________________________________________________________
+
+### Madeleine Abroms
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12508,8 +13852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Michael Rouse
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12526,8 +13872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mike Stocker
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12544,8 +13892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vince Heaton III
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12562,8 +13912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alexa Urratio
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12580,8 +13932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### David Makarevich
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12598,8 +13952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Heather Hansen
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -12616,8 +13972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jared Crews
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12634,8 +13992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Julia Taylor
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12652,8 +14012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Melissa Gross
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12670,8 +14032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mohammad Yaqubi
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12688,8 +14052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Owen Peters
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12706,8 +14072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Owen Walsh
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12724,8 +14092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sammie Rosenbloom
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12742,8 +14112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sandy Chang
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12760,8 +14132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shawn Im
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12778,8 +14152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Uche Peter-Azorji
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12796,8 +14172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brittany Sarsfield
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -12814,8 +14192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lauren Anaya
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12832,8 +14212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Miranda Beckford
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12850,8 +14232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Scott Skinner
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12868,8 +14252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Whitney Freese
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -12886,8 +14272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Adam Carr
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -12904,8 +14292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### EQ Quanstrom
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -12922,8 +14312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Joseph Sandler
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12940,8 +14332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Matt Young
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12958,8 +14352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Max Angell
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12976,8 +14372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sara Shea
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -12994,8 +14392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Scott Sorensen
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13012,8 +14412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tony Chedrawee
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13030,8 +14432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alexis Rodriguez
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -13048,8 +14452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### David Johnson
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13066,8 +14472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gregory Jackson-Wright
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13084,8 +14492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nick McDonnell
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13102,8 +14512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Radu Văduva
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13120,8 +14532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Westin Bennett
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13138,8 +14552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Wilson Scott
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13156,8 +14572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### John Henwood
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13174,8 +14592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Avi Aditya
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13192,8 +14612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Heena Choudhary
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13210,8 +14632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vineet Chatterjee
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13228,8 +14652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Diana Constantino De La Espriella
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13246,8 +14672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Felipe Blanco
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13264,8 +14692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jonny Knight
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13282,8 +14712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Juliana Garcia Franco
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -13300,8 +14732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nicolas Hurtado
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -13318,8 +14752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Karen Lopez
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13336,8 +14772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Daniela Lopez
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13354,8 +14792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Diego Uribe
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13372,8 +14812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Adonis Adeoye
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13390,8 +14832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Elsa Schlemm
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -13408,8 +14852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Khaydien Anderson
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Adamant
@@ -13426,14 +14872,16 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ryan Stamp
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
 - department: Sales (GC5.11010)
 - team: Account Executives (GC5.11040)
-- title: Account Executive,  SMB
+- title: Account Executive, SMB
 - ghost: false
 - hp: 48 | atk: 53 | def: 48 | spd: 48 | spatk: 48 | spdef: 48
 - signature: ACCOUNT EXECUTIVE (Normal, 50 power)
@@ -13444,8 +14892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Samuel Church
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13462,8 +14912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tom Lewis
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13480,8 +14932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Josiah Benjamin
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13498,8 +14952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Robbie Village
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13516,8 +14972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Amilcar Milan Garcia
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13534,8 +14992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Emilio Obeso Sansores
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -13552,8 +15012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mauricio Garcia Sainz Sours
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Brave
@@ -13570,8 +15032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alex Roehrig Nava
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -13588,8 +15052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jhoana Medina Uh
+
 - tier: 3
 - type: Fire/Fighting
 - nature: Careful
@@ -13606,8 +15072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dany Altamirano Llamas
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13624,8 +15092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Jose Alejandro  Chavez
+______________________________________________________________________
+
+### Jose Alejandro Chavez
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13642,8 +15112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kindred Alana Velarde
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13660,8 +15132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lily Garza Garza
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13678,8 +15152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Luis Antúnez Olguín
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13696,8 +15172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Tania Garcia Chavez
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Careful
@@ -13714,8 +15192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Frida Calderon
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13732,8 +15212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jose Luis Mondragon Maya
+
 - tier: 3
 - type: Fighting/Fire
 - nature: Modest
@@ -13750,8 +15232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Amelia Jones
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -13768,8 +15252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Luz Echanove
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -13786,8 +15272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Max Da Luz
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -13804,8 +15292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shardul Navare
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -13822,8 +15312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Zobaida Hossain
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -13840,8 +15332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Juliana Bonilla Buitrago
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -13858,8 +15352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ana Ballesteros
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -13876,8 +15372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alejandra Aguilera Soria
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -13894,8 +15392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sacbé Ibarra Escobedo
+
 - tier: 3
 - type: Water/Fairy
 - nature: Brave
@@ -13912,8 +15412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Abril Lopez Macias
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -13930,8 +15432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alan Jimenez Gonzalez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -13948,8 +15452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alejandro Aguilar Olivares
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -13966,8 +15472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alejandro Arriaga Gálvez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -13984,8 +15492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alejandro Núñez de La Pena
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -14002,8 +15512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alexis Castro Cardenas
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14020,8 +15532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alicia Andreina Antunez Reyes
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14038,8 +15552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ana Mejia Avila
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14056,8 +15572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Anaid Sansinena Hernandez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14074,8 +15592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Andrea González Córdova
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14092,8 +15612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Arlette Estrada Figueroa
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14110,8 +15632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Barush Cruz Enriquez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -14128,8 +15652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brenda Adalid Melo Villalobos
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14146,8 +15672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brenda Michel
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14164,8 +15692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dani Garcia
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14182,8 +15712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Diego Tamayo Guzman
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14200,8 +15732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Eduardo Estrada Maldonado
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14218,8 +15752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Elias Marin Topete
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14236,8 +15772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Enrique Sampedro Jameson
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14254,8 +15792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gabriel Martinez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14272,8 +15812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gabriela Anaya
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14290,8 +15832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jair Lopez Pedroza
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14308,8 +15852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jorge Alejandro Flores
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14326,8 +15872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jorge Gasca Gutiérrez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14344,8 +15892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### Josue Neftali  Reyes Flores
+______________________________________________________________________
+
+### Josue Neftali Reyes Flores
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14362,8 +15912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Juan Nieto Landeros
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14380,8 +15932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kellyn Escobar Cruz
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14398,8 +15952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Laura Xiadani Rivera Zamudio
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14416,8 +15972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Luis Nuñez Diaz
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14434,8 +15992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Luz Ruiz
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14452,8 +16012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Marifer Arguedas Ramírez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14470,8 +16032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Michel Flores Santiago
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14488,8 +16052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Miguel Angel Gaytan
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14506,8 +16072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mónica Cisneros Mondragón
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14524,8 +16092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nat Ortega
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14542,8 +16112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Noemi Vergara
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14560,8 +16132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Oscar Lorenzoni Narvaez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14578,8 +16152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Paloma Tellez Ocampo
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14596,8 +16172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Perla Pérez Salazar
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -14614,8 +16192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rodrigo Ivan Gaxiola Martinez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14632,8 +16212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rodrigo Phillips
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14650,8 +16232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sara Méndez Diaz
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14668,8 +16252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sasha Suárez Lugo
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -14686,8 +16272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sergio Vega Lara
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14704,8 +16292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Xochiquetzalli Sabourin Arellano
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -14722,8 +16312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Brenda Cardinez
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -14740,8 +16332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Eve Nueva
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -14758,8 +16352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gail Mondragon
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -14776,8 +16372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ibrahim Aslam
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -14794,8 +16392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Indira Lynn Cale
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -14812,8 +16412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jade Magsacay
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -14830,8 +16432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jocel Escobar
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -14848,8 +16452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Maribeth Dayota
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -14866,8 +16472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Monaliza Santillan
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -14884,8 +16492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nett Cortez
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -14902,8 +16512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Razel Avanceña
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -14920,8 +16532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aletha Jacinto
+
 - tier: 3
 - type: Water/Fairy
 - nature: Quiet
@@ -14938,8 +16552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Anna Fajarito
+
 - tier: 3
 - type: Water/Fairy
 - nature: Quiet
@@ -14956,8 +16572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### April Caviente
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -14974,8 +16592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dustin Nathaniel Keys
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -14992,8 +16612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Fiona Paclipan
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15010,8 +16632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jan Bulanadi
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15028,8 +16652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lira Faurillo
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15046,8 +16672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Paige York
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15064,8 +16692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Paula Mercado
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15082,8 +16712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Valery Gallito
+
 - tier: 3
 - type: Water/Fairy
 - nature: Quiet
@@ -15100,8 +16732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Allen Manubag
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15118,8 +16752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Archie Escamillas
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15136,8 +16772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Cath San Juan
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15154,8 +16792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Christine Felicia
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15172,8 +16812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gigi Obaob
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -15190,8 +16832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ingrid Esma
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15208,8 +16852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jackson Gibson
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -15226,8 +16872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jaffet Monticod
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15244,8 +16892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jesson Lagman
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15262,8 +16912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Joe Yuvienco Jr
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -15280,8 +16932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### John Henrix Serdeña
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15298,8 +16952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
-### John Michael  Jordan
+______________________________________________________________________
+
+### John Michael Jordan
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15316,8 +16972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### John Sicat
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15334,8 +16992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jov Mendez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15352,8 +17012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Keith Espinosa
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15370,8 +17032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kenny Keesee
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15388,8 +17052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kim Mamac
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15406,8 +17072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kristina Louise Minagawa
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15424,8 +17092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kross Gerochi
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15442,8 +17112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lyn Arbitrario
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15460,8 +17132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mark Anthony Aquileña
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15478,8 +17152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mineko Marie Harada
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15496,8 +17172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Rhian Cagoyong
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15514,8 +17192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Shari Flores
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15532,8 +17212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alex Dalmas
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15550,8 +17232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ferdinand Bernal
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15568,8 +17252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Francis Pelletero
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15586,8 +17272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Janet Mandapat
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15604,8 +17292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Melanie Cardeno
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15622,8 +17312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Nnamdi Uzoewulu
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15640,8 +17332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### JJ Ranara
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15658,8 +17352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aravinth Subramonian
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -15676,8 +17372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Vidushi Agarwal
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15694,8 +17392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ginna Mendoza Gutierrez
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15712,8 +17412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ana Dueñas
+
 - tier: 3
 - type: Water/Fairy
 - nature: Quiet
@@ -15730,8 +17432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jeison Rivera Castaño
+
 - tier: 3
 - type: Water/Fairy
 - nature: Quiet
@@ -15748,8 +17452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sebastian Velandia
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -15766,8 +17472,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Juan Castaño
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15784,8 +17492,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Santiago Taborda
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -15802,8 +17512,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alvaro Caballero Percy
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15820,8 +17532,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Andres Pastrana
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -15838,8 +17552,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Javier Rodriguez
+
 - tier: 3
 - type: Water/Fairy
 - nature: Quiet
@@ -15856,8 +17572,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Stef Dey
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -15874,8 +17592,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alan Serrano De La Cruz
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15892,8 +17612,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alberto Batiz Hernandez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15910,8 +17632,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alejandra Rangel Ochoa
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15928,8 +17652,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alejandro Corona Ruiz
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15946,8 +17672,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alonso Alvarez Rubio
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -15964,8 +17692,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Alvaro Mendoza Cabrera
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -15982,8 +17712,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Aylen Estevez Méndez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16000,8 +17732,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Carlos Baltazar Mata
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16018,8 +17752,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Christian Alfaro
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16036,8 +17772,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Claudia Espinosa Gonzalez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16054,8 +17792,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Cristian Rico Espinosa
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16072,8 +17812,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Dani Zenteno Linares
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16090,8 +17832,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Daniel Ruiz Sarabia
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16108,8 +17852,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Diego Chavez Torres
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16126,8 +17872,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Emmanuel Sandoval Vazquez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16144,8 +17892,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Eric de la Vega Cuevas
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16162,8 +17912,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Erika Neyra Paczka
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -16180,8 +17932,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Fernando Vazquez Carreon
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16198,8 +17952,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Froylan Valderrabano Chavez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16216,8 +17972,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gerardo Quintana Vazquez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16234,8 +17992,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Gus Cabrera Avila
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16252,8 +18012,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hector Aldana Rosas
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16270,8 +18032,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Hector Sandoval Rodriguez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16288,8 +18052,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Israel Sanchez Carlos
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16306,8 +18072,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jaime Sanchez Berdejo
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16324,8 +18092,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Jesus Alejandro Diaz Reyes
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16342,8 +18112,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Julian Cazares Rodriguez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16360,8 +18132,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Kali Gonzalez Pliego
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16378,8 +18152,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Karen De la Vega Cuevas
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16396,8 +18172,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Ligia Bahena Garmendia
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16414,8 +18192,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Lupita Cuateco Garcia
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Careful
@@ -16432,8 +18212,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Manuel De la Concha Vidal
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16450,8 +18232,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Maria Archundia Dominguez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16468,8 +18252,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Maria Calero
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16486,8 +18272,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mariana Escalante
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16504,8 +18292,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mel Flores Lopez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16522,8 +18312,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Mitch Monterrosas Zuñiga
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16540,8 +18332,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sam Lopez Garcia
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16558,8 +18352,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Sirac Tornel Gonzalez
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16576,8 +18372,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Valeria Pastrana Mancera
+
 - tier: 3
 - type: Electric/Psychic
 - nature: Modest
@@ -16594,8 +18392,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Carlos De la Villa Casillas
+
 - tier: 3
 - type: Water/Fairy
 - nature: Modest
@@ -16612,8 +18412,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Savvy Krishnan
+
 - tier: 3
 - type: Water/Fairy
 - nature: Careful
@@ -16630,8 +18432,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Luis Sanchez Hernandez
+
 - tier: 3
 - type: Water/Fairy
 - nature: Quiet
@@ -16648,8 +18452,10 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________
+
 ### Pedro Cerda Magdaleno
+
 - tier: 3
 - type: Water/Fairy
 - nature: Quiet
@@ -16666,4 +18472,4 @@
 - quote: "I prefer my data like my meetings — short and to the point."
 - refreshed: 2026-04-01
 
----
+______________________________________________________________________

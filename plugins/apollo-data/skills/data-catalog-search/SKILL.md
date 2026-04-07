@@ -35,13 +35,13 @@ Use the returned `sql_predicate` to construct correct WHERE clauses. Never hardc
 When building an ad-hoc query from catalog tables:
 
 1. **Always prefer canonical tables** over preferred/reference/avoid
-2. **Join to `LU_TEAM_ATTRIBUTES`** (on `team_id`) for any segmentation (segment, region, plan, core account, golden population)
-3. **Join to `LU_FISCAL_CALENDAR`** (on `ds = calendar_date`) for fiscal year/quarter grouping
-4. **Filter `arr > 0`** for "paid teams" unless explicitly asked about free teams
-5. **Never query tables with `trust_tier = 'avoid'`**
-6. **For feature/activity questions:** use `DIM_TEAMS_DAILY` with `IS_PAID_IND = true` — always filter to single date or narrow range (8.6B rows)
-7. **For feature-level user counts:** prefer `FCT_TEAM_FEATURE_USERS_DAILY` (lighter weight)
-8. **LIMIT all queries:** default 20, max 100
+1. **Join to `LU_TEAM_ATTRIBUTES`** (on `team_id`) for any segmentation (segment, region, plan, core account, golden population)
+1. **Join to `LU_FISCAL_CALENDAR`** (on `ds = calendar_date`) for fiscal year/quarter grouping
+1. **Filter `arr > 0`** for "paid teams" unless explicitly asked about free teams
+1. **Never query tables with `trust_tier = 'avoid'`**
+1. **For feature/activity questions:** use `DIM_TEAMS_DAILY` with `IS_PAID_IND = true` — always filter to single date or narrow range (8.6B rows)
+1. **For feature-level user counts:** prefer `FCT_TEAM_FEATURE_USERS_DAILY` (lighter weight)
+1. **LIMIT all queries:** default 20, max 100
 
 ## Trust Tier Hierarchy
 
@@ -66,6 +66,7 @@ ORDER BY trust_tier, table_name
 ## 49 Business Terms in Glossary
 
 Common terms that trip people up:
+
 - **WAT:** Weekly Active Teams, Sunday anchor. Exec context = paid WAT (~69K)
 - **NRR:** M3 Cohort NRR (62-78%), NOT aggregate net retention (~96%)
 - **Golden Population:** Core plan, North America, Sales dept >3, 1-2 seats

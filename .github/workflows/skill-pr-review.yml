@@ -21,7 +21,7 @@ jobs:
       REPO: ${{ github.repository }}
       PR_NUMBER: ${{ github.event.pull_request.number }}
       BASE_REF: ${{ github.base_ref }}
-      MAX_DIFF_BYTES: "51200"
+      MAX_DIFF_BYTES: "204800"
     steps:
       - uses: actions/checkout@v6
         with:
@@ -118,10 +118,13 @@ jobs:
 
           # --- call Anthropic API ---
 
+          diff_file="$(mktemp)"
+          printf '%s' "${diff_payload}" > "${diff_file}"
+
           prompt_json="$(mktemp)"
           jq -n \
             --rawfile rubric "${rubric_file}" \
-            --arg diff_payload "${diff_payload}" \
+            --rawfile diff_payload "${diff_file}" \
             --arg truncated "${truncated}" \
             --arg reviewed_files "${reviewed_files}" \
             '{
@@ -148,7 +151,7 @@ jobs:
                     "Skip binary-file concerns because binaries were excluded before this request.\n" +
                     (
                       if $truncated == "1"
-                      then "Note: The diff payload was truncated at 50KB, so not all changed files may be included.\n"
+                      then "Note: The diff payload was truncated at 200KB, so not all changed files may be included.\n"
                       else ""
                       end
                     ) +
@@ -186,7 +189,7 @@ jobs:
 
           comment_body="${BOT_HEADER}"$'\n\n'"${review_text}"
           if [ "${truncated}" = "1" ]; then
-            comment_body+=$'\n\n'"_Note: Review context was truncated to the first 50KB of text-based plugin changes._"
+            comment_body+=$'\n\n'"_Note: Review context was truncated to the first 200KB of text-based plugin changes._"
           fi
 
           verdict="$(printf '%s\n' "${review_text}" | awk '/^## Verdict/{getline; print; exit}' | tr -d '\r' | xargs)"

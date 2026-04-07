@@ -34,12 +34,13 @@ Present as a numbered list with priority tags:
 > **Weekly Insights (week of YYYY-MM-DD)**
 >
 > 1. **[P1]** _Headline_ -- Detail (Owner: X, Effort: Y, Impact: Z)
-> 2. **[P2]** _Headline_ -- Detail (Owner: X, Effort: Y, Impact: Z)
-> ...
+> 1. **[P2]** _Headline_ -- Detail (Owner: X, Effort: Y, Impact: Z)
+>    ...
 
 ## Context
 
 The insights table is refreshed weekly by the Analytics team (primarily Leo). Each row contains:
+
 - **HEADLINE:** One-line summary of the insight
 - **DETAIL:** Supporting explanation with data references
 - **OWNER:** Who should act on it
