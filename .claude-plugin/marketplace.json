@@ -53,6 +53,13 @@
       "description": "Product management, roadmap, and lifecycle processes",
       "category": "product",
       "tags": ["cowork", "product"]
+    },
+    {
+      "name": "apollo-eng-fabric-surfaces",
+      "source": "./plugins/apollo-eng-fabric-surfaces",
+      "description": "Skills specific to the Fabric Surfaces team",
+      "category": "engineering",
+      "tags": ["claude-code", "fabric-surfaces"]
     }
   ]
 }
