@@ -769,7 +769,7 @@ ______________________________________________________________________
 ## All Apollo Employees (Auto-Generated Stubs)
 
 > Tier 3 cards auto-generated from Darwinbox roster. Stats derived from title/department.
-> Run `/apollo-data:battle explain` after any battle to see rationale.
+> Run `/apollo-analytics:battle explain` after any battle to see rationale.
 > Deep scan pending — cards will be upgraded on next company-wide scan.
 
 ______________________________________________________________________

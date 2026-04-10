@@ -20,8 +20,8 @@
       "tags": ["claude-code", "operations", "claudathon"]
     },
     {
-      "name": "apollo-data",
-      "source": "./plugins/apollo-data",
+      "name": "apollo-analytics",
+      "source": "./plugins/apollo-analytics",
       "description": "Analytics and data skills — Pokemon battle cards, metric intelligence, data team tools",
       "category": "engineering",
       "tags": ["claude-code", "operations", "claudathon"]

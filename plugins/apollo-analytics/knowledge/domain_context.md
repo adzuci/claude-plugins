@@ -324,7 +324,7 @@ ______________________________________________________________________
 | 2026-03-20 | free to paid rate | > **Owner:** Andrew Green (Analytics) / Conversion PM |
 | 2026-03-26 | USER SEQUENCE ACTIONS DAILY | > Daily user-level sequence actions. One row per user per action per event date. |
 | 2026-03-26 | USER WORKFLOW ACTIONS DAILY | > Daily user-level workflow actions. One row per user per action per event date. |
-| 2026-03-24 | battle skill release notes 20260324 | **Skill:** `/apollo-data:battle` |
+| 2026-03-24 | battle skill release notes 20260324 | **Skill:** `/apollo-analytics:battle` |
 | 2026-03-23 | FCT MONGO HTTP REQUESTS V3 RT VW | > Real-time view of Apollo HTTP API requests — raw source for MCP usage. \*\*As of 2026-03-23, prefer DIM_USERS ... |
 | 2026-03-23 | FCT MONGO DAILY TEAM AUDIT REPORTS | > Daily team audit snapshots from MongoDB. Credit limits, billing period, and plan details. |
 | 2026-03-22 | DIM TEAMS DAILY | > Daily snapshot of team-level metrics. One row per team per day. |

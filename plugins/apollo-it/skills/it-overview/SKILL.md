@@ -36,7 +36,7 @@ Use this skill when someone asks about device setup, access requests, IT tooling
 | **Software access** | Check Okta app catalog first (self-service). If not listed, open a Jira Service Management ticket with the app name and business justification. |
 | **VPN** | Follow the VPN setup guide in Kandji KB. For issues, post in `#it-help`. |
 | **Hardware replacement** | Open a Jira Service Management ticket under "Hardware Request". Include device type, reason for replacement, and shipping address. |
-| **Snowflake / data tool access** | Not IT — go through `#data-infra` or `#xfn-team-discovery-and-analytics` (see apollo-data plugin). |
+| **Snowflake / data tool access** | Not IT — go through `#data-infra` or `#xfn-team-discovery-and-analytics` (see apollo-analytics plugin). |
 | **New tool evaluation** | Contact Patrick Sullivan (Sr Director, Business Systems) for vendor evaluation and procurement. |
 
 ## Gotchas

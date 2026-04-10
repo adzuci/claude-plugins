@@ -10,12 +10,12 @@ Run a Pokemon-style battle between Apollo employees using Trainer Card stats der
 ## Commands
 
 ```
-/apollo-data:battle                → you vs random opponent, battle type randomly chosen
-/apollo-data:battle @name          → you vs them
-/apollo-data:battle team           → your team fusion vs random team
-/apollo-data:battle explain        → data rationale for last battle's cards
-/apollo-data:battle hand           → show your current card and stats
-/apollo-data:battle leaderboard    → ELO rankings
+/apollo-analytics:battle                → you vs random opponent, battle type randomly chosen
+/apollo-analytics:battle @name          → you vs them
+/apollo-analytics:battle team           → your team fusion vs random team
+/apollo-analytics:battle explain        → data rationale for last battle's cards
+/apollo-analytics:battle hand           → show your current card and stats
+/apollo-analytics:battle leaderboard    → ELO rankings
 ```
 
 No interactive prompts. No menus. One message in, one battle out.
@@ -204,8 +204,8 @@ Structure:
 🂠→🎴 OPPONENT'S HAND REVEALED:
   {Move} | {Terrain} | {Wild card}
 
-GG. /apollo-data:battle explain for the data.
-    /apollo-data:battle for another.
+GG. /apollo-analytics:battle explain for the data.
+    /apollo-analytics:battle for another.
 ```
 
 ### Narration rules:
@@ -222,15 +222,15 @@ ______________________________________________________________________
 
 ## Step 7: Post-Battle
 
-### `/apollo-data:battle explain`
+### `/apollo-analytics:battle explain`
 
 Show stat rationale for both fighters from the card's `rationale` field.
 
-### `/apollo-data:battle hand`
+### `/apollo-analytics:battle hand`
 
 Show the user's full card without fighting.
 
-### `/apollo-data:battle leaderboard`
+### `/apollo-analytics:battle leaderboard`
 
 Track wins/losses/ELO across battles. Store in memory or local state.
 
@@ -293,6 +293,6 @@ ______________________________________________________________________
 
 Cards are generated from real work activity by the Analytics team's company-wide scan. Stats reflect actual Snowflake queries, GitHub PRs, Slack presence, Jira tickets, documentation, and tool usage. Ghost typing means low visibility across work systems — not low performance.
 
-**Card data is refreshed weekly** from the analytics-copilot repo. To learn more about how stats are calculated, ask for `/apollo-data:battle explain` after any battle.
+**Card data is refreshed weekly** from the analytics-copilot repo. To learn more about how stats are calculated, ask for `/apollo-analytics:battle explain` after any battle.
 
 Built by the Analytics team. Leo is Jarvis's father. Bridie is Jarvis's godmother. Henry is to blame for everything else.
