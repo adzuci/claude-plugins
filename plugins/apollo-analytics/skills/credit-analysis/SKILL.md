@@ -1,6 +1,18 @@
 ---
 name: credit-analysis
 description: Analyze credit utilization, consumption patterns, and monetization metrics
+note: "Power-user sessions: prefer /product-debrief credits — it adds customer voice (BAT calls + support tickets) and Jira cross-reference on top of this Snowflake-only analysis."
+trigger-conditions:
+  - "credit utilization"
+  - "credit consumption"
+  - "credit usage"
+  - "credit breakdown"
+  - "credits used"
+  - "credit monetization"
+  - "power-up usage"
+  - "waterfall credits"
+not-for:
+  - "[company] credit utilization" → use account-deep-dive (includes credits per team)
 ---
 
 # Credit Analysis
@@ -12,7 +24,6 @@ Use this skill when a user asks about credit utilization, consumption, credit ty
 Use `ANALYTICS_DB.PLAYGROUND.AGG_TEAM_CREDITS` for all credit volume reporting. Other credit tables are supplementary.
 
 For daily team-level detail:
-
 - **Usage:** `ANALYTICS_DB.PLAYGROUND.FCT_TEAM_CREDIT_USE_DAILY`
 - **Limits:** `ANALYTICS_DB.PLAYGROUND.FCT_TEAM_CREDIT_LIMITS_DAILY`
 
@@ -61,3 +72,8 @@ LIMIT 100
 - **Waterfall/Enrichment growth:** +402%
 - **AI Power-Up growth:** +151%
 - **Biggest unsolved problem:** Credit-to-revenue translation — can't do ARR-by-product attribution until revenue infra improves
+
+## Tracking
+
+- **Query tag:** Pass `--context credit_analysis` when running queries via `snowflake_query.py`
+- **Pulse:** After completing the analysis, fire: `python3 scripts/snowflake_query.py --pulse credit_analysis --detail "<feature types and timeframe analyzed>"`

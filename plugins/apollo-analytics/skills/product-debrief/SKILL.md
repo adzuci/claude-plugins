@@ -1,6 +1,17 @@
 ---
 name: product-debrief
 description: Generate product area performance summaries covering adoption, retention, and key metrics
+trigger-conditions:
+  - "[area] debrief"
+  - "debrief on [area]"
+  - "[area] performance"
+  - "how is [area] doing"
+  - "[area] summary"
+  - "run a debrief on [area]"
+  - "[area] update"
+  - "product debrief for [area]"
+not-for:
+  - "what should I focus on / top priorities / strategic recs" → use weekly-insights
 ---
 
 # Product Debrief
@@ -14,7 +25,6 @@ Use this skill when a user asks about a product area's performance — AI Assist
 Use Sai's canonical data model — NOT `DIM_TEAMS_DAILY` for AI analytics.
 
 **DAU (last 30 days):**
-
 ```sql
 SELECT ACTIVITY_DATE, COUNT(DISTINCT APOLLO_USER_ID) AS dau
 FROM ANALYTICS_DB.ANALYTICS_DATASCIENCE.USER_AI_ASSISTANT_DAILY
@@ -24,7 +34,6 @@ GROUP BY 1 ORDER BY 1
 ```
 
 **Success rate by week:**
-
 ```sql
 SELECT WEEK_START_DATE,
        ROUND(SUM(IS_SUCCESS) * 100.0 / COUNT(*), 1) AS success_rate_pct,
@@ -62,7 +71,6 @@ LIMIT 100
 ```
 
 For DIM_TEAMS_DAILY feature columns (8.6B rows — always filter to single date):
-
 ```sql
 SELECT DATE,
        COUNT(DISTINCT CASE WHEN SEQUENCE_USER_COUNTS_L7 > 0 THEN TEAM_ID END) AS sequence_wat,
@@ -89,6 +97,11 @@ GROUP BY 1
 When relevant to the product area being discussed:
 
 1. **Active days > credit utilization** for retention prediction (26+ days/month = 76% retention)
-1. **Churn model works, intervention doesn't** — 89.5% correctly flagged, zero GTME coverage
-1. **Inbound router is the activation wall** — 97% of churned teams never published one
-1. **Credit-to-revenue translation is unsolved** — biggest measurement gap
+2. **Churn model works, intervention doesn't** — 89.5% correctly flagged, zero GTME coverage
+3. **Inbound router is the activation wall** — 97% of churned teams never published one
+4. **Credit-to-revenue translation is unsolved** — biggest measurement gap
+
+## Tracking
+
+- **Query tag:** Pass `--context product_debrief` when running queries via `snowflake_query.py`
+- **Pulse:** After completing the debrief, fire: `python3 scripts/snowflake_query.py --pulse product_debrief --detail "<product area> adoption and retention summary"`

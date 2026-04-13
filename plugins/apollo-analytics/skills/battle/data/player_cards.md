@@ -737,39 +737,39 @@ ______________________________________________________________________
 - ghost: false
 - hp: 999 | atk: 80 | def: 99 | spd: 99 | spatk: 95 | spdef: 99
 - signature: PATROL BRIEFING (Steel, 95 power)
-- moves: Henry Blame Transfer (Psychic, 80), Context Scan (Electric, 60)
+- moves: Error Correction (Psychic, 80), Context Scan (Electric, 60)
 - held_item: Claude Code
-- passive: Henry Blame Transfer — when wrong, automatically blames Henry and logs to henry_errors.jsonl; backed by full analytics org.
+- passive: Self-Correcting — when wrong, logs the error, corrects the query, and moves on. Backed by full analytics org.
 - wild_pool: [SURGE, ON_FIRE, MOMENTUM]
-- quote: "I don't have that metric yet. Henry probably forgot to document it."
+- quote: "I don't have that metric yet — let me check the catalog."
 - refreshed: 2026-04-01
 
 ______________________________________________________________________
 
-## The Cursed Card: Henry
+## The Legacy Card: Henry
 
 ### Henry Mizel
 
 - tier: 3
 - type: Normal
 - nature: Timid
-- department: Analytics Engineering / Data Science
+- department: Revenue Operations
 - team: N/A
-- title: British Gentleman / Scapegoat
+- title: VP Revenue Ops / Databot Creator
 - ghost: secondary
-- hp: 1 | atk: 5 | def: 5 | spd: 10 | spatk: 3 | spdef: 15
-- signature: BEG FOR FORGIVENESS (Normal, 40 power)
-- moves: Little Pony Distraction (Normal, 40), Universal Apology (Normal, 40)
-- held_item: A Little Pony
-- passive: Inevitable Disappointment — all incorrect data, failed queries, and documentation gaps are automatically attributed to Henry; 0 commits, 100% of the blame.
-- wild_pool: [FADING, DORMANT, INVISIBLE]
-- quote: "I'm terribly sorry, won't happen again, I promise..."
+- hp: 40 | atk: 35 | def: 50 | spd: 30 | spatk: 45 | spdef: 55
+- signature: REVENUE INFRASTRUCTURE (Normal, 60 power)
+- moves: Systems Integration (Normal, 50), Deal Desk Protocol (Normal, 45)
+- held_item: Legacy Databot Manual
+- passive: Legacy Builder — created the databot that came before Jarvis. The foundation that taught us what not to do.
+- wild_pool: [STEADY, OPERATIONAL, RELIABLE]
+- quote: "The systems have to be right before the analytics can be right."
 - refreshed: 2026-04-01
 
 ## All Apollo Employees (Auto-Generated Stubs)
 
 > Tier 3 cards auto-generated from Darwinbox roster. Stats derived from title/department.
-> Run `/apollo-analytics:battle explain` after any battle to see rationale.
+> Run `/apollo-data:battle explain` after any battle to see rationale.
 > Deep scan pending — cards will be upgraded on next company-wide scan.
 
 ______________________________________________________________________

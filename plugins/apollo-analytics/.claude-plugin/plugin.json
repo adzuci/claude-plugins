@@ -1,6 +1,7 @@
 {
   "name": "apollo-analytics",
-  "description": "Analytics and data skills for Apollo — battle cards, metric lookups, and data intelligence",
-  "version": "1.0.0",
+  "displayName": "Jarvis — Apollo Analytics Copilot",
+  "version": "2.0.0",
+  "description": "Apollo Analytics Copilot — answers data questions using governed Snowflake metrics, runs product debriefs, generates account profiles, and surfaces weekly strategic insights. Built by the Analytics team.",
   "license": "UNLICENSED"
 }

@@ -1,6 +1,16 @@
 ---
 name: data-catalog-search
 description: Search the governed data catalog to find the right tables and understand business terms
+trigger-conditions:
+  - "what tables have [topic]"
+  - "where does [data] live"
+  - "find tables for [concept]"
+  - "what tables do you have"
+  - "which table should I use for [concept]"
+  - "show me the catalog"
+not-for:
+  - "what is [metric] / define [metric]" → use metric-lookup first
+  - "amplitude event / mongo collection / sfdc object / salesforce field" → use source-catalog (power-user only)
 ---
 
 # Data Catalog Search
@@ -35,13 +45,13 @@ Use the returned `sql_predicate` to construct correct WHERE clauses. Never hardc
 When building an ad-hoc query from catalog tables:
 
 1. **Always prefer canonical tables** over preferred/reference/avoid
-1. **Join to `LU_TEAM_ATTRIBUTES`** (on `team_id`) for any segmentation (segment, region, plan, core account, golden population)
-1. **Join to `LU_FISCAL_CALENDAR`** (on `ds = calendar_date`) for fiscal year/quarter grouping
-1. **Filter `arr > 0`** for "paid teams" unless explicitly asked about free teams
-1. **Never query tables with `trust_tier = 'avoid'`**
-1. **For feature/activity questions:** use `DIM_TEAMS_DAILY` with `IS_PAID_IND = true` — always filter to single date or narrow range (8.6B rows)
-1. **For feature-level user counts:** prefer `FCT_TEAM_FEATURE_USERS_DAILY` (lighter weight)
-1. **LIMIT all queries:** default 20, max 100
+2. **Join to `LU_TEAM_ATTRIBUTES`** (on `team_id`) for any segmentation (segment, region, plan, core account, golden population)
+3. **Join to `LU_FISCAL_CALENDAR`** (on `ds = calendar_date`) for fiscal year/quarter grouping
+4. **Filter `arr > 0`** for "paid teams" unless explicitly asked about free teams
+5. **Never query tables with `trust_tier = 'avoid'`**
+6. **For feature/activity questions:** use `DIM_TEAMS_DAILY` with `IS_PAID_IND = true` — always filter to single date or narrow range (8.6B rows)
+7. **For feature-level user counts:** prefer `FCT_TEAM_FEATURE_USERS_DAILY` (lighter weight)
+8. **LIMIT all queries:** default 20, max 100
 
 ## Trust Tier Hierarchy
 
@@ -66,10 +76,14 @@ ORDER BY trust_tier, table_name
 ## 49 Business Terms in Glossary
 
 Common terms that trip people up:
-
 - **WAT:** Weekly Active Teams, Sunday anchor. Exec context = paid WAT (~69K)
 - **NRR:** M3 Cohort NRR (62-78%), NOT aggregate net retention (~96%)
 - **Golden Population:** Core plan, North America, Sales dept >3, 1-2 seats
 - **PLSM:** Product-Led Sales Motion
 - **PQA:** Product Qualified Account (3+ MAU)
 - **Active Days:** #1 retention predictor (26+ days = 76% retention)
+
+## Tracking
+
+- **Query tag:** Pass `--context catalog_search` when running queries via `snowflake_query.py`
+- **Pulse:** After completing the search, fire: `python3 scripts/snowflake_query.py --pulse catalog_search --detail "<search terms and tables found>"`

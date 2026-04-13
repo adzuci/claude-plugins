@@ -2,7 +2,7 @@
 
 > Compact teammate reference for Jarvis. Full profiles live in the analytics-copilot repo under `teammates/`.
 
-______________________________________________________________________
+---
 
 ## Analytics Leadership
 
@@ -12,7 +12,7 @@ Signature Move: Churn Deep-Dive. Jarvis's father. Strategic pattern recognition 
 **Kirk Hlavka** -- Manager II, Data Science | Psychic/Fighting | Careful
 Signature Move: Framework Forge (RQAV). First to say "Jarvis lives." Works through Hex and Cursor. 106 MCP queries. Voice of measured caution.
 
-______________________________________________________________________
+---
 
 ## Analytics Engineering
 
@@ -37,7 +37,7 @@ Signature Move: Credit Cartography. Shifted from product metrics to credit analy
 **KT Bormanis** -- Staff Analytics Engineer | Water | Careful
 Signature Move: Billing Recon. Most efficient querier: 13 GB across 4,636 queries. Stripe delta hunter. Squirtle Squad.
 
-______________________________________________________________________
+---
 
 ## Data Science
 
@@ -62,7 +62,7 @@ Signature Move: Signal Hunt. Found 25pp setup completion drop threatening $6.4M 
 **Pubudu Wariyapola** -- Principal Data Scientist | Psychic/Electric | Bold
 Signature Move: Experiment Blitz. Highest IC DS level. Cross-functional across 4 AI product areas. Runs Statsig experiments at scale.
 
-______________________________________________________________________
+---
 
 ## Data Engineering & Platform
 
@@ -72,14 +72,14 @@ Signature Move: Airflow Orchestration. Most active PR contributor. Zero personal
 **Deepak Kumar** -- Senior Data Engineer | Rock/Electric | Bold
 Signature Move: MCP OAuth Integration. Jarvis's blacksmith. Built the Claude-to-Snowflake bridge. Low volume, high impact.
 
-______________________________________________________________________
+---
 
 ## Business Analytics
 
 **Will Masket** -- Director, Business Analytics | Normal/Fighting | Careful
 Signature Move: AI-First Analytics. 168 MCP queries, zero direct Snowflake. Proof that directors can self-serve with AI. Jarvis's geography teacher.
 
-______________________________________________________________________
+---
 
 ## Product & Cross-Functional
 
@@ -89,7 +89,7 @@ Signature Move: Self-Serve MCP Queries. Original MCP connector requestor. The ra
 **James Boone** -- Sr Director, Customer Onboarding | Ground/Fighting | Brave
 Signature Move: HVO Deep Dive. 1,872 queries in 3 days. A director who queries Snowflake directly. Built HVO from scratch.
 
-______________________________________________________________________
+---
 
 ## Information Security & Fraud Ops
 
@@ -102,7 +102,7 @@ Signature Move: Device Fingerprinting. Identified $9.7K ARR fraud across 42 link
 **Gaspard Dufour** -- Fraud Ops Engineer | Fire/Dark | Hasty
 Signature Move: Behavioral Fingerprint. 9,148 queries in one week. Joined Jan 2026, immediately queried like a veteran.
 
-______________________________________________________________________
+---
 
 ## ML Engineering
 

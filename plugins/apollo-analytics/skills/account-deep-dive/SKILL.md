@@ -1,6 +1,18 @@
 ---
 name: account-deep-dive
 description: Generate a comprehensive profile for a specific team/account combining revenue, credits, support, email, and events
+trigger-conditions:
+  - "account [name]"
+  - "tell me about [company]"
+  - "team [name] profile"
+  - "[company] deep dive"
+  - "[company] account"
+  - "look up [company]"
+  - "what do we know about [customer]"
+  - "team_id [id]"
+not-for:
+  - "credit utilization overall / across all teams" → use credit-analysis
+  - "[area] performance across all accounts" → use product-debrief
 ---
 
 # Account Deep Dive
@@ -79,14 +91,43 @@ LIMIT 20
 
 ## Output Format
 
-Present as a structured profile:
+**Always write an HTML file** to `debriefs/<team_name_slug>_account_<YYYY_MM_DD>.html` and commit it:
+```
+docs(debrief): add account deep dive <team_name> <YYYY-MM-DD>
+```
+
+The HTML file uses dark-mode styling (same palette as product-debrief):
+- bg `#0f1117`, surface `#1a1d27`, border `#2e3248`
+- accent `#6c63ff`, teal `#00d4aa`, red `#ff6b6b`, yellow `#ffd166`
+- System fonts: `-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`
+- Monospace: `'SF Mono', 'Fira Code', 'Consolas', monospace`
+
+### HTML layout
+
+```
+Page header (team name + team_id + segment pill + ARR badge)
+Risk Signals banner (⚠️ — shown at top if any risk flags exist, hidden if clean)
+─────────────────────────────────────────────────────
+KPI cards row: ARR | Plan | Region | Billing Term | Is Core
+─────────────────────────────────────────────────────
+Section: Credit Utilization (30d)
+  Table: feature_type | credits_used | limit | utilization % (color-coded: green <70%, yellow 70-90%, red >90%)
+Section: Support Activity (30d)
+  Table: date | conversation_count | turned_to_ticket
+  Note Intercom spike caveat if Mar 2+ data is present
+Section: Email Activity (30d)
+  Table: date | message_type | delivered | opened | replied | open_rate | reply_rate
+Section: Notable Events (90d)
+  Timeline list: date · event_type · event_detail
+```
+
+Also present a brief inline summary in chat (no HTML rendering in chat):
 
 > **Account Profile: [Team Name]** (team_id: [X])
 >
 > **Segment:** [segment] | **Plan:** [plan] | **ARR:** $[X] | **Region:** [region]
 >
-> **Credit Utilization (30d):**
-> [table of feature_type, avg utilization]
+> **Credit Utilization (30d):** [table of feature_type, avg utilization]
 >
 > **Support (30d):** [X] conversations, [Y] tickets
 >
@@ -95,8 +136,15 @@ Present as a structured profile:
 > **Recent Events:** [notable events list]
 >
 > **Risk Signals:** [flag anything unusual — declining utilization, support spikes, cancellation events]
+>
+> HTML saved to: `debriefs/<team_name_slug>_account_<YYYY_MM_DD>.html`
 
 ## Gotchas
 
 - `IS_CONVERSATION_TURNED_TICKET` spiked 10x starting Mar 2 — likely Intercom rule change, not real volume. Mention this if the spike appears.
 - Credit utilization can return NaN due to `credit_type` name mismatches. Use `feature_type` instead.
+
+## Tracking
+
+- **Query tag:** Pass `--context account_deep_dive` when running queries via `snowflake_query.py`
+- **Pulse:** After completing the deep dive, fire: `python3 scripts/snowflake_query.py --pulse account_deep_dive --detail "<team_name> revenue + credits + support"`
