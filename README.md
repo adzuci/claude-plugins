@@ -56,7 +56,7 @@ A plugin is a folder with a `.claude-plugin/plugin.json` manifest that packages 
 
 ### Plugin structure
 
-\`\`\`text
+```text
 plugins/apollo-eng/
 ├── .claude-plugin/
 │ └── plugin.json # Required: name, description, version
@@ -68,7 +68,7 @@ plugins/apollo-eng/
 ├── agents/ # Optional
 ├── hooks/ # Optional
 └── .mcp.json # Optional
-\`\`\`
+```
 
 > **Common mistake:** `commands/`, `agents/`, `skills/`, and `hooks/` must be at the plugin root — not inside `.claude-plugin/`. Only `plugin.json` goes inside `.claude-plugin/`.
 
@@ -78,9 +78,9 @@ plugins/apollo-eng/
 
 1. **Add the marketplace** (one-time):
 
-   \`\`\`text
+   ```text
    /plugin marketplace add git@github.com:apolloio/claude-plugins
-   \`\`\`
+   ```
 
 1. **Install a plugin**
 
@@ -94,9 +94,9 @@ plugins/apollo-eng/
 
 1. Run:
 
-   \`\`\`text
+   ```text
    /plugin marketplace add git@github.com:apolloio/claude-plugins
-   \`\`\`
+   ```
 
 1. Run `/plugin`
 
@@ -167,9 +167,9 @@ Both Claude Code and Cowork skills use the same format: a `SKILL.md` file with Y
 
 1. **Copy the template**
 
-   \`\`\`text
+   ```text
    cp -r template/skills/example plugins/<plugin-name>/skills/<skill-name>
-   \`\`\`
+   ```
 
 1. **Set frontmatter** in `SKILL.md`:
 
@@ -180,10 +180,10 @@ Both Claude Code and Cowork skills use the same format: a `SKILL.md` file with Y
 
 1. **Validate and format** — Run before committing:
 
-   \`\`\`bash
+   ```bash
    claude plugin validate .
    mdformat plugins/<plugin-name>/skills/<skill-name>/SKILL.md
-   \`\`\`
+   ```
 
 1. **Open a PR** — CI will lint, validate, and run the skill-review rubric automatically.
 
@@ -267,29 +267,29 @@ Users invoke skills as `/plugin-name:skill-name` (e.g. `/apollo-eng:pr-descripti
 
 1. **Copy the template**
 
-   \`\`\`text
+   ```text
    cp -r template plugins/<plugin-name>
-   \`\`\`
+   ```
 
 1. **Edit the plugin manifest** at `plugins/<plugin-name>/.claude-plugin/plugin.json`:
 
-   \`\`\`json
+   ```json
    {
-   "name": "<plugin-name>",
-   "description": "Short description of the plugin",
-   "version": "1.0.0"
+     "name": "<plugin-name>",
+     "description": "Short description of the plugin",
+     "version": "1.0.0"
    }
-   \`\`\`
+   ```
 
 1. **Register in the marketplace** — add an entry to `.claude-plugin/marketplace.json`:
 
-   \`\`\`json
+   ```json
    {
-   "name": "<plugin-name>",
-   "source": "./plugins/<plugin-name>",
-   "description": "Short description of the plugin"
+     "name": "<plugin-name>",
+     "source": "./plugins/<plugin-name>",
+     "description": "Short description of the plugin"
    }
-   \`\`\`
+   ```
 
 1. **Validate** — Run `claude plugin validate .` from the repo root.
 
@@ -299,28 +299,28 @@ Users invoke skills as `/plugin-name:skill-name` (e.g. `/apollo-eng:pr-descripti
 
 To have Claude Code suggest this marketplace when someone works in another repo, add this to that repo's `.claude/settings.json`:
 
-\`\`\`json
+```json
 {
-"extraKnownMarketplaces": {
-"apollo-plugins": {
-"source": {
-"source": "github",
-"repo": "apolloio/claude-plugins"
+  "extraKnownMarketplaces": {
+    "apollo-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "apolloio/claude-plugins"
+      }
+    }
+  }
 }
-}
-}
-}
-\`\`\`
+```
 
 To auto-enable specific plugins in that repo:
 
-\`\`\`json
+```json
 {
-"enabledPlugins": {
-"apollo-eng@apollo-plugins": true
+  "enabledPlugins": {
+    "apollo-eng@apollo-plugins": true
+  }
 }
-}
-\`\`\`
+```
 
 ### Auto-update
 
@@ -340,80 +340,83 @@ Cursor and Windsurf can also load skills from `.claude/skills/` directories. Cop
 
 ## How This Repo Works
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
-dev([Developer])
+    dev([Developer])
 
-```
-subgraph repo["apolloio/claude-plugins (this repo)"]
-    branch["Feature branch\nAdd or edit SKILL.md"]
-    pr["Pull Request"]
+    subgraph repo["apolloio/claude-plugins (this repo)"]
+        branch["Feature branch<br/>Add or edit SKILL.md"]
+        pr["Pull Request"]
 
-    subgraph ci_pr["CI — on pull_request"]
-        lint["Lint\n(markdownlint + mdformat)"]
-        validate["Validate\n(claude plugin validate)"]
-        namecheck["Skill name check\n(dir == frontmatter name)"]
+        subgraph ci_pr["CI - on pull_request"]
+            lint["Lint<br/>(markdownlint + mdformat)"]
+            validate["Validate<br/>(claude plugin validate)"]
+            namecheck["Skill name check<br/>(dir == frontmatter name)"]
+        end
+
+        merge["Merge to main"]
+
+        subgraph ci_main["CI - on push to main"]
+            inventory["Update skill inventory<br/>(README table auto-updated)"]
+            bump["Bump version<br/>(Conventional Commits -> semver tag<br/>+ GitHub Release)"]
+        end
+
+        marketplace[".claude-plugin/marketplace.json<br/>apollo-plugins marketplace"]
+        plugins["plugins/<br/>apollo-eng/<br/>apollo-eng-devops/<br/>apollo-eng-leadership/<br/>apollo-analytics/"]
     end
 
-    merge["Merge to main"]
-
-    subgraph ci_main["CI — on push to main"]
-        inventory["Update skill inventory\n(README table auto-updated)"]
-        bump["Bump version\n(Conventional Commits → semver tag\n+ GitHub Release)"]
+    subgraph consumers["Consuming repos (e.g. leadgenie, devops)"]
+        settings[".claude/settings.json<br/>extraKnownMarketplaces"]
+        install["/plugin install apollo-eng@apollo-plugins"]
+        skill["/apollo-eng:pr-description<br/>/apollo-eng-devops:incident-response<br/>etc."]
     end
 
-    marketplace[".claude-plugin/marketplace.json\napollo-plugins marketplace"]
-    plugins["plugins/\n  apollo-eng/\n  apollo-eng-devops/\n  apollo-eng-leadership/\n  apollo-analytics/"]
-end
-
-subgraph consumers["Consuming repos (e.g. leadgenie, devops)"]
-    settings[".claude/settings.json\nextraKnownMarketplaces"]
-    install["/plugin install apollo-eng@apollo-plugins"]
-    skill["/apollo-eng:pr-description\n/apollo-eng-devops:incident-response\netc."]
-end
-
-dev --> branch --> pr --> ci_pr
-ci_pr --> merge --> ci_main
-merge --> marketplace
-merge --> plugins
-marketplace --> consumers
-plugins --> consumers
-settings --> install --> skill
+    dev --> branch --> pr --> lint
+    pr --> validate
+    pr --> namecheck
+    lint --> merge
+    validate --> merge
+    namecheck --> merge
+    merge --> inventory
+    merge --> bump
+    merge --> marketplace
+    merge --> plugins
+    marketplace --> settings
+    plugins --> install
+    settings --> install --> skill
 ```
-
-\`\`\`
 
 ## Repository Structure
 
-\`\`\`text
+```text
 .claude/
-settings.json
+  settings.json
 .claude-plugin/
-marketplace.json
+  marketplace.json
 .github/
-workflows/ # CI: lint, validate, bump-version, skill-pr-review, update-skill-inventory
-scripts/ # Helper scripts used by workflows
-skill-review-rubric.md
+  workflows/  # CI: lint, validate, bump-version, skill-pr-review, update-skill-inventory
+scripts/  # Helper scripts used by workflows
+  skill-review-rubric.md
 template/
-.claude-plugin/
-plugin.json
-skills/
-example/
-SKILL.md
+  .claude-plugin/
+    plugin.json
+  skills/
+    example/
+      SKILL.md
 plugins/
-apollo-eng/ # Shared engineering skills
-.claude-plugin/
-plugin.json
-skills/
-pr-description/
-SKILL.md
-apollo-eng-devops/ # DevOps and SRE skills
-...
-apollo-eng-leadership/ # Engineering leadership Cowork skills
-...
-apollo-analytics/ # Data and analytics skills
-...
-\`\`\`
+  apollo-eng/  # Shared engineering skills
+    .claude-plugin/
+      plugin.json
+    skills/
+      pr-description/
+        SKILL.md
+  apollo-eng-devops/  # DevOps and SRE skills
+    ...
+  apollo-eng-leadership/  # Engineering leadership cowork skills
+    ...
+  apollo-analytics/  # Data and analytics skills
+    ...
+```
 
 ## Versioning and Releases
 
