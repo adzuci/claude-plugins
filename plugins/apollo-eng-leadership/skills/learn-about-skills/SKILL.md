@@ -1,6 +1,6 @@
 ---
 name: learn-about-skills
-description: Explain how Cowork skills and plugins work in Apollo's shared skills marketplace. Use when the user asks how Cowork skills work, wants to browse or understand shared plugins, or wants help writing a new skill and opening a PR to add it to apolloio/skills.
+description: Explain how Cowork skills and plugins work in Apollo's shared skills marketplace. Use when the user asks how Cowork skills work, wants to browse or understand shared plugins, or wants help writing a new skill and opening a PR to add it to apolloio/claude-plugins.
 ---
 
 # Learn About Skills
@@ -35,7 +35,7 @@ Guide them through the contribution flow:
 1. Create the folder layout under `plugins/<plugin-name>/skills/<skill-name>/SKILL.md`.
 1. Keep `SKILL.md` concise. Put only the core workflow in the file and move large references into separate files when needed.
 1. If they are creating a new plugin, add `.claude-plugin/plugin.json`, a short plugin `README.md`, and a marketplace entry in `.claude-plugin/marketplace.json`.
-1. Open a branch, commit the change, and create a PR against `apolloio/skills`.
+1. Open a branch, commit the change, and create a PR against `apolloio/claude-plugins`.
 
 ## Coaching points
 

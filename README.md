@@ -79,7 +79,7 @@ plugins/apollo-eng/
 1. **Add the marketplace** (one-time):
 
    \`\`\`text
-   /plugin marketplace add git@github.com:apolloio/skills
+   /plugin marketplace add git@github.com:apolloio/claude-plugins
    \`\`\`
 
 1. **Install a plugin**
@@ -95,7 +95,7 @@ plugins/apollo-eng/
 1. Run:
 
    \`\`\`text
-   /plugin marketplace add git@github.com:apolloio/skills
+   /plugin marketplace add git@github.com:apolloio/claude-plugins
    \`\`\`
 
 1. Run `/plugin`
@@ -138,7 +138,7 @@ plugins/apollo-eng/
 | apollo-eng-devops | `/apollo-eng-devops:kubernetes-specialist` | Kubernetes debugging and rollout specialist for Apollo's GKE clusters. Activate when debugging pod crashes, CrashLoopBackOff, OOMKilled, readiness or liveness failures, deployment rollouts, HPA scaling, or resource limit tuning. |
 | apollo-eng-devops | `/apollo-eng-devops:systematic-debugging` | Apply a four-phase root-cause debugging methodology to any production issue. Activate when the user is debugging a production problem, performance regression, or unexpected system behavior. |
 | apollo-eng-leadership | `/apollo-eng-leadership:eng-metrics` | Summarize engineering metrics for a team or org. Activate when a manager asks for eng metrics, engineering health, developer productivity metrics, DORA metrics, or says "eng metrics". |
-| apollo-eng-leadership | `/apollo-eng-leadership:learn-about-skills` | Explain how Cowork skills and plugins work in Apollo's shared skills marketplace. Use when the user asks how Cowork skills work, wants to browse or understand shared plugins, or wants help writing a new skill and opening a PR to add it to apolloio/skills. |
+| apollo-eng-leadership | `/apollo-eng-leadership:learn-about-skills` | Explain how Cowork skills and plugins work in Apollo's shared skills marketplace. Use when the user asks how Cowork skills work, wants to browse or understand shared plugins, or wants help writing a new skill and opening a PR to add it to apolloio/claude-plugins. |
 | apollo-eng-leadership | `/apollo-eng-leadership:okr-report` | Generate an OKR status report for an engineering team. Activate when a manager asks for an OKR report, OKR status, quarterly progress, key results update, or says "okr report". |
 | apollo-eng-leadership | `/apollo-eng-leadership:sprint-planning` | Help prepare for sprint planning by summarizing carry-over work, team capacity, and suggested priorities. Activate when a manager asks to prepare for sprint planning, plan the next sprint, sprint prep, or says "sprint planning". |
 
@@ -305,7 +305,7 @@ To have Claude Code suggest this marketplace when someone works in another repo,
 "apollo-plugins": {
 "source": {
 "source": "github",
-"repo": "apolloio/skills"
+"repo": "apolloio/claude-plugins"
 }
 }
 }
@@ -345,7 +345,7 @@ flowchart TD
 dev([Developer])
 
 ```
-subgraph repo["apolloio/skills (this repo)"]
+subgraph repo["apolloio/claude-plugins (this repo)"]
     branch["Feature branch\nAdd or edit SKILL.md"]
     pr["Pull Request"]
 

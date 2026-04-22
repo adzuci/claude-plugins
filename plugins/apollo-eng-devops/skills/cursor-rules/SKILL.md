@@ -15,10 +15,10 @@ description: Export Apollo skills as Cursor rules (.mdc files) into a project's 
 
 Check in this order and stop at the first match:
 
-1. The current working directory is the `apolloio/skills` repo (contains `plugins/` and `.claude-plugin/`)
+1. The current working directory is the `apolloio/claude-plugins` repo (contains `plugins/` and `.claude-plugin/`)
 1. `~/.apollo-plugins/` exists and contains `plugins/`
-1. Ask the user: "Where is your local clone of apolloio/skills? (or I can clone it for you)"
-   - If they want it cloned: `git clone git@github.com:apolloio/skills.git ~/.apollo-plugins`
+1. Ask the user: "Where is your local clone of apolloio/claude-plugins? (or I can clone it for you)"
+   - If they want it cloned: `git clone git@github.com:apolloio/claude-plugins.git ~/.apollo-plugins`
 
 Store the resolved path as `SKILLS_REPO`.
 

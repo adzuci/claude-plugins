@@ -7,7 +7,7 @@
     "apollo-plugins": {
       "source": {
         "source": "github",
-        "repo": "apolloio/skills"
+        "repo": "apolloio/claude-plugins"
       },
       "autoUpdate": true
     }
