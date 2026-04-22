@@ -22,6 +22,26 @@ A **plugin marketplace** is a versioned catalog that distributes Claude Code plu
 - **Auto-updates** — this marketplace uses `"autoUpdate": true` so engineers get the latest skills automatically without running a manual update command
 - **Governed by code review** — every skill goes through CI validation and a PR before it reaches anyone
 
+## When to Use Which Feature
+
+Use this table to decide where a new behavior or workflow belongs before you build anything.
+
+| Feature | Where it lives | Used when… | Examples |
+| --- | --- | --- | --- |
+| **CLAUDE.md** | `CLAUDE.md` at the project root | You want instructions and context loaded automatically into every Claude session in this project — without repeating yourself each time | "use pnpm, not npm", "run tests with pytest", "follow PEP8" |
+| **Skills** | `plugins/<plugin>/skills/<name>/SKILL.md` | You have a reusable, multi-step workflow. Invoke it on demand via `/plugin:skill-name` or let Claude trigger it automatically from a phrase | Generating PR descriptions (`/apollo-eng:pr-description`), running security reviews, writing ship posts |
+| **MCP Servers** | `.mcp.json` in the plugin or project root | You need Claude to call an external service via structured tool calls — especially where authentication, pagination, or a typed schema matter more than raw shell output | Query a database, fetch GitHub issues, send Slack messages, read Google Drive |
+| **Hooks** | `hooks/hooks.json` in the plugin | You need side effects that must run unconditionally at specific lifecycle events (`PreToolUse`, `PostToolUse`, `Stop`, etc.) — executed outside the LLM with the ability to block or modify Claude's actions | Auto-format files after every edit, run tests after code changes, send a notification when Claude stops |
+
+**Quick-pick:**
+
+- Persistent project instructions → `CLAUDE.md`
+- Named, repeatable workflow → Skill (invoked with `/plugin:skill-name`)
+- Talk to an external service or API → MCP Server
+- Must run unconditionally, every time, outside the LLM → Hook
+
+> **New to Claude Code?** Start with `CLAUDE.md` for project instructions and create a Skill for any workflow you catch yourself re-explaining to Claude more than twice. Add MCP Servers when you need structured access to external services; use Hooks when automation must run regardless of what Claude decides.
+
 ## What is a Plugin?
 
 A plugin is a folder with a `.claude-plugin/plugin.json` manifest that packages one or more of these components:
