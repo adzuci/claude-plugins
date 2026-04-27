@@ -157,27 +157,23 @@ Where:
 - `<arrow>` = trend arrow emoji
 - `<status_circle>` = green/yellow circle based on net trend
 
-### Step 6: Post to Slack or Present to User
+### Step 6: Post to Slack
 
-The user may optionally provide a Slack thread link when invoking this skill (e.g., `https://apolloio.slack.com/archives/CHANNEL_ID/pTIMESTAMP`).
+Post the formatted message directly to `#internal-squad-fabric-surfaces` (channel ID: `C06HG89A6S2`) as a top-level message.
 
-**If a Slack thread link is provided AND the Slack MCP tools (`mcp__claude_ai_Slack__slack_send_message`) are available:**
+**If Slack MCP (`mcp__claude_ai_Slack__slack_send_message`) is available:**
 
-1. Parse the channel ID and thread timestamp from the URL:
-   - Channel ID: the segment after `/archives/` (e.g., `D08C3UHA4SY`)
-   - Thread timestamp: the `p` prefix timestamp converted to Slack `ts` format (e.g., `p1774539593856959` → `1774539593.856959`)
-2. Post the formatted message as a reply in that thread using `mcp__claude_ai_Slack__slack_send_message`
-3. Return the message link to the user
+1. Call `mcp__claude_ai_Slack__slack_send_message` with:
+   - `channel_id`: `C06HG89A6S2`
+   - `message`: the formatted message
+   - Do NOT set `thread_ts` — this is a top-level post
+2. Return the message link to the user
 
-**If a Slack thread link is provided but Slack MCP is NOT available:**
+**If Slack MCP is NOT available:**
 
 - Do NOT ask the user to set up Slack MCP
-- Simply output the formatted message in a code block so the user can copy-paste it into Slack manually
-- Tell the user: "Slack MCP is not connected, so here's the message for you to copy-paste."
-
-**If no Slack thread link is provided:**
-
 - Output the formatted message in a code block for the user to copy-paste
+- Tell the user: "Slack MCP is not connected, here's the message to copy-paste."
 
 ## 0% Coverage Files — Extraction Steps
 
@@ -203,9 +199,27 @@ The HTML structure is:
 - Inside each tab, accordion sections per team: `<div class="owner-section">` with header `@apolloio/<team-name>`
 - Inside each accordion, file entries: `<div class="file-name">path/to/file.ts</div>`
 
-Find the **first** occurrence of `@apolloio/fabric-surfaces` in the file — this is the 0% tab's section. Read from that point until the next `<div class="owner-section">` starts (the next team). Extract all file paths from `<div class="file-name">` tags within that block.
+The file is large. First find the exact line boundaries of tab-0 and tab-1 using the Bash tool:
 
-The file may be large. Use the Grep tool to find the line number of the first `fabric-surfaces` occurrence, then use the Read tool with offset/limit to read just that section (~100 lines should be enough).
+```bash
+grep -n 'id="tab-0"\|id="tab-1"' /tmp/fe-coverage-report.html | head -2
+```
+
+Extract `tab0_line` and `tab1_line` from the output. If `id="tab-1"` is not present, set `tab1_line` to the total number of lines + 1:
+
+```bash
+wc -l /tmp/fe-coverage-report.html
+```
+
+Then search for `@apolloio/fabric-surfaces` **only within those line numbers** (tab-0 start to tab-1 start):
+
+```bash
+awk 'NR>=<tab0_line> && NR<tab1_line' /tmp/fe-coverage-report.html | grep -n "fabric-surfaces"
+```
+
+If fabric-surfaces is **not found** within tab-0, the team has 0 files with 0% coverage — skip directly to Step D (zero files case).
+
+If found, the relative grep line number is 1-based within the awk slice. Compute the absolute line number as `tab0_line + relative_offset - 1`, then use the Read tool at that offset for ~100 lines and extract all `<div class="file-name">` entries until the next `<div class="owner-section">`.
 
 ### Step C: Count and format
 
