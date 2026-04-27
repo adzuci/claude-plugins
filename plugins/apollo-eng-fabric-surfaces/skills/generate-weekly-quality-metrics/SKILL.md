@@ -123,25 +123,25 @@ Use this exact format:
 
 Hey team! :wave: Here's this week's snapshot of our eng quality signals:
 
-• *Breached Incidents (Missed SLA)*
-    ◦ *MTTR*: <MTTR_RESULT>
-    ◦ *MTTA*: <MTTA_RESULT>
-• *Open Incidents*
-    ◦ <TOTAL> currently open
-        ▪︎ <X> SEV-2
-        ▪︎ <Y> SEV-3
-        ▪︎ <Z> SEV-4
-    ◦ :link: *<https://apollopde.atlassian.net/issues/?filter=11702|Fabric Surfaces Open Production Incidents>*
-• *About-to-Breach (next 7 days)*
-    ◦ <ABOUT_TO_BREACH>
+- *Breached Incidents (Missed SLA)*
+    - *MTTR*: <MTTR_RESULT>
+    - *MTTA*: <MTTA_RESULT>
+- *Open Incidents*
+    - <TOTAL> currently open
+        - <X> SEV-2
+        - <Y> SEV-3
+        - <Z> SEV-4
+    - :link: *[Fabric Surfaces Open Production Incidents](https://apollopde.atlassian.net/issues/?filter=11702)*
+- *About-to-Breach (next 7 days)*
+    - <ABOUT_TO_BREACH>
 
 __
 
 :blue_book: *MTTA Playbook Reminder* – How to keep our MTTA signal clean
-• *Step 1:* Once you've reviewed the incident and confirmed it's valid, move it from `Reported` → `Triage in Progress`
-    ◦ :stopwatch: This *stops the MTTA timer* — it tells the team you're actively looking into it. No need to wait until you're fixing it.
-• *Step 2:* After triaging (i.e. you've assessed severity and scope), move it to `Prioritized`
-    ◦ :spiral_calendar_pad: This means the issue is now queued or scheduled for resolution.
+- *Step 1:* Once you've reviewed the incident and confirmed it's valid, move it from `Reported` → `Triage in Progress`
+    - :stopwatch: This *stops the MTTA timer* — it tells the team you're actively looking into it. No need to wait until you're fixing it.
+- *Step 2:* After triaging (i.e. you've assessed severity and scope), move it to `Prioritized`
+    - :spiral_calendar_pad: This means the issue is now queued or scheduled for resolution.
 
 cc: <!subteam^S06M2L5DGDR> <@U02SQFD1F5J>
 ```
@@ -150,17 +150,17 @@ cc: <!subteam^S06M2L5DGDR> <@U02SQFD1F5J>
 
 **Placeholder rules:**
 
-- `<MTTR_RESULT>`: If Query A returned no tickets → `None :large_green_circle:`. Otherwise → `N ticket(s) :red_circle:` followed by a newline-separated nested bulleted list of `<TICKET_KEY|SUMMARY>` links (each on a new deeply-indented line with `▪︎`, 8 spaces in).
+- `<MTTR_RESULT>`: If Query A returned no tickets → `None :large_green_circle:`. Otherwise → `N ticket(s) :red_circle:` followed by a newline-separated nested bulleted list of `[KEY](https://apollopde.atlassian.net/browse/KEY)` links (each on a new deeply-indented line with `-`, 8 spaces in).
 - `<MTTA_RESULT>`: Same format as MTTR but based on Step 3 output. Use `:red_circle:` when breached, `:large_green_circle:` when none.
 - `<TOTAL>`: Total count of open tickets from Query C.
 - `<X>`, `<Y>`, `<Z>`: Per-severity counts. Omit the line entirely if count is 0 for that severity. Include SEV-0/SEV-1 lines only if they have counts.
 - `<ABOUT_TO_BREACH>`: If Query D returned no tickets → `None :large_green_circle:`. Otherwise → `N incident(s) :large_yellow_circle:` with a nested bulleted list below:
   ```
-  ◦ N incident(s) :large_yellow_circle:
-      ▪︎ <TICKET_KEY|SUMMARY> (due <DUEDATE>)
+  - N incident(s) :large_yellow_circle:
+      - [KEY – SUMMARY](https://apollopde.atlassian.net/browse/KEY) (due <DUEDATE>)
   ```
 
-**Ticket link format:** Use `<https://apollopde.atlassian.net/browse/TICKET_KEY|TICKET_KEY>` for each issue reference.
+**Ticket link format:** Use `[TICKET_KEY](https://apollopde.atlassian.net/browse/TICKET_KEY)` for each issue reference.
 
 ### Step 6: Post to Slack or output for copy-paste
 
@@ -177,6 +177,8 @@ cc: <!subteam^S06M2L5DGDR> <@U02SQFD1F5J>
 - Output the formatted message inside a code block so the user can copy-paste into Slack manually.
 - If Slack MCP is unavailable but a thread link was provided, tell the user: "Slack MCP is not connected, so here's the message for you to copy-paste."
 
+> **Formatting note:** `mcp__Slack__slack_send_message` (and the Atlassian proxy variant) accept standard markdown, not Slack mrkdwn. Always use `[label](url)` for links — never `<url|label>`. Use `__` (not `---`) for section dividers. Replace Unicode bullets (`◦`, `▪︎`) with indented `-` list items. Using `---` or `<url|label>` syntax will produce an `invalid_blocks` error and the message will not send.
+
 ## Example Output
 
 ```
@@ -184,22 +186,22 @@ cc: <!subteam^S06M2L5DGDR> <@U02SQFD1F5J>
 
 Hey team! :wave: Here's this week's snapshot of our eng quality signals:
 
-• *Breached Incidents (Missed SLA)*
-    ◦ *MTTR*: None :large_green_circle:
-    ◦ *MTTA*: None :large_green_circle:
-• *Open Incidents*
-    ◦ 2 currently open
-        ▪︎ 1 SEV-2
-        ▪︎ 1 SEV-4
-    ◦ :link: *<https://apollopde.atlassian.net/issues/?filter=11702|Fabric Surfaces Open Production Incidents>*
-• *About-to-Breach (next 7 days)*
-    ◦ None :large_green_circle:
+- *Breached Incidents (Missed SLA)*
+    - *MTTR*: None :large_green_circle:
+    - *MTTA*: None :large_green_circle:
+- *Open Incidents*
+    - 2 currently open
+        - 1 SEV-2
+        - 1 SEV-4
+    - :link: *[Fabric Surfaces Open Production Incidents](https://apollopde.atlassian.net/issues/?filter=11702)*
+- *About-to-Breach (next 7 days)*
+    - None :large_green_circle:
 
 :blue_book: *MTTA Playbook Reminder* – How to keep our MTTA signal clean
-• *Step 1:* Once you've reviewed the incident and confirmed it's valid, move it from `Reported` → `Triage in Progress`
-    ◦ :stopwatch: This *stops the MTTA timer* — it tells the team you're actively looking into it. No need to wait until you're fixing it.
-• *Step 2:* After triaging (i.e. you've assessed severity and scope), move it to `Prioritized`
-    ◦ :spiral_calendar_pad: This means the issue is now queued or scheduled for resolution.
+- *Step 1:* Once you've reviewed the incident and confirmed it's valid, move it from `Reported` → `Triage in Progress`
+    - :stopwatch: This *stops the MTTA timer* — it tells the team you're actively looking into it. No need to wait until you're fixing it.
+- *Step 2:* After triaging (i.e. you've assessed severity and scope), move it to `Prioritized`
+    - :spiral_calendar_pad: This means the issue is now queued or scheduled for resolution.
 
 cc: <!subteam^S06M2L5DGDR> <@U02SQFD1F5J>
 ```
