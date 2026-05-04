@@ -1,0 +1,6 @@
+organization_website,person_linkedin_url,email,apollo_match_status,apollo_email,apollo_email_status,apollo_phone,apollo_mobile_phone,apollo_title,apollo_seniority,department,country,industry,apollo_revenue,apollo_employee_count,apollo_industry,apollo_funding,apollo_hq_location
+acme.com,linkedin.com/in/a,a@acme.com,Matched,a@acme.com,verified,555-1234,,VP Sales,vp,Sales,US,SaaS,10M,200,Technology,,San Francisco
+brex.com,,b@brex.com,Matched,b@brex.com,verified,,555-9999,Director,director,Marketing,US,SaaS,,150,Technology,Series B,New York
+,,,Not Matched,,,,,,,,US,Retail,,,,,
+workday.com,linkedin.com/in/b,,Matched,c@workday.com,verified,555-5678,,Manager,manager,Engineering,EMEA,SaaS,50M,500,Finance,,London
+x.com,,,Not Matched,,,,,,,,EMEA,Retail,,,,,

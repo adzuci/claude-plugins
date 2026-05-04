@@ -1,0 +1,226 @@
+{
+  "mappings": {
+    "First Name": {
+      "maps_to": "first_name",
+      "description": "Salesforce standard first name field",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Last Name": {
+      "maps_to": "last_name",
+      "description": "Salesforce standard last name field",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Account Name": {
+      "maps_to": "organization_name",
+      "description": "Salesforce Account Name = organization name",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Website": {
+      "maps_to": "organization_website",
+      "description": "Salesforce Website field = company domain",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Title": {
+      "maps_to": "title",
+      "description": "Salesforce Title field = job title",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Mailing Street": {
+      "maps_to": "street_address",
+      "description": "Salesforce mailing street address",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Mailing City": {
+      "maps_to": "city",
+      "description": "Salesforce mailing city",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Mailing State/Province (text only)": {
+      "maps_to": "state",
+      "description": "Salesforce mailing state/province",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Mailing Zip/Postal Code": {
+      "maps_to": "zip",
+      "description": "Salesforce mailing zip/postal code",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Mailing Country (text only)": {
+      "maps_to": "country",
+      "description": "Salesforce mailing country",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Phone": {
+      "maps_to": "phone",
+      "description": "Salesforce Phone field = office/main phone",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Mobile": {
+      "maps_to": "mobile_phone",
+      "description": "Mobile phone number",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "Email": {
+      "maps_to": "email",
+      "description": "Salesforce Email field = work email",
+      "first_seen": "2026-04-08",
+      "reported_by": "morrisseygoodale_duel"
+    },
+    "corp website": {
+      "maps_to": "organization_website",
+      "description": "Company website / domain",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "company url": {
+      "maps_to": "organization_website",
+      "description": "Company website URL",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "web": {
+      "maps_to": "organization_website",
+      "description": "Website/domain shorthand",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "company domain": {
+      "maps_to": "organization_website",
+      "description": "Company domain",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "full name": {
+      "maps_to": "SPLIT:first_name,last_name",
+      "description": "Full name in a single column — split on first space into first_name and last_name",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "name": {
+      "maps_to": "SPLIT:first_name,last_name",
+      "description": "Full name — split into first_name and last_name",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "contact name": {
+      "maps_to": "SPLIT:first_name,last_name",
+      "description": "Contact full name — split into first_name and last_name",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "company": {
+      "maps_to": "organization_name",
+      "description": "Company/organization name",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "account name": {
+      "maps_to": "organization_name",
+      "description": "Salesforce account name = organization name",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "job title": {
+      "maps_to": "title",
+      "description": "Person's job title",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "position": {
+      "maps_to": "title",
+      "description": "Person's position/title",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "linkedin": {
+      "maps_to": "person_linkedin_url",
+      "description": "Person LinkedIn profile URL",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "li url": {
+      "maps_to": "person_linkedin_url",
+      "description": "LinkedIn URL shorthand",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "contact linkedin": {
+      "maps_to": "person_linkedin_url",
+      "description": "Contact LinkedIn URL",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "email address": {
+      "maps_to": "email",
+      "description": "Email address",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "work email": {
+      "maps_to": "email",
+      "description": "Work email address",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "phone number": {
+      "maps_to": "phone",
+      "description": "Phone number",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "mobile": {
+      "maps_to": "mobile_phone",
+      "description": "Mobile phone number",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "city": {
+      "maps_to": "city",
+      "description": "City",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "state": {
+      "maps_to": "state",
+      "description": "State or province",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "country": {
+      "maps_to": "country",
+      "description": "Country",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "industry": {
+      "maps_to": "industry",
+      "description": "Industry vertical",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "employee count": {
+      "maps_to": "employees",
+      "description": "Number of employees",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    },
+    "headcount": {
+      "maps_to": "employees",
+      "description": "Company headcount",
+      "first_seen": "2026-04-08",
+      "reported_by": "system"
+    }
+  }
+}
