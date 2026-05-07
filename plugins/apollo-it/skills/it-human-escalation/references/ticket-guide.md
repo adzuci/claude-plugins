@@ -65,9 +65,16 @@ Slack Thread: [link to original Slack thread, if available]
 
 - **Project:** `ITSD`
 - **Cloud ID:** `5ee66b17-496e-4339-8a97-c9992ff2013f`
-- **Issue type:** `Access & Account` (ID: `11417`) for login, access, and permission issues
-  - For other categories (hardware, software, etc.), use the most appropriate available type
-- **Priority:** As determined in Step 3
+- **Issue type:** use the ID from this table — always pass the exact name:
+
+| Category | Issue type name | ID |
+|---|---|---|
+| Access, login, MFA, permissions | `Access & Account` | `11417` |
+| Hardware | `Hardware Issues` | `11416` |
+| Software / app config | `Software & Applications` | `11418` |
+| Network, VPN, automation, general | `General IT Support` | `11419` |
+
+- **Priority:** As determined in Step 3 — use the exact names `P0`, `P1`, `P2`, `P3` (the ITSD project does not use High/Medium/Low)
 
 ______________________________________________________________________
 
@@ -78,10 +85,11 @@ Use the `createJiraIssue` tool with:
 ```
 cloudId: "5ee66b17-496e-4339-8a97-c9992ff2013f"
 projectKey: "ITSD"
-issueTypeName: "Access & Account"   ← or appropriate type
+issueTypeName: "Access & Account"   ← or appropriate type (exact name from the table above)
 summary: "[Category] Description — User Name"
 description: <structured description from Step 4>
 contentFormat: "markdown"
+additional_fields: {"priority": {"name": "P2"}}   ← use P0/P1/P2/P3 — always include this field
 ```
 
 ______________________________________________________________________

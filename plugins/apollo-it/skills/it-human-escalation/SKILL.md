@@ -26,16 +26,16 @@ ______________________________________________________________________
 Before creating the ticket, identify the correct **summary prefix** based on what the
 user needs. This is used in the ticket Summary field.
 
-| Request type | Summary prefix | Jira issue type |
-|---|---|---|
-| Access to a tool / app | `[Access Request]` | `Access & Account` |
-| Login issue / account locked / MFA | `[Login Issue]` | `Access & Account` |
-| Permission / privilege change | `[Privileges]` | `Access & Account` |
-| Laptop / monitor / peripherals / hardware | `[Hardware]` | Use the appropriate hardware issue type |
-| Software install, license, app config, Zoom, Slack, Google Workspace issues | `[Software]` | Use the appropriate software issue type |
-| VPN / network issue | `[Network]` | Use the appropriate issue type |
-| Automation / integration / script request | `[Automation]` | Use the appropriate issue type |
-| General / doesn't fit above | `[General IT]` | Use the appropriate issue type |
+| Request type | Summary prefix | Jira issue type | ID |
+|---|---|---|---|
+| Access to a tool / app | `[Access Request]` | `Access & Account` | `11417` |
+| Login issue / account locked / MFA | `[Login Issue]` | `Access & Account` | `11417` |
+| Permission / privilege change | `[Privileges]` | `Access & Account` | `11417` |
+| Laptop / monitor / peripherals / hardware | `[Hardware]` | `Hardware Issues` | `11416` |
+| Software install, license, app config, Zoom, Slack, Google Workspace issues | `[Software]` | `Software & Applications` | `11418` |
+| VPN / network issue | `[Network]` | `General IT Support` | `11419` |
+| Automation / integration / script request | `[Automation]` | `General IT Support` | `11419` |
+| General / doesn't fit above | `[General IT]` | `General IT Support` | `11419` |
 
 > ⚠️ **Out of scope — do NOT create ITSD tickets for these:**
 >
