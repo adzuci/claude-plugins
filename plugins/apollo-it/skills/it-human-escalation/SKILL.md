@@ -77,7 +77,22 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
+## If ticket creation fails
+
+If the `createJiraIssue` call fails for any reason (permissions, connectivity, or any other error), do NOT leave the user without a path forward. Immediately tell them:
+
+> I wasn't able to create the ticket automatically. You can reach IT directly through any of these alternatives:
+>
+> - **Slack:** Ping `@it-help` in `#it-help-desk` — describe your issue and reference that ticket creation failed
+> - **Email:** `it-team@apollo.io`
+> - **ITSD portal:** [Open a ticket directly](https://apollopde.atlassian.net/servicedesk/customer/portal/217)
+
+Then summarize the key details of their request (name, issue, urgency) so they can paste it directly into whichever channel they choose.
+
+______________________________________________________________________
+
 ## References
 
 - ITSD Project: https://apollopde.atlassian.net/servicedesk/customer/portal/217
 - IT Help Desk Slack: `#it-help-desk`
+- IT Email: `it-team@apollo.io`

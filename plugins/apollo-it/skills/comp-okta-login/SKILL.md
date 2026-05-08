@@ -24,4 +24,8 @@ Ask the user to describe their issue, then load `references/scenarios.md` for th
 - **Scenario D** — Okta account locked (too many failed attempts)
 - **Scenario E** — New hire / first-time setup not working
 
-If none of the self-serve steps resolve the issue, offer to open an ITSD ticket via the `it-human-escalation` skill.
+If none of the self-serve steps resolve the issue, before invoking `it-human-escalation` tell the user which scenario was attempted and why it didn't work. For example:
+
+> I walked you through [Scenario X — description], but the steps didn't resolve the issue. Let me open a ticket with IT so a human agent can take over.
+
+Then invoke the `it-human-escalation` skill with the full context of what was tried.

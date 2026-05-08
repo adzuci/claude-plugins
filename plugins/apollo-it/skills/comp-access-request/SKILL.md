@@ -57,7 +57,15 @@ Ping `@it-help` in `#it-help-desk` (or I'll open a ticket for you) if:
 - You need access for a **contractor** (extra provisioning steps may apply)
 - You need to request access **on behalf of someone else**
 
-Just tell me what's going on and I'll take it from there! 🚀
+Before invoking `it-human-escalation`, always tell the user which condition triggered the escalation and what was already attempted. For example:
+
+> It looks like [tool] isn't available in Lumos, so I can't walk you through self-service for this one. Let me open a ticket with IT directly.
+
+or:
+
+> You were approved more than 2 business days ago and still don't have access — this means provisioning likely failed. Let me escalate this to IT.
+
+Then invoke the `it-human-escalation` skill with the full context.
 
 ______________________________________________________________________
 
