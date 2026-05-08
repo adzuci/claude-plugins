@@ -1,2 +1,3 @@
 * @apolloio/devops
 plugins/apollo-it/ @apolloio/devops @apolloio/it-team
+plugins/apollo-rnd/ @apolloio/devops @apolloio/rnd

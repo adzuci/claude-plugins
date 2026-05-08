@@ -60,6 +60,13 @@
       "description": "Skills specific to the Fabric Surfaces team",
       "category": "engineering",
       "tags": ["claude-code", "fabric-surfaces"]
+    },
+    {
+      "name": "apollo-rnd",
+      "source": "./plugins/apollo-rnd",
+      "description": "Research and development skills for Apollo R&D",
+      "category": "rnd",
+      "tags": ["claude-code", "cowork", "rnd"]
     }
   ]
 }
