@@ -1,3 +1,4 @@
-* @apolloio/devops
+* @apolloio/devops @apolloio/ai-tools
+plugins/apollo-eng-devops/ @apolloio/devops
 plugins/apollo-it/ @apolloio/devops @apolloio/it-team
 plugins/apollo-rnd/ @apolloio/devops @apolloio/rnd
