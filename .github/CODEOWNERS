@@ -2,3 +2,4 @@
 plugins/apollo-eng-devops/ @apolloio/devops
 plugins/apollo-it/ @apolloio/devops @apolloio/it-team
 plugins/apollo-rnd/ @apolloio/devops @apolloio/rnd
+plugins/apollo-gtm/ @apolloio/devops @apolloio/ai-tools @apolloio/gtm
