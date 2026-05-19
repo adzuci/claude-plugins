@@ -34,6 +34,14 @@ Use these as starting points. Always personalize with the specific ticket key, e
 
 > Linked PD ({PD_URL}) is resolved as of {TIMESTAMP}. Closing this Jira and assigning to @{RESPONDER_TEAM} for any follow-ups noted in the PD postmortem.
 
+Use only when **all** of these hold: (a) single one-shot firing, (b) post-resolution behavior observed clean for 24h+, (c) no `Again`/`Recurring` signal in title or related tickets, (d) priority is P3/P4. For anything else (P2+ with no RCA, recurring alerts, or unclear root cause), use `pd-resolved-rca-or-close` below.
+
+## pd-resolved-rca-or-close
+
+> Linked PD ({PD_URL}) auto-resolved {TIMESTAMP}, but no RCA was recorded on this Jira. Routing to @{TEAM} to either confirm the root cause is fixed (and close) or open a postmortem ticket. If this alert fires again on the same surface, please link the new ticket with `Relates` so we consolidate rather than re-open.
+
+Default action for PD-resolved tickets that aren't strict same-shift duplicates. Preserves the operational signal without forcing a premature close.
+
 ## runbook-gap
 
 > No runbook found for this failure mode (Glean returned no relevant doc). Filed {INFRA_KEY} to write one — link it from the postmortem.

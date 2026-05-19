@@ -68,7 +68,15 @@ Work through these steps in order. Print intermediate output as you go — silen
 
    Stop and ask the user if they want to handle the urgent list first or continue to the full table. Do not skip this step — it's the part of the weekly review that actually matters.
 
-1. **Reconcile linked PagerDuty incidents**: for each ticket with a PD link, fetch PD status (if MCP available). When PD is `resolved`, record this as a candidate for "assign to the team that owned the PD + transition to Done with a summary comment" — but stage it; don't write yet.
+1. **Reconcile linked PagerDuty incidents**: for each ticket with a PD link, fetch PD status (if MCP available). When PD is `resolved`, the default action is **NOT** auto-close. PD resolution often means the alert stopped firing (auto-resolved, flapped, or human-acked-and-forgot), not that the underlying issue is fixed. Apply these heuristics before staging any action:
+
+   - **Strict duplicate** — same alert, same host/service, multiple firings inside a short window (hours, not days). Stage `Mark duplicate of <KEY>` + comment + transition to `Duplicated`. Pick the canonical as the firing that is still acknowledged (or, if all resolved, the oldest with most context).
+   - **Recurring / flapping signal** — title contains "Again"/"Recurring", or the same alert fired N≥2 times across days, or the PD service is a repeating low-priority alert. Stage **"Comment + route for RCA-or-close"** — do NOT close. The recurrence IS the signal; closing buries it.
+   - **Recent human activity** — any non-reporter comment within the last 7 days, or the user is currently working it this session. Skip — the ticket is actively being worked.
+   - **P2+ with no RCA evidence** — PD resolved but the Jira has no comments, no linked PR, no postmortem. Stage **"Comment + route for RCA-or-close"** — closing a P2 without RCA loses operational signal.
+   - **One-shot clean event** — P3/P4, single firing, fully self-recovered, no related tickets, no recurrence in 7+ days. Only this case maps to "Comment + close (no action)".
+
+   Stage decisions; don't write yet.
 
 1. **Detect duplicates**: see [`references/duplicate-heuristics.md`](references/duplicate-heuristics.md). Group candidates and pick a canonical ticket per group (oldest with most context wins). Stage `Duplicate` issue links — don't write yet.
 
@@ -82,7 +90,9 @@ Work through these steps in order. Print intermediate output as you go — silen
    | Key | Title | Age | Sev | Proposed action | Team | Reason | Confidence |
    ```
 
-   Proposed action is one of: `This sprint`, `Mark duplicate of <KEY>`, `Comment + downgrade`, `Comment + close (no action)`, `Ask reporter`, `Open INFRA runbook ticket`.
+   Proposed action is one of: `This sprint`, `Mark duplicate of <KEY>`, `Comment + route for RCA-or-close`, `Comment + downgrade`, `Comment + close (no action)`, `Ask reporter`, `Open INFRA runbook ticket`.
+
+   Default for PD-resolved-but-not-strict-duplicate tickets is **`Comment + route for RCA-or-close`**, NOT `Comment + close`. Closing is the rarest outcome — reserve it for clean one-shots.
 
 1. **Confirm and write**: ask the user to approve rows. Accept formats like `approve INCIDENT-123, INCIDENT-141` or `approve all duplicates`. For each approved row, execute the staged Jira writes and print the new state. Never batch writes without naming the rows.
 
@@ -104,6 +114,15 @@ The skill is invocation-agnostic; it just calls MCPs. From Slack via the Apollo 
 - Cite Jira keys, never paraphrase tickets without the key.
 - Cite Glean URLs verbatim when claiming a CVE is unreachable or a runbook exists. Do not invent links.
 - Confidence is `high` / `med` / `low` and reflects how much you'd bet on the routing being correct without a reporter conversation.
+
+## Known Limitations
+
+- **Transition denials**: Claude Code's auto-mode permission classifier may inconsistently deny `transitionJiraIssue` calls, citing "malformed payload" or "agent-inferred parameter" even when the `{"id": "<n>"}` payload was just fetched from `getTransitionsForJiraIssue` and is identical to a payload that succeeded in the same batch. When this happens:
+  - Note which keys were denied and continue executing the rest of the approved batch.
+  - For each denied transition, print a one-line fallback: `Open <KEY> in Jira and click "<transition name>" in the workflow menu.`
+  - Do NOT loop-retry — the classifier's decision is per-call and retries waste tokens.
+  - At wrap-up, suggest the user add a permission rule for `mcp__atlassian__transitionJiraIssue` to their settings if these denials become common.
+- The link + comment from a `Mark duplicate` action are durable even without the transition — the canonical-ticket signal isn't lost when a transition is denied, just the status change.
 
 ## Examples
 

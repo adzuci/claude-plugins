@@ -25,6 +25,13 @@ The other tickets in the group get an issue link of type `Duplicate` pointing to
 - One ticket is a CVE finding and the other is a runtime symptom, even if they end up being the same root cause. Link with `Relates` instead so both stay open until the underlying fix lands.
 - Reporters differ and one ticket has reproduction steps the other lacks. Merging loses signal.
 - Status differs (one is `In Progress`, the other `Open`). Comment instead of merging.
+- **Same alert fires across multiple days on separate occasions.** That's a *recurring* issue, not a duplicate. Closing recurring instances as duplicates buries the recurrence signal — the third firing of the same alert this week is more important than the first. Either keep each open, or consolidate into one root-cause ticket assigned to the owning team and link the rest with `Relates`.
+- **Title contains "Again", "Recurring", "Still", or similar reporter frustration markers.** The reporter is telling you the root cause isn't fixed; honor that signal.
+
+## Recurring vs duplicate — quick test
+
+- Same host/service + same alert + multiple firings inside the **same on-call shift** (hours) → **duplicates**. Merge to the still-acked or oldest-with-context.
+- Same host/service + same alert + firings across **multiple days** → **recurring**. Do not merge; route to the owning team for memory/disk/limit fix.
 
 ## Examples
 
