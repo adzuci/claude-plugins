@@ -41,6 +41,20 @@ mdformat .
 
 CI runs `mdformat --check .` on every PR and will fail if files are not formatted.
 
+## Testing
+
+If a skill ships executable code (e.g. Python in `scripts/`), add pytest tests
+in a sibling `tests/` directory. CI runs `pytest -q` from the repo root and
+auto-installs any `plugins/**/scripts/requirements.txt` or
+`plugins/**/tests/requirements.txt` it finds.
+
+- Keep pure helpers at module scope so they can be imported and tested directly.
+- Use `pytest.importorskip("module_name")` at the top of each test file so the
+  suite skips cleanly when scripts haven't landed yet.
+- Run locally with `pytest -q` before committing.
+
+See the README "Testing skill scripts" section for the full convention.
+
 ## Git & PRs
 
 - **Branches**: Use the format `<user>/<ticket>-description-of-changes` (e.g. `adzuci/ABC-123-add-bump-version-workflow`).

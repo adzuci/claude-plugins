@@ -187,6 +187,43 @@ Both Claude Code and Cowork skills use the same format: a `SKILL.md` file with Y
 
 1. **Open a PR** — CI will lint, validate, and run the skill-review rubric automatically.
 
+### Testing skill scripts
+
+Skills with executable code (e.g. Python in `scripts/`) should ship pytest tests
+alongside the script. CI auto-discovers any `tests/` directory and runs `pytest -q`
+from the repo root.
+
+**Layout:**
+
+```text
+plugins/<plugin>/skills/<skill>/
+├── scripts/
+│   ├── my_script.py
+│   └── requirements.txt   # optional, installed by CI
+└── tests/
+    └── test_my_script.py
+```
+
+**Conventions:**
+
+- Put pure helpers in module-level functions so they can be imported and tested directly.
+- Keep CLI side effects (`print`, `sys.exit`) in `if __name__ == "__main__":` so the
+  module is importable.
+- Add a `tests/conftest.py` that puts `../scripts` on `sys.path`, then load each
+  module under test with `pytest.importorskip("module_name")`. The suite then
+  skips cleanly if the script lands in a separate PR.
+- Declare runtime deps in `scripts/requirements.txt` (or `tests/requirements.txt`)
+  — the `tests.yml` workflow installs every match before running pytest.
+- Repo-level tests (e.g. marketplace consistency) live in `tests/` at the repo root.
+
+**Run locally:**
+
+```bash
+pip install pytest
+pytest -q                                    # all tests
+pytest plugins/<plugin>/skills/<skill>/tests # one skill
+```
+
 ### Claude Code skills
 
 Claude Code skills automate developer workflows: generating PR descriptions, running security reviews, producing release notes. They have access to the terminal, file system, and git — so they can read code, run commands, and make changes.
@@ -394,7 +431,7 @@ flowchart TD
 .claude-plugin/
   marketplace.json
 .github/
-  workflows/  # CI: lint, validate, bump-version, skill-pr-review, update-skill-inventory
+  workflows/  # CI: lint, validate, tests, bump-version, skill-pr-review, update-skill-inventory
 scripts/  # Helper scripts used by workflows
   skill-review-rubric.md
 template/

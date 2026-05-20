@@ -1,0 +1,34 @@
+name: Tests
+
+on:
+  pull_request:
+    paths:
+      - "tests/**"
+      - "plugins/**/tests/**"
+      - "plugins/**/scripts/**"
+      - "plugins/**/.claude-plugin/**"
+      - ".claude-plugin/**"
+      - ".github/workflows/tests.yml"
+
+jobs:
+  pytest:
+    runs-on:
+      group: arc-scale-sets
+      labels: general-low
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install pytest
+        run: pip install pytest
+      - name: Install per-skill requirements
+        run: |
+          shopt -s nullglob globstar
+          for req in plugins/**/scripts/requirements.txt plugins/**/tests/requirements.txt; do
+            echo "Installing $req"
+            pip install -r "$req"
+          done
+      - name: Run pytest
+        run: pytest -q
