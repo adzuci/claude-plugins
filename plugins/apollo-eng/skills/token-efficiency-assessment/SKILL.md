@@ -1,109 +1,160 @@
 ---
 name: token-efficiency-assessment
 description: Run an interactive token efficiency self-assessment for Claude Code users. Activate when the user wants to check their token habits, assess token efficiency, prepare for a budget increase request, or says 'token efficiency assessment', 'token quiz', or 'check my token usage habits'.
+allowed-tools: Bash Write Read
 ---
 
 # Token Efficiency Assessment
 
-Walk the user through a 2-section self-assessment of their Claude Code token usage habits. Engineers requesting more token budget run this first — EMs review the results.
+Walk the user through a hybrid self-assessment: a Python script auto-detects 7 configuration signals from the filesystem, and Claude asks ~15 judgment-based questions. Results are stored in Notion (or locally if the MCP is unavailable).
+
+Engineers requesting more token budget run this first — EMs review the results.
 
 Read `references/references.md` in this skill's directory for the Notion database ID, data source ID, efficiency guide URL, and Notion MCP install instructions.
 
 ## Instructions
 
-1. Read `references/references.md` from this skill's directory for all external links and IDs
-1. Detect the user's **full name** automatically — check `git config user.name`, or the Notion MCP `get-users` with `user_id: "self"`, or `whoami`. Do NOT ask the user for their name. If none of these work, use the system username.
-1. Present questions **one section at a time** using `AskUserQuestion`
-1. After each section, briefly note any red flags or good practices
-1. After both sections, **score** the user (see Scoring below) and provide a summary
-1. **Store results** (see Output section below)
+### Step 1 — Detect user name
 
-## Questions by Section
+Check `git config user.name`, then Notion MCP `get-users` with `user_id: "self"`, then `whoami`. Do NOT ask. Use the system username as a last resort.
 
-### Section 1: Usage & Context Management
+### Step 2 — Run the env scan
 
-Covers basics, context management, and model selection.
+Run the deterministic environment scan (stdlib Python, no external deps):
 
-- Why do you think your token usage is so high? (multi-select: long conversations, large context/logs, heavy Opus usage, images in chat, non-English prompts, not sure)
-- Are you using `/compact` to compress conversation history?
-- Have you run `/context` recently — what % was your context window at?
-- Have you checked your usage in the **ccflare dashboard**?
-- Are you starting fresh conversations for new tasks, or letting context grow unbounded?
-- Are you pasting large logs/stacktraces inline, or pointing Claude to files on disk?
-- Are you pasting images into chat? (images are especially token-heavy)
-- Are you writing prompts and comments in English? (non-English tokenizes 2-3x worse)
-- Are you using `/model` to switch to Haiku/Sonnet for simpler tasks (linting, formatting, small edits)?
-- Are you using Opus only for tasks that actually need deep reasoning?
-- Do you know about `opusplan` mode (`/model opusplan`) for planning?
+```bash
+SKILL_DIR="$(find ~/.claude/plugins "$PWD" -maxdepth 8 -path '*/token-efficiency-assessment/scripts/check_env.py' -exec dirname {} \; 2>/dev/null | head -1)"
+python3 "$SKILL_DIR/check_env.py" --out /tmp/tea-env.json
+```
 
-Present these as 3-4 `AskUserQuestion` calls to keep each one manageable (3-4 questions per call).
+Read `/tmp/tea-env.json`. Show the user a brief summary — one line per signal:
 
-### Section 2: Workflow & Configuration
+- Green check (✓) for score=1 signals
+- Red flag (✗) for score=0 signals, with the `fix` text
 
-Covers workflow patterns, configuration, guardrails, and MCP/tools.
+Example:
 
-- Are you giving clear, specific prompts — or vague ones that cause multiple rounds of back-and-forth?
+```
+Auto-detected signals:
+  ✓ .claudeignore configured
+  ✓ CLAUDE.md is lean (45 lines)
+  ✗ Tool Search threshold not tuned — set toolSearchThreshold: 0.05 in settings.json
+  ...
+```
+
+Do not ask the user about these signals — they are already scored.
+
+### Step 3 — Ask judgment questions (4 rounds)
+
+Present questions one round at a time using `AskUserQuestion`. After each round, briefly note any red flags or strong practices you observe.
+
+**Round 1 — Usage root cause + context hygiene**
+
+Ask these 4 questions:
+
+- Why do you think your usage is high? (multi-select, max 4 options)
+  Options: Long conversations, Large context/logs pasted, Heavy Opus usage, Not sure
+- Are you using `/compact` or `/clear` to manage context?
+  Options (key → value): "Proactively, before it gets full" → `yes`; "Sometimes, when reminded" → `sometimes`; "Rarely or never" → `no`
+- Last time you ran `/context` — what % was your context window at?
+  Options: "Under 50%" → `under_50`; "50–80%" → `50_to_80`; "Over 80%" → `over_80`; "Haven't checked recently" → `unsure`
+- Do you check your token usage in the ccflare dashboard?
+  Options: "Yes, regularly" → `yes`; "No / don't know how" → `no`; "I don't have access" → `unsure`
+
+**Round 2 — Context loading habits**
+
+Ask these 4 questions:
+
+- Are you starting fresh conversations for new tasks, or letting context grow?
+  Options: "Fresh per task" → `yes`; "Sometimes reset, sometimes continue" → `sometimes`; "Rarely start fresh" → `no`
+- When sharing logs or stacktraces, do you paste inline or point Claude to files?
+  Options: "Point to files on disk" → `files`; "Mix of both" → `mix`; "Paste inline" → `inline`
+- Do you paste images into chat?
+  Options: "Never / rarely" → `never`; "Sometimes" → `sometimes`; "Often" → `often`
+- Are you writing prompts and comments in English?
+  Options: "Yes, always" → `english`; "Mix of English and another language" → `mixed`; "Primarily non-English" → `non_english`
+
+**Round 3 — Model selection and prompt quality**
+
+Ask these 4 questions:
+
+- Are you using `/model` to switch to Haiku or Sonnet for simple tasks (linting, small edits)?
+  Options: "Yes, regularly" → `yes`; "Sometimes" → `sometimes`; "No, I stay on Opus" → `no`
+- Are you using Opus only when the task genuinely needs deep reasoning?
+  Options: "Yes, selectively" → `yes`; "Sometimes" → `sometimes`; "I use Opus for everything" → `no`
+- Do you know about `opusplan` mode (`/model opusplan`) — Opus for planning, Sonnet for execution?
+  Options: "Yes, and I use it" → `yes_use`; "I know about it but don't use it" → `yes_know`; "I didn't know about it" → `no`
+- How would you describe the quality of your prompts?
+  Options: "Very specific — one clear task per message" → `specific`; "Mix of specific and vague" → `mixed`; "Often vague, causing back-and-forth" → `vague`
+
+**Round 4 — Workflow patterns**
+
+Ask these 4 questions:
+
 - Are you using `/plan` before large tasks to align on approach before burning tokens on implementation?
-- Are you batching related changes in one conversation vs. spreading across many?
-- Are you using subagents/Agent tool excessively when Grep/Glob would suffice?
-- What permission mode are you using? (auto-accept burns tokens faster if Claude goes off-track)
-- Are you using `.claudeignore` to exclude irrelevant dirs (node_modules, build artifacts, vendor)?
-- Do you have `--max-turns` or a token budget configured?
-- Is your `CLAUDE.md` lean and scannable, or bloated with stale entries?
-- What MCPs do you have enabled? (each one adds token cost to every request)
-- Are MCP tool calls returning excessively large payloads?
-- Have you tuned your Tool Search threshold? (default 10%, 5% can save tokens)
-- Are you calling MCP tools repeatedly for info you could cache in CLAUDE.md or memory?
+  Options: "Yes, consistently" → `yes`; "Sometimes" → `sometimes`; "Rarely" → `no`
+- Are you batching related changes in one conversation rather than many small ones?
+  Options: "Batch related work" → `yes`; "Mix" → `sometimes`; "Many small conversations" → `no`
+- Are you using the Agent/subagent tool when Grep or Glob would be faster and cheaper?
+  Options: "No, I prefer Grep/Glob" → `no`; "Sometimes use subagents unnecessarily" → `sometimes`; "Often reach for subagents first" → `yes`
+- Are MCP tool calls returning excessively large payloads (thousands of lines)?
+  Options: "No, payloads are reasonable" → `yes`; "Sometimes large" → `sometimes`; "Often very large" → `no`
 
-Present these as 3-4 `AskUserQuestion` calls to keep each one manageable (3-4 questions per call).
+### Step 4 — Collect answers and score
 
-## Scoring
+After all 4 rounds, construct the answers JSON using the `→ value` mappings above. Use the root_cause multi-select labels as-is. For any question the user skipped, use `""` as the value (scores 0).
 
-Score each answer on a 0-1 scale. The first question in Section 1 ("Why do you think your token usage is so high?") is **informational only** — it helps contextualize answers but is not scored. All other questions map to one scored signal each (22 total).
+Write answers to `/tmp/tea-answers.json`:
 
-**Positive signals (1 point each):**
+```json
+{
+  "root_cause": ["Long conversations"],
+  "uses_compact": "yes",
+  "context_window_pct": "under_50",
+  "checks_ccflare": "yes",
+  "fresh_conversations": "yes",
+  "log_sharing": "files",
+  "image_pasting": "never",
+  "prompt_language": "english",
+  "model_switching": "yes",
+  "opus_only": "yes",
+  "opusplan_known": "yes_use",
+  "prompt_quality": "specific",
+  "uses_plan_mode": "yes",
+  "batching": "yes",
+  "subagent_overuse": "no",
+  "mcp_payloads_reasonable": "yes"
+}
+```
 
-- Uses `/compact` or `/clear` proactively
-- Context window under 50%
-- Checks ccflare dashboard
-- Starts fresh conversations per task
-- Points Claude to files on disk (not paste inline)
-- Does not paste images
-- Prompts in English
-- Switches models for simple tasks
-- Uses Opus only for deep reasoning
-- Knows about opusplan
-- Writes clear, specific prompts
-- Uses `/plan` before large tasks
-- Batches related changes
-- Does not overuse subagents
-- Uses a non-auto-accept permission mode
-- Has `.claudeignore` configured
-- Has `--max-turns` or token budget set
-- Keeps `CLAUDE.md` lean
-- Only necessary MCPs enabled
-- MCP payloads are reasonable
-- Tool Search threshold tuned
-- Caches MCP data in CLAUDE.md or memory
+Run score.py:
 
-**Score → readiness mapping:**
+```bash
+SKILL_DIR="$(find ~/.claude/plugins "$PWD" -maxdepth 8 -path '*/token-efficiency-assessment/scripts/score.py' -exec dirname {} \; 2>/dev/null | head -1)"
+python3 "$SKILL_DIR/score.py" --env /tmp/tea-env.json --answers /tmp/tea-answers.json
+```
 
-- **18-22:** Ready for budget increase — strong habits
-- **12-17:** Needs improvement — address gaps before requesting more budget
-- **0-11:** Not ready — significant changes needed
+### Step 5 — Generate top-3 recommendations
 
-After scoring, present:
+Read the `red_flags` list from the score output. Each env-signal red flag includes a `fix` field (specific, actionable). Use these plus context from the user's answers to write the **top 3 improvement recommendations**, ordered by impact. Link to the efficiency guide from `references/references.md`.
 
-- Numeric score (e.g., "Score: 17/22")
-- Areas of strength
-- Top 3 improvement recommendations (link to the efficiency guide from references/references.md)
-- Budget readiness verdict: "Yes", "Needs improvement", or "No"
+### Step 6 — Present results
 
-## Output: Store Results
+Show:
 
-### If the Notion MCP is available
+- Numeric score: "Score: **N/22**"
+- Verdict: "Budget readiness: **Yes** / **Needs improvement** / **No**"
+  - 18–22: Ready for budget increase — strong habits
+  - 12–17: Needs improvement — address gaps before requesting more budget
+  - 0–11: Not ready — significant changes needed
+- Areas of strength (list from `strengths`)
+- Top 3 improvement recommendations with links
 
-Check if `notion-create-pages` or similar Notion MCP tools are available. If they are, create a page in the Notion database using the data source ID from `references/references.md`.
+### Step 7 — Store results
+
+#### If the Notion MCP is available
+
+Check if `notion-create-pages` or similar Notion MCP tools are available. If so, create a page in the Notion database using the database ID from `references/references.md`.
 
 Properties to set:
 
@@ -115,21 +166,19 @@ Properties to set:
 | Usage Habits | Section 1 answers, summarized |
 | Workflow & Config | Section 2 answers, summarized |
 | Strengths | Bulleted list of strengths |
-| Red Flags | Bulleted list of red flags |
+| Red Flags | Bulleted list of red flags (label only, omit fix text) |
 | Recommendations | Top 3 recommendations |
 | Budget Ready | "Yes" / "Needs improvement" / "No" |
 
-After creating the page, share the Notion URL with the user and remind them to share it with their EM if requesting a budget increase.
+Share the Notion URL with the user and remind them to share it with their EM if requesting a budget increase.
 
-### If the Notion MCP is NOT available
+#### If the Notion MCP is NOT available
 
-1. Save results as JSON to `~/.claude/token-efficiency-assessments/<name>-<date>.json` with all the fields above
-1. Tell the user where the file was saved
-1. Point them to `references/references.md` in this skill's directory for instructions on:
-   - Installing the Notion MCP server
-   - Pushing saved results to Notion after installation
-1. Print the key instructions inline:
-   - Install: `claude mcp add notion -- npx -y @anthropic-ai/notion-mcp-server`
-   - Set `NOTION_TOKEN` in `~/.claude/settings.json` env
-   - Share the DB with the integration in Notion
-   - Re-run the skill to push results
+Save results as JSON to `~/.claude/token-efficiency-assessments/<name>-<date>.json` using the same field structure as the existing assessments in that directory (compatible with the format in `references/references.md`).
+
+Tell the user where the file was saved, then print the Notion MCP install instructions inline:
+
+- Install: `claude mcp add notion -- npx -y @anthropic-ai/notion-mcp-server`
+- Set `NOTION_TOKEN` in `~/.claude/settings.json` env section
+- Share the Notion DB with the integration
+- Re-run the skill to push saved results to Notion
