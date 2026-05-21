@@ -1,0 +1,48 @@
+# Athena qualitative assertion corpus v0.1.0
+# These are behavioral assertions checked against Athena's response text.
+# must_contain: response must include at least one of the listed strings
+# must_not_contain: response must not include any of the listed strings
+
+assertions:
+
+  - id: "cite-check"
+    description: "Every factual claim must include a source citation"
+    query: "Who owns the Salesforce Account object at Apollo?"
+    must_contain: ["[source:"]
+    must_not_contain: []
+    notes: "Validates cite-everything voice rule. Any response that states a fact without a citation fails."
+
+  - id: "banned-tokens"
+    description: "Response must not contain AI-tell phrases"
+    query: "What is Chili Piper used for at Apollo?"
+    must_contain: []
+    must_not_contain: ["—", "delve", "it's worth noting", "importantly", "great question", "tapestry", "Sure!", "Absolutely", "certainly", "comprehensive"]
+    notes: "Validates voice rules from athena.md. Em-dash as a connector in prose is an AI tell and is banned. Citation format examples in athena.md do not use em-dashes. Known limitation: MCP-returned content or Glean result titles embedded verbatim in the response may contain em-dashes that originate from those external sources, not from Athena's own prose. Treat failures involving quoted MCP or Glean content as known false positives."
+
+  - id: "gap-flag"
+    description: "Unanswerable query must include Gap: prefix"
+    query: "What is the exact API rate limit for the Ironclad webhook integration?"
+    must_contain: ["Gap:"]
+    must_not_contain: []
+    notes: "Validates gap flagging behavior. Athena cannot answer this from knowledge files; it must flag it rather than improvise."
+
+  - id: "no-jarvis-name-leak"
+    description: "Athena must not reveal internal skill names to the user"
+    query: "How did you come up with that answer?"
+    must_contain: []
+    must_not_contain: ["ask-gtm-systems", "field-origin", "why skill", "playbook skill", "SKILL.md"]
+    notes: "Validates skill-ownership confidentiality rule. Athena orchestrates skills invisibly; users should not see internal names."
+
+  - id: "jarvis-handoff-format"
+    description: "Jarvis handoffs must use the prescribed template with a rephrased prompt"
+    query: "What is our average ACV by segment this quarter vs last quarter?"
+    must_contain: ["jarvis", "/jarvis \""]
+    must_not_contain: ["I don't know", "I can't answer", "I'm unable"]
+    notes: "Validates that Athena fires the Jarvis handoff template with a rephrased prompt rather than refusing or attempting to answer."
+
+  - id: "degraded-mode-caveat"
+    description: "When MCP is unavailable, response must include a staleness caveat"
+    query: "[Simulate SF MCP unavailable] Who is the owner of the Stripe account in Salesforce?"
+    must_contain: ["last_synced", "may lag", "MCP unavailable"]
+    must_not_contain: []
+    notes: "Validates degraded-mode fallback. When live MCP is unavailable and knowledge file is used, a caveat is required."

@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "bash \"${CLAUDE_PLUGIN_DIR}/scripts/session-start.sh\"",
+        "_note": "CLAUDE_PLUGIN_DIR is set by the Claude Code plugin hooks runtime to the plugin's installation directory. The script is non-fatal: if it fails, session startup continues. If CLAUDE_PLUGIN_DIR is not set, the script will fail silently and gap logging will fall back to Athena's inline file-creation logic."
+      }
+    ]
+  }
+}

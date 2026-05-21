@@ -1,0 +1,166 @@
+# Athena classifier test corpus v0.1.0
+# Tests the Jarvis classifier: does a given query route to Athena, Jarvis, or split?
+#
+# expected_route values: "athena" | "jarvis" | "split"
+# signals: aggregate_verb | modeled_metric | time_window | cross_segment_slice | record_anchor
+#
+# Run with: claude plugin test plugins/apollo-gtm-systems/tests/athena/classifier-cases.yaml
+
+cases:
+
+  # --- clear Jarvis cases (2+ signals, no record-level anchor) ---
+
+  - id: "jarvis-001"
+    query: "What is our win rate this quarter versus last quarter?"
+    expected_route: "jarvis"
+    signals: [aggregate_verb, modeled_metric, time_window]
+    notes: "Classic aggregate metric with time-window comparator. No specific opp, account, or contact named."
+
+  - id: "jarvis-002"
+    query: "Show me pipeline coverage by segment for the ENT team."
+    expected_route: "jarvis"
+    signals: [modeled_metric, cross_segment_slice]
+    notes: "Pipeline coverage is a modeled metric. Segment slice adds a second signal. No specific account."
+
+  - id: "jarvis-003"
+    query: "What is our NRR trend over the last 6 months?"
+    expected_route: "jarvis"
+    signals: [modeled_metric, time_window]
+    notes: "NRR is a modeled metric. 'Trend over time' is an explicit time-window comparator."
+
+  - id: "jarvis-004"
+    query: "How does ACV per rep compare MoM across SMB and MM?"
+    expected_route: "jarvis"
+    signals: [modeled_metric, time_window, cross_segment_slice]
+    notes: "Three signals: ACV (modeled metric), MoM (time comparator), segment slice."
+
+  - id: "jarvis-005"
+    query: "What percentage of deals reached stage 4 before closing this fiscal year?"
+    expected_route: "jarvis"
+    signals: [aggregate_verb, modeled_metric, time_window]
+    notes: "'Percentage of deals' is aggregate. 'Reached stage 4 before closing' is a funnel metric. Time-bounded."
+
+  - id: "jarvis-006"
+    query: "What is average deal velocity for inbound opps vs outbound this quarter?"
+    expected_route: "jarvis"
+    signals: [aggregate_verb, modeled_metric, time_window, cross_segment_slice]
+    notes: "Deal velocity is a modeled metric. Average is aggregate. Inbound vs outbound is a slice."
+
+  - id: "jarvis-007"
+    query: "Show me attainment by rep for Q2."
+    expected_route: "jarvis"
+    signals: [modeled_metric, time_window, cross_segment_slice]
+    notes: "Attainment is quota-relative. By-rep is a cross-segment slice. Q2 is a time window."
+
+  # --- clear Athena cases (record-level, system ownership, diagnostic, process) ---
+
+  - id: "athena-001"
+    query: "Who owns the Acme Corp account in Salesforce?"
+    expected_route: "athena"
+    signals: [record_anchor]
+    notes: "Specific named account. Athena queries SF MCP directly."
+
+  - id: "athena-002"
+    query: "Why wasn't my call with TechCorp recorded in Gong yesterday?"
+    expected_route: "athena"
+    signals: [record_anchor]
+    notes: "Specific call (record-level anchor). Routes to diagnostics/no-gong-recording.md."
+
+  - id: "athena-003"
+    query: "What does the Chili Piper__Routing_Rule__c field do on the Lead object?"
+    expected_route: "athena"
+    signals: []
+    notes: "SF field question. Routes to field-origin skill and knowledge/salesforce/."
+
+  - id: "athena-004"
+    query: "How do I request access to Gong?"
+    expected_route: "athena"
+    signals: []
+    notes: "Process question. Routes to knowledge/playbooks/new-user-access.md."
+
+  - id: "athena-005"
+    query: "I got a validation rule error in Salesforce when closing an opportunity. What does it mean?"
+    expected_route: "athena"
+    signals: []
+    notes: "SF error diagnostic. Routes to knowledge/diagnostics/sf-errors.md."
+
+  - id: "athena-006"
+    query: "What Salesforce profile does an AE get by default?"
+    expected_route: "athena"
+    signals: []
+    notes: "System ownership / access question. Answered from knowledge/access-map.md or SF MCP."
+
+  - id: "athena-007"
+    query: "Who administers Chili Piper at Apollo?"
+    expected_route: "athena"
+    signals: []
+    notes: "Tool ownership question. Answered from knowledge/tool-inventory.md."
+
+  - id: "athena-008"
+    query: "A lead got routed to the wrong rep. What should I check first?"
+    expected_route: "athena"
+    signals: []
+    notes: "Routing diagnostic. Routes to knowledge/diagnostics/unexpected-routing.md."
+
+  # --- record-level exception cases (metric vocab present but specific record named -> Athena) ---
+
+  - id: "athena-exception-001"
+    query: "What is the ACV on the Databricks opportunity?"
+    expected_route: "athena"
+    signals: [modeled_metric, record_anchor]
+    notes: "ACV fires as a metric signal but 'Databricks opportunity' is a specific record anchor. Athena answers from SF MCP."
+
+  - id: "athena-exception-002"
+    query: "What stage is the renewal on Okta's account and what is the NRR forecast for it?"
+    expected_route: "athena"
+    signals: [modeled_metric, record_anchor]
+    notes: "NRR appears but the question is anchored to a named account. Athena handles both components from SF and Gong."
+
+  - id: "athena-exception-003"
+    query: "Is the Stripe deal at risk? What's the win probability showing in Gong?"
+    expected_route: "athena"
+    signals: [record_anchor]
+    notes: "Win probability appears but it is scoped to a single named deal. Athena queries Gong MCP."
+
+  # --- ambiguous split cases ---
+
+  - id: "split-001"
+    query: "How is the Figma account doing and how does it compare to our average MM ACV this quarter?"
+    expected_route: "split"
+    athena_component: "Figma account health — account owner, stage, last activity from SF MCP"
+    jarvis_component: "Average MM ACV this quarter — aggregate metric, time-bounded, segment slice"
+    notes: "Named account (Athena) combined with an aggregate benchmark (Jarvis). Athena answers the account piece, then appends a Jarvis handoff."
+
+  - id: "split-002"
+    query: "What is our total pipeline for Q3 and specifically what is Salesforce's opp stage right now?"
+    expected_route: "split"
+    athena_component: "Salesforce Inc opportunity — current stage from SF MCP"
+    jarvis_component: "Total Q3 pipeline — aggregate metric with time window"
+    notes: "Two clearly separable components. Athena handles the named account; Jarvis handles the aggregate."
+
+  - id: "split-003"
+    query: "Show me the Hubspot renewal status and tell me what our overall renewal rate looks like YoY."
+    expected_route: "split"
+    athena_component: "Hubspot renewal — Ironclad contract status or SF opportunity for the named account"
+    jarvis_component: "Overall renewal rate YoY — modeled metric with time-window comparator"
+    notes: "Classic split: one named record, one aggregate with YoY comparator."
+
+  # --- false positive tests (metric vocab in a non-analytics question) ---
+
+  - id: "fp-001"
+    query: "What does 'quota' mean in the context of Salesforce governor limits?"
+    expected_route: "athena"
+    signals: []
+    notes: "Quota appears as a technical SF term (governor limits), not a sales metric. No aggregate signal, no time window."
+
+  - id: "fp-002"
+    query: "How do I request a new field for tracking pipeline stage changes?"
+    expected_route: "athena"
+    signals: []
+    notes: "'Pipeline' in the context of a field request is a domain noun, not an aggregate metric query."
+
+  - id: "fp-003"
+    query: "What is the field API name for ARR on the Salesforce Account object?"
+    expected_route: "athena"
+    signals: []
+    notes: "ARR appears as a field name, not a metric to be computed. Routes to field-origin skill."

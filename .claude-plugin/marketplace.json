@@ -67,6 +67,13 @@
       "description": "Research and development skills for Apollo R&D",
       "category": "rnd",
       "tags": ["claude-code", "cowork", "rnd"]
+    },
+    {
+      "name": "apollo-gtm-systems",
+      "source": "./plugins/apollo-gtm-systems",
+      "description": "Apollo's GTM Systems concierge. Answers questions about the GTM stack, Salesforce data model, system ownership, routing, access, and integration diagnostics. Users interact in natural language; no slash commands required.",
+      "category": "gtm",
+      "tags": ["cowork", "gtm-systems", "revops", "salesforce"]
     }
   ]
 }

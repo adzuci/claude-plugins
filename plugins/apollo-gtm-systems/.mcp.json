@@ -1,0 +1,65 @@
+{
+  "_notes": "Most MCP servers are enterprise-provisioned via Apollo's Claude enterprise deployment. This file is the canonical reference for which MCPs are in scope for Athena. To add or modify an MCP connection, update this file and open a PR against apolloio/claude-plugins. Keys prefixed with _ are internal metadata (_notes) or pending integration stubs (_<name>-TODO).",
+  "mcpServers": {
+    "salesforce": {
+      "description": "Salesforce read-only — record state, profile and role lookups, field metadata, ownership queries",
+      "note": "Enterprise-provisioned. Falls back to knowledge/salesforce/ files if MCP is unavailable.",
+      "provisioning": "enterprise"
+    },
+    "snowflake": {
+      "description": "Snowflake read-only — dim_teams_analyst for org structure and user profiling, GTM metrics context, Gong Data Cloud tables",
+      "note": "Enterprise-provisioned. Used on session start to identify the requesting user's role and team.",
+      "provisioning": "enterprise"
+    },
+    "google-drive": {
+      "description": "Google Drive read-only — RevOps shared drive, GTM Systems authored documents",
+      "note": "Enterprise-provisioned.",
+      "provisioning": "enterprise"
+    },
+    "github": {
+      "description": "GitHub read-only — scoped to apolloio/SFDCgearset and apolloio/gtm-systems-toolkit",
+      "note": "Enterprise-provisioned. Users without GitHub credentials fall back to knowledge/salesforce/data-model.md.",
+      "provisioning": "enterprise"
+    },
+    "jira": {
+      "description": "Jira read/write — RVOSYS project (GTM Systems work) and RS project (service desk requests)",
+      "note": "Enterprise-provisioned.",
+      "provisioning": "enterprise"
+    },
+    "glean": {
+      "description": "Glean — broad enterprise search across Confluence, Notion, Slack, Google Drive, and Jira. Typically the most efficient first hop when knowledge files don't cover the question.",
+      "note": "Enterprise-provisioned.",
+      "provisioning": "enterprise"
+    },
+    "slack": {
+      "description": "Slack read/write. Public channels for context and thread lookups. Athena drafts routing posts for IC confirmation (#sales-ops), posts directly for Manager routing (#revops-sales) and Director routing (#revops-gtm-leadership), and sends gap-flag notifications silently to #gtm-systems-athena.",
+      "note": "Enterprise-provisioned.",
+      "provisioning": "enterprise"
+    },
+    "notion": {
+      "description": "Notion read-only — Apps DB, RevOps intake, GTM Systems workspace",
+      "note": "Enterprise-provisioned.",
+      "provisioning": "enterprise"
+    },
+    "gong": {
+      "description": "Gong read-only — call recording diagnostic queries, pipeline hygiene signals, deal inspection",
+      "note": "Enterprise-provisioned.",
+      "provisioning": "enterprise"
+    },
+    "ironclad": {
+      "description": "Ironclad read-only — contract status and opportunity linkage, scoped to the requesting user's account team",
+      "note": "Enterprise-provisioned.",
+      "provisioning": "enterprise"
+    },
+    "apollo": {
+      "description": "Apollo product read-only — contact and account lookups against Apollo's own database",
+      "note": "Enterprise-provisioned.",
+      "provisioning": "enterprise"
+    },
+    "_chili-piper-TODO": {
+      "description": "Chili Piper — routing rules, rep profiles, scheduling diagnostics. NOT YET ACTIVE.",
+      "note": "Requires Phase 1.5 proxy deployment (apolloio/chili-piper-mcp-proxy). Omit from active MCP config until the proxy is deployed and validated. Remove this _TODO key and add a real chili-piper entry at that point.",
+      "provisioning": "pending"
+    }
+  }
+}
