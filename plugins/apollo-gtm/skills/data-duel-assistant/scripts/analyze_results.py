@@ -2,7 +2,7 @@
 Results Analysis — Data Duel Assistant
 Phase 6: Compute all enrichment metrics and diagnose match failure categories.
 
-Requires Python 3.9+ (uses list[dict] type hints and pandas ≥1.3).
+Requires Python 3.9+ (uses list[dict] type hints, from __future__ import annotations, and pandas ≥1.3).
 
 Usage:
   python analyze_results.py <apollo_only_csv> [waterfall_csv]
@@ -14,6 +14,8 @@ Output:
   Full Phase 6 metrics table + match failure breakdown.
   Paste directly into the Phase 7 scorecard.
 """
+
+from __future__ import annotations
 
 import pandas as pd
 import sys

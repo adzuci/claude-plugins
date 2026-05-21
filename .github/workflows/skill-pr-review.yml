@@ -9,5 +9,7 @@ on:
 jobs:
   skill-review:
     uses: apolloio/.github/.github/workflows/skill-pr-review-reusable.yml@main
+    with:
+      rubric-repo: ""
     secrets:
       anthropic-api-key: ${{ secrets.APOLLO_REVIEW_BOT_ANTHROPIC_KEY }}

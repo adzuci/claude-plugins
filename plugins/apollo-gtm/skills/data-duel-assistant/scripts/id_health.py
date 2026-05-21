@@ -3,6 +3,8 @@ Identifier Health Assessment — Data Duel Assistant
 Scores a normalized CSV for Apollo matching readiness.
 """
 
+from __future__ import annotations
+
 import pandas as pd
 import sys
 import re

@@ -10,7 +10,7 @@ Apollo's private Claude Code skills marketplace — a central place to build, ve
 
 **Questions?** Ask in [#xfn-team-devops](https://apollo-io.slack.com/archives/xfn-team-devops).
 
-## What is a Claude Marketplace?
+## What Is a Claude Marketplace?
 
 A **plugin marketplace** is a versioned catalog that distributes Claude Code plugins across teams and repositories. Apollo's marketplace (`apollo-plugins`) lives in this repo and is backed by `.claude-plugin/marketplace.json`.
 
@@ -42,7 +42,7 @@ Use this table to decide where a new behavior or workflow belongs before you bui
 
 > **New to Claude Code?** Start with `CLAUDE.md` for project instructions and create a Skill for any workflow you catch yourself re-explaining to Claude more than twice. Add MCP Servers when you need structured access to external services; use Hooks when automation must run regardless of what Claude decides.
 
-## What is a Plugin?
+## What Is a Plugin?
 
 A plugin is a folder with a `.claude-plugin/plugin.json` manifest that packages one or more of these components:
 
@@ -54,7 +54,7 @@ A plugin is a folder with a `.claude-plugin/plugin.json` manifest that packages 
 | **MCP Servers** | `.mcp.json` | Connections to external tools and APIs (Jira, Notion, GitHub, databases) that Claude can call as tools during a session. |
 | **Commands** | `commands/<name>.md` | Flat Markdown slash commands. Use `skills/` for new work — commands are a legacy format. |
 
-### Plugin structure
+### Plugin Structure
 
 ```text
 plugins/apollo-eng/
@@ -163,7 +163,7 @@ There are three places to store Claude skills depending on scope:
 
 Both Claude Code and Cowork skills use the same format: a `SKILL.md` file with YAML frontmatter (`name` and `description`) and a markdown body with instructions.
 
-### Adding a skill to an existing plugin
+### Adding a Skill to an Existing Plugin
 
 1. **Copy the template**
 
@@ -187,11 +187,18 @@ Both Claude Code and Cowork skills use the same format: a `SKILL.md` file with Y
 
 1. **Open a PR** — CI will lint, validate, and run the skill-review rubric automatically.
 
-### Testing skill scripts
+### Testing Skill Scripts
 
-Skills with executable code (e.g. Python in `scripts/`) should ship pytest tests
-alongside the script. CI auto-discovers any `tests/` directory and runs `pytest -q`
-from the repo root.
+If your skill ships Python in `scripts/`, add pytest tests in a sibling `tests/`
+directory. CI runs `python -m pytest -q` against Python 3.9 and 3.11.
+
+**Run locally:**
+
+```bash
+pip install -r tests/requirements.txt          # pytest + any skill deps
+python -m pytest -q                            # all tests
+python -m pytest plugins/<plugin>/skills/<skill>/tests  # one skill
+```
 
 **Layout:**
 
@@ -199,36 +206,59 @@ from the repo root.
 plugins/<plugin>/skills/<skill>/
 ├── scripts/
 │   ├── my_script.py
-│   └── requirements.txt   # optional, installed by CI
+│   └── requirements.txt   # optional runtime deps, installed by CI
 └── tests/
+    ├── conftest.py
+    ├── requirements.txt   # optional test-only deps (e.g. pandas)
     └── test_my_script.py
 ```
 
-**Conventions:**
+**Adding tests for a new skill:**
 
-- Put pure helpers in module-level functions so they can be imported and tested directly.
-- Keep CLI side effects (`print`, `sys.exit`) in `if __name__ == "__main__":` so the
-  module is importable.
-- Add a `tests/conftest.py` that puts `../scripts` on `sys.path`, then load each
-  module under test with `pytest.importorskip("module_name")`. The suite then
-  skips cleanly if the script lands in a separate PR.
-- Declare runtime deps in `scripts/requirements.txt` (or `tests/requirements.txt`)
-  — the `tests.yml` workflow installs every match before running pytest.
-- Repo-level tests (e.g. marketplace consistency) live in `tests/` at the repo root.
+1. Keep helpers at module scope; gate `print`/`sys.exit`/`argparse` behind
+   `if __name__ == "__main__":` so the module imports cleanly.
 
-**Run locally:**
+1. `tests/conftest.py` — put `../scripts` on `sys.path`:
 
-```bash
-pip install pytest
-pytest -q                                    # all tests
-pytest plugins/<plugin>/skills/<skill>/tests # one skill
+   ```python
+   import sys
+   from pathlib import Path
+
+   SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
+   if SCRIPTS.is_dir() and str(SCRIPTS) not in sys.path:
+       sys.path.insert(0, str(SCRIPTS))
+   ```
+
+1. `tests/test_<module>.py` — use `importorskip` so the file skips cleanly
+   if the script lands in a separate PR:
+
+   ```python
+   import pytest
+   my_module = pytest.importorskip("my_module")
+
+   def test_helper_returns_expected():
+       assert my_module.helper(42) == "expected"
+   ```
+
+1. Add any extra test deps to `tests/requirements.txt`. CI installs every
+   matching file (root + per-skill) before the run.
+
+**Python 3.9 vs 3.11:** add `from __future__ import annotations` to any script
+using `X | Y` union types — PEP 604 needs 3.10+, the future import makes them
+lazy strings. If a skill genuinely needs 3.10+ features (e.g. `match`), guard
+its test file:
+
+```python
+import sys, pytest
+if sys.version_info < (3, 10):
+    pytest.skip("requires Python 3.10+", allow_module_level=True)
 ```
 
-### Claude Code skills
+### Claude Code Skills
 
 Claude Code skills automate developer workflows: generating PR descriptions, running security reviews, producing release notes. They have access to the terminal, file system, and git — so they can read code, run commands, and make changes.
 
-### Cowork skills
+### Cowork Skills
 
 Cowork skills help with workflows that don't require a local codebase: writing documentation, triaging bugs from Notion, generating reports, onboarding. They run in the Cowork web UI and can connect to tools via MCP servers.
 
@@ -251,7 +281,7 @@ Many plugins use both: the agent defines expertise and guardrails, the skills de
 
 ## Plugin Management Best Practices
 
-### New plugin vs. contributing to an existing one
+### New Plugin vs. Contributing to an Existing One
 
 **Contribute to an existing plugin when:**
 
@@ -267,7 +297,7 @@ Many plugins use both: the agent defines expertise and guardrails, the skills de
 
 If you want help creating a new plugin for your team, reach out in [#claudathon](https://apollo-io.slack.com/archives/claudathon).
 
-### Token budget and skill size
+### Token Budget and Skill Size
 
 Every installed skill loads into Claude's context on each request:
 
@@ -359,7 +389,7 @@ To auto-enable specific plugins in that repo:
 }
 ```
 
-### Auto-update
+### Auto-Update
 
 This marketplace uses `"autoUpdate": true` so every engineer gets the latest skills automatically without running `claude plugin update`. The accepted risk is that any commit merged to `main` takes effect on consumer machines at next sync — so branch protection, required reviews, and CI validation on `main` are load-bearing controls.
 

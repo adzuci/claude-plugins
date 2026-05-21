@@ -44,16 +44,37 @@ CI runs `mdformat --check .` on every PR and will fail if files are not formatte
 ## Testing
 
 If a skill ships executable code (e.g. Python in `scripts/`), add pytest tests
-in a sibling `tests/` directory. CI runs `pytest -q` from the repo root and
-auto-installs any `plugins/**/scripts/requirements.txt` or
-`plugins/**/tests/requirements.txt` it finds.
+in a sibling `tests/` directory. CI runs `python -m pytest -q` from the repo root
+(Python 3.9 and 3.11 matrix) and auto-installs any `plugins/**/scripts/requirements.txt`
+or `plugins/**/tests/requirements.txt` it finds.
 
 - Keep pure helpers at module scope so they can be imported and tested directly.
 - Use `pytest.importorskip("module_name")` at the top of each test file so the
   suite skips cleanly when scripts haven't landed yet.
-- Run locally with `pytest -q` before committing.
+- Add `from __future__ import annotations` to any script using `X | Y` union type
+  syntax so it runs on Python 3.9. If a skill truly needs 3.10+, add a
+  `pytest.skip` version guard at the top of its test file.
+- Install deps with `pip install -r tests/requirements.txt` and run
+  `python -m pytest -q` before committing.
 
-See the README "Testing skill scripts" section for the full convention.
+See the README "Testing Skill Scripts" section for the full convention.
+
+## Documentation
+
+This repo is read by both engineers and non-engineers (PMs, GTM, designers
+installing skills). Keep that audience in mind when editing docs.
+
+- **Update the README whenever you change how to create, modify, test, install,
+  or run things** — workflow changes that aren't reflected in the README
+  effectively don't exist. CLAUDE.md is a pointer; the README is the source
+  of truth.
+- **Title case headers** (e.g. `## Testing Skill Scripts`, not `## Testing skill scripts`).
+- **Be concise.** Cut redundant explanation, prefer code snippets over prose,
+  and don't repeat the same concept in multiple sections.
+- **Lead with the recipe, not the rationale.** Non-engineers want copy-paste
+  steps; deeper "why" notes can come after.
+- **Skip jargon when a plain word works.** When a technical term is necessary
+  (e.g. `pytest.importorskip`), give a one-line explanation in context.
 
 ## Git & PRs
 
@@ -67,7 +88,7 @@ See the README "Testing skill scripts" section for the full convention.
 
 When corrected, suggest an update to this file to prevent the same mistake again.
 
-## Skill routing
+## Skill Routing
 
 When the user's request matches an available skill, ALWAYS invoke it using the Skill
 tool as your FIRST action. Do NOT answer directly, do NOT use other tools first.

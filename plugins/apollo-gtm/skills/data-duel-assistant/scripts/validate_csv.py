@@ -12,6 +12,8 @@ Output:
   - Hard stop if record count exceeds 1,500
 """
 
+from __future__ import annotations
+
 import pandas as pd
 import sys
 from pathlib import Path

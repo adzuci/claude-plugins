@@ -15,20 +15,21 @@ jobs:
     runs-on:
       group: arc-scale-sets
       labels: general-low
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.11"]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
           cache: pip
-      - name: Install pytest
-        run: pip install pytest
-      - name: Install per-skill requirements
+      - name: Install requirements
         run: |
           shopt -s nullglob globstar
-          for req in plugins/**/scripts/requirements.txt plugins/**/tests/requirements.txt; do
+          for req in tests/requirements.txt plugins/**/scripts/requirements.txt plugins/**/tests/requirements.txt; do
             echo "Installing $req"
             pip install -r "$req"
           done
       - name: Run pytest
-        run: pytest -q
+        run: python -m pytest -q
