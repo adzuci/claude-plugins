@@ -1,0 +1,116 @@
+{
+  "name": "apollo-plugins",
+  "interface": {
+    "displayName": "Apollo Plugins"
+  },
+  "plugins": [
+    {
+      "name": "apollo-eng",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-eng"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "apollo-eng-devops",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-eng-devops"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "apollo-analytics",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-analytics"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "apollo-eng-leadership",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-eng-leadership"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "apollo-gtm",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-gtm"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "GTM"
+    },
+    {
+      "name": "apollo-it",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-it"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "IT"
+    },
+    {
+      "name": "apollo-product",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-product"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Product"
+    },
+    {
+      "name": "apollo-eng-fabric-surfaces",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-eng-fabric-surfaces"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Engineering"
+    },
+    {
+      "name": "apollo-rnd",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-rnd"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "RND"
+    }
+  ]
+}

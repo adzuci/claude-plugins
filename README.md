@@ -6,13 +6,13 @@
 
 <!-- VERSION-END -->
 
-Apollo's private Claude Code skills marketplace — a central place to build, version, and distribute AI-powered workflows to every engineer and team across the org. Rather than each repo reinventing the same Claude commands, anyone can install a plugin with a single command and get the full library of shared skills immediately.
+Apollo's private Claude Code and Codex skills marketplace — a central place to build, version, and distribute AI-powered workflows to every engineer and team across the org. Rather than each repo reinventing the same agent workflows, anyone can install a plugin with a single command and get the full library of shared skills immediately.
 
 **Questions?** Ask in [#xfn-team-devops](https://apollo-io.slack.com/archives/xfn-team-devops).
 
-## What Is a Claude Marketplace?
+## What Is the Apollo Marketplace?
 
-A **plugin marketplace** is a versioned catalog that distributes Claude Code plugins across teams and repositories. Apollo's marketplace (`apollo-plugins`) lives in this repo and is backed by `.claude-plugin/marketplace.json`.
+A **plugin marketplace** is a versioned catalog that distributes plugins across teams and repositories. Apollo's marketplace (`apollo-plugins`) lives in this repo and is backed by `.claude-plugin/marketplace.json` for Claude Code and `.agents/plugins/marketplace.json` for Codex.
 
 **Why this matters at Apollo:**
 
@@ -28,23 +28,23 @@ Use this table to decide where a new behavior or workflow belongs before you bui
 
 | Feature | Where it lives | Used when… | Examples |
 | --- | --- | --- | --- |
-| **CLAUDE.md** | `CLAUDE.md` at the project root | You want instructions and context loaded automatically into every Claude session in this project — without repeating yourself each time | "use pnpm, not npm", "run tests with pytest", "follow PEP8" |
-| **Skills** | `plugins/<plugin>/skills/<name>/SKILL.md` | You have a reusable, multi-step workflow. Invoke it on demand via `/plugin:skill-name` or let Claude trigger it automatically from a phrase | Generating PR descriptions (`/apollo-eng:pr-description`), running security reviews, writing ship posts |
-| **MCP Servers** | `.mcp.json` in the plugin or project root | You need Claude to call an external service via structured tool calls — especially where authentication, pagination, or a typed schema matter more than raw shell output | Query a database, fetch GitHub issues, send Slack messages, read Google Drive |
-| **Hooks** | `hooks/hooks.json` in the plugin | You need side effects that must run unconditionally at specific lifecycle events (`PreToolUse`, `PostToolUse`, `Stop`, etc.) — executed outside the LLM with the ability to block or modify Claude's actions | Auto-format files after every edit, run tests after code changes, send a notification when Claude stops |
+| **CLAUDE.md / AGENTS.md** | `CLAUDE.md` and `AGENTS.md` at the project root | You want instructions and context loaded automatically into every Claude or Codex session in this project — without repeating yourself each time | "use pnpm, not npm", "run tests with pytest", "follow PEP8" |
+| **Skills** | `plugins/<plugin>/skills/<name>/SKILL.md` | You have a reusable, multi-step workflow. Invoke it on demand via `/plugin:skill-name` or let the agent trigger it automatically from a phrase | Generating PR descriptions (`/apollo-eng:pr-description`), running security reviews, writing ship posts |
+| **MCP Servers** | `.mcp.json` in the plugin or project root | You need the agent to call an external service via structured tool calls — especially where authentication, pagination, or a typed schema matter more than raw shell output | Query a database, fetch GitHub issues, send Slack messages, read Google Drive |
+| **Hooks** | `hooks/hooks.json` in the plugin | You need side effects that must run unconditionally at specific lifecycle events (`PreToolUse`, `PostToolUse`, `Stop`, etc.) — executed outside the LLM with the ability to block or modify actions | Auto-format files after every edit, run tests after code changes, send a notification when the agent stops |
 
 **Quick-pick:**
 
-- Persistent project instructions → `CLAUDE.md`
+- Persistent project instructions → `CLAUDE.md` for Claude Code and `AGENTS.md` for Codex
 - Named, repeatable workflow → Skill (invoked with `/plugin:skill-name`)
 - Talk to an external service or API → MCP Server
 - Must run unconditionally, every time, outside the LLM → Hook
 
-> **New to Claude Code?** Start with `CLAUDE.md` for project instructions and create a Skill for any workflow you catch yourself re-explaining to Claude more than twice. Add MCP Servers when you need structured access to external services; use Hooks when automation must run regardless of what Claude decides.
+> **New to Claude Code or Codex?** Start with project instructions and create a Skill for any workflow you catch yourself re-explaining more than twice. Add MCP Servers when you need structured access to external services; use Hooks when automation must run regardless of what the agent decides.
 
 ## What Is a Plugin?
 
-A plugin is a folder with a `.claude-plugin/plugin.json` manifest that packages one or more of these components:
+A plugin is a folder with a `.claude-plugin/plugin.json` manifest for Claude Code and a `.codex-plugin/plugin.json` manifest for Codex. It can package one or more of these components:
 
 | Component | Directory | What it does |
 | --- | --- | --- |
@@ -59,7 +59,9 @@ A plugin is a folder with a `.claude-plugin/plugin.json` manifest that packages 
 ```text
 plugins/apollo-eng/
 ├── .claude-plugin/
-│ └── plugin.json # Required: name, description, version
+│ └── plugin.json # Claude Code manifest: name, description, version
+├── .codex-plugin/
+│ └── plugin.json # Codex manifest: name, description, version, skills path
 ├── skills/
 │ ├── pr-description/
 │ │ └── SKILL.md
@@ -70,7 +72,7 @@ plugins/apollo-eng/
 └── .mcp.json # Optional
 ```
 
-> **Common mistake:** `commands/`, `agents/`, `skills/`, and `hooks/` must be at the plugin root — not inside `.claude-plugin/`. Only `plugin.json` goes inside `.claude-plugin/`.
+> **Common mistake:** `commands/`, `agents/`, `skills/`, and `hooks/` must be at the plugin root — not inside `.claude-plugin/` or `.codex-plugin/`. Only `plugin.json` goes inside each manifest directory.
 
 ## Installing Plugins
 
@@ -86,6 +88,22 @@ plugins/apollo-eng/
 
    - From the UI: **Browse and install plugins** → **apollo-plugins** → pick a plugin → Install now
    - Or run: `/plugin install apollo-eng@apollo-plugins`
+
+1. **Use a skill**
+   Mention it in chat (e.g. "Use the pr-description skill to generate a PR description") or run the command directly: `/apollo-eng:pr-description`
+
+### Codex
+
+1. **Add the marketplace** (one-time):
+
+   ```text
+   codex plugin marketplace add git@github.com:apolloio/claude-plugins
+   ```
+
+1. **Install a plugin**
+
+   - From the Codex plugin directory: choose **Apollo Plugins** → pick a plugin → Install plugin
+   - Or run: `codex`, then `/plugins`
 
 1. **Use a skill**
    Mention it in chat (e.g. "Use the pr-description skill to generate a PR description") or run the command directly: `/apollo-eng:pr-description`
@@ -161,7 +179,7 @@ There are three places to store Claude skills depending on scope:
 
 ## Making Skills
 
-Both Claude Code and Cowork skills use the same format: a `SKILL.md` file with YAML frontmatter (`name` and `description`) and a markdown body with instructions.
+Claude Code, Codex, and Cowork skills use the same format: a `SKILL.md` file with YAML frontmatter (`name` and `description`) and a markdown body with instructions.
 
 ### Adding a Skill to an Existing Plugin
 
@@ -174,7 +192,7 @@ Both Claude Code and Cowork skills use the same format: a `SKILL.md` file with Y
 1. **Set frontmatter** in `SKILL.md`:
 
    - **name**: Lowercase, hyphenated (e.g. `my-skill`). Must match the directory name exactly (enforced by CI).
-   - **description**: One line describing *what* the skill does and *when* Claude should use it. Write it as "do X when Y" and include trigger phrases so the agent can discover it without an explicit command.
+   - **description**: One line describing *what* the skill does and *when* the agent should use it. Write it as "do X when Y" and include trigger phrases so the agent can discover it without an explicit command.
 
 1. **Write the body** — Replace the placeholder with your instructions. You can add optional reference files (e.g. `references/playbook.md`) in the same skill directory.
 
@@ -182,6 +200,7 @@ Both Claude Code and Cowork skills use the same format: a `SKILL.md` file with Y
 
    ```bash
    claude plugin validate .
+   codex plugin validate .
    mdformat plugins/<plugin-name>/skills/<skill-name>/SKILL.md
    ```
 
@@ -256,7 +275,7 @@ if sys.version_info < (3, 10):
 
 ### Claude Code Skills
 
-Claude Code skills automate developer workflows: generating PR descriptions, running security reviews, producing release notes. They have access to the terminal, file system, and git — so they can read code, run commands, and make changes.
+Claude Code and Codex skills automate developer workflows: generating PR descriptions, running security reviews, producing release notes. They have access to the terminal, file system, and git — so they can read code, run commands, and make changes.
 
 ### Cowork Skills
 
@@ -299,7 +318,7 @@ If you want help creating a new plugin for your team, reach out in [#claudathon]
 
 ### Token Budget and Skill Size
 
-Every installed skill loads into Claude's context on each request:
+Every installed skill can load into the agent's context on matching requests:
 
 - Keep individual skills under **~2,000 tokens** (roughly 1,500 words of instruction)
 - A plugin with 10 skills at 2,000 tokens each consumes ~20,000 tokens per request
@@ -338,7 +357,7 @@ Users invoke skills as `/plugin-name:skill-name` (e.g. `/apollo-eng:pr-descripti
    cp -r template plugins/<plugin-name>
    ```
 
-1. **Edit the plugin manifest** at `plugins/<plugin-name>/.claude-plugin/plugin.json`:
+1. **Edit the Claude Code plugin manifest** at `plugins/<plugin-name>/.claude-plugin/plugin.json`:
 
    ```json
    {
@@ -358,7 +377,35 @@ Users invoke skills as `/plugin-name:skill-name` (e.g. `/apollo-eng:pr-descripti
    }
    ```
 
-1. **Validate** — Run `claude plugin validate .` from the repo root.
+1. **Edit the Codex plugin manifest** at `plugins/<plugin-name>/.codex-plugin/plugin.json`:
+
+   ```json
+   {
+     "name": "<plugin-name>",
+     "description": "Short description of the plugin",
+     "version": "1.0.0",
+     "skills": "./skills/"
+   }
+   ```
+
+1. **Register in the Codex marketplace** — add an entry to `.agents/plugins/marketplace.json`:
+
+   ```json
+   {
+     "name": "<plugin-name>",
+     "source": {
+       "source": "local",
+       "path": "./plugins/<plugin-name>"
+     },
+     "policy": {
+       "installation": "AVAILABLE",
+       "authentication": "ON_INSTALL"
+     },
+     "category": "Productivity"
+   }
+   ```
+
+1. **Validate** — Run `claude plugin validate .` and `codex plugin validate .` from the repo root.
 
 1. **Add skills** — Follow "Adding a skill to an existing plugin" above. Skill commands will be namespaced as `/<plugin-name>:skill-name`.
 
@@ -417,7 +464,7 @@ flowchart TD
 
         subgraph ci_pr["CI - on pull_request"]
             lint["Lint<br/>(markdownlint + mdformat)"]
-            validate["Validate<br/>(claude plugin validate)"]
+            validate["Validate<br/>(claude plugin validate + codex plugin validate)"]
             namecheck["Skill name check<br/>(dir == frontmatter name)"]
         end
 
@@ -428,12 +475,12 @@ flowchart TD
             bump["Bump version<br/>(Conventional Commits -> semver tag<br/>+ GitHub Release)"]
         end
 
-        marketplace[".claude-plugin/marketplace.json<br/>apollo-plugins marketplace"]
+        marketplace["Claude + Codex marketplace files<br/>apollo-plugins marketplace"]
         plugins["plugins/<br/>apollo-eng/<br/>apollo-eng-devops/<br/>apollo-eng-leadership/<br/>apollo-analytics/"]
     end
 
     subgraph consumers["Consuming repos (e.g. leadgenie, devops)"]
-        settings[".claude/settings.json<br/>extraKnownMarketplaces"]
+        settings[".claude/settings.json or Codex plugin marketplace<br/>extraKnownMarketplaces"]
         install["/plugin install apollo-eng@apollo-plugins"]
         skill["/apollo-eng:pr-description<br/>/apollo-eng-devops:incident-response<br/>etc."]
     end
@@ -460,6 +507,9 @@ flowchart TD
   settings.json
 .claude-plugin/
   marketplace.json
+.agents/
+  plugins/
+    marketplace.json
 .github/
   workflows/  # CI: lint, validate, tests, bump-version, skill-pr-review, update-skill-inventory
 scripts/  # Helper scripts used by workflows
@@ -467,12 +517,16 @@ scripts/  # Helper scripts used by workflows
 template/
   .claude-plugin/
     plugin.json
+  .codex-plugin/
+    plugin.json
   skills/
     example/
       SKILL.md
 plugins/
   apollo-eng/  # Shared engineering skills
     .claude-plugin/
+      plugin.json
+    .codex-plugin/
       plugin.json
     skills/
       pr-description/
@@ -503,5 +557,7 @@ The README skill inventory table is auto-updated by CI on merge — do not edit 
 
 - [Claude Code plugin docs](https://code.claude.com/docs/en/plugins) — official plugin creation guide
 - [Claude Code marketplace docs](https://code.claude.com/docs/en/plugin-marketplaces) — private marketplace setup
+- [Codex plugin docs](https://developers.openai.com/codex/plugins) — official Codex plugin guide
+- [Codex plugin build docs](https://developers.openai.com/codex/plugins/build) — Codex plugin and marketplace setup
 - [Agent Skills specification](https://agentskills.io/specification) — format and conventions for skill files
 - [Apollo Claude Skills Library](https://www.notion.so/apolloio/Claude-Skills-Library-2fbab2b3b4968002a11ad055663f0b05?source=copy_link) — Notion library of Apollo skills and ideas
