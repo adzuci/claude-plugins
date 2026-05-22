@@ -74,6 +74,13 @@
       "description": "Apollo's GTM Systems concierge. Answers questions about the GTM stack, Salesforce data model, system ownership, routing, access, and integration diagnostics. Users interact in natural language; no slash commands required.",
       "category": "gtm",
       "tags": ["cowork", "gtm-systems", "revops", "salesforce"]
+    },
+    {
+      "name": "apollo-legal",
+      "source": "./plugins/apollo-legal",
+      "description": "End-to-end contract review for Apollo's Commercial Legal team — vendor contracts and NDAs",
+      "category": "legal",
+      "tags": ["cowork", "legal"]
     }
   ]
 }

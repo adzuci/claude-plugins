@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "ironclad": {
+      "type": "url",
+      "url": "https://connector-ironclad-fgt6qb6vmq-uc.a.run.app/mcp",
+      "note": "Used in vendor-contract-review (Phases 1–2) and nda-redline-monitor (Phases 1–2) to scan and download contracts. Requires OAuth — run /mcp and authenticate with 'claude.ai Ironclad MCP - Corp Eng [Dev]' before using the Ironclad scan path. Direct file upload works without this."
+    }
+  }
+}

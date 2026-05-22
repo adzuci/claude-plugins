@@ -1,0 +1,12 @@
+{
+  "name": "apollo-legal",
+  "version": "1.0.0",
+  "description": "End-to-end contract review for Apollo's Commercial Legal team. Triages vendor contracts and NDAs, classifies by type, applies Apollo's legal playbooks, generates redlined Word documents with tracked changes, and outputs summary reports.",
+  "author": "Apollo Corp Eng",
+  "license": "MIT",
+  "permissions": {
+    "skill": ["*"],
+    "command": ["*"],
+    "mcp": ["Ironclad MCP - Corp Eng [Dev]"]
+  }
+}
