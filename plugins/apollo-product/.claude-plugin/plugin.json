@@ -1,5 +1,6 @@
 {
   "name": "apollo-product",
+  "displayName": "Apollo Product",
   "version": "0.1.0",
   "description": "Product management, roadmap, and lifecycle processes",
   "license": "UNLICENSED"

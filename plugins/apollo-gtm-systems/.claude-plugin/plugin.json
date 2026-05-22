@@ -1,6 +1,6 @@
 {
   "name": "apollo-gtm-systems",
-  "displayName": "Athena",
+  "displayName": "Apollo Go-to-Market Systems",
   "version": "0.1.0",
   "description": "Apollo's GTM Systems concierge. Answers questions about the GTM stack, Salesforce data model, system ownership, routing, access, and integration diagnostics. Users interact in natural language; no slash commands required.",
   "license": "UNLICENSED"

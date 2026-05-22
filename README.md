@@ -362,6 +362,7 @@ Users invoke skills as `/plugin-name:skill-name` (e.g. `/apollo-eng:pr-descripti
    ```json
    {
      "name": "<plugin-name>",
+     "displayName": "Plugin Display Name",
      "description": "Short description of the plugin",
      "version": "1.0.0"
    }

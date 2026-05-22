@@ -1,5 +1,6 @@
 {
   "name": "apollo-gtm",
+  "displayName": "Apollo Go-to-Market",
   "version": "0.1.0",
   "description": "Go-to-market strategy, sales enablement, and demand generation",
   "license": "UNLICENSED"
