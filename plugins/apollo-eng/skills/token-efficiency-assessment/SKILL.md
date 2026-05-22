@@ -6,7 +6,7 @@ allowed-tools: Bash Write Read
 
 # Token Efficiency Assessment
 
-Walk the user through a hybrid self-assessment: a Python script auto-detects 7 configuration signals from the filesystem, and Claude asks ~15 judgment-based questions. Results are stored in Notion (or locally if the MCP is unavailable).
+Walk the user through a hybrid self-assessment: Python scripts auto-detect 8 configuration signals from the filesystem and context window, and Claude asks ~15 judgment-based questions. Results are stored in Notion (or locally if the MCP is unavailable).
 
 Engineers requesting more token budget run this first — EMs review the results.
 
@@ -18,7 +18,32 @@ Read `references/references.md` in this skill's directory for the Notion databas
 
 Check `git config user.name`, then Notion MCP `get-users` with `user_id: "self"`, then `whoami`. Do NOT ask. Use the system username as a last resort.
 
-### Step 2 — Run the env scan
+### Step 2 — Run context analysis
+
+Run `/context` first (before any file reads or tool calls that would pollute the baseline). Capture the output to `/tmp/tea-context-raw.txt`, then analyze it:
+
+```bash
+SKILL_DIR="$(find ~/.claude/plugins "$PWD" -maxdepth 8 -path '*/token-efficiency-assessment/scripts/analyze_context.py' -exec dirname {} \; 2>/dev/null | head -1)"
+python3 "$SKILL_DIR/analyze_context.py" --input /tmp/tea-context-raw.txt --out /tmp/tea-context.json
+```
+
+Read `/tmp/tea-context.json`. If there are issues (items that shouldn't be in context), show them to the user:
+
+```
+Context analysis:
+  Baseline: 12% (threshold: 15%) ✓
+  Issues found:
+    ✗ node_modules/lodash/index.js (15%) — node_modules should be in .claudeignore
+    ✗ package-lock.json (8%) — package-lock.json is large; consider .claudeignore
+
+  Suggested fix — add to .claudeignore:
+    node_modules/
+    package-lock.json
+```
+
+If baseline is OK and no issues, show a brief success message. Do not ask about context — this is auto-detected.
+
+### Step 3 — Run the env scan
 
 Run the deterministic environment scan (stdlib Python, no external deps):
 
@@ -44,7 +69,7 @@ Auto-detected signals:
 
 Do not ask the user about these signals — they are already scored.
 
-### Step 3 — Ask judgment questions (4 rounds)
+### Step 4 — Ask judgment questions (4 rounds)
 
 Present questions one round at a time using `AskUserQuestion`. After each round, briefly note any red flags or strong practices you observe.
 
@@ -100,7 +125,7 @@ Ask these 4 questions:
 - Are MCP tool calls returning excessively large payloads (thousands of lines)?
   Options: "No, payloads are reasonable" → `yes`; "Sometimes large" → `sometimes`; "Often very large" → `no`
 
-### Step 4 — Collect answers and score
+### Step 5 — Collect answers and score
 
 After all 4 rounds, construct the answers JSON using the `→ value` mappings above. Use the root_cause multi-select labels as-is. For any question the user skipped, use `""` as the value (scores 0).
 
@@ -127,30 +152,30 @@ Write answers to `/tmp/tea-answers.json`:
 }
 ```
 
-Run score.py:
+Run score.py with both env and context signals:
 
 ```bash
 SKILL_DIR="$(find ~/.claude/plugins "$PWD" -maxdepth 8 -path '*/token-efficiency-assessment/scripts/score.py' -exec dirname {} \; 2>/dev/null | head -1)"
-python3 "$SKILL_DIR/score.py" --env /tmp/tea-env.json --answers /tmp/tea-answers.json
+python3 "$SKILL_DIR/score.py" --env /tmp/tea-env.json --context /tmp/tea-context.json --answers /tmp/tea-answers.json
 ```
 
-### Step 5 — Generate top-3 recommendations
+### Step 6 — Generate top-3 recommendations
 
-Read the `red_flags` list from the score output. Each env-signal red flag includes a `fix` field (specific, actionable). Use these plus context from the user's answers to write the **top 3 improvement recommendations**, ordered by impact. Link to the efficiency guide from `references/references.md`.
+Read the `red_flags` list from the score output. Each env-signal and context-signal red flag includes a `fix` field (specific, actionable). Use these plus context from the user's answers to write the **top 3 improvement recommendations**, ordered by impact. Link to the efficiency guide from `references/references.md`.
 
-### Step 6 — Present results
+### Step 7 — Present results
 
 Show:
 
-- Numeric score: "Score: **N/22**"
+- Numeric score: "Score: **N/23**"
 - Verdict: "Budget readiness: **Yes** / **Needs improvement** / **No**"
-  - 18–22: Ready for budget increase — strong habits
-  - 12–17: Needs improvement — address gaps before requesting more budget
-  - 0–11: Not ready — significant changes needed
+  - 19–23: Ready for budget increase — strong habits
+  - 13–18: Needs improvement — address gaps before requesting more budget
+  - 0–12: Not ready — significant changes needed
 - Areas of strength (list from `strengths`)
 - Top 3 improvement recommendations with links
 
-### Step 7 — Store results
+### Step 8 — Store results
 
 #### If the Notion MCP is available
 

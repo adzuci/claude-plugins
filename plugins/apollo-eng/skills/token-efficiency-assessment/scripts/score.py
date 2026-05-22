@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-score.py — Combines env-report + conversational answers into a final score.
+score.py — Combines env-report + context-report + conversational answers into a final score.
 
 Env report comes from check_env.py.
+Context report comes from analyze_context.py.
 Answers come from the skill's AskUserQuestion collection.
 
 Answers JSON schema (15 keys; root_cause is informational only):
@@ -28,6 +29,7 @@ Answers JSON schema (15 keys; root_cause is informational only):
 
 Usage:
     python3 score.py --env env-report.json --answers answers.json
+    python3 score.py --env env-report.json --context context-report.json --answers answers.json
     python3 score.py --env env-report.json --answers-json '{"uses_compact": "yes", ...}'
 """
 
@@ -87,13 +89,20 @@ ENV_SIGNAL_LABELS = {
     "memory_populated":           "Caches repeated context in memory",
 }
 
+CONTEXT_SIGNAL_LABEL = "context_clean"
+CONTEXT_SIGNAL_DESC = "Context baseline is clean (≤15%, no problematic items)"
 
-def _verdict(score):
-    # Thresholds hold for both integer and float totals (max 22).
-    # With 0.5 partial credit, a score of e.g. 17.5 correctly lands in "Needs improvement".
-    if score >= 18:
+
+def _verdict(score, max_score=22):
+    # Thresholds scale with max_score. Base thresholds for max 22:
+    # - Ready: 18+ (82%)
+    # - Needs improvement: 12-17 (55-77%)
+    # - Not ready: <12 (<55%)
+    ready_threshold = max_score * 0.82
+    needs_improvement_threshold = max_score * 0.55
+    if score >= ready_threshold:
         return "Yes"
-    elif score >= 12:
+    elif score >= needs_improvement_threshold:
         return "Needs improvement"
     return "No"
 
@@ -102,20 +111,31 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--env", metavar="FILE")
     parser.add_argument("--env-json", metavar="JSON")
+    parser.add_argument("--context", metavar="FILE")
+    parser.add_argument("--context-json", metavar="JSON")
     parser.add_argument("--answers", metavar="FILE")
     parser.add_argument("--answers-json", metavar="JSON")
     args = parser.parse_args()
 
     if args.env:
-        env_data = json.loads(open(args.env).read())
+        with open(args.env, "r", encoding="utf-8") as f:
+            env_data = json.load(f)
     elif args.env_json:
         env_data = json.loads(args.env_json)
     else:
         print("ERROR: supply --env FILE or --env-json JSON", file=sys.stderr)
         sys.exit(1)
 
+    context_data = None
+    if args.context:
+        with open(args.context, "r", encoding="utf-8") as f:
+            context_data = json.load(f)
+    elif args.context_json:
+        context_data = json.loads(args.context_json)
+
     if args.answers:
-        answers = json.loads(open(args.answers).read())
+        with open(args.answers, "r", encoding="utf-8") as f:
+            answers = json.load(f)
     elif args.answers_json:
         answers = json.loads(args.answers_json)
     else:
@@ -135,6 +155,26 @@ def main():
             "fix": sig.get("fix", ""),
         }
 
+    # Score context signal (if provided)
+    context_scored = {}
+    if context_data:
+        ctx_score = context_data.get("score", 0)
+        ctx_fix = ""
+        if ctx_score == 0:
+            baseline_fix = context_data.get("baseline_fix", "")
+            combined_fix = context_data.get("combined_fix", "")
+            if baseline_fix and combined_fix:
+                ctx_fix = f"{baseline_fix}\n\n{combined_fix}"
+            else:
+                ctx_fix = baseline_fix or combined_fix or ""
+        context_scored[CONTEXT_SIGNAL_LABEL] = {
+            "label": CONTEXT_SIGNAL_DESC,
+            "score": ctx_score,
+            "value": context_data.get("baseline_pct"),
+            "fix": ctx_fix,
+            "issues": context_data.get("issues", []),
+        }
+
     # Score conversational answers
     answer_scored = {}
     for key, label in ANSWER_LABELS.items():
@@ -142,33 +182,46 @@ def main():
         score = ANSWER_SCORE_MAP.get(key, {}).get(raw, 0)
         answer_scored[key] = {"label": label, "score": score, "value": raw}
 
-    total = sum(s["score"] for s in env_scored.values()) + sum(
-        s["score"] for s in answer_scored.values()
+    total = (
+        sum(s["score"] for s in env_scored.values())
+        + sum(s["score"] for s in context_scored.values())
+        + sum(s["score"] for s in answer_scored.values())
     )
-    max_score = len(env_scored) + len(answer_scored)  # 22
+    max_score = len(env_scored) + len(context_scored) + len(answer_scored)  # 23 with context
 
-    strengths = [s["label"] for s in env_scored.values() if s["score"] == 1] + [
-        s["label"] for s in answer_scored.values() if s["score"] == 1
-    ]
+    strengths = (
+        [s["label"] for s in env_scored.values() if s["score"] == 1]
+        + [s["label"] for s in context_scored.values() if s["score"] == 1]
+        + [s["label"] for s in answer_scored.values() if s["score"] == 1]
+    )
 
-    red_flags = [
-        {"label": s["label"], "fix": s.get("fix", "")}
-        for s in env_scored.values()
-        if s["score"] == 0
-    ] + [
-        {"label": s["label"], "fix": ""}
-        for s in answer_scored.values()
-        if s["score"] == 0
-    ]
+    red_flags = (
+        [
+            {"label": s["label"], "fix": s.get("fix", "")}
+            for s in env_scored.values()
+            if s["score"] == 0
+        ]
+        + [
+            {"label": s["label"], "fix": s.get("fix", "")}
+            for s in context_scored.values()
+            if s["score"] == 0
+        ]
+        + [
+            {"label": s["label"], "fix": ""}
+            for s in answer_scored.values()
+            if s["score"] == 0
+        ]
+    )
 
     result = {
         "score": total,
         "score_max": max_score,
-        "verdict": _verdict(total),
+        "verdict": _verdict(total, max_score),
         "strengths": strengths,
         "red_flags": red_flags,
         "root_cause": answers.get("root_cause", []),
         "env_signals": env_scored,
+        "context_signals": context_scored,
         "answer_signals": answer_scored,
     }
 
