@@ -25,13 +25,25 @@ The other tickets in the group get an issue link of type `Duplicate` pointing to
 - One ticket is a CVE finding and the other is a runtime symptom, even if they end up being the same root cause. Link with `Relates` instead so both stay open until the underlying fix lands.
 - Reporters differ and one ticket has reproduction steps the other lacks. Merging loses signal.
 - Status differs (one is `In Progress`, the other `Open`). Comment instead of merging.
-- **Same alert fires across multiple days on separate occasions.** That's a *recurring* issue, not a duplicate. Closing recurring instances as duplicates buries the recurrence signal — the third firing of the same alert this week is more important than the first. Either keep each open, or consolidate into one root-cause ticket assigned to the owning team and link the rest with `Relates`.
+- One ticket is an automated finding (label `kodem` / `orca` / `panther`) and the other is a manual verification of the same issue (label `bugcrowd` / `claude-security`). The manual ticket carries audit context the automated one doesn't — see INCIDENT-28885 as the canonical example. Link with `Relates`, keep both open, and let the manual one drive the fix.
+- **Same alert fires across multiple days on separate occasions.** That's a *recurring* issue, not a duplicate. Closing recurring instances as duplicates buries the recurrence signal — the third firing of the same alert this week is more important than the first. Either keep each open, or consolidate into one root-cause ticket and link the rest with `Relates`.
 - **Title contains "Again", "Recurring", "Still", or similar reporter frustration markers.** The reporter is telling you the root cause isn't fixed; honor that signal.
 
-## Recurring vs duplicate — quick test
+## PD / Grafana alert dedup
+
+PD alerts (`[FIRING:N] ...`) flap, so dedup is aggressive but bounded.
+
+Quick test:
 
 - Same host/service + same alert + multiple firings inside the **same on-call shift** (hours) → **duplicates**. Merge to the still-acked or oldest-with-context.
 - Same host/service + same alert + firings across **multiple days** → **recurring**. Do not merge; route to the owning team for memory/disk/limit fix.
+
+Detailed cases:
+
+- **Same alert title + same service group + within 24h + both Open** → near-certain duplicate. Canonical is the older ticket with more linked artifacts. Merge.
+- **Same alert title across a longer window (> 24h)** → recurring failure mode, **not** a duplicate. Link with `Relates` and use the `pd-recurring-runbook-gap` template to propose a runbook ticket. INCIDENT-29054 + INCIDENT-28316 (same Sidekiq crawler alert, different days) is the canonical example.
+- **Different alert titles but same PD service in the same firing window** → likely one incident with multiple alert rules firing. Link with `Relates`, pick a lead ticket for the postmortem.
+- **Open PD + resolved PD on the same alert** → the open one is the canonical incident; the resolved one closes as `Mark duplicate of <open>`.
 
 ## Examples
 
@@ -40,3 +52,5 @@ The other tickets in the group get an issue link of type `Duplicate` pointing to
 **Don't merge**: `INCIDENT-501 "CVE-2025-1234 in nokogiri"` + `INCIDENT-512 "ES cluster red"` — both have label `security` but different components and unrelated symptoms.
 
 **Don't merge, link as Relates**: `INCIDENT-490 "Sidekiq queue lag"` + `INCIDENT-491 "enrichment job slow"` — likely the same root cause but different symptoms; keep both until diagnosis confirms.
+
+**Don't merge, link as Relates (recurring)**: `INCIDENT-29054` + `INCIDENT-28316` — same Sidekiq crawler PD alert fired on different days, both already resolved at the PD level. Recurring failure mode, not a duplicate.
