@@ -81,6 +81,13 @@
       "description": "End-to-end contract review for Apollo's Commercial Legal team — vendor contracts and NDAs",
       "category": "legal",
       "tags": ["cowork", "legal"]
+    },
+    {
+      "name": "apollo-people",
+      "source": "./plugins/apollo-people",
+      "description": "People Enablement skills for Apollo employees — performance reviews, career development, and growth tools",
+      "category": "people",
+      "tags": ["cowork", "people"]
     }
   ]
 }
