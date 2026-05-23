@@ -1,0 +1,187 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Apollo Agent Response Schema",
+  "description": "Validated stable response schema confirmed by Apollo Agent in Slack thread 1775950470.926019 on April 11, 2026. Use when you want machine-parseable output from @Apollo Agent. Append 'Output format: JSON in code block per schema v1.0' to your Mode B prompt to invoke this.",
+  "version": "1.0",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "request_id",
+    "task",
+    "audience",
+    "customer",
+    "questions",
+    "results",
+    "meta",
+    "errors"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "request_id": {
+      "type": "string",
+      "description": "Caller-supplied or agent-generated unique ID for this query"
+    },
+    "task": {
+      "type": "string",
+      "enum": [
+        "research_for_reply",
+        "diagnose_issue",
+        "verify_feature",
+        "check_account_config"
+      ]
+    },
+    "audience": {
+      "type": "string",
+      "enum": [
+        "customer_admin",
+        "customer_end_user",
+        "internal_gtme"
+      ]
+    },
+    "customer": {
+      "type": "object",
+      "required": ["team_id", "domain", "user_email", "godmode_url"],
+      "properties": {
+        "team_id": { "type": ["string", "null"] },
+        "domain": { "type": ["string", "null"] },
+        "user_email": { "type": ["string", "null"] },
+        "godmode_url": { "type": ["string", "null"] }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["question_id", "question"],
+        "properties": {
+          "question_id": { "type": "string" },
+          "question": { "type": "string" }
+        }
+      }
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "question_id",
+          "answer",
+          "confidence_label",
+          "confidence_reason",
+          "evidence",
+          "kb_links",
+          "customer_impact",
+          "recommended_reply_snippet",
+          "follow_ups",
+          "assumptions",
+          "limitations"
+        ],
+        "properties": {
+          "question_id": { "type": "string" },
+          "answer": { "type": "string" },
+          "confidence_label": {
+            "type": "string",
+            "enum": ["VERIFIED", "INFERRED", "UNKNOWN"]
+          },
+          "confidence_reason": { "type": "string" },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "reference"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["kb", "backend_data", "jira", "slack", "code_read", "other"]
+                },
+                "reference": { "type": "string" },
+                "url": { "type": ["string", "null"] },
+                "excerpt": { "type": ["string", "null"] }
+              }
+            }
+          },
+          "kb_links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["title", "url"],
+              "properties": {
+                "title": { "type": "string" },
+                "url": { "type": "string", "format": "uri" }
+              }
+            }
+          },
+          "customer_impact": { "type": ["string", "null"] },
+          "recommended_reply_snippet": { "type": ["string", "null"] },
+          "follow_ups": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["question", "why"],
+              "properties": {
+                "question": { "type": "string" },
+                "why": { "type": "string" }
+              }
+            }
+          },
+          "assumptions": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "limitations": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "required": ["sources_used", "generated_at", "redactions"],
+      "properties": {
+        "sources_used": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["kb", "backend_data", "jira", "slack", "code_read", "pagerduty", "notion", "google_sheets"]
+          }
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 timestamp"
+        },
+        "redactions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  },
+  "_attribution": {
+    "source": "Apollo Agent self-described schema, Slack thread 1775950470.926019",
+    "channel": "#gtme-support-apollo-agent-forum (C0A3HGMHMN2)",
+    "date": "2026-04-11",
+    "notes": [
+      "All keys always exist; use empty arrays or null when no data, so the parser does not need conditionals.",
+      "schema_version is 1.0; future versions will bump this field.",
+      "questions[] is always an array even for single-question calls, so batching does not break the contract later."
+    ]
+  }
+}
