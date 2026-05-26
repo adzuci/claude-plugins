@@ -104,7 +104,7 @@ def check_mcp_count():
         ]
         if entries:
             count = len(entries)
-    except Exception:
+    except (FileNotFoundError, subprocess.TimeoutExpired, subprocess.SubprocessError):
         pass
 
     # Fall back to counting enabled marketplace plugins

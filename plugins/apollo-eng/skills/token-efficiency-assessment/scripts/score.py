@@ -118,7 +118,7 @@ def main():
     args = parser.parse_args()
 
     if args.env:
-        with open(args.env, "r", encoding="utf-8") as f:
+        with open(args.env, encoding="utf-8") as f:
             env_data = json.load(f)
     elif args.env_json:
         env_data = json.loads(args.env_json)
@@ -128,13 +128,13 @@ def main():
 
     context_data = None
     if args.context:
-        with open(args.context, "r", encoding="utf-8") as f:
+        with open(args.context, encoding="utf-8") as f:
             context_data = json.load(f)
     elif args.context_json:
         context_data = json.loads(args.context_json)
 
     if args.answers:
-        with open(args.answers, "r", encoding="utf-8") as f:
+        with open(args.answers, encoding="utf-8") as f:
             answers = json.load(f)
     elif args.answers_json:
         answers = json.loads(args.answers_json)
