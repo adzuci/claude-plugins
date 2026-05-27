@@ -10,7 +10,7 @@ Focus on high-signal issues only. Prefer concrete, file-specific feedback.
 Frontmatter
 
 - Confirm `SKILL.md` exists at `plugins/<plugin>/skills/<skill-name>/SKILL.md`. Do NOT expect a SKILL.md at the plugin root — plugins contain multiple skills in subdirectories.
-- Require YAML frontmatter with exactly `name` and `description`.
+- Require YAML frontmatter with `name` and `description`. Also allow `disable-model-invocation: true` for skills that should only activate by explicit command.
 - Check that `name` matches the skill directory name and uses lowercase letters, digits, and hyphens.
 - Check that `description` explains both what the skill does and when to use it.
 - Prefer trigger-rich wording with explicit user intents, contexts, or phrases that should activate the skill.
@@ -20,6 +20,12 @@ Descriptions — skill vs plugin
 
 - **Plugin descriptions** (in `plugin.json` and `marketplace.json`) are short catalog blurbs identifying the team and broad scope. Do not demand trigger-rich wording in plugin descriptions.
 - **Skill descriptions** (in `SKILL.md` frontmatter) are where activation triggers, user intents, and context phrases belong. Apply the trigger-richness checks only to skill-level descriptions.
+
+Routing and activation
+
+- Check new or changed skill descriptions for trigger overlap with existing skills that the same user might have active. Flag broad or generic wording that could route common requests away from a more specific skill.
+- Prefer descriptions that make the skill's audience and activation boundary clear, especially for company-wide or cross-team skills.
+- Prefer `disable-model-invocation: true` for new skills unless the skill needs natural-language activation. If it is omitted, look for a clear reason the user would not know to invoke the skill explicitly.
 
 Structure
 

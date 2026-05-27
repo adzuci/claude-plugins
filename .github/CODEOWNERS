@@ -1,4 +1,5 @@
 * @apolloio/devops @apolloio/ai-tools
+/skill-review-rubric.md @apolloio/devops @apolloio/ai-tools @apolloio/it-team
 plugins/apollo-eng-devops/ @apolloio/devops
 plugins/apollo-it/ @apolloio/devops @apolloio/it-team
 plugins/apollo-rnd/ @apolloio/devops @apolloio/rnd
