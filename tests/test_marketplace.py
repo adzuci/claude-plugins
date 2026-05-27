@@ -23,6 +23,7 @@ EXPECTED_DISPLAY_NAMES = {
     "apollo-rnd": "Apollo Research and Development",
     "apollo-legal": "Apollo Legal",
     "apollo-people": "Apollo People",
+    "apollo-marketing": "Apollo Marketing",
 }
 
 

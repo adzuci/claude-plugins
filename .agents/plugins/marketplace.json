@@ -111,6 +111,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "RND"
+    },
+    {
+      "name": "apollo-marketing",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-marketing"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Marketing"
     }
   ]
 }

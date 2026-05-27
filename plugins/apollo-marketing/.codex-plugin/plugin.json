@@ -1,0 +1,7 @@
+{
+  "name": "apollo-marketing",
+  "displayName": "Apollo Marketing",
+  "version": "1.0.0",
+  "description": "Apollo's internal brand copilot. Activates only when the user explicitly signals brand intent — asking for on-brand content, checking against Apollo's brand voice or visual guidelines, or requesting brand specs (colors, fonts, logo). Does not activate on generic writing requests. Trigger phrases: \"on-brand\", \"with Apollo's brand\", \"brand voice\", \"is this on-brand\", \"Apollo brand colors/fonts/logo\", \"make this on-brand\", \"draft an ad\", \"write a landing page\", \"write a brand-compliant [X]\".",
+  "license": "UNLICENSED"
+}
