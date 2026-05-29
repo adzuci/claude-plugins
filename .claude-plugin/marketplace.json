@@ -95,6 +95,13 @@
       "description": "Apollo's internal brand copilot. Activates only when the user explicitly signals brand intent — asking for on-brand content, checking against Apollo's brand voice or visual guidelines, or requesting brand specs (colors, fonts, logo). Does not activate on generic writing requests. Trigger phrases: \"on-brand\", \"with Apollo's brand\", \"brand voice\", \"is this on-brand\", \"Apollo brand colors/fonts/logo\", \"make this on-brand\", \"draft an ad\", \"write a landing page\", \"write a brand-compliant [X]\".",
       "category": "marketing",
       "tags": ["cowork", "marketing", "brand"]
+    },
+    {
+      "name": "apollo-gtm-enablement",
+      "source": "./plugins/apollo-gtm-enablement",
+      "description": "Creates facilitator-ready enablement decks for Apollo's GTM teams (Sales, CS, Product). Pulls topics from Notion calendars, validates with Salesforce activity and Gong conversations, and produces Apollo-branded training materials backed by real evidence.",
+      "category": "gtm",
+      "tags": ["claude-code", "gtm", "enablement"]
     }
   ]
 }

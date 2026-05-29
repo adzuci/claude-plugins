@@ -1,0 +1,25 @@
+{
+  "_notes": "All MCPs below are enterprise-provisioned via Apollo's Claude enterprise deployment. Run /gtme-setup to verify connectivity before first use.",
+  "mcpServers": {
+    "notion": {
+      "description": "Notion read-only — GTM enablement calendar, supporting docs",
+      "note": "Enterprise-provisioned.",
+      "provisioning": "enterprise"
+    },
+    "google-drive": {
+      "description": "Google Drive read-only — supporting docs; deck output location",
+      "note": "Enterprise-provisioned.",
+      "provisioning": "enterprise"
+    },
+    "salesforce": {
+      "description": "Salesforce read-only — usage stats, opportunity/activity evidence",
+      "note": "Enterprise-provisioned.",
+      "provisioning": "enterprise"
+    },
+    "gong": {
+      "description": "Gong read-only — call recording examples used as evidence in training decks",
+      "note": "Enterprise-provisioned (Apollo-built custom MCP).",
+      "provisioning": "enterprise"
+    }
+  }
+}

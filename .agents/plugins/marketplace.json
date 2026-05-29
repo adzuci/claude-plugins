@@ -123,6 +123,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Marketing"
+    },
+    {
+      "name": "apollo-gtm-enablement",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-gtm-enablement"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "GTM"
     }
   ]
 }
