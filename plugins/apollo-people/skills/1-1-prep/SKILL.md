@@ -27,7 +27,7 @@ ______________________________________________________________________
 
 ## Step 0: Connector Pre-flight Check
 
-Confirm Slack and Notion are enabled (Glean and Google Drive are optional). If the manager needs setup help, share [`references/connector-setup.md`](references/connector-setup.md). Wait for **"ready"** before proceeding.
+Confirm Slack and Notion are enabled (Glean and Google Drive are optional). If the manager needs setup help, share [`references/connector-setup.md`](references/connector-setup.md).
 
 ______________________________________________________________________
 
