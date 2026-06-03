@@ -110,14 +110,17 @@ jobs:
           echo "=== New tag: ${NEW_TAG} ==="
           echo "new_tag=${NEW_TAG}" >> "$GITHUB_OUTPUT"
 
-      - name: Update version in README
+      - name: Update README and per-plugin versions
         if: steps.version.outputs.new_tag != ''
         shell: bash
         env:
           NEW_TAG: ${{ steps.version.outputs.new_tag }}
+          LAST_TAG: ${{ steps.version.outputs.last_tag }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Repo-wide version badge in the README.
           python3 -c "
           import re, os
           tag = os.environ['NEW_TAG']
@@ -129,8 +132,22 @@ jobs:
           open('README.md', 'w').write(text)
           "
           git add README.md
+
+          # Per-plugin manifest versions, derived from the commits in this release.
+          # Only run when LAST_TAG is a real ref so we never scan full history and over-bump.
+          PLUGIN_BUMPS=""
+          if git rev-parse -q --verify "${LAST_TAG}^{commit}" >/dev/null; then
+            PLUGIN_BUMPS=$(python3 .github/scripts/bump_plugin_versions.py "${LAST_TAG}..HEAD")
+            [ -n "$PLUGIN_BUMPS" ] && echo "$PLUGIN_BUMPS"
+            git add plugins/*/.claude-plugin/plugin.json
+          else
+            echo "LAST_TAG '${LAST_TAG}' is not a ref; skipping per-plugin bumps."
+          fi
+
           git diff --cached --quiet && exit 0
-          git commit -m "chore(release): update README to ${NEW_TAG} [skip ci]"
+          MSG="chore(release): update README to ${NEW_TAG} [skip ci]"
+          [ -n "$PLUGIN_BUMPS" ] && MSG="${MSG}"$'\n\nPlugin version bumps:\n'"${PLUGIN_BUMPS}"
+          git commit -m "$MSG"
           git push origin main
 
       - name: Create and push annotated tag

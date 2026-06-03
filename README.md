@@ -513,8 +513,8 @@ flowchart TD
     marketplace.json
 .github/
   workflows/  # CI: lint, validate, tests, bump-version, skill-pr-review, update-skill-inventory
-scripts/  # Helper scripts used by workflows
-  skill-review-rubric.md
+  scripts/    # Helper scripts used by workflows (update-skill-inventory, bump_plugin_versions)
+skill-review-rubric.md
 template/
   .claude-plugin/
     plugin.json
@@ -549,6 +549,9 @@ This repo uses [Conventional Commits](https://www.conventionalcommits.org/) to d
 1. Picks the highest-impact bump: **major** (`feat!:` / `BREAKING CHANGE`), **minor** (`feat:`), **patch** (`fix:` and other releasable types)
 1. Skips tagging entirely for non-releasing types: `chore`, `docs`, `ci`, `style`, `test`
 1. Pushes an annotated tag and creates a GitHub Release with auto-generated notes
+1. Bumps the `version` in each changed plugin's `plugin.json` using the same semver rules, based on the commits that touched that plugin (via `.github/scripts/bump_plugin_versions.py`)
+
+Both the repo-wide tag and the per-plugin manifest versions are bumped automatically — you do not need to edit `plugin.json` versions by hand. The per-plugin bump is derived from scoped Conventional Commits, so commit with a plugin scope (e.g. `feat(apollo-people): ...`) and touch that plugin's files.
 
 The README skill inventory table is auto-updated by CI on merge — do not edit it manually.
 
