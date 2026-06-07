@@ -71,14 +71,15 @@ Before fetching anything beyond the ticket list, scan each ticket for vendor nam
 
 This is the load-bearing rule of the skill.
 
-- Every proposed comment is printed in a fenced block tagged `proposed-comment` under its ticket key.
-- `addCommentToJiraIssue` is **never** called without an explicit `approve <KEY>` from the user **in the same session**.
-- There is no "approve all comments" path. Reroute comments require approval per ticket.
+- Every proposed comment is shown inline in the numbered routing table (the "Proposed comment" column / sub-line), not in separate blocks. Each row has a number the user references to approve, reject, or revise.
+- `addCommentToJiraIssue` is **never** called without an explicit `approve <n>` from the user **in the same session**.
+- There is no "approve all comments" path. Comments are approved per row.
+- `update <n>: <new text>` revises a row's comment before posting; re-print the row, still gated on a later `approve <n>`.
 - Assignee changes (`editJiraIssue` setting `assignee`) follow the same per-row approval rule — but **PD-responder batch assignments** are an explicit exception, see "PD-assignment batching" below.
-- Status transitions and issue links may be batched but only against rows the user has named (e.g. `approve all duplicates`, `approve INCIDENT-503, INCIDENT-507`).
+- Status transitions and issue links may be batched but only against rows the user has named (e.g. `approve all duplicates`, `approve 3,5`).
 - Keep proposed comments to ≤ 3 sentences. Reporters respond to short messages.
 
-If the user asks the skill to "just post them," do not comply silently — print the full list of proposed comments and ask for one explicit confirmation that names the keys.
+If the user asks to "just post them," do not comply silently — re-print the numbered table and ask for one explicit confirmation naming the rows.
 
 ## Honesty over confidence
 
@@ -90,20 +91,21 @@ Wrong-but-confident routes cost more turns than "I'm not sure, let me verify." I
 | -------------- | --------------------------------------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------- |
 | `report` | Jira, Glean, PD (if available), Grafana (if available) | None | Stand-up summary, status check, exec readout |
 | `triage` | Jira, Glean, PD (if available), Grafana (if available), GitHub (CODEOWNERS), `apollo-dev-teams.yml` | Jira (after per-row confirmation) | Weekly review session — default mode |
-| `pd-reconcile` | Jira, PagerDuty (required), `apollo-dev-teams.yml` | Jira (after per-row confirmation) | Sync open Jira tickets with their linked PD incidents — assign responders + transition states |
+| `pd-reconcile` | Jira, PD read access (MCP or `pd` CLI, required), `apollo-dev-teams.yml` | Jira (after per-row confirmation) | Sync open Jira tickets with their linked PD incidents — assign responders + transition states |
 
 ### `pd-reconcile` mode
 
-A focused pass for the PD/Grafana alert class only. The mode requires the PagerDuty MCP — if it's not available, refuse to run and print the install command. The skill does not guess at PD state from Jira-side signals.
+A focused pass for the PD/Grafana alert class only. Requires PD read access (MCP or `pd` CLI) per [`references/pd-access.md`](references/pd-access.md); if neither is usable, refuse and print the install command. The skill does not guess at PD state from Jira-side signals.
 
 Workflow:
 
 1. Find open Jira tickets in the chosen scope with a PD link (`pagerduty.com/incidents/` URL in description or comments, or label `pagerduty`). PD URLs often live in `description`/`comment`, which the compact field list omits — for `pd-reconcile` discovery, fetch `description` (and the last few comments) on the scoped rows so PD-linked tickets aren't missed. This is the one place the "don't fetch description by default" rule is relaxed, because PD links are the thing being discovered.
-1. For each, fetch PD status (`get_incident`) and any PD notes/comments (`list_log_entries`).
+1. For each, fetch PD status and any PD notes/comments — via the MCP (`get_incident`, `list_log_entries`) when authorized, otherwise via the `pd` CLI (`pd rest get -e /incidents/<ID>`, `pd incident:notes -i <ID>`).
+1. Before proposing any close/resolve transition, extract any Slack URL from the PD notes/log entries and follow it to confirm the context — verify there are no open action items in the thread. If a Slack link exists but can't be read, downgrade the proposal from Close to "Ask assignee to confirm + close" (see [`references/pd-alerts.md`](references/pd-alerts.md) → "Confirm Slack context before closing").
 1. Apply the proposal table in [`references/pd-alerts.md`](references/pd-alerts.md) → "PD status reconciliation."
-1. Print one compact row per ticket: PD status, PD responder (if any), proposed Jira assignee, proposed transition, one-line reason.
+1. Print one numbered, compact row per ticket: PD status, PD responder (if any), proposed Jira assignee, proposed transition, any proposed comment inline, and a one-line reason.
 1. **Batch the PD-responder assignments** — see "PD-assignment batching" below.
-1. Stage all writes; require approval per row or per batch as appropriate.
+1. Stage all writes; require approval per row (`approve <n>`, `update <n>: …` to revise a comment first) or per batch as appropriate.
 
 ## Scope → JQL
 
@@ -128,15 +130,7 @@ If any of these are missing, stop and print the install command (see `devops` sk
 
 **Optional but valuable**:
 
-- **PagerDuty MCP** — required for `pd-reconcile` mode. If absent and any ticket links to PD (URL contains `pagerduty.com/incidents/` or body contains `PD-`), print this once and continue in degraded mode:
-
-  > Some tickets reference PagerDuty incidents but the PagerDuty MCP isn't connected. To enable PD reconciliation, run:
-  >
-  > ```bash
-  > claude mcp add --transport sse -s user pagerduty https://mcp.pagerduty.com/sse
-  > ```
-  >
-  > Without it, I'll flag PD-linked tickets as "needs PD verification" instead of proposing assignment/close actions.
+- **PagerDuty read access (MCP or `pd` CLI)** — required for `pd-reconcile` mode. Detect the MCP state — authorized / auth-failing (`401`/`403` → unavailable, don't loop-retry) / absent — then prefer the read-only `pd` CLI over re-adding the MCP. Full procedure and install commands: [`references/pd-access.md`](references/pd-access.md). If neither is usable and any ticket links to PD, flag PD-linked tickets as "needs PD verification" and continue in degraded mode.
 
 - **Grafana MCP** — enables Tempo TraceQL queries, Prometheus metric queries, dashboard fetches, Loki log queries. Many investigation paths collapse from "ask the user to look" → "fetch the rate inline" when Grafana is available. **Check this at preflight** — see workflow step 2.
 
@@ -210,7 +204,8 @@ Print a single-line MCP table:
 Tools: Atlassian ✅  GitHub ✅  Glean ✅  PagerDuty ✅  Grafana ✅  (cloudId resolved)
 ```
 
-- For `pd-reconcile`, PD MCP is **required**; stop and print the install command if absent.
+- Detect PD read access per the three MCP states in [`references/pd-access.md`](references/pd-access.md) — authorized / auth-failing (`401`/`403` → treat as unavailable, don't loop-retry) / absent — then check `command -v pd` for the CLI fallback, preferring the `pd` CLI over re-adding the MCP.
+- For `pd-reconcile`, PD read access is **required**; if neither the authorized MCP nor the `pd` CLI is usable, stop and print the CLI install command.
 - For other modes, note any missing optionals in the table.
 - If Grafana is absent, the skill will not auto-fetch metric/trace data — fall back to "describe what you'd want to investigate" without the data.
 - If `--dry-run` is set, print a one-line banner.
@@ -311,31 +306,27 @@ When sources disagree, **the team-state file wins for routing decisions** *where
 
 For security findings, run the reachability flow in [`cve-triage.md`](references/cve-triage.md).
 
-### 13. Routing table (only after step 7's questions are answered)
+### 13. Numbered routing table (only after step 7's questions are answered)
 
 ```
-| Key | Title | Class | Age | Sev | Proposed action | Owner | Reason | Confidence |
+| # | Key | Title | Class | Age | Sev | Proposed action | Owner | Proposed comment | Reason | Confidence |
 ```
 
-For security findings, add an `OWASP` column. For PD alerts, the `Reason` column should reference the PD service or service-group tag. For vendor-recognized rows, the `Reason` should name the vendor entry being applied.
+Number rows `1, 2, 3…`. Put each row's proposed comment text in the `Proposed comment` column verbatim (use a sub-line under the row if it's too long to fit) — the user reads it here, not in a separate block. For security findings, add an `OWASP` column. For PD alerts, the `Reason` column should reference the PD service or service-group tag. For vendor-recognized rows, the `Reason` should name the vendor entry being applied.
 
-### 14. Proposed comments
+### 14. Confirm and write
 
-Print each row's proposed comment in `proposed-comment` fenced blocks tagged with the ticket key. Do not collapse them.
-
-### 15. Confirm and write
-
-Accept formats like `approve INCIDENT-123, INCIDENT-141`, `approve all duplicates`, `approve PD-batch`. For each approved row/batch, execute the staged writes and print the new state. Never batch writes without naming the rows or batch.
+Ask the user to approve rows by number. Accept `approve 1,3`, `approve all duplicates`, `approve PD-batch`, or `update <n>: <new text>` to revise a comment before posting (re-print that row, still gated on a later `approve <n>`). For each approved row/batch, execute the staged writes and print the new state. Never batch writes without naming the rows or batch.
 
 **Sprint awareness**: when staging an assignment, default to adding the ticket to the current active sprint of the team's `jira_default_project`. Look up via `searchJiraIssuesUsingJql` with `project = <KEY> AND sprint in openSprints()` once per session and cache.
 
 **If `--dry-run` was set**, print what would be written for each approval but do not call any Jira write tool.
 
-### 16. Runbook gap
+### 15. Runbook gap
 
 If a ticket has no linked runbook and Glean finds nothing relevant, propose a draft INFRA ticket body (do not create — confirm first).
 
-### 17. End-of-pass gate
+### 16. End-of-pass gate
 
 Once approved writes are done, **ask before writing the summary**:
 
@@ -343,7 +334,7 @@ Once approved writes are done, **ask before writing the summary**:
 
 If the user says yes, loop back to step 7. If no, proceed to summary.
 
-### 18. Summary (format-aware)
+### 17. Summary (format-aware)
 
 Ask the user once how they want the summary:
 
@@ -354,7 +345,7 @@ Options: "Slack post (numbered bullets)" / "Jira ticket comment" / "Stand-up rea
 
 Then write the summary in that format. Default counts to include: `assigned`, `rerouted`, `commented`, `closed`, `merged as duplicate`, `deferred`, `flagged hygiene`. One-line followup for the next review.
 
-### 19. Skill-improvement offer (post-summary)
+### 18. Skill-improvement offer (post-summary)
 
 If the session surfaced something the skill should have known but didn't — stale CODEOWNERS, missing vendor entry, "this exception name lies," a team reorg the registry hasn't caught up to — offer:
 
@@ -374,7 +365,7 @@ The skill is invocation-agnostic; it just calls MCPs. From Slack via the Apollo 
 
 ## Output Discipline
 
-- Always print the routing table **and** the proposed comments before requesting writes. The one exception is the **PD-responder batch** (see "PD-assignment batching" and Comment-discipline): those assignee/transition writes are approved via the batched `AskUserQuestion` in step 7 and don't produce free-text comments, so they don't require the routing table or `proposed-comment` blocks first. They still require explicit batch approval — they are never written silently.
+- Always print the numbered routing table — with proposed comments inline — before requesting writes. Approval is by row number (`approve 1,3`); `update <n>: …` revises a comment first. The one exception is the **PD-responder batch** (see "PD-assignment batching" and Comment-discipline): those assignee/transition writes are approved via the batched `AskUserQuestion` in step 7 and don't produce free-text comments, so they don't require the routing table first. They still require explicit batch approval — they are never written silently.
 - Cite Jira keys, never paraphrase tickets without the key.
 - Cite Glean URLs verbatim when claiming a CVE is unreachable or a runbook exists. Do not invent links.
 - Confidence is `high` / `med` / `low` and reflects how much you'd bet on the routing being correct without a reporter conversation. Vendor-recognized routes can start at `high`; auto-classifier-only routes start at `med` until verified.
@@ -418,7 +409,25 @@ Recognized patterns:
 
 No writes performed. Want the routing table, or to dig into one of the urgent rows?
 
-### Example 2 — pd-reconcile with PD-batch
+### Example 2 — triage mode, mine scope
+
+**User**: "Triage my findings."
+
+**Assistant**:
+*[Identity: adam.blackwell → @apolloio/devops, @apolloio/sre per GitHub teams. Confirmed.]*
+
+I found 6 tickets assigned to you. Routing table:
+
+| # | Key | Title | Class | Sev (raw → adj) | OWASP | Proposed action | Owner | Proposed comment | Reason | Confidence |
+| - | -------------------- | -------------------------------------- | ---------------- | --------------- | ----- | ------------------- | ---------- | ---------------- | -------------------------------------------- | ---------- |
+| 1 | INCIDENT-27148 | Same `secret_key_base` prod/staging | Manual ask | P4 → P2 | A02 | Work this sprint | @your-team | — | Cross-env secret parity = floor at P2 | high |
+| 2 | INCIDENT-28083-clone | Axios HTTP splitting in leadgenie/scripts | Security finding | P1 → P4 | A03 | Comment + downgrade | — | *(below)* | CI tooling path, CVSS context-adjusted | high |
+
+Row 2 comment: Triaged CVE-2026-40175 (raw CVSS: 10.0). The vulnerable path is `scripts/jira-incident-failed-tests/`, which is CI tooling — not a production serving path. Proposing context-adjusted severity P4 per the CVSS context-adjustment policy. Evidence: <glean-link>. cc @security-owner.
+
+Reply `approve 2` to post + downgrade, or `update 2: <new text>` to revise the comment first. Nothing is posted until you do.
+
+### Example 3 — pd-reconcile with PD-batch
 
 **User**: `/apollo-eng-devops:incident-triage pd-reconcile unassigned`
 
@@ -446,7 +455,7 @@ AskUserQuestion:
 
 After user picks "Yes" on both, execute the batches and print the per-ticket outcomes. No tables of proposed comments needed for these standard PD-reconcile actions — the templates are in `pd-alerts.md`.
 
-### Example 3 — recognition-first triage
+### Example 4 — recognition-first triage
 
 **User**: "Triage incidents."
 
@@ -465,12 +474,28 @@ AskUserQuestion:
 
 If user says y/n to the Shifter query, fetch it inline and confirm or refute the recognition before staging a route.
 
+### Example 5 — rename fallback
+
+**User**: "Triage them."
+
+**Assistant**:
+*\[For INCIDENT-29001, CODEOWNERS in `apolloio/leadgenie` points to `@apolloio/platform-engagement` for the affected path, but that slug is not in `apollo-dev-teams.yml`. Fuzzy match: `engagement-platform` at 0.83.\]*
+
+| # | Key | Proposed action | Proposed comment | Confidence |
+| - | --- | --- | --- | --- |
+| 1 | INCIDENT-29001 | Confirm reroute (`?`) | Possible reroute to Engagement Platform — CODEOWNERS in `leadgenie` references `@apolloio/platform-engagement`, not in `apollo-dev-teams.yml` (closest: `engagement-platform`, 0.83). Did you mean Engagement Platform? Assignee unchanged pending confirmation; CODEOWNERS may need updating. | low |
+
+*(Abbreviated table — the `Title`/`Class`/`Age`/`Sev` columns from the canonical step-13 format are omitted here for brevity.)*
+
+Row marked `?` confidence `low`. Will not auto-reroute. `approve 1` to post, `update 1: …` to revise.
+
 ## References
 
 - [`references/vendors.md`](references/vendors.md) — Upstream-vendor recognition index. Shifter, Redis Cloud, MongoDB Atlas, Cloudflare, etc. Use for fast recognition before investigation.
 - [`references/internal-tooling.md`](references/internal-tooling.md) — Pantheon, Apollo Agent classifier, jira-bot. Trust-description-not-labels rules.
 - [`references/team-state-2026.md`](references/team-state-2026.md) — Org snapshot. BE Platform + DevOps rosters with "functionally on X" annotations. CRM Platform → deals-intelligence reorg, FE Platform → fabric-surfaces split. Overrides registry routing.
 - [`references/pd-alerts.md`](references/pd-alerts.md) — PD/Grafana FIRING alerts: identification, extraction, PD status reconciliation, routing
+- [`references/pd-access.md`](references/pd-access.md) — PD read access: MCP states (401/403 handling), `pd` CLI fallback, install commands
 - [`references/finding-sources.md`](references/finding-sources.md) — Security source labels (Kodem, Orca, Bugcrowd, Panther, claude-security): per-source extraction
 - [`references/team-lookup.md`](references/team-lookup.md) — Identity resolution, CODEOWNERS lookup, rename fallback
 - [`references/owasp-ranking.md`](references/owasp-ranking.md) — OWASP Top 10 with Apollo context, for security finding severity ranking

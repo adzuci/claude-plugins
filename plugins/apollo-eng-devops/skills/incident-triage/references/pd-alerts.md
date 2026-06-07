@@ -54,7 +54,7 @@ For each PD-linked ticket, fetch PD status (`get_incident`) if MCP available, th
 | PD `acknowledged` by a named responder | Propose assignee = responder, transition Jira to **In Progress**. Ack means someone is investigating. |
 | PD has comments/notes from a human responder (any state) | Propose transition to **In Progress** if not already. Comments are investigation evidence. |
 | PD `resolved`, no human acks or comments (auto-resolved flap) | Propose transition to **In Review** or leave Open + add `linked-pd-auto-resolved` comment. **Do not close.** |
-| PD `resolved`, had human ack/comments, no follow-up Jira activity in 7+ days | Propose **Close (No Action)** with `linked-pd-resolved` comment citing the PD work. Closing represents human sign-off, not PD state. |
+| PD `resolved`, had human ack/comments, no follow-up Jira activity in 7+ days | **Gated.** Before proposing Close, extract any Slack URL from the PD notes/log entries and read the thread to confirm no open action items (see "Confirm Slack context before closing"). If the thread is clean → propose **Close (No Action)** with `linked-pd-resolved` comment citing the PD work. If a Slack link exists but can't be read → downgrade to **Ask assignee to confirm + close**. Closing represents human sign-off, not PD state. |
 | PD `resolved`, Jira already has follow-up comments / linked PRs | Leave as-is — humans are working it. Note status in the row, propose no transition. |
 
 If PD MCP isn't available, propose `needs PD verification` and link the PD URL in the comment — do not guess the PD state from the Jira title's `[FIRING:N]` / `[RESOLVED:N]` prefix alone, since that reflects the alert at ticket creation, not the current PD state.
@@ -65,6 +65,18 @@ If PD MCP isn't available, propose `needs PD verification` and link the PD URL i
 - The Jira's purpose is the **human follow-up loop**: did we acknowledge, investigate, fix the root cause, file a runbook?
 - A PD that auto-resolved with no human touch usually means the condition recovered on its own. The Jira should stay open until someone decides whether to investigate or to tune the alert — closing it silently loses signal.
 - A PD that resolved after human ack + comments is closer to "done," but the Jira should still capture the outcome before closing: was there a fix? An accepted risk? A follow-up ticket?
+
+### Confirm Slack context before closing
+
+A PD `resolved` status plus a human resolution note is **not** sufficient to close the Jira. Investigation almost always continues in Slack, and the PD note is written before that follow-up lands.
+
+Before proposing any Close (No Action) / resolve for a PD-resolved ticket:
+
+1. Extract any Slack URL (`slack.com/archives/`, `<workspace>.slack.com/...`) from the PD incident's notes and log entries (`list_log_entries`).
+1. Follow that link and read the thread. Confirm there are **no remaining action items** — no "still need to," no open follow-up ticket, no unresolved backlog.
+1. Only if the thread is clean → propose Close. If a Slack link exists but you cannot read it (no access, dead link), **downgrade the proposal from Close to "Ask assignee to confirm + close"** rather than auto-closing.
+
+Why: a real miss — a PD auto-marked `resolved` with a note ("worker fixed"); the skill proposed Close, but the Slack thread showed the worker's retry-set backlog was still draining and follow-up was unresolved. The note described the immediate fix, not the full follow-up loop. Slack is the source of truth for whether the human loop is done.
 
 ## Duplicate handling
 
@@ -103,6 +115,6 @@ A PD alert lifts to the urgent list when any of:
 - **PD with human comments, Jira still Open** → propose transition to In Progress. Comments = investigation.
 - **Open PD, no assignee, no comments** → propose assignee = PD on-call responder; leave state Open until ack.
 - **Auto-resolved PD, no human touch** → propose comment summarizing the flap; leave Open or move to In Review for someone to decide on tuning. Do not close.
-- **Resolved PD with prior human ack, no Jira follow-up in 7+ days** → propose Close (No Action) with the PD work cited. The human loop is done.
+- **Resolved PD with prior human ack, no Jira follow-up in 7+ days** → first extract any Slack URL from the PD notes/log entries and read the thread to confirm no open action items (see "Confirm Slack context before closing"). Thread clean → propose Close (No Action) with the PD work cited. Slack link present but unreadable → downgrade to "Ask assignee to confirm + close." A resolution note alone is not sign-off — the human loop is only done once Slack confirms it.
 - **Recurring alert with no runbook** → propose linking the prior ticket as `Relates` + draft an INFRA ticket body for a runbook (do not create until approved).
 - **Flapping alert with low signal** → propose surfacing to the alert owner with `pd-tune-this-alert` comment.
