@@ -16,7 +16,7 @@
 ## Origin
 
 - Eng-leadership questionnaire from Griffin Brodman / Piotr Dyba
-- [Slack thread](https://apolloio.slack.com/archives/C0469GJ8281/p1773933687939499?thread_ts=1773933419.150089&cid=C0469GJ8281)
+- [Original Slack thread](https://apolloio.slack.com/archives/C0469GJ8281/p1773933687939499?thread_ts=1773933419.150089&cid=C0469GJ8281)
 
 ## Installing the Notion MCP Server
 

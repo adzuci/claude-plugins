@@ -190,6 +190,20 @@ def check_tool_search_threshold():
     return _sig(1 if tuned else 0, threshold, fix)
 
 
+def check_default_model():
+    settings = _load_settings()
+    model = settings.get("model", "")
+    if not model or "opus" in model.lower():
+        return _sig(
+            0,
+            model or None,
+            "Default model is Opus (or unset, defaulting to Opus). "
+            "Set Sonnet as your default and reach for Opus only when the task needs deep reasoning:\n"
+            '  "model": "claude-sonnet-4-6"  # in ~/.claude/settings.json',
+        )
+    return _sig(1, model)
+
+
 def check_memory_populated():
     dirs = list(Path.home().glob(".claude/projects/*/memory"))
     dirs.append(Path.home() / ".claude" / "memory")
@@ -236,6 +250,7 @@ def main():
             "permission_mode_non_auto": check_permission_mode(),
             "tool_search_tuned": check_tool_search_threshold(),
             "memory_populated": check_memory_populated(),
+            "default_model_not_opus": check_default_model(),
         },
         "info": _collect_info(settings),
     }

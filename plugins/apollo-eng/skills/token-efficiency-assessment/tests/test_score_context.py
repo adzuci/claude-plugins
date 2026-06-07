@@ -5,20 +5,20 @@ score = pytest.importorskip("score")
 
 class TestVerdictScaling:
     def test_verdict_max_22(self):
-        # 82% of 22 = 18.04, so need 19+ for "Yes"
-        # 55% of 22 = 12.1, so need 13+ for "Needs improvement"
-        assert score._verdict(19, 22) == "Yes"
-        assert score._verdict(18, 22) == "Needs improvement"
-        assert score._verdict(13, 22) == "Needs improvement"
-        assert score._verdict(12, 22) == "No"
+        # 82% of 22 = 18.04, so need 19+ for "Ready"
+        # 55% of 22 = 12.1, so need 13+ for "Almost There"
+        assert score._verdict(19, 22) == "Ready"
+        assert score._verdict(18, 22) == "Almost There"
+        assert score._verdict(13, 22) == "Almost There"
+        assert score._verdict(12, 22) == "Building Habits"
 
     def test_verdict_max_23(self):
-        # 82% of 23 = 18.86, so need 19+ for "Yes"
-        # 55% of 23 = 12.65, so need 13+ for "Needs improvement"
-        assert score._verdict(19, 23) == "Yes"
-        assert score._verdict(18, 23) == "Needs improvement"
-        assert score._verdict(13, 23) == "Needs improvement"
-        assert score._verdict(12, 23) == "No"
+        # 82% of 23 = 18.86, so need 19+ for "Ready"
+        # 55% of 23 = 12.65, so need 13+ for "Almost There"
+        assert score._verdict(19, 23) == "Ready"
+        assert score._verdict(18, 23) == "Almost There"
+        assert score._verdict(13, 23) == "Almost There"
+        assert score._verdict(12, 23) == "Building Habits"
 
 
 class TestContextSignalScoring:
@@ -27,11 +27,9 @@ class TestContextSignalScoring:
         answers = {
             "uses_compact": "yes",
             "context_window_pct": "under_50",
-            "checks_ccflare": "yes",
             "fresh_conversations": "yes",
             "log_sharing": "files",
             "image_pasting": "never",
-            "prompt_language": "english",
             "model_switching": "yes",
             "opus_only": "yes",
             "opusplan_known": "yes_use",
@@ -40,6 +38,7 @@ class TestContextSignalScoring:
             "batching": "yes",
             "subagent_overuse": "no",
             "mcp_payloads_reasonable": "yes",
+            "checks_cost": "yes",
         }
 
         env_scored = {}
@@ -70,7 +69,7 @@ class TestContextSignalScoring:
 
         assert max_score == 23
         assert context_scored[score.CONTEXT_SIGNAL_LABEL]["score"] == 1
-        assert total == 16  # env=0, context=1, answers=15
+        assert total == 15  # env=0, context=1, answers=14
 
     def test_context_signal_fail_generates_fix(self):
         context_data = {

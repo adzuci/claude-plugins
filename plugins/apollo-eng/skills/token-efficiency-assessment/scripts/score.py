@@ -41,11 +41,9 @@ import sys
 ANSWER_LABELS = {
     "uses_compact":               "Uses /compact or /clear proactively",
     "context_window_pct":         "Context window under 50%",
-    "checks_ccflare":             "Checks ccflare dashboard",
     "fresh_conversations":        "Starts fresh conversations per task",
     "log_sharing":                "Points Claude to files on disk (not pasted inline)",
     "image_pasting":              "Does not paste images into chat",
-    "prompt_language":            "Writes prompts in English",
     "model_switching":            "Switches to Haiku/Sonnet for simple tasks",
     "opus_only":                  "Uses Opus only for deep-reasoning tasks",
     "opusplan_known":             "Knows and uses opusplan mode",
@@ -54,6 +52,7 @@ ANSWER_LABELS = {
     "batching":                   "Batches related changes in one conversation",
     "subagent_overuse":           "Does not overuse subagents (uses Grep/Glob instead)",
     "mcp_payloads_reasonable":    "MCP tool call payloads are a reasonable size",
+    "checks_cost":                "Uses /cost to monitor spend mid-session",
 }
 
 # Scoring lookup: answer value → score
@@ -64,11 +63,9 @@ ANSWER_SCORE_MAP = {
     #                              yes      partial    no
     "uses_compact":               {"yes": 1, "sometimes": 0.5, "no": 0},
     "context_window_pct":         {"under_50": 1, "50_to_80": 0.5, "over_80": 0, "unsure": 0},
-    "checks_ccflare":             {"yes": 1, "no": 0, "unsure": 0},          # binary
     "fresh_conversations":        {"yes": 1, "sometimes": 0.5, "no": 0},
     "log_sharing":                {"files": 1, "mix": 0.5, "inline": 0},
     "image_pasting":              {"never": 1, "sometimes": 0.5, "often": 0},
-    "prompt_language":            {"english": 1, "mixed": 0.5, "non_english": 0},
     "model_switching":            {"yes": 1, "sometimes": 0.5, "no": 0},
     "opus_only":                  {"yes": 1, "sometimes": 0.5, "no": 0},
     "opusplan_known":             {"yes_use": 1, "yes_know": 0.5, "no": 0},  # use > know > unaware
@@ -77,6 +74,7 @@ ANSWER_SCORE_MAP = {
     "batching":                   {"yes": 1, "sometimes": 0.5, "no": 0},
     "subagent_overuse":           {"no": 1, "sometimes": 0.5, "yes": 0},
     "mcp_payloads_reasonable":    {"yes": 1, "sometimes": 0.5, "no": 0},
+    "checks_cost":                {"yes": 1, "sometimes": 0.5, "no": 0},
 }
 
 ENV_SIGNAL_LABELS = {
@@ -87,6 +85,7 @@ ENV_SIGNAL_LABELS = {
     "permission_mode_non_auto":   "Uses non-auto-accept permission mode",
     "tool_search_tuned":          "Tool Search threshold tuned below default",
     "memory_populated":           "Caches repeated context in memory",
+    "default_model_not_opus":     "Default model set to Sonnet/Haiku (not Opus)",
 }
 
 CONTEXT_SIGNAL_LABEL = "context_clean"
@@ -94,17 +93,17 @@ CONTEXT_SIGNAL_DESC = "Context baseline is clean (≤15%, no problematic items)"
 
 
 def _verdict(score, max_score=22):
-    # Thresholds scale with max_score. Base thresholds for max 22:
-    # - Ready: 18+ (82%)
-    # - Needs improvement: 12-17 (55-77%)
-    # - Not ready: <12 (<55%)
+    # Thresholds scale with max_score. Default 22 = without context (8 env + 14 answers).
+    # - Ready: 82%+
+    # - Almost There: 55-81%
+    # - Building Habits: <55%
     ready_threshold = max_score * 0.82
     needs_improvement_threshold = max_score * 0.55
     if score >= ready_threshold:
-        return "Yes"
+        return "Ready"
     elif score >= needs_improvement_threshold:
-        return "Needs improvement"
-    return "No"
+        return "Almost There"
+    return "Building Habits"
 
 
 def main():
@@ -193,7 +192,7 @@ def main():
         [s["label"] for s in env_scored.values() if s["score"] == 1]
         + [s["label"] for s in context_scored.values() if s["score"] == 1]
         + [s["label"] for s in answer_scored.values() if s["score"] == 1]
-    )
+    )[:5]
 
     red_flags = (
         [
