@@ -1,0 +1,3 @@
+# Runtime deps for the oncall scripts: none — they use only the Python standard library
+# and shell out to the PagerDuty CLI (`pd`). This file exists so CI's dependency
+# auto-install step has a target; keep it empty unless a real dependency is added.
