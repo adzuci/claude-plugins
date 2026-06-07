@@ -1,7 +1,8 @@
 ---
 name: gameday
-description: Run a MongoDB incident gameday — tabletop or live failure drills built from Apollo's real Mongo RCAs. Activate when someone wants to practice incident response, run a gameday or fire drill, rehearse a Mongo failure scenario, or onboard to on-call by simulating production incidents.
+description: Manual-invocation only. Run a MongoDB incident gameday — tabletop or live failure drills built from Apollo's real Mongo RCAs, to practice incident response, rehearse a Mongo failure scenario, or onboard to on-call. Run via /apollo-eng-devops:gameday.
 argument-hint: optional scenario name, or --list to see the catalog, or --live for a live drill
+disable-model-invocation: true
 ---
 
 # Mongo Gameday
