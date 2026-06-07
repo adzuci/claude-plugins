@@ -2,6 +2,8 @@
 
 The largest class of INCIDENT tickets by volume. PD auto-creates a Jira ticket whenever a Grafana/Prometheus alert fires (and sometimes when one resolves). They look like `[FIRING:N] <alert name> [<service-group>] (<labels>)`.
 
+**Before applying the rules in this file, scan the title and labels against [`vendors.md`](vendors.md).** Many PD alerts fire because of a recognizable upstream vendor pattern (Shifter self-spam, Redis Cloud slowlog, Cloudflare 5XX bursts, etc.). Recognition collapses the investigation — the vendor entry tells you the known failure shape and routing decision in one step.
+
 ## Identification
 
 A ticket is a PD alert if any of:
@@ -73,6 +75,18 @@ PD alerts dedupe heavily because the same flapping condition fires repeatedly. B
 - **Different alert titles but same PD service in the same firing window** → likely the same incident with multiple alert rules firing. Link with `Relates` and pick one as the "lead" for the postmortem.
 
 Examples: INCIDENT-29054 + INCIDENT-28316 are the same Sidekiq crawler worker alert firing on two different days — these are a **recurring failure**, not duplicates. Link as `Relates`, flag the runbook gap.
+
+## Vendor self-spam patterns
+
+When a PD alert fires for a worker or service that calls an external vendor, **always check whether *Apollo* caused the failure before assuming the vendor failed.** Pattern is common enough to deserve its own triage step.
+
+The flagship example is the **Shifter self-spam** pattern documented in [`vendors.md`](vendors.md):
+
+- `Crawler::SearchEngineLinkedinPersonUpdaterWorker` errors burst with `Net::HTTPClientException: 403 "Forbidden"` wrapped as `RuntimeError("Something is wrong with VPN setup")`.
+- The exception name suggests an upstream VPN/proxy outage, but in practice the cause is usually Apollo's outbound rate exceeding Shifter tolerance (the recurring pattern across INCIDENT-29534, 29054, 28316, 28094).
+- **Triage step**: before staging a route to native-data with "Shifter outage" framing, query Tempo for `rate({span.net.peer.name=~".*shifter\\.io"})` over the alert window. Baseline is ~3–7 req/s. If our rate during the burst was 10–100× baseline (saw 167× in INCIDENT-29534), we caused it. The proposed action becomes "find what enqueued the surge," not "wait for Shifter to recover."
+
+General rule: **if an alert names a worker/endpoint that touches an external vendor, do the cheap "our outbound rate" check first.** Vendor entries in `vendors.md` enumerate the recognition signals and the relevant Grafana queries.
 
 ## Urgent skim signals
 
