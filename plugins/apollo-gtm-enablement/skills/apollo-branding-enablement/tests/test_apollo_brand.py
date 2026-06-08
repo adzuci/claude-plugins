@@ -17,23 +17,49 @@ SCRIPT_DIR = Path(__file__).resolve().parent.parent / "scripts"
 sys.path.insert(0, str(SCRIPT_DIR))
 
 import apollo_brand  # noqa: E402
+from pptx import Presentation  # noqa: E402
+from pptx.util import Inches  # noqa: E402
+
+
+# ---- color ----
+
+
+def test_color_resolves_palette_role():
+    c = apollo_brand.color("night")
+    assert str(c) == "243031"
+
+
+def test_color_resolves_raw_hex():
+    assert str(apollo_brand.color("1A1A1A")) == "1A1A1A"
+    assert str(apollo_brand.color("#1A1A1A")) == "1A1A1A"
+
+
+def test_palette_has_core_roles():
+    for role in ("ink", "white", "paper", "night", "sun", "mist"):
+        assert role in apollo_brand.PALETTE
+
+
+# ---- fonts ----
+
+
+def test_font_roles_are_scotts_stack():
+    assert apollo_brand.FONT_DISPLAY == "Space Grotesk"
+    assert apollo_brand.FONT_BODY == "DM Sans"
+    assert apollo_brand.FONT_MONO == "DM Mono"
+
+
+def test_known_fonts_include_stack_and_fallbacks():
+    for f in ("Space Grotesk", "DM Sans", "DM Mono", "Arial", "Consolas"):
+        assert f in apollo_brand.KNOWN_FONTS
 
 
 # ---- asset_path ----
 
 
 def test_asset_path_resolves_existing_logo():
-    p = apollo_brand.asset_path("icon-white")
-    assert p.is_file()
-    assert p.name == "apollo-icon-white.png"
-
-
-def test_asset_path_resolves_all_known_variants():
-    for variant in (
-        "icon-white", "icon-stone", "icon-sun",
-        "lockup-white", "lockup-stone", "lockup-sun",
-    ):
-        assert apollo_brand.asset_path(variant).is_file()
+    for variant in ("icon-sun", "icon-stone"):
+        p = apollo_brand.asset_path(variant)
+        assert p.is_file() and p.name == f"apollo-{variant}.png"
 
 
 def test_asset_path_raises_for_unknown_variant():
@@ -41,105 +67,96 @@ def test_asset_path_raises_for_unknown_variant():
         apollo_brand.asset_path("icon-purple")
 
 
-# ---- validate_text ----
+# ---- canvas ----
 
 
-def test_validate_text_passes_clean_string():
-    assert apollo_brand.validate_text("This is a normal sentence.") == []
+def test_canvas_matches_reference_decks():
+    assert apollo_brand.SLIDE_W == Inches(10.0)
+    assert apollo_brand.SLIDE_H == Inches(5.625)
 
 
-def test_validate_text_flags_em_dash():
-    errors = apollo_brand.validate_text("Apollo — the revenue engine")
-    assert any("em-dash" in e for e in errors)
+# ---- verify_deck ----
 
 
-def test_validate_text_flags_emoji():
-    errors = apollo_brand.validate_text("Apollo is fast 🚀")
-    assert any("emoji" in e for e in errors)
-
-
-def test_validate_text_flags_legacy_color():
-    errors = apollo_brand.validate_text("Background should be #1A1A1A.")
-    assert any("#1A1A1A" in e for e in errors)
-
-
-def test_validate_text_flags_legacy_color_case_insensitively():
-    errors = apollo_brand.validate_text("Background should be #1a1a1a.")
-    assert any("#1A1A1A" in e for e in errors)
-
-
-# ---- set_background ----
-
-
-def test_set_background_rejects_invalid_color():
-    class FakeSlide:
-        class background:
-            class fill:
-                @staticmethod
-                def solid():
-                    pass
-
-    with pytest.raises(ValueError, match="orange"):
-        apollo_brand.set_background(FakeSlide(), "orange")
-
-
-# ---- check_font_size ----
-
-
-def test_check_font_size_allows_in_scale():
-    for pt in (12, 14, 16, 20, 24, 32, 48, 64, 96):
-        apollo_brand.check_font_size(pt)  # no raise
-
-
-def test_check_font_size_rejects_off_scale():
-    with pytest.raises(ValueError, match="off-scale"):
-        apollo_brand.check_font_size(18)
-
-
-# ---- assert_text_color ----
-
-
-def test_assert_text_color_allows_white():
-    apollo_brand.assert_text_color(apollo_brand.RGBColor(0xFF, 0xFF, 0xFF))
-
-
-def test_assert_text_color_allows_stone():
-    apollo_brand.assert_text_color(apollo_brand.RGBColor(0x25, 0x25, 0x21))
-
-
-def test_assert_text_color_rejects_apollo_sun():
-    with pytest.raises(ValueError, match="Yellow text"):
-        apollo_brand.assert_text_color(apollo_brand.RGBColor(0xFB, 0xF5, 0x00))
-
-
-def test_assert_text_color_rejects_any_yellow():
-    # A generic bright yellow not in the brand palette
-    with pytest.raises(ValueError, match="Yellow text"):
-        apollo_brand.assert_text_color(apollo_brand.RGBColor(0xFF, 0xFF, 0x00))
-
-
-def test_assert_text_color_allows_mid_blue():
-    # Blue should never be flagged as yellow
-    apollo_brand.assert_text_color(apollo_brand.RGBColor(0x00, 0x80, 0xFF))
-
-
-# ---- end-to-end smoke test using the toolkit ----
-
-
-def test_can_build_minimal_deck_with_toolkit(tmp_path):
-    """Compose a one-slide deck using only toolkit primitives to confirm
-    they cooperate with python-pptx end-to-end."""
-    from pptx import Presentation
-
+def _new_deck():
     deck = Presentation()
     deck.slide_width = apollo_brand.SLIDE_W
     deck.slide_height = apollo_brand.SLIDE_H
+    return deck
 
+
+def test_verify_deck_clean_on_well_formed_slide(tmp_path):
+    deck = _new_deck()
     slide = deck.slides.add_slide(deck.slide_layouts[6])
-    apollo_brand.set_background(slide, "stone")
-    apollo_brand.add_chrome(slide, bg="stone", page_number=1)
-    apollo_brand.add_speaker_notes(slide, "Test notes")
-
-    out = tmp_path / "smoke.pptx"
+    apollo_brand.set_background(slide, "night")
+    apollo_brand.add_text(
+        slide, "Hello", left=Inches(0.6), top=Inches(2.0),
+        width=Inches(6), height=Inches(1), size=32,
+        font=apollo_brand.FONT_DISPLAY, fill="white", autosize=False,
+    )
+    apollo_brand.add_chrome(slide, bg="night", page_number=1)
+    out = tmp_path / "clean.pptx"
     deck.save(str(out))
-    assert out.exists() and out.stat().st_size > 0
+    assert apollo_brand.verify_deck(str(out)) == []
+
+
+def test_verify_deck_flags_text_off_slide(tmp_path):
+    deck = _new_deck()
+    slide = deck.slides.add_slide(deck.slide_layouts[6])
+    apollo_brand.add_text(
+        slide, "way out", left=Inches(9.5), top=Inches(1),
+        width=Inches(4), height=Inches(1), size=16, autosize=False,
+    )
+    out = tmp_path / "offslide.pptx"
+    deck.save(str(out))
+    issues = apollo_brand.verify_deck(str(out))
+    assert any("off-slide" in i for i in issues)
+
+
+def test_verify_deck_flags_text_collision(tmp_path):
+    deck = _new_deck()
+    slide = deck.slides.add_slide(deck.slide_layouts[6])
+    # two same-size boxes drifting into each other (~83% partial overlap)
+    apollo_brand.add_text(
+        slide, "AAAA", left=Inches(1.0), top=Inches(1),
+        width=Inches(3), height=Inches(1), size=16, autosize=False,
+    )
+    apollo_brand.add_text(
+        slide, "BBBB", left=Inches(1.5), top=Inches(1),
+        width=Inches(3), height=Inches(1), size=16, autosize=False,
+    )
+    out = tmp_path / "collide.pptx"
+    deck.save(str(out))
+    issues = apollo_brand.verify_deck(str(out))
+    assert any("collision" in i for i in issues)
+
+
+def test_verify_deck_flags_unknown_font(tmp_path):
+    deck = _new_deck()
+    slide = deck.slides.add_slide(deck.slide_layouts[6])
+    apollo_brand.add_text(
+        slide, "stray", left=Inches(1), top=Inches(1),
+        width=Inches(3), height=Inches(1), size=16, font="Comic Sans MS", autosize=False,
+    )
+    out = tmp_path / "font.pptx"
+    deck.save(str(out))
+    issues = apollo_brand.verify_deck(str(out))
+    assert any("unknown font" in i for i in issues)
+
+
+def test_verify_deck_allows_card_behind_text(tmp_path):
+    """A filled card (no text) layered behind a label must NOT be a collision."""
+    from pptx.enum.shapes import MSO_SHAPE
+
+    deck = _new_deck()
+    slide = deck.slides.add_slide(deck.slide_layouts[6])
+    card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1), Inches(1), Inches(4), Inches(2))
+    card.fill.solid()
+    card.fill.fore_color.rgb = apollo_brand.color("mist")
+    apollo_brand.add_text(
+        slide, "label on card", left=Inches(1.2), top=Inches(1.2),
+        width=Inches(3.5), height=Inches(0.4), size=13, autosize=False,
+    )
+    out = tmp_path / "cardtext.pptx"
+    deck.save(str(out))
+    assert apollo_brand.verify_deck(str(out)) == []

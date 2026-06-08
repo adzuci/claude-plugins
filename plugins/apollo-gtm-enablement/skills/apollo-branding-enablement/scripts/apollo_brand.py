@@ -1,128 +1,168 @@
-"""Apollo brand toolkit for python-pptx deck builds.
+"""Apollo GTME deck toolkit — light helpers + a post-build verifier.
 
-This module exposes the Apollo brand constants and a few small helpers so
-build scripts written per-deck don't have to re-encode colors, font names,
-asset paths, or banned-content checks. Layout decisions are intentionally
-NOT in here — those are the deck author's job per Scott's design system.
+Philosophy: the deck author (the model) owns every layout decision and writes
+a fresh python-pptx script per deck. This module does NOT cage that freedom —
+there are no validators that reject font sizes, colors, or characters. It only
+provides:
+
+  1. Reference constants — the real palette, fonts (with safe fallbacks),
+     canvas size, and chrome geometry extracted from the reference decks that
+     look good. Use them or override them per deck.
+  2. Optional convenience helpers — set_background, add_chrome, add_text,
+     add_speaker_notes. Use them or roll your own.
+  3. verify_deck(path) — the functional guarantee. Run it AFTER building. It
+     catches the glitch class that actually broke past decks: shapes off the
+     slide, two text boxes colliding, and fonts that will not render. Fix
+     whatever it flags and rebuild.
+
+The functional guarantee lives in verification AFTER the build, not in
+restrictions BEFORE it — so design stays free and output stays correct.
 
 Usage from a build script:
 
-    from apollo_brand import COLORS, FONT_BODY, FONT_DISPLAY, asset_path,
-                             add_chrome, set_background, validate_text
+    from apollo_brand import (
+        PALETTE, FONT_DISPLAY, FONT_BODY, FONT_MONO,
+        SLIDE_W, SLIDE_H, set_background, add_chrome, add_text, verify_deck,
+    )
 
     deck = Presentation()
     deck.slide_width = SLIDE_W
     deck.slide_height = SLIDE_H
-
     slide = deck.slides.add_slide(deck.slide_layouts[6])
-    set_background(slide, "stone")
-    add_chrome(slide, bg="stone", page_number=1)
-    # ... add your shapes/text using COLORS, FONT_*, etc.
-
+    set_background(slide, "night")
+    # ... compose freely ...
+    add_chrome(slide, bg="night", page_number=1)
     deck.save("/tmp/gtme-decks/my-deck.pptx")
 
-When Apollo's brand spec changes, update only this file. See the
-sibling SKILL.md for the full design system.
+    issues = verify_deck("/tmp/gtme-decks/my-deck.pptx")
+    assert not issues, issues
+
+See SKILL.md for the full design reference (palette roles, type scale,
+card patterns, slide-type recipes).
 """
 from __future__ import annotations
 
-import re
+import sys
 from pathlib import Path
 
+from pptx import Presentation
 from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN
-from pptx.util import Inches, Pt
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.text import MSO_AUTO_SIZE, PP_ALIGN
+from pptx.util import Emu, Inches, Pt
 
 # ---------------------------------------------------------------------------
-# Brand constants
+# Canvas — matches the reference decks (16:9 at Google-Slides scale)
 # ---------------------------------------------------------------------------
 
-# Apollo's three core tokens (Scott's brand spec)
-COLORS = {
-    "sun": RGBColor(0xFB, 0xF5, 0x00),
-    "stone": RGBColor(0x25, 0x25, 0x21),
-    "off-white": RGBColor(0xF9, 0xF9, 0xF6),
-    "white": RGBColor(0xFF, 0xFF, 0xFF),
+SLIDE_W = Inches(10.0)
+SLIDE_H = Inches(5.625)
+
+# ---------------------------------------------------------------------------
+# Palette — the working palette from the reference decks, with role names.
+# These are the colors the good decks actually use. Pass a role name to the
+# helpers, or pass any "RRGGBB" hex string directly — nothing is rejected.
+# ---------------------------------------------------------------------------
+
+PALETTE = {
+    # text / ink
+    "ink": "1A1A1A",        # primary text on light backgrounds
+    "white": "FFFFFF",      # text on dark backgrounds
+    "muted": "736F6C",      # secondary text
+    "muted-2": "94918E",    # tertiary / captions
+    "muted-3": "47423D",    # dark muted
+    # surfaces (light)
+    "paper": "F3F0EE",      # primary light slide background
+    "paper-2": "F2F0EB",    # cream variant
+    "paper-3": "F7F5F2",    # lightest cream
+    # surfaces (dark)
+    "night": "243031",      # primary dark slide background / cover
+    # accents
+    "sun": "F8FF2C",        # primary yellow accent (chips, accent bar, highlights)
+    "sun-deep": "E1F000",   # deeper yellow (numbered chips, "done" nodes)
+    "sun-pale": "FEFFD9",   # pale yellow callout card
+    "mist": "CCC9C6",       # neutral grey card fill
+    "lavender": "C9C6D3",   # section tint
+    "steel": "3A6783",      # blue section tint
+    "lime": "C8CC3C",       # lime section tint
+    # semantic (use sparingly, only when the data calls for it)
+    "success": "22C55E",
+    "danger": "EF4444",
+    "amber": "F59E0B",
 }
 
-# Body text color per slide background (per Scott's slide color system)
-TEXT_FOR_BG = {
-    "stone": COLORS["white"],
-    "sun": COLORS["stone"],
-    "off-white": COLORS["stone"],
+# Default body-text color per common background role
+TEXT_ON = {
+    "night": "white",
+    "steel": "white",
+    "ink": "white",
+    "paper": "ink",
+    "paper-2": "ink",
+    "paper-3": "ink",
+    "sun": "ink",
+    "sun-deep": "ink",
+    "sun-pale": "ink",
+    "mist": "ink",
+    "lavender": "ink",
+    "lime": "ink",
 }
 
-# Icon variant to use for each background (per mandatory chrome rules)
+# ---------------------------------------------------------------------------
+# Typography — Google Fonts the reference decks use, each with a metric-close
+# fallback so layout survives when the licensed font is not installed on the
+# viewer's machine. Always pass these through add_text / set the run font name.
+# ---------------------------------------------------------------------------
+
+FONT_DISPLAY = "Space Grotesk"   # titles, hero, section heads. Fallback: Arial
+FONT_BODY = "DM Sans"            # body copy, bullets, cards. Fallback: Arial
+FONT_MONO = "DM Mono"            # labels, metrics, code, SFDC names. Fallback: Consolas
+
+# Fonts we know render acceptably (licensed Google Fonts + universal fallbacks).
+# verify_deck flags anything outside this set so a stray Calibri/Times does not
+# silently ship.
+KNOWN_FONTS = {
+    FONT_DISPLAY, FONT_BODY, FONT_MONO,
+    "Arial", "Helvetica", "Helvetica Neue", "Consolas", "Courier New",
+}
+
+# Chrome geometry (matches reference decks)
+CHROME_MARGIN = Inches(0.35)
+ACCENT_BAR_W = Inches(0.06)
+
+# Apollo sunburst mark variant per background: the Apollo Sun (yellow) mark on
+# dark backgrounds, the Stone (dark) mark on light/yellow backgrounds. Both are
+# the real Apollo sunburst (square, transparent) bundled under assets/.
 ICON_FOR_BG = {
-    "stone": "icon-white",
-    "sun": "icon-stone",
-    "off-white": "icon-stone",
+    "night": "icon-sun", "steel": "icon-sun", "ink": "icon-sun",
+    "paper": "icon-stone", "paper-2": "icon-stone", "paper-3": "icon-stone",
+    "sun": "icon-stone", "sun-deep": "icon-stone", "sun-pale": "icon-stone",
+    "mist": "icon-stone", "lavender": "icon-stone", "lime": "icon-stone",
 }
 
-# Typography (falls back if viewer's machine doesn't have the licensed fonts)
-FONT_DISPLAY = "SeasonMix Variable"
-FONT_BODY = "ABC Diatype"
-
-# Allowed font scale per Scott's "Off-scale font sizes" ban (in points)
-FONT_SCALE_PT = {12, 14, 16, 20, 24, 32, 48, 64, 96}
-
-# Allowed border radii per Scott's spec (in points; convert to EMU at use)
-ALLOWED_RADII_PT = {8, 12, 24}
-
-# Slide dimensions (16:9 widescreen)
-SLIDE_W = Inches(13.333)
-SLIDE_H = Inches(7.5)
-
-# Default session label (override per deck if needed)
-DEFAULT_SESSION_LABEL = "GTM ENABLEMENT TRAINING"
-
-# Chrome positioning (24px from edges per Scott's spec; ~0.24in at slide DPI)
-CHROME_MARGIN_IN = 0.24
-CHROME_FONT_PT = 12  # closest allowed scale point to the 10-11pt spec
-
-# Asset directory (PNGs live in sibling assets/ folder)
+# Bundled logo assets (PNGs in sibling assets/ folder)
 ASSET_DIR = Path(__file__).resolve().parent.parent / "assets"
 
-# Approved backgrounds — anything else should fail validation
-VALID_BACKGROUNDS = {"stone", "sun", "off-white"}
+
+# ---------------------------------------------------------------------------
+# Color helper
+# ---------------------------------------------------------------------------
+
+
+def color(name_or_hex: str) -> RGBColor:
+    """Resolve a palette role name (e.g. "night") or a raw "RRGGBB" hex string
+    to an RGBColor. Raw hex is accepted as-is — no color is rejected."""
+    hexval = PALETTE.get(name_or_hex, name_or_hex).lstrip("#")
+    return RGBColor.from_string(hexval)
 
 
 # ---------------------------------------------------------------------------
-# Banned content per Scott's "BANNED. ZERO TOLERANCE" section
-# ---------------------------------------------------------------------------
-
-BANNED_CHARS = {"—": "em-dash (U+2014); use a period, colon, or parentheses"}
-
-EMOJI_PATTERN = re.compile(
-    "["
-    "\U0001f600-\U0001f64f"
-    "\U0001f300-\U0001f5ff"
-    "\U0001f680-\U0001f6ff"
-    "\U0001f1e0-\U0001f1ff"
-    "\U00002700-\U000027bf"
-    "\U0001f900-\U0001f9ff"
-    "]+"
-)
-
-LEGACY_COLOR_TOKENS = frozenset({
-    "#F8FF2C", "#E8FF00", "#FEFF2C", "#E1F000",  # legacy yellows
-    "#1A1A1A", "#243031", "#243332",  # legacy darks
-    "#F2F0EB", "#F3F0EE", "#C6C3C0",  # legacy creams
-    "#C8CC3C", "#C9C6D3", "#DCDDAD",  # retired
-})
-
-
-# ---------------------------------------------------------------------------
-# Helpers
+# Asset helper
 # ---------------------------------------------------------------------------
 
 
 def asset_path(name: str) -> Path:
-    """Return the absolute path of a bundled logo asset.
-
-    `name` is the variant slug without extension, e.g. "icon-white", "lockup-sun".
-    Raises FileNotFoundError if the asset doesn't exist.
-    """
+    """Absolute path of a bundled logo asset, e.g. asset_path("icon-white").
+    Raises FileNotFoundError if missing — never fake the logo."""
     candidate = ASSET_DIR / f"apollo-{name}.png"
     if not candidate.is_file():
         raise FileNotFoundError(
@@ -132,133 +172,201 @@ def asset_path(name: str) -> Path:
     return candidate
 
 
-def validate_text(text: str) -> list[str]:
-    """Run brand-compliance checks on a single text string.
-
-    Returns a list of error messages (empty if the text passes). Call this
-    on every user-visible string in the deck before saving.
-    """
-    errors: list[str] = []
-    for char, msg in BANNED_CHARS.items():
-        if char in text:
-            errors.append(f"text contains banned {msg}: {text!r}")
-    if EMOJI_PATTERN.search(text):
-        errors.append(f"text contains emoji (banned per brand rules): {text!r}")
-    for legacy in LEGACY_COLOR_TOKENS:
-        if legacy.lower() in text.lower():
-            errors.append(f"text references legacy color {legacy}: {text!r}")
-    return errors
+# ---------------------------------------------------------------------------
+# Optional convenience helpers — use them or compose shapes yourself
+# ---------------------------------------------------------------------------
 
 
 def set_background(slide, bg: str) -> None:
-    """Fill the slide background with the named brand color.
-
-    `bg` must be one of VALID_BACKGROUNDS.
-    """
-    if bg not in VALID_BACKGROUNDS:
-        raise ValueError(
-            f"bg {bg!r} is not approved. Use one of {sorted(VALID_BACKGROUNDS)}."
-        )
+    """Fill the slide background with a palette role or raw hex. Anything goes."""
     fill = slide.background.fill
     fill.solid()
-    fill.fore_color.rgb = COLORS[bg]
+    fill.fore_color.rgb = color(bg)
 
 
-def add_chrome(
+def add_text(
     slide,
+    text,
     *,
-    bg: str,
-    page_number: int,
-    session_label: str = DEFAULT_SESSION_LABEL,
-) -> None:
-    """Add the three mandatory chrome elements per Scott's brand spec.
+    left,
+    top,
+    width,
+    height,
+    size,
+    font=FONT_BODY,
+    fill="ink",
+    bold=False,
+    align=PP_ALIGN.LEFT,
+    autosize=True,
+    wrap=True,
+):
+    """Add a text box. By default word-wraps and shrinks text to fit its box,
+    so a font fallback (different metrics) cannot push text out of the box.
+    This is the main defense against the collision/overflow glitch class."""
+    box = slide.shapes.add_textbox(left, top, width, height)
+    tf = box.text_frame
+    tf.word_wrap = wrap
+    if autosize:
+        tf.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
+    p = tf.paragraphs[0]
+    p.alignment = align
+    run = p.add_run()
+    run.text = text
+    run.font.name = font
+    run.font.size = Pt(size)
+    run.font.bold = bold
+    run.font.color.rgb = color(fill)
+    return box
 
-    1. Top-right: Apollo brand icon (variant picked by bg per ICON_FOR_BG)
-    2. Bottom-left: session label (e.g. "GTM ENABLEMENT TRAINING")
-    3. Bottom-right: page number
-    """
-    text_color = TEXT_FOR_BG[bg]
-    margin = Inches(CHROME_MARGIN_IN)
-    icon_size = Inches(0.32)
 
-    # Top-right brand icon
+def add_chrome(slide, *, bg: str, page_number: int, session_label: str = "GTM ENABLEMENT TRAINING") -> None:
+    """Add the four reference chrome elements: left edge yellow accent bar,
+    top-right Apollo sunburst mark, bottom-left session label, bottom-right
+    page number.
+
+    The brand mark is the real Apollo sunburst PNG (square, transparent),
+    auto-picked per background: the Apollo Sun (yellow) mark on dark
+    backgrounds, the Stone mark on light/yellow ones."""
+    text_color = TEXT_ON.get(bg, "ink")
+
+    # Left-edge accent bar
+    bar = slide.shapes.add_shape(
+        MSO_SHAPE.RECTANGLE,
+        Emu(0), Emu(0), ACCENT_BAR_W, SLIDE_H,
+    )
+    bar.fill.solid()
+    bar.fill.fore_color.rgb = color("sun")
+    bar.line.fill.background()
+    bar.shadow.inherit = False
+
+    # Top-right Apollo sunburst mark (square asset → square box, no distortion)
+    mark = Inches(0.32)
     slide.shapes.add_picture(
-        str(asset_path(ICON_FOR_BG[bg])),
-        SLIDE_W - icon_size - margin,
-        margin,
-        width=icon_size,
-        height=icon_size,
+        str(asset_path(ICON_FOR_BG.get(bg, "icon-stone"))),
+        SLIDE_W - mark - CHROME_MARGIN, CHROME_MARGIN - Inches(0.04),
+        width=mark, height=mark,
     )
 
-    # Bottom-left session label
-    label_box = slide.shapes.add_textbox(
-        margin, SLIDE_H - Inches(CHROME_MARGIN_IN + 0.2),
-        Inches(4), Inches(0.2),
+    add_text(
+        slide, session_label,
+        left=CHROME_MARGIN, top=SLIDE_H - Inches(0.30),
+        width=Inches(4.0), height=Inches(0.2),
+        size=8, font=FONT_MONO, fill=text_color, autosize=False,
     )
-    p = label_box.text_frame.paragraphs[0]
-    run = p.add_run()
-    run.text = session_label
-    run.font.name = FONT_BODY
-    run.font.size = Pt(CHROME_FONT_PT)
-    run.font.bold = True
-    run.font.color.rgb = text_color
-
-    # Bottom-right page number
-    page_box = slide.shapes.add_textbox(
-        SLIDE_W - Inches(CHROME_MARGIN_IN + 0.5),
-        SLIDE_H - Inches(CHROME_MARGIN_IN + 0.2),
-        Inches(0.5), Inches(0.2),
+    add_text(
+        slide, str(page_number),
+        left=SLIDE_W - Inches(0.6), top=SLIDE_H - Inches(0.30),
+        width=Inches(0.4), height=Inches(0.2),
+        size=8, font=FONT_MONO, fill=text_color, align=PP_ALIGN.RIGHT, autosize=False,
     )
-    p = page_box.text_frame.paragraphs[0]
-    p.alignment = PP_ALIGN.RIGHT
-    run = p.add_run()
-    run.text = str(page_number)
-    run.font.name = FONT_BODY
-    run.font.size = Pt(CHROME_FONT_PT)
-    run.font.color.rgb = text_color
 
 
 def add_speaker_notes(slide, text: str) -> None:
-    """Attach speaker notes to a slide. No-op if text is empty."""
-    if not text:
-        return
-    slide.notes_slide.notes_text_frame.text = text
+    """Attach speaker notes. No-op on empty text."""
+    if text:
+        slide.notes_slide.notes_text_frame.text = text
 
 
-def check_font_size(pt: int) -> None:
-    """Raise if pt is not in Apollo's allowed font scale."""
-    if pt not in FONT_SCALE_PT:
-        raise ValueError(
-            f"font size {pt}pt is off-scale. Allowed: {sorted(FONT_SCALE_PT)}"
-        )
+# ---------------------------------------------------------------------------
+# verify_deck — the functional guarantee (run AFTER building)
+# ---------------------------------------------------------------------------
+
+_TOL = Pt(2)  # geometry tolerance in EMU (~2pt)
 
 
-def assert_text_color(color: RGBColor) -> None:
-    """Raise if color is yellow or any yellow-adjacent hue.
+def _bbox(shape):
+    if None in (shape.left, shape.top, shape.width, shape.height):
+        return None
+    return (shape.left, shape.top, shape.left + shape.width, shape.top + shape.height)
 
-    Yellow text is never permitted — it fails contrast on light backgrounds
-    and looks unintentional on dark ones. Detection is hue-based so it
-    catches any shade of yellow, not just Apollo Sun.
-    """
-    r, g, b = color[0], color[1], color[2]
-    # Convert to 0-1 range
-    rf, gf, bf = r / 255.0, g / 255.0, b / 255.0
-    max_c = max(rf, gf, bf)
-    min_c = min(rf, gf, bf)
-    delta = max_c - min_c
-    if delta == 0 or max_c == 0:
-        return  # achromatic (black/white/gray) — always allowed
-    # Hue in [0, 360)
-    if max_c == rf:
-        hue = 60.0 * (((gf - bf) / delta) % 6)
-    elif max_c == gf:
-        hue = 60.0 * (((bf - rf) / delta) + 2)
+
+def _overlap_area(a, b):
+    ix = max(0, min(a[2], b[2]) - max(a[0], b[0]))
+    iy = max(0, min(a[3], b[3]) - max(a[1], b[1]))
+    return ix * iy
+
+
+def verify_deck(path: str) -> list[str]:
+    """Geometric + font sanity check on a built deck. Returns a list of issue
+    strings (empty == deck is functionally sound).
+
+    Catches the glitch class that actually broke past decks:
+      - shapes positioned off the slide edges
+      - two text-bearing boxes colliding (text-on-text collision)
+      - fonts that will not render on a normal machine
+
+    It is layout-agnostic: it does not judge design, only whether the file
+    will render without artifacts. Layered card-behind-text is fine (the card
+    carries no text); only two real text boxes overlapping is flagged."""
+    prs = Presentation(path)
+    sw, sh = prs.slide_width, prs.slide_height
+    issues: list[str] = []
+
+    for si, slide in enumerate(list(prs.slides), start=1):
+        text_boxes = []
+        for shape in slide.shapes:
+            box = _bbox(shape)
+            if box is None:
+                continue
+            has_text = shape.has_text_frame and shape.text_frame.text.strip()
+            # off-slide check — only for text (decorative full-bleed shapes and
+            # images are placed off-edge on purpose; text running off is a bug)
+            if has_text and (box[0] < -_TOL or box[1] < -_TOL
+                             or box[2] > sw + _TOL or box[3] > sh + _TOL):
+                issues.append(
+                    f"slide {si}: text off-slide ({shape.text_frame.text[:30]!r}) "
+                    f"bounds exceed canvas"
+                )
+            # collect non-empty text boxes for collision check
+            if has_text:
+                text_boxes.append((box, shape.text_frame.text[:30]))
+                # font check
+                for para in shape.text_frame.paragraphs:
+                    for run in para.runs:
+                        fn = run.font.name
+                        if fn and fn not in KNOWN_FONTS:
+                            issues.append(
+                                f"slide {si}: unknown font {fn!r} (will fall back; "
+                                f"use {FONT_DISPLAY}/{FONT_BODY}/{FONT_MONO})"
+                            )
+
+        # text-on-text collision check. Two non-empty text boxes overlapping by
+        # >50% of the smaller box is a collision — including the nested/equal
+        # case (a box sitting inside a larger text box), which is still text on
+        # text. Card-behind-text never trips this: a filled card carries no text
+        # so it is not in text_boxes.
+        for i in range(len(text_boxes)):
+            for j in range(i + 1, len(text_boxes)):
+                a, b = text_boxes[i][0], text_boxes[j][0]
+                area = _overlap_area(a, b)
+                if area <= 0:
+                    continue
+                smaller = min((a[2] - a[0]) * (a[3] - a[1]), (b[2] - b[0]) * (b[3] - b[1]))
+                if smaller > 0 and area / smaller > 0.5:
+                    issues.append(
+                        f"slide {si}: text collision between {text_boxes[i][1]!r} "
+                        f"and {text_boxes[j][1]!r} ({area / smaller:.0%} overlap)"
+                    )
+
+    # de-dup while preserving order
+    seen = set()
+    deduped = []
+    for it in issues:
+        if it not in seen:
+            seen.add(it)
+            deduped.append(it)
+    return deduped
+
+
+if __name__ == "__main__":
+    if len(sys.argv) >= 3 and sys.argv[1] == "verify":
+        found = verify_deck(sys.argv[2])
+        if found:
+            print(f"verify_deck: {len(found)} issue(s) in {sys.argv[2]}")
+            for it in found:
+                print(f"  - {it}")
+            sys.exit(1)
+        print(f"verify_deck: OK — {sys.argv[2]} is functionally sound")
     else:
-        hue = 60.0 * (((rf - gf) / delta) + 4)
-    # Yellow hues: roughly 45°–75° (narrow band around 60°)
-    saturation = delta / max_c
-    if saturation > 0.3 and 45 <= hue <= 75:
-        raise ValueError(
-            f"Yellow text is not permitted (hue={hue:.0f}°, color=#{r:02X}{g:02X}{b:02X}). "
-            "Use Stone (#252521) or White (#FFFFFF) for text."
-        )
+        print("usage: python apollo_brand.py verify <deck.pptx>")
+        sys.exit(2)

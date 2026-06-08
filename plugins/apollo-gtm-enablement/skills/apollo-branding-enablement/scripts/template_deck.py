@@ -1,17 +1,18 @@
-"""Starter template for an Apollo GTM Enablement deck.
+"""Starter example for an Apollo GTME deck — card-based, dense, free-form.
 
-Copy this file, rename it for your topic (e.g. `outbound_cadence.py`),
-edit the slide functions, and run:
+This is NOT a renderer to call generically. It is a worked example showing the
+reference layout patterns (numbered agenda, two-column content with a sidebar
+card, chips, workflow chain) so you can crib the patterns and then DESIGN EACH
+SLIDE YOURSELF for the topic at hand. Copy it, rename per topic, rewrite the
+slide bodies. Every deck is its own design problem.
 
-    python3 outbound_cadence.py
+Run:
+    python3 my_topic_deck.py        # builds + self-verifies
 
-The model is expected to write a fresh script PER DECK, owning layout
-decisions per slide. Brand constants and chrome live in apollo_brand;
-do NOT redefine them here.
-
-Reference docs:
-- ../SKILL.md          Full design system (colors, fonts, layouts, banned items)
-- apollo_brand.py      Brand toolkit (constants, asset paths, helpers)
+Reference:
+- ../SKILL.md       Design reference (palette roles, type scale, slide recipes)
+- apollo_brand.py   Light helpers + verify_deck (the post-build guarantee)
+- The example decks Scott shared are the visual north star.
 """
 from __future__ import annotations
 
@@ -20,151 +21,176 @@ from pathlib import Path
 
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE
-from pptx.enum.text import PP_ALIGN
+from pptx.enum.text import MSO_AUTO_SIZE, PP_ALIGN
 from pptx.util import Inches, Pt
 
-# When this script is generated and run from /tmp/, the toolkit lives next
-# to the SKILL.md; resolve via the apollo-branding-enablement skill folder.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from apollo_brand import (  # noqa: E402
-    COLORS,
     FONT_BODY,
     FONT_DISPLAY,
+    FONT_MONO,
     SLIDE_H,
     SLIDE_W,
-    TEXT_FOR_BG,
     add_chrome,
     add_speaker_notes,
-    asset_path,
-    check_font_size,
+    add_text,
+    color,
     set_background,
-    validate_text,
+    verify_deck,
 )
 
-# ---------------------------------------------------------------------------
-# Edit this metadata per deck
-# ---------------------------------------------------------------------------
-
 DECK_TITLE = "Session Title Here"
-DECK_DATE = "2026-MM-DD"
-HOSTS = [{"name": "First Last", "title": "Role"}]
+DECK_DATE = "MM.DD.YY"
 OUTPUT_PATH = Path("/tmp/gtme-decks/example.pptx")
 
 
 # ---------------------------------------------------------------------------
-# Helpers that wrap python-pptx for brand-safe text adds
+# Small layout primitives — cards are the backbone of the reference look
 # ---------------------------------------------------------------------------
 
 
-def add_text(slide, text, *, left, top, width, height, size, font, color, bold=False, align=PP_ALIGN.LEFT):
-    check_font_size(size)
-    errors = validate_text(text)
-    if errors:
-        raise ValueError("\n".join(errors))
-    box = slide.shapes.add_textbox(left, top, width, height)
-    tf = box.text_frame
-    tf.word_wrap = True
+def card(slide, *, left, top, width, height, fill="mist", radius=0.08, shadow=False):
+    """A rounded-rectangle card. Text goes in a SEPARATE add_text on top — the
+    card itself carries no text, so it never trips the collision check."""
+    shp = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left, top, width, height)
+    shp.fill.solid()
+    shp.fill.fore_color.rgb = color(fill)
+    shp.line.fill.background()
+    try:
+        shp.adjustments[0] = radius
+    except (IndexError, KeyError):
+        # shape has no corner-radius adjustment handle — keep its default
+        pass
+    shp.shadow.inherit = False
+    if shadow:
+        shp.shadow.inherit = True
+    return shp
+
+
+def chip(slide, text, *, left, top, size=0.42, fill="sun-deep"):
+    """A small filled circle chip with a number or glyph centered. `fill` is the
+    chip's background color; the centered text is always ink for contrast on the
+    light accent fills these chips use."""
+    shp = slide.shapes.add_shape(MSO_SHAPE.OVAL, left, top, Inches(size), Inches(size))
+    shp.fill.solid()
+    shp.fill.fore_color.rgb = color(fill)
+    shp.line.fill.background()
+    tf = shp.text_frame
+    tf.word_wrap = False
+    tf.auto_size = MSO_AUTO_SIZE.NONE
     p = tf.paragraphs[0]
-    p.alignment = align
-    run = p.add_run()
-    run.text = text
-    run.font.name = font
-    run.font.size = Pt(size)
-    run.font.bold = bold
-    run.font.color.rgb = color
-    return box
+    p.alignment = PP_ALIGN.CENTER
+    r = p.add_run()
+    r.text = text
+    r.font.name = FONT_DISPLAY
+    r.font.size = Pt(13)
+    r.font.bold = True
+    r.font.color.rgb = color("ink")
+    return shp
 
 
 # ---------------------------------------------------------------------------
-# Slide-by-slide layout — author owns these decisions
+# Slide recipes — author owns every one of these decisions
 # ---------------------------------------------------------------------------
 
 
-def add_title_slide(deck, page):
-    """Cover slide. Stone bg, display title, hosts + date as accent line."""
+def cover(deck, page):
     slide = deck.slides.add_slide(deck.slide_layouts[6])
-    bg = "stone"
-    set_background(slide, bg)
-    text_color = TEXT_FOR_BG[bg]
-
+    set_background(slide, "night")
     add_text(
         slide, DECK_TITLE,
-        left=Inches(0.8), top=Inches(2.8), width=Inches(11), height=Inches(1.6),
-        size=64, font=FONT_DISPLAY, color=text_color, bold=True,
+        left=Inches(0.6), top=Inches(2.0), width=Inches(8.6), height=Inches(1.1),
+        size=48, font=FONT_DISPLAY, fill="white", bold=True, autosize=False,
     )
-
-    host_line = "  ·  ".join(f"{h['name']}, {h['title']}" for h in HOSTS)
     add_text(
-        slide, f"{DECK_DATE}  ·  {host_line}",
-        left=Inches(0.8), top=Inches(4.8), width=Inches(11), height=Inches(0.5),
-        size=20, font=FONT_BODY, color=COLORS["sun"],
+        slide, DECK_DATE,
+        left=Inches(0.62), top=Inches(3.4), width=Inches(3.0), height=Inches(0.4),
+        size=14, font=FONT_MONO, fill="sun", autosize=False,
     )
+    add_chrome(slide, bg="night", page_number=page)
+    add_speaker_notes(slide, "Welcome the team. Note the session is recorded.")
 
-    add_chrome(slide, bg=bg, page_number=page)
-    add_speaker_notes(slide, "Welcome the team. Remind them this is recorded.")
 
-
-def add_section_divider(deck, page, *, number, title):
-    """Section divider. Apollo Sun bg, large display title."""
+def agenda(deck, page, items):
+    """Numbered agenda: left list of numbered rows + right timing sidebar card."""
     slide = deck.slides.add_slide(deck.slide_layouts[6])
-    bg = "sun"
-    set_background(slide, bg)
-
+    set_background(slide, "paper")
     add_text(
-        slide, f"{number}. {title}",
-        left=Inches(0.8), top=Inches(3.0), width=Inches(11), height=Inches(1.6),
-        size=64, font=FONT_DISPLAY, color=TEXT_FOR_BG[bg], bold=True,
+        slide, "Agenda",
+        left=Inches(0.6), top=Inches(0.35), width=Inches(6.0), height=Inches(0.6),
+        size=32, font=FONT_DISPLAY, fill="ink", bold=True, autosize=False,
     )
+    y = 1.3
+    for i, (title, sub) in enumerate(items, start=1):
+        chip(slide, f"{i:02d}", left=Inches(0.6), top=Inches(y), size=0.40)
+        add_text(
+            slide, title,
+            left=Inches(1.15), top=Inches(y - 0.02), width=Inches(4.4), height=Inches(0.28),
+            size=13, font=FONT_DISPLAY, fill="ink", bold=True, autosize=False,
+        )
+        add_text(
+            slide, sub,
+            left=Inches(1.15), top=Inches(y + 0.24), width=Inches(4.4), height=Inches(0.24),
+            size=10, font=FONT_BODY, fill="muted", autosize=False,
+        )
+        y += 0.78
+    # timing sidebar
+    card(slide, left=Inches(6.1), top=Inches(1.1), width=Inches(3.3), height=Inches(3.6), fill="mist")
+    add_text(
+        slide, "60 MINUTES",
+        left=Inches(6.3), top=Inches(1.3), width=Inches(2.9), height=Inches(0.3),
+        size=11, font=FONT_MONO, fill="ink", bold=True, autosize=False,
+    )
+    add_chrome(slide, bg="paper", page_number=page)
 
-    add_chrome(slide, bg=bg, page_number=page)
 
-
-def add_content_slide(deck, page, *, title, paragraphs=(), bullets=()):
-    """Generic content slide. Off-white bg, title at top, content stacked."""
+def content_two_col(deck, page, *, eyebrow, title, what_label, what_text, side_title, side_rows):
+    """Two-column content: left definition card, right labeled rows."""
     slide = deck.slides.add_slide(deck.slide_layouts[6])
-    bg = "off-white"
-    set_background(slide, bg)
-    text_color = TEXT_FOR_BG[bg]
-
+    set_background(slide, "paper")
+    add_text(
+        slide, eyebrow,
+        left=Inches(0.6), top=Inches(0.35), width=Inches(4.0), height=Inches(0.26),
+        size=11, font=FONT_MONO, fill="ink", bold=True, autosize=False,
+    )
     add_text(
         slide, title,
-        left=Inches(0.8), top=Inches(0.8), width=Inches(11.5), height=Inches(1.0),
-        size=48, font=FONT_DISPLAY, color=text_color, bold=True,
+        left=Inches(0.6), top=Inches(0.7), width=Inches(8.8), height=Inches(0.7),
+        size=28, font=FONT_DISPLAY, fill="ink", bold=True, autosize=False,
     )
-
-    top_in = 2.0
-    for p in paragraphs:
+    # left card
+    card(slide, left=Inches(0.6), top=Inches(1.7), width=Inches(5.0), height=Inches(2.9), fill="mist", shadow=True)
+    add_text(
+        slide, what_label,
+        left=Inches(0.8), top=Inches(1.85), width=Inches(4.6), height=Inches(0.26),
+        size=11, font=FONT_MONO, fill="muted-3", bold=True, autosize=False,
+    )
+    add_text(
+        slide, what_text,
+        left=Inches(0.8), top=Inches(2.2), width=Inches(4.6), height=Inches(2.2),
+        size=13, font=FONT_BODY, fill="ink",
+    )
+    # right rows
+    add_text(
+        slide, side_title,
+        left=Inches(5.9), top=Inches(1.7), width=Inches(3.5), height=Inches(0.26),
+        size=11, font=FONT_MONO, fill="ink", bold=True, autosize=False,
+    )
+    y = 2.1
+    for label, val in side_rows:
+        card(slide, left=Inches(5.9), top=Inches(y), width=Inches(3.5), height=Inches(0.5), fill="mist")
         add_text(
-            slide, p,
-            left=Inches(0.8), top=Inches(top_in), width=Inches(11.5), height=Inches(1.2),
-            size=24, font=FONT_BODY, color=text_color,
+            slide, label,
+            left=Inches(6.05), top=Inches(y + 0.08), width=Inches(2.4), height=Inches(0.34),
+            size=11, font=FONT_BODY, fill="ink", autosize=False,
         )
-        top_in += 1.4
-
-    if bullets:
-        # Compose all bullets in a single textbox so spacing is consistent
-        box = slide.shapes.add_textbox(
-            Inches(0.8), Inches(top_in), Inches(11.5), Inches(0.6 * len(bullets) + 0.4)
+        add_text(
+            slide, val,
+            left=Inches(8.4), top=Inches(y + 0.08), width=Inches(0.9), height=Inches(0.34),
+            size=11, font=FONT_MONO, fill="muted-3", align=PP_ALIGN.RIGHT, autosize=False,
         )
-        tf = box.text_frame
-        tf.word_wrap = True
-        for idx, item in enumerate(bullets):
-            errors = validate_text(item)
-            if errors:
-                raise ValueError("\n".join(errors))
-            p = tf.paragraphs[0] if idx == 0 else tf.add_paragraph()
-            run = p.add_run()
-            run.text = f"• {item}"
-            run.font.name = FONT_BODY
-            run.font.size = Pt(24)
-            run.font.color.rgb = text_color
-
-    add_chrome(slide, bg=bg, page_number=page)
-
-
-# ---------------------------------------------------------------------------
-# Compose the deck — model edits this body per deck
-# ---------------------------------------------------------------------------
+        y += 0.62
+    add_chrome(slide, bg="paper", page_number=page)
 
 
 def build() -> Path:
@@ -172,13 +198,21 @@ def build() -> Path:
     deck.slide_width = SLIDE_W
     deck.slide_height = SLIDE_H
 
-    add_title_slide(deck, page=1)
-    add_section_divider(deck, page=2, number=1, title="Why this matters")
-    add_content_slide(
+    cover(deck, page=1)
+    agenda(deck, page=2, items=[
+        ("The Field Reality", "Reviewing what's happening IRL"),
+        ("What This Is", "Workflow and trigger signals"),
+        ("What Good Looks Like", "Gong evidence and patterns"),
+        ("Live Practice", "Your accounts, your messaging"),
+    ])
+    content_two_col(
         deck, page=3,
-        title="The data",
-        paragraphs=["Replace this with the substance of the slide."],
-        bullets=["Point one", "Point two", "Point three"],
+        eyebrow="THE FIELD REALITY",
+        title="What is this intervention?",
+        what_label="WHAT IT IS",
+        what_text="Replace with the real definition pulled from the Notion source page.",
+        side_title="TRIGGER SIGNAL",
+        side_rows=[("Signal", "L7"), ("Owner", "AE"), ("SFDC", "Yes")],
     )
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -188,4 +222,10 @@ def build() -> Path:
 
 if __name__ == "__main__":
     path = build()
+    issues = verify_deck(str(path))
+    if issues:
+        print(f"verify_deck found {len(issues)} issue(s):")
+        for it in issues:
+            print(f"  - {it}")
+        sys.exit(1)
     print(f"Built deck: {path}")

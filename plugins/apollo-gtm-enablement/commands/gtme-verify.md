@@ -9,7 +9,18 @@ If the output is a deck or presentation, also validate against `apollo-branding-
 
 Re-read the available source context and verify that the enablement output is ready for delivery.
 
-Check for:
+**If a `.pptx` was built, run the functional check first.** From the
+`apollo-branding-enablement/scripts` folder:
+
+```bash
+python3 apollo_brand.py verify /tmp/gtme-decks/<topic-slug>.pptx
+```
+
+This catches the glitch class that breaks decks — text off-slide, text-on-text
+collisions, and non-rendering fonts. It must return `OK` before delivery. If it
+reports issues, fix the offending positions/fonts in the build script and rebuild.
+
+Then check the content for:
 
 1. correct topic identification
 1. correct intervention/source mapping
@@ -20,7 +31,7 @@ Check for:
 1. at least one interactive activity
 1. facilitator-ready guidance
 1. practical rep behavior change, not generic training language
-1. readiness for Apollo-branded deck production if slides are requested
+1. deck matches the `apollo-branding-enablement` design DNA (card-based, dense, Scott's palette/fonts)
 
 Return:
 

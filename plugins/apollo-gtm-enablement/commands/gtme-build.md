@@ -5,7 +5,7 @@ description: Build a facilitator-ready Apollo GTM enablement deck from Notion, S
 
 Use the `apollo-gtme-enablement-deck` skill.
 
-If the request involves a presentation, deck, or slides, also follow `apollo-branding-enablement` as the source of truth for Apollo deck design and production rules.
+If the request involves a presentation, deck, or slides, also follow the `apollo-branding-enablement` skill as the source of truth for Apollo deck design and production rules.
 
 **Before building, verify required connectors are available.** Confirm Notion and Google Drive respond to a trivial test query (e.g. "search Notion for 'GTME'"). If either fails, stop and tell the user to run `/gtme-setup` before retrying — do not attempt to build a deck without the data sources available.
 
@@ -60,5 +60,9 @@ Actions:
    - key takeaways
    - next steps
 1. If inputs required by the Apollo branding workflow are missing, clearly list them.
+1. If a deck is requested, follow `apollo-branding-enablement`: write a fresh
+   `python-pptx` script per deck (card-based, Scott's palette/fonts), save to
+   `/tmp/gtme-decks/<topic-slug>.pptx`, and end the script with `verify_deck`.
+   The deck is not done until `verify_deck` returns clean.
 
 Do not invent internal facts. If evidence is incomplete, call out the gap explicitly.

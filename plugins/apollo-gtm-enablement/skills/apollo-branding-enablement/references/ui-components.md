@@ -1,147 +1,96 @@
-# Apollo UI Component Patterns — Extended Reference
+# Apollo GTME UI Component Patterns — Extended Reference
 
-Use these specs when composing slide elements in python-pptx. Translate CSS values to EMU/Pt as needed.
+Card-based components from the reference decks. Build each as a rounded-rectangle
+card (no text on the card shape) plus separate `add_text` layers on top. All
+sizes in points; positions in inches on the 10 x 5.625 canvas.
 
-## Badge / Pill Label
+## Numbered chip (agenda / steps)
 
 ```text
-background:     #FBF500
-color:          #252521
-font:           ABC Diatype 700, 12px, All-Caps, letter-spacing: 0.1em
-fallback:       Arial Bold
-border-radius:  24px
-padding:        4px 12px
+shape:   oval or rounded square, ~0.40in
+fill:    sun-deep (E1F000)
+text:    Space Grotesk bold ~13pt, ink, centered
+use:     agenda row numbers, workflow step numbers
 ```
 
-## Numbered Action Circle
+## Eyebrow label
 
 ```text
-background:     #FBF500
-color:          #252521
-shape:          circle, 32x32px
-font:           SeasonMix Variable 550, 16px
-fallback:       Georgia Bold
+font:    DM Mono ~11pt, All-Caps, ink (or muted-3 on cards)
+use:     section/category label above a slide title
 ```
 
-## Dashed Action Callout Box
+## Definition card ("WHAT IT IS")
 
 ```text
-border:         1.5px dashed rgba(37,37,33,0.4)
-border-radius:  8px
-background:     transparent
-padding:        20px
+card:    mist (CCC9C6) fill, radius ~0.08, shadow on the primary card
+label:   DM Mono ~11pt All-Caps, muted-3
+body:    DM Sans ~13pt, ink, word-wrap + autofit
 ```
 
-## PRO TIP Block
+## Pale-yellow callout card (trigger / key signal)
 
 ```text
-background:     #F9F9F6
-border-left:    4px solid #FBF500
-border-radius:  0 8px 8px 0
-padding:        14px 16px
-font:           ABC Diatype 400, 14px, #252521
-fallback:       Arial
-label:          PRO TIP
-label font:     ABC Diatype 700 All-Caps, #252521
-box-shadow:     var(--shadow-1)
+card:    sun-pale (FEFFD9) fill, radius ~0.08
+label:   DM Mono ~11pt All-Caps
+value:   DM Mono ~12-13pt (e.g. a metric or SFDC field name)
+note:    DM Sans ~10-11pt, muted
+use:     one highlighted signal per content slide, max
 ```
 
-## Content Card / Info Box
+## Labeled metric row (sidebar)
 
 ```text
-background:     #F9F9F6 or #FFFFFF
-border-radius:  12px
-padding:        24px
-box-shadow:     var(--shadow-1)
+card:    mist fill, ~0.5in tall row
+label:   DM Sans ~11pt, ink, left
+value:   DM Mono ~11pt, muted-3, right-aligned
+use:     timing sidebar, KPI list, trigger attributes
 ```
 
-## KPI Card
+## Workflow chain
 
 ```text
-background:     #F9F9F6
-border-radius:  8px
-padding:        16px
-box-shadow:     var(--shadow-1)
-eyebrow:        10px ABC Diatype All-Caps, #252521 at 50% opacity
-value:          24px SeasonMix Variable 550, #252521
-delta:          14px ABC Diatype 400, one line below value
+steps:   mist cards (~0.48in tall) stacked, each "N  Label" (DM Sans/Mono)
+arrows:  down-arrow glyph between cards, ink, ~10pt
+final:   highlight the terminal step with a sun-deep card
 ```
 
-## Apollo Sun Callout
+## Timing / agenda sidebar
 
 ```text
-background:     #F9F9F6
-border-left:    4px solid #FBF500
-border-radius:  0 8px 8px 0
-padding:        14px 16px
-Use sparingly. One per section maximum.
+card:    mist fill, tall
+header:  "60 MINUTES" DM Mono ~11pt bold
+rows:    section name (DM Sans) + duration (DM Mono, right)
 ```
 
-## Routing Logic Chip
+## Section divider
 
 ```text
-border:         1.5px solid #252521
-border-radius:  999px
-background:     transparent
-padding:        4px 10px
-font:           ABC Diatype 400, 10px, All-Caps, letter-spacing: 0.08em
-fallback:       Arial
-color:          #252521
+background: sun or night
+title:      large Space Grotesk bold (48-64), "N. Title"
 ```
 
-## Section Divider
+## Engagement activity slide
 
 ```text
-border-top:     1px solid #252521
-width:          100%
-margin:         8px 0 16px
+background: sun (F8FF2C)
+badge:      ENGAGEMENT ACTIVITY — small stone pill, white/off-white text
+headline:   Space Grotesk bold, large (48-72), ink
+watermark:  optional faint stone outline mark, large, corner
 ```
 
-## Timeline Node
+## Host / placeholder circle
 
 ```text
-background:     #FBF500
-color:          #252521
-border-radius:  999px
-padding:        4px 10px
-font:           SeasonMix Variable 550, 13px
-fallback:       Georgia Bold
+shape:  circle, ink at low opacity, placeholder only — never generate faces
+sizes:  1 host large, scale down as host count grows
 ```
 
-## Timeline Card
+## Evidence / quote card (Gong)
 
 ```text
-background:     #F9F9F6
-border-radius:  0 0 16px 0
-padding:        16px
-min-height:     120px
-```
-
-## Host Photo Circle
-
-```text
-shape:          circle
-fill:           #252521 at 20% opacity
-use:            placeholder only. Never generate faces.
-sizes:          1 host=400px, 2 hosts=320px, 3 hosts=260px, 4 hosts=220px
-```
-
-## Engagement Activity Slide
-
-```text
-background:     #FBF500
-watermark:      Apollo sunburst, large, bottom-right, Stone outline ~15% opacity
-badge:          ENGAGEMENT ACTIVITY pill, Stone bg, Off-White text
-headline:       SeasonMix Variable 550, 64-96px, #252521
-fallback:       Georgia Bold
-types:          Polling, Zoom Chat, Breakout Exercise, Quiz Time
-```
-
-## Weekly Rundown Table
-
-```text
-header row:     bg #252521, text #FFFFFF, ABC Diatype 700 All-Caps
-body rows:      bg #F9F9F6, separator 1px solid rgba(37,37,33,0.15)
-link icon:      #252521
-status marks:   use Stone or White only unless an approved semantic palette has been explicitly provided
+card:   paper-3 or mist, radius ~0.08
+quote:  DM Sans ~13pt, ink
+clip:   DM Mono All-Caps chip "CLIP 1 OF 2"
+keep the clip label clear of the title (>50% overlap fails verify_deck)
 ```
