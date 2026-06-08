@@ -102,6 +102,13 @@
       "description": "Creates facilitator-ready enablement decks for Apollo's GTM teams (Sales, CS, Product). Pulls topics from Notion calendars, validates with Salesforce activity and Gong conversations, and produces Apollo-branded training materials backed by real evidence.",
       "category": "gtm",
       "tags": ["claude-code", "gtm", "enablement"]
+    },
+    {
+      "name": "apollo-risk",
+      "source": "./plugins/apollo-risk",
+      "description": "Privacy and compliance skills for Apollo's Legal Risk team — DSR response drafting, privacy queue triage, and regulatory compliance workflows.",
+      "category": "legal",
+      "tags": ["cowork", "legal", "privacy", "compliance"]
     }
   ]
 }
