@@ -109,6 +109,13 @@
       "description": "Privacy and compliance skills for Apollo's Legal Risk team — DSR response drafting, privacy queue triage, and regulatory compliance workflows.",
       "category": "legal",
       "tags": ["cowork", "legal", "privacy", "compliance"]
+    },
+    {
+      "name": "apollo-corpsec",
+      "source": "./plugins/apollo-corpsec",
+      "description": "Apollo IT CorpSec skills: device & managed-endpoint policy, external storage rules, a device-rules FAQ, and policy exception requests.",
+      "category": "security",
+      "tags": ["cowork", "security", "corpsec", "compliance"]
     }
   ]
 }
