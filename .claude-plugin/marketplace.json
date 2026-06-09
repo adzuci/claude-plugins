@@ -116,6 +116,13 @@
       "description": "Apollo IT CorpSec skills: device & managed-endpoint policy, external storage rules, a device-rules FAQ, and policy exception requests.",
       "category": "security",
       "tags": ["cowork", "security", "corpsec", "compliance"]
+    },
+    {
+      "name": "apollo-talent",
+      "source": "./plugins/apollo-talent",
+      "description": "Talent Acquisition skills for Apollo's TA team — company knowledge for candidate briefings and project planning tools for TA initiatives.",
+      "category": "people",
+      "tags": ["cowork", "talent", "recruiting"]
     }
   ]
 }

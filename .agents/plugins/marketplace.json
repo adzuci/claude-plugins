@@ -159,6 +159,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Security"
+    },
+    {
+      "name": "apollo-talent",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-talent"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "People"
     }
   ]
 }
