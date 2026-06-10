@@ -17,6 +17,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 | `/apollo-eng-devops:kubernetes-specialist` | Kubernetes debugging and rollout specialist for Apollo's GKE clusters |
 | `/apollo-eng-devops:grafana-observability` | Grafana dashboard design and alert quality specialist |
 | `/apollo-eng-devops:incident-response` | Incident commander guide for Apollo production incidents |
+| `/apollo-eng-devops:news-feed` | Weekly vendor announcement triage for DevOps-relevant AI, security, observability, platform, and infrastructure changes |
 | `/apollo-eng-devops:systematic-debugging` | Four-phase root-cause debugging methodology (investigate → pattern → hypothesize → implement) |
 
 ## Skill Stacking
@@ -28,6 +29,7 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 - **Incident investigation**: `devops` + `kubernetes-specialist` + `incident-response`
 - **New service launch**: `devops` + `grafana-observability`
 - **Alert tuning sprint**: `grafana-observability` + `devops` (for SLO context)
+- **Vendor announcement review**: `news-feed` + `grafana-observability` when Grafana changes affect dashboards, alerts, IRM, or telemetry cost
 - **Architecture design review**: `devops` (design review path)
 - **Postmortem writing**: `incident-response`
 
