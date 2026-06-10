@@ -11,6 +11,7 @@ description: >
   triage, or deal channel management. Load when working on any Apollo sales activity.
   Read the reference files relevant to the current task — you do not need to read
   all files for every request.
+disable-model-invocation: true
 metadata:
   author: Apollo Solutions Consulting
   version: '3.3.0'

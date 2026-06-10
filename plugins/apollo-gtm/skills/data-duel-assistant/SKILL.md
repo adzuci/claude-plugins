@@ -9,6 +9,7 @@ description: >
   (ZoomInfo, Lusha, SalesIntel, Cognism, etc.). Also trigger when someone wants to assess why a
   CSV had low match rates, prep a file for Apollo enrichment, interpret enrichment results for a
   customer, or log a duel outcome to Salesforce — even if they don't use the word "duel."
+disable-model-invocation: true
 ---
 
 # Data Duel Assistant

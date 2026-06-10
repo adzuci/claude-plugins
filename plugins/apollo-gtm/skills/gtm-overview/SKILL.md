@@ -1,6 +1,7 @@
 ---
 name: gtm-overview
 description: Go-to-market motion overview — segments, channels, and launch process. Use when the user asks about Apollo GTM strategy, target customer segments, how to plan a product launch, who owns a GTM metric, or wants to understand PLG vs rep-driven motions.
+disable-model-invocation: true
 ---
 
 # Go-To-Market Overview

@@ -1,6 +1,7 @@
 ---
 name: khaydien-context-structuring
 description: Builds production-ready context payloads for Apollo Agent queries (the @Apollo Agent in #gtme-support-apollo-agent-forum) AND optionally posts them directly to Slack via MCP. Produces a payload the teammate can (a) copy-paste, (b) save as a Slack draft for review, or (c) send immediately to channel C0A3HGMHMN2 with the Apollo Agent (user U0ABEQ94H7Z) properly tagged. Codifies the Apollo Agent's own stated ideal prompt format plus the two proven patterns from the channel: Khaydien's natural-language client-question style and Jason's CONTEXT QUERY Pipeline 5 structured template. Triggers on "build apollo agent query", "apollo agent prompt", "post to apollo agent", "ask apollo agent", "structure apollo agent context", "khaydien this", "khaydien method", "ask apollo agent about [account]", "query apollo agent for [client]", "context payload for apollo agent", or any request to format or send a question to @Apollo Agent. SCOPE: Apollo Agent only. Does not fire for Glean Agent, Customer Journey Agent, or other agents.
+disable-model-invocation: true
 ---
 
 # Khaydien Context Structuring
