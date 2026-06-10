@@ -53,11 +53,31 @@ For each PD-linked ticket, fetch PD status (`get_incident`) if MCP available, th
 | PD `triggered`, aged > 30 min | Escalate in urgent skim. No state change yet; assign on-call responder if PD has one. |
 | PD `acknowledged` by a named responder | Propose assignee = responder, transition Jira to **In Progress**. Ack means someone is investigating. |
 | PD has comments/notes from a human responder (any state) | Propose transition to **In Progress** if not already. Comments are investigation evidence. |
-| PD `resolved`, no human acks or comments (auto-resolved flap) | Propose transition to **In Review** or leave Open + add `linked-pd-auto-resolved` comment. **Do not close.** |
+| PD `resolved`, no human acks or comments (auto-resolved flap) | The resolved snapshot hides the responder — get the assignee-at-trigger from the log-entry timeline (see "Assignee source" below) before assuming there is none. Propose assignee = that responder, transition to **In Review** or leave Open + add `linked-pd-auto-resolved` comment. **Do not close.** |
 | PD `resolved`, had human ack/comments, no follow-up Jira activity in 7+ days | **Gated.** Before proposing Close, extract any Slack URL from the PD notes/log entries and read the thread to confirm no open action items (see "Confirm Slack context before closing"). If the thread is clean → propose **Close (No Action)** with `linked-pd-resolved` comment citing the PD work. If a Slack link exists but can't be read → downgrade to **Ask assignee to confirm + close**. Closing represents human sign-off, not PD state. |
 | PD `resolved`, Jira already has follow-up comments / linked PRs | Leave as-is — humans are working it. Note status in the row, propose no transition. |
 
 If PD MCP isn't available, propose `needs PD verification` and link the PD URL in the comment — do not guess the PD state from the Jira title's `[FIRING:N]` / `[RESOLVED:N]` prefix alone, since that reflects the alert at ticket creation, not the current PD state.
+
+### Assignee source
+
+`get_incident` (CLI: `pd rest get -e /incidents/<ID>`) returns the **current** state. For an **auto-resolved** incident that snapshot is misleading: `assignments[]` and `acknowledgements[]` are empty and `last_status_change_by` is a `service_reference`, so it looks like nobody owned it. There almost always was an owner — PD's escalation policy assigns a human **at trigger time**, and that only appears in the log entries, not the resolved-state snapshot. Reading the snapshot alone makes the "assign the responder" batch look empty when it isn't.
+
+When the snapshot shows no human responder, pull the timeline before falling back to cluster-owner-by-team — MCP: `list_log_entries`; CLI: `pd rest get -e /incidents/<ID>/log_entries`. Read in order:
+
+- `trigger_log_entry` → `assignees[].summary` = who PD first assigned.
+- `escalate_log_entry` → re-assignment hops (and to whom).
+- `acknowledge_log_entry` → who, if anyone, acked.
+- `notify_log_entry` → who PD paged.
+
+Resolution order for the proposed Jira assignee, stating the basis in the row:
+
+1. Human acker (`acknowledge_log_entry`) → basis "PD responder (acked)".
+1. Assignee-at-trigger / escalation target (`trigger`/`escalate_log_entry`) → basis "PD assignee at trigger, no ack".
+1. Cluster owner of the dedup canonical → basis "cluster owner".
+1. None of the above → leave unassigned, route by Impacted Team.
+
+Why: a real miss — a pass concluded "no responder to assign" for a batch of auto-resolved cron-OOM and mongos-health flaps from the resolved snapshot alone; the log entries showed every one had been paged and assigned to the be-platform / devops on-call, which was the correct routing all along.
 
 ### Why PD-closed isn't Jira-closed
 

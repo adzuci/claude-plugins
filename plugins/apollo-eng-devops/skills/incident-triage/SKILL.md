@@ -188,6 +188,36 @@ Default field set for `searchJiraIssuesUsingJql` and `getJiraIssue`:
 
 **Do not fetch `description` or `comment` by default** — those are what blow past token limits. Only fetch them on tickets you've identified as the "needs decision" set (typically ≤10 tickets per pass). Exception: `pd-reconcile` discovery needs `description`/`comment` to find PD URLs — see the `pd-reconcile` workflow above.
 
+## Cost & Token Efficiency
+
+Triage runs are dominated by oversized tool outputs, not by reasoning. The rules below are load-bearing, not optional.
+
+**Estimate at preflight, before fetching the queue.** Once the row count `N` is known (cap with `--limit`, default ~30), print a rough estimate so the caller can cap before spending:
+
+```
+tokens ≈ fetch (N × ~0.4K minimal fields)
+       + PD lookups (D distinct clusters × ~1.5K)   # D ≤ N after dedup
+       + per-ticket description pulls (P × ~2K)      # only the rows you action
+       + reasoning/output (~15K flat)
+```
+
+Rough rule of thumb: `~5K + N×0.5K + D×1.5K` tokens. Print it as `est ~Xk tokens` (token count only — don't guess at dollar pricing), and suggest `--limit` if `N` is large.
+
+**Use subagents for any bulk or large-output work — keep the big payloads out of the main thread.** Delegate to a subagent (Task tool) and have it return only the distilled rows the main thread needs:
+
+- **Queue fetch + classify** — a subagent runs `searchJiraIssuesUsingJql`, classifies each row, and returns a compact table (`key | class | priority | reporter | labels | age`), not the raw JSON.
+- **PD reconcile** — a subagent fetches PD status per cluster (MCP or `pd` CLI) and returns one line per cluster (`canonical | status | responder | basis`); the verbose `list_log_entries` / incident JSON never enters the main context.
+- **PR / CODEOWNERS lookups** — a subagent runs `gh` / `get_file_contents` and returns just the resolved owner or PR state (`title | state | mergedAt | url`).
+- **Glean** — a subagent runs `search` / `chat` and returns the single citation link + a one-sentence finding.
+
+Main thread keeps only: the routing table, staged actions, and proposed comments. If you can't spawn a subagent, parse large outputs via `jq` / `grep` on a saved file and pull back only the extracted rows — never read a full payload inline.
+
+**Compact at the natural breakpoints.** Tool outputs accumulate fast. After the queue fetch + classify (Workflow steps 5–6), after staging dedup/PD/assignment proposals (steps 10–13), and after the writes complete (step 14), compact the context: keep the routing table, the staged/approved actions, and the resolved arg set; drop raw queue JSON, PD payloads, Glean results, and write echoes. Re-fetch a single field on demand rather than retaining full issues.
+
+**Ignore write-call echoes.** `editJiraIssue` / `transitionJiraIssue` / `getJiraIssue` return the full issue JSON — large enough that a write's response can overflow the token limit even though the write succeeded. Treat overflow-on-write as success; never read or summarize the echo, and don't re-fetch the issue to "confirm" — that just doubles the payload.
+
+**Dedupe before per-ticket PD lookups.** Cluster duplicates first (Workflow step 10) so the same flapping condition isn't fetched many times — fetch PD status once per distinct cluster (`D`), not once per row (`N`). See [`references/duplicate-heuristics.md`](references/duplicate-heuristics.md).
+
 ## Workflow
 
 Work through these steps in order. Print intermediate output as you go — silence is worse than verbosity in a triage session.
