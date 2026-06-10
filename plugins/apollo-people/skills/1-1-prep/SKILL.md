@@ -17,17 +17,13 @@ ______________________________________________________________________
 
 **Supportive framing.** This is context to help the manager support their direct report, not surveillance. Frame findings as conversation starters, not judgments.
 
-**Source links required.** Every finding must include a hyperlink to its source so the manager can verify and follow up — this applies everywhere it's referenced, including the narrative summary, not just bulleted lists. If you mention recognition, a win, or a blocker in prose, link the phrase to its source.
+**Source links required.** Every finding must include a hyperlink to its source — in prose and bulleted lists alike. If you mention recognition, a win, or a blocker, link the phrase to its source so the manager can verify and follow up.
 
 **No rating language.** Present facts with sources. Never suggest performance ratings or evaluations — that's the manager's job in a different context.
 
 **Recency matters.** Default to the past week. Older context is less actionable for a weekly 1:1.
 
-______________________________________________________________________
-
-## Step 0: Connector Pre-flight Check
-
-Confirm Slack and Notion are enabled (Glean and Google Drive are optional). If the manager needs setup help, share [`references/connector-setup.md`](references/connector-setup.md).
+**Search every connected source.** Don't skip a source because the first query is sparse. Run the searches for each connected source and report what you found — including "nothing found." Skipping is only acceptable when a source fails the connector check (Step 2).
 
 ______________________________________________________________________
 
@@ -43,17 +39,17 @@ If they say "default" or just want to proceed, use 1 week.
 
 ______________________________________________________________________
 
-## Step 1b: Test Connector Access
+## Step 2: Connector Check
 
-After intake, run a quick connectivity test before searching — make one minimal search query against each connector (Slack, Notion, and Glean and Google Drive if available) using the direct report's name to confirm it responds, then report the status to the manager.
+Before searching, confirm each connector responds: make one minimal search (the direct report's name) against Slack, Notion, and Glean and Google Drive if available, then report status to the manager. Slack and Notion are required; Glean and Google Drive are optional.
 
-Follow the full test procedure, status-report format, and fallback handling in [`references/connectivity-test.md`](references/connectivity-test.md).
+Full test procedure, status-report format, and fallback handling are in [`references/connectivity-test.md`](references/connectivity-test.md). If the manager needs setup help, share [`references/connector-setup.md`](references/connector-setup.md).
 
 ______________________________________________________________________
 
-## Step 2: Search Plan
+## Step 3: Search Plan
 
-Before searching, tell the manager where you'll look and ask if there are other places to check:
+Tell the manager where you'll look and ask if there are other places to check:
 
 ______________________________________________________________________
 
@@ -72,66 +68,56 @@ Wait for "go" or additional locations before proceeding. Add any locations they 
 
 ______________________________________________________________________
 
-## Step 3: Data Gathering
+## Step 4: Data Gathering
 
-Search systematically across each connected source.
+Work through the numbered steps below **in order**. Complete every step for each connected source — don't stop early because a step returns little. If a step finds nothing, record "nothing found" and move on.
 
-**If Glean is connected, use it instead of searching Slack directly.** Glean indexes Slack (and more), so a few cross-platform Glean queries replace many individual channel searches and save tokens. Only fall back to the direct Slack searches below when Glean is unavailable, or to follow up on a specific channel or thread Glean surfaced.
+**Step 4.1 — Glean (if connected)**
 
-### Slack (primary only when Glean is not connected)
+If Glean is connected, make it your primary search — it covers Slack and other tools in one place, so a few targeted queries replace many per-channel Slack searches and save tokens. Run at least:
 
-Skip this section if Glean is connected — use Glean (below) instead. When Glean is unavailable, search Slack directly for:
+1. The direct report's full name — cross-platform mentions, recognition, kudos
+2. Their name + "blocker" / "help" / "stuck" — friction signals
+3. Their name + current project or quarter — recent project context and collaboration
 
-- **#kudos** — recognition they received
-- **#eoq-celebration** — recognition, especially for revenue/GTM roles (this channel is revenue-oriented, so it's most relevant for sales, CS, and other go-to-market reports)
-- **Project channels** — their activity and mentions
-- **Shared channels** — conversations involving them
-- **Help requests** — times they asked for help or flagged blockers
-- **Any additional channels** the manager specified
+Reserve direct Slack searches (Step 4.2) for following up on a specific thread Glean surfaces. If Glean isn't connected, skip silently and complete Step 4.2 fully instead.
 
-Look for:
+**Step 4.2 — Slack**
 
-- Wins and recognition (who said what, with links)
-- Blockers or frustrations mentioned
-- Collaboration patterns (who they're working with)
+If Glean is connected, run this step only to follow up on a thread Glean surfaced. If Glean isn't connected, this is your primary source — search each location:
 
-### Notion
+1. **#kudos** — recognition they received
+2. **#eoq-celebration** — recognition, especially for revenue/GTM roles (revenue-oriented, so most relevant for sales, CS, and other go-to-market reports)
+3. **Project channels** — their activity and mentions
+4. **Shared channels** — conversations involving them
+5. **Help requests** — times they asked for help or flagged blockers
+6. **Any additional channels** the manager specified
 
-Search for:
+For each, look for wins and recognition (who said what), blockers or frustrations, and collaboration patterns.
 
-- **1:1 notes pages** — try "[Direct Report] \<> [Manager Name]" or similar paired naming first; if that returns nothing, search for just the direct report's name
-- **OKR/KR tracking pages** — their goals and progress
-- **Project pages** — where they're listed as DRI or contributor
-- **Any additional pages** the manager specified
+**Step 4.3 — Notion**
 
-Look for:
+Search for each of the following; record results or "nothing found" for each:
 
-- Open action items from previous 1:1s
-- Goal progress or blockers
-- Recent project updates
+1. **1:1 notes pages** — try "[Direct Report] \<> [Manager Name]" or similar paired naming first; if nothing, search just the direct report's name
+2. **OKR/KR tracking pages** — their goals and progress
+3. **Project pages** — where they're listed as DRI or contributor
+4. **Any additional pages** the manager specified
 
-### Glean (preferred when connected)
+Look for open action items from previous 1:1s, goal progress or blockers, and recent project updates.
 
-When Glean is connected, make it the primary search — it covers Slack and other tools in one place, so prefer a few targeted Glean queries over many per-channel Slack searches. Search for:
-
-- Their name to find cross-platform mentions, recognition, and kudos
-- Recent project context, blockers, and collaboration
-- Anything you'd otherwise look for in Slack (wins, help requests, frustrations)
-
-Reserve direct Slack searches for following up on a specific channel or thread Glean surfaces. If Glean is not connected, skip silently — do not mention it as a gap — and use the Slack section above instead.
-
-### Google Drive (if connected)
+**Step 4.4 — Google Drive (if connected)**
 
 Search for:
 
-- **1:1 notes docs** — often shared Google Docs between the manager and report
-- Project docs, OKR sheets, or update decks they authored or contributed to
+1. **1:1 notes docs** — often shared Google Docs between manager and report
+2. Project docs, OKR sheets, or update decks they authored or contributed to
 
-If Google Drive is not connected, skip silently — do not mention it as a gap.
+If Google Drive isn't connected, skip silently.
 
 ______________________________________________________________________
 
-## Step 4: Generate Prep Summary
+## Step 5: Generate Prep Summary
 
 Present findings in this format:
 
@@ -189,6 +175,14 @@ Based on the above, you might ask:
 | Notion | ✅ | X pages |
 | Glean | ⚠️ | Not connected |
 | Google Drive | ⚠️ | Not connected |
+
+______________________________________________________________________
+
+## Step 6: Data Hygiene & Tracking Tips
+
+After the summary, add a short section that helps the manager improve documentation so future prep is sharper. Generate it **dynamically** from the gaps you hit during Step 4 — missing docs, stale pages, empty channels, unconnected tools — and pull in one or two proactive tracking habits worth adopting. Keep it brief and optional in tone; skip it entirely if every source was rich and current.
+
+The tip catalog, proactive-habit suggestions, and closing line are in [`references/data-hygiene.md`](references/data-hygiene.md).
 
 ______________________________________________________________________
 
