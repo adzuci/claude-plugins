@@ -1,6 +1,19 @@
 ---
 name: support-metrics
-description: "PA Live Support metrics snapshot — Chat SLA, AI Resolution Rate, Escalation Rate, Channel Mix (chat + email) from Snowflake, with N months of history vs AOP targets and a trend narrative. Use when someone asks for support metrics, chat SLA, AI resolution rate, escalation rate, channel mix, support metrics trend, or PA Live Support performance vs AOP targets. Accepts an optional [--months N] argument (default 6)."
+description: "PA Live Support metrics snapshot — Chat SLA, AI Resolution Rate, Escalation Rate, Channel Mix (chat + email) from Snowflake. Shows N months of history vs AOP targets with trend narrative."
+user_invocable: true
+trigger-conditions:
+  - "show me support metrics"
+  - "run support metrics snapshot"
+  - "how is chat SLA doing"
+  - "what is the AI resolution rate"
+  - "support escalation rate this month"
+  - "PA live support metrics"
+  - "show support metrics vs AOP targets"
+  - "support channel mix"
+  - "support metrics trend"
+argument-hint: "[--months N, default 6]"
+allowed-tools: Bash, mcp__apollo_snowflake__read_query
 ---
 
 # PA Live Support Metrics Snapshot
@@ -16,7 +29,7 @@ Runs 4 validated Snowflake queries for PA Live Support and produces a monthly tr
 
 **Not included (requires Intercom API or is unreliable):**
 
-- Handle Time Chat/Video — Snowflake runs 5-15 min too high; requires the Intercom API
+- Handle Time Chat/Video — Snowflake runs 5-15 min too high; use `/tmp/intercom_handle_time.py`
 - Video SLA — `IS_A_CALL_CONVERSATION` undercounts video by 5-15%
 - Email SLA — formula not confirmed, up to 10% gap
 - Chat FCR — `IS_CONVERSATION_FIRST_CONTACT_RESOLUTION` is broken in FY26
@@ -33,23 +46,16 @@ Compute:
 lookback_months = N (default 6)
 ```
 
-The SQL queries use `DATEADD('month', -{{lookback_months}}, DATE_TRUNC('month', CURRENT_DATE()))` as the dynamic start date, so no date math is needed outside Snowflake.
-
-**Before running:** replace every `{{lookback_months}}` placeholder in the queries below with the integer value (e.g. `6`). It is a literal placeholder, not a Jinja/template variable the Snowflake MCP will expand.
+The SQL queries use `DATEADD('month', -<lookback_months>, DATE_TRUNC('month', CURRENT_DATE()))` as the dynamic start date, so no date math is needed outside Snowflake.
 
 ______________________________________________________________________
 
 ## Step 1.5a — Registry lookup (advisory)
 
-Check `LU_SAVED_METRICS` for canonical support metric definitions. Run via the Snowflake MCP:
+Check `LU_SAVED_METRICS` for canonical support metric definitions:
 
-```sql
-SELECT metric_name, variant, metric_sql
-FROM ANALYTICS_DB.PLAYGROUND.LU_SAVED_METRICS
-WHERE status = 'approved'
-  AND (LOWER(metric_name) LIKE '%support%' OR LOWER(metric_name) LIKE '%chat%'
-       OR LOWER(metric_name) LIKE '%sla%' OR LOWER(metric_name) LIKE '%escalation%'
-       OR LOWER(metric_name) LIKE '%resolution%')
+```bash
+python3 scripts/snowflake_query.py "SELECT metric_name, variant, metric_sql FROM ANALYTICS_DB.PLAYGROUND.LU_SAVED_METRICS WHERE status = 'approved' AND (LOWER(metric_name) LIKE '%support%' OR LOWER(metric_name) LIKE '%chat%' OR LOWER(metric_name) LIKE '%sla%' OR LOWER(metric_name) LIKE '%escalation%' OR LOWER(metric_name) LIKE '%resolution%')"
 ```
 
 If canonical definitions exist, prefer their SQL over inline queries. If AOP targets are stored in a metric's description or a separate LU table, use those rather than the hardcoded FY figures below.
@@ -58,23 +64,21 @@ ______________________________________________________________________
 
 ## Step 1.5b — Intelligence Kernel Check (before running queries)
 
-Before running the metric queries, check for a recent intelligence snapshot. Run via the Snowflake MCP:
+Before running Snowflake queries, check for a recent intelligence snapshot:
 
-```sql
-SELECT intelligence, assessed_at
-FROM ANALYTICS_DB.PLAYGROUND.INTELLIGENCE_SNAPSHOTS
-WHERE kernel_id = 'support_intelligence_weekly'
-ORDER BY assessed_at DESC
-LIMIT 1
+```bash
+python3 scripts/snowflake_query.py "SELECT intelligence, assessed_at FROM ANALYTICS_DB.PLAYGROUND.INTELLIGENCE_SNAPSHOTS WHERE kernel_id = 'support_intelligence_weekly' ORDER BY assessed_at DESC LIMIT 1"
 ```
 
 If a snapshot exists from the last 3 days, use it as pre-computed context alongside the queries below. Cite as "From intelligence snapshot (support_intelligence_weekly, assessed <date>)."
+
+Also check if `domain/intelligence/support_intelligence_weekly.yaml` has a populated `queries:` block — if so, prefer those queries over the hardcoded ones below (they're maintained by the intelligence pipeline).
 
 ______________________________________________________________________
 
 ## Step 2 — Run all 4 queries in parallel
 
-Run each via the Snowflake MCP. All 4 are independent and can be fired simultaneously.
+Use `mcp__apollo_snowflake__read_query` for each. Run all 4 simultaneously.
 
 ### Query 1: Chat SLA
 
@@ -244,10 +248,3 @@ Format:
 ```
 
 If no alerts, omit the section entirely.
-
-______________________________________________________________________
-
-## Tracking
-
-- **Query tag:** Before running queries, set the session query tag via the Snowflake MCP: `ALTER SESSION SET QUERY_TAG = '{"app":"jarvis","action":"support_metrics"}'`
-- **Pulse:** After producing the snapshot, log the session via the Snowflake MCP `log-jarvis-session` tool with action `support_metrics` and a one-line detail (months covered + any alerts).

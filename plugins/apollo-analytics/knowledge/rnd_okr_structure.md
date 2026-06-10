@@ -4,7 +4,7 @@
 **Source:** Bi-weekly R&D Huddles updates (Mar 16-30), shared by Jaime DyBuncio (Bela's Chief of Staff)
 **Audience:** Jarvis — use this to understand how Bela's product org frames priorities, tracks progress, and organizes teams
 
----
+______________________________________________________________________
 
 ## How to Use This File
 
@@ -14,7 +14,7 @@ When answering questions about what Bela cares about, what R&D is working on, or
 
 **⚠ Staleness warning:** The scorecard below is a snapshot from the biweekly R&D Huddle (as of Mar 30). These values go stale quickly. When answering exec questions about current OKR status, **pull live metrics from Snowflake** (e.g., ARR from FCT_DAILY_REVENUE, WAT from FCT_TEAM_FEATURE_USERS_DAILY) instead of echoing the values below. Use this file for the OKR structure and targets — not as the source of current actuals.
 
----
+______________________________________________________________________
 
 ## 5 Company Objectives (R&D Scope)
 
@@ -26,7 +26,7 @@ When answering questions about what Bela cares about, what R&D is working on, or
 | 4 | **New Product Revenue** | H2 | Inbound $6.4M, Dialer $4.1M, AI Sheets alpha |
 | 5 | **Build the Future** | H3 | Single AI assistant for every rep + #1 agentic GTM API |
 
----
+______________________________________________________________________
 
 ## Q1 OKR Scorecard (Top 16 Metrics)
 
@@ -52,13 +52,14 @@ When answering questions about what Bela cares about, what R&D is working on, or
 | Obj 5 | MCP | DAU, WAT, Credits | **LIVE** — see query below | |
 | Obj 5 | Co-Sell (Assistant 2.0) | 5+ design partners | Qualitative milestone — Notion/slides | Manual |
 
----
+______________________________________________________________________
 
 ## Live OKR Queries
 
 When generating the CPO/OKR report, run these queries instead of echoing cached values.
 
 ### Deliverability CIR (Complaint + Invalid Rate)
+
 ```sql
 -- Reference: domain/deliverability.md
 SELECT
@@ -73,6 +74,7 @@ ORDER BY 1 DESC;
 ```
 
 ### CSV Credit Consumption (Monthly)
+
 ```sql
 SELECT
     DATE_TRUNC('month', ds)::date AS month,
@@ -85,6 +87,7 @@ ORDER BY 1 DESC;
 ```
 
 ### AI Credit Consumption (Monthly Total)
+
 ```sql
 SELECT
     DATE_TRUNC('month', ds)::date AS month,
@@ -98,6 +101,7 @@ ORDER BY 1 DESC;
 ```
 
 ### AI Assistant W4 Retention
+
 ```sql
 -- Reference: teammates/pubudu_wariyapola/ai_assistant_retention_all_weeks.sql
 -- Paid Core users only. W4 = days 22-28 post first active date.
@@ -128,6 +132,7 @@ ORDER BY 1 DESC;
 ```
 
 ### Inbound ARR
+
 ```sql
 SELECT
     date(date_time_string) AS dd,
@@ -142,6 +147,7 @@ LIMIT 1;
 ```
 
 ### Dialer ARR
+
 ```sql
 SELECT
     date(date_time_string) AS dd,
@@ -156,6 +162,7 @@ LIMIT 1;
 ```
 
 ### MCP (DAU, WAT, Credits)
+
 ```sql
 -- MCP DAU (last 7 days)
 SELECT
@@ -179,7 +186,7 @@ GROUP BY 1
 ORDER BY 1 DESC;
 ```
 
----
+______________________________________________________________________
 
 ## Team → Objective Mapping
 
@@ -188,6 +195,7 @@ ORDER BY 1 DESC;
 | Fabric & Service Design | Obj 1: Meet the Moment | KR1.1 |
 | AI Assistant | Obj 2: Improve NRR + Obj 5: Build the Future | KR2.1, KR5.1 |
 | Onboarding | Obj 2: Improve NRR | KR2.2 |
+| Conversion (Growth Product) | Obj 2: Improve NRR | W2 FTP ≥ 1.33%, Trial W2 CVR ≥ 3.5%, SS Annual ≥ 7.0% — see `domain/conversion_team_q2_fy27_okr.md` |
 | Concept Car / Kaizen | Obj 2: Improve NRR | KR2.1 |
 | Deliverability | Obj 3: Upmarket Readiness | KR3.2, KR3.3 |
 | Data | Obj 3: Upmarket Readiness | KR3.1, KR3.3 |
@@ -201,14 +209,16 @@ ORDER BY 1 DESC;
 | Apollo Co-Sell (fka Assistant 2.0) | Obj 5: Build the Future | KR5.1 |
 | MCP | Obj 5: Build the Future | KR5.2 |
 
----
+______________________________________________________________________
 
 ## Objective Detail
 
 ### Objective 1: Meet the Moment
+
 AI transformation in people, company, operations, and product. Invest in people and leaders.
 
 Key highlights (Q1):
+
 - Pocus acquisition: Isaac Pohl-Zaretsky (AI Sheets lead), Claire Seaver (Discovery & Analytics PM), Hana Kim (Pocus integration), 11 engineers
 - Product Builder L5 role in POC; PM rubric revision toward Builder/AI-native skills
 - Athena PRD Agent: 55+ PRDs generated, hours → minutes
@@ -216,25 +226,30 @@ Key highlights (Q1):
 - Experiment digest channel (#amplitude-experiment-digest) vibe-coded post all-hands
 
 ### Objective 2: Horizon 1 — Improve NRR
+
 Improve VSB and SMB NRR by 10+ pts. Decrease TTV, optimize onboarding and activation.
 
 **AI Assistant** (KR2.1):
+
 - Paid Core WAUs: 10K+ (from 3.6K pre-GA)
 - W1 retention: 27.9% (from 19%), F7D high-value action rate: 4.8% → 21.5%
 - W4 retention: 11.1% — below 13.4% baseline, well below 20% target
 - Risk: Execution Engine drops requests; 29.1% of conversations end without action
 
 **Onboarding** (KR2.2):
+
 - Wizard removal: 100% rollout, stat-sig +1.74% FTP lift
 - Champion Onboarding Flow: launched 3/26
 - Habit RA: ~11.7% vs 17% target
 - Key insight: "Activation breaks before or at the first outbound experience, not after it"
 
 **Concept Car / Kaizen** (KR2.1):
+
 - 4 experiments designed, sized, ready for eng — not yet in development
 - Focus: email trigger on copy, action bar cleanup, simplified email compose, export→nudge
 
 ### Objective 3: Horizon 1 — Upmarket Readiness
+
 Generate $37.7M in MM/Ent ARR. Improve upmarket win rate 39%→42%. Improve MM churn 6 pts.
 
 **Data**: Account match 85% (big recovery from CSV scrubbing). Fill rate gaps structural (funding 19%). SFDC V2 broken — 0/37 duels.
@@ -250,12 +265,13 @@ Generate $37.7M in MM/Ent ARR. Improve upmarket win rate 39%→42%. Improve MM c
 **AI Sheets** (KR4.3): ~70% MVP complete. Prospeo + LeadMagic live. Isaac (ex-Pocus CTO) leading. Controlled customer rollout April.
 
 ### Objective 5: Build the Future
+
 Build the single AI assistant every rep uses. Become #1 API for agentic GTM.
 
 **Co-Sell / Assistant 2.0** (KR5.1): 3/5 design partners signed. Slack POC live staging. 0/5 running autonomous workflows — first test (Slack Daily Brief) this week. Validate or pivot by 5/7.
 **MCP** (KR5.2): Peak DAU 2,492 (+40% WoW), WAT 7,472 (+150% WoW), Credits 100K+/wk. Moving from Tiger Team to dedicated scrum. Legal/compliance gating expansion beyond Anthropic.
 
----
+______________________________________________________________________
 
 ## Update Cadence
 

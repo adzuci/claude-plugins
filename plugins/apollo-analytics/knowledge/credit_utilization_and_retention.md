@@ -21,6 +21,7 @@ Andrew analyzed coefficient of variation in credit usage across months (15K team
 ## Feature Usage and Retention
 
 Teams using multiple features retain better. Key features analyzed:
+
 - **Direct dial** — steepest usage decline recently
 - **Searcher emails** — high-usage feature, correlated with retention
 - **Power-ups** — usage increased significantly since Dec-Jan 2025 (affects analyses of teams paying since Sept)
@@ -29,12 +30,14 @@ Teams using multiple features retain better. Key features analyzed:
 ## Pricing & Monetization Insights
 
 ### Price-insensitive segment (5-10% of paying customers)
+
 - High-intent teams that frequently hit credit limits are likely less price-sensitive
 - Hypothesis: a higher price point on basic monthly plan could improve professional plan take rates
 - Testing needed to understand elasticity — estimated impact in "tens of dollars" per customer
 - Previous seat discount experiments (by Sarab) lifted retention ~9-10% but were uneconomical due to unit economics
 
 ### One-time / non-subscription idea
+
 - Pubudu raised the idea of a separate non-subscription product for customers with narrow, specific needs
 - Andrew noted it's a valuable thought exercise but operationally challenging
 
@@ -48,6 +51,7 @@ Teams using multiple features retain better. Key features analyzed:
 ## Proposed Experiments
 
 ### 1. Soft-cap daily credit limit
+
 Encourage daily engagement by distributing credits across days rather than allowing bulk consumption. Inspired by Duolingo's streak system and Claude's daily usage cap model.
 
 - **Mechanism:** Daily credit allocation or soft gate — users get a daily budget, can still use more but with friction (e.g., "You've used your daily credits, come back tomorrow" or reduced speed)
@@ -56,6 +60,7 @@ Encourage daily engagement by distributing credits across days rather than allow
 - **Owner:** Karthik to explore feasibility and A/B test setup
 
 ### 2. Higher price point for basic monthly plan
+
 - Test a price increase targeting high-intent, price-insensitive customers
 - Measure impact on FTP (free-to-paid) conversion and professional plan upgrade rates
 
@@ -68,8 +73,8 @@ Encourage daily engagement by distributing credits across days rather than allow
 
 ## Relevance to Our Work
 
-This analysis directly relates to the **GOLD_TEAM_CREDITS** table (PR #2672) and credit pipeline work:
-- `credits_used_by_feature` VARIANT field enables the multi-feature retention analysis
-- Active days analysis would need a new metric: count of distinct days with credits_used > 0 per team per month
-- Daily soft-cap implementation would need credit usage tracking at the daily grain — our (ds, team_id) grain in GOLD_TEAM_CREDITS supports this
-- Utilization rate = credits_used / credit_limit — directly computable from GOLD_TEAM_CREDITS
+This analysis relates to the credit pipeline. **GOLD_TEAM_CREDITS is deprecated** (data unreliable, flagged 2026-04-15). Use `AGG_TEAM_CREDITS` as the trusted source until `FCT_TEAM_CREDITS_DAILY` is rebuilt:
+
+- `credits_used_by_feature` analysis requires the new foundation table (not yet built)
+- Active days analysis: count of distinct days with credits_used > 0 per team per month — use `AGG_TEAM_CREDITS`
+- Utilization rate = credits_used / credit_limit — computable from `AGG_TEAM_CREDITS`

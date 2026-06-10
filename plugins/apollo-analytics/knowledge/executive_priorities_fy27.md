@@ -10,13 +10,14 @@ Source: FY27 AOP, CKO: Ignite to Win sessions, FY27 Goals Repository (CBRs #8–
 - **Operating model shift:** PLG point solution → multi-solution platform via hybrid motion (PLG + human-led sales)
 - **Framework:** Horizons (H1 core / H2 emerging / H3 exploratory), teams locked per quarter
 
----
+______________________________________________________________________
 
 ## Strategic Pillar 1: NRR & Retention
 
 **Why it matters:** T4 customers = 52% of ARR but 75% of total churn. Retention is the single most impactful lever.
 
 ### What needs to be measured
+
 | Metric | Current | Target | Cadence |
 |---|---|---|---|
 | NRR by segment (T1/T2/T3/T4) | ? | Improve | Monthly |
@@ -31,20 +32,22 @@ Source: FY27 AOP, CKO: Ignite to Win sessions, FY27 Goals Repository (CBRs #8–
 | Month-to-annual upgrade rate | ? | Increase | Monthly |
 
 **OKR detail (CBR #10 — Multi-Product & Retention):**
+
 - "Multi-product" = teams using 2+ Apollo use cases (sequences + enrichment, etc.)
 - M3 NRR measures retention 3 months after acquisition — cohort-based, not aggregate
 - Growth accounting framework: need "NRR annualized actual" metric for tracking real vs modeled retention
 
 ### Data Sparring insight (2026-03-06)
-Daily active days is the #1 retention signal — 26+ days = 76% retention vs <40% at 1-5 days. Proposed soft-cap daily credit limit experiment to drive daily engagement. See `domain/credit_utilization_and_retention.md`.
+
+Daily active days is the #1 retention signal — 26+ days = 76% retention vs \<40% at 1-5 days. Proposed soft-cap daily credit limit experiment to drive daily engagement. See `domain/credit_utilization_and_retention.md`.
 
 ### Relevant tables
-- `GOLD_TEAM_CREDITS` (PR #2672) — (ds, team_id) grain, has credit usage by feature/type, utilization rate
-- `AGG_TEAM_CREDITS` — Source for credit metrics
+
+- `AGG_TEAM_CREDITS` — Source for credit metrics (usage and limits by type/feature)
 - `LU_TEAMS` — Team metadata, segment, plan
 - `FCT_EVENTS` / Amplitude — Product engagement events, active days
 
----
+______________________________________________________________________
 
 ## Strategic Pillar 2: AI-Native GTM
 
@@ -53,6 +56,7 @@ Daily active days is the #1 retention signal — 26+ days = 76% retention vs <40
 ### Key product areas
 
 **AI Assistant (GA)**
+
 - SDR workflow: 1 hour → 10-15 minutes for sequence building
 - OKR targets (CBR #9): 15K WAUs at 20% W4 retention
 - Tracking: AI WAT (weekly active teams), multi-tool call rates, first-time use conversion
@@ -60,23 +64,27 @@ Daily active days is the #1 retention signal — 26+ days = 76% retention vs <40
 - AI credit consumption recalibration needed — behavioral baseline not established yet
 
 **Context Center 3.0**
+
 - ~1-4% adoption of AI WAT teams so far (early stage)
 - 644 teams approved but show zero AI WAT activity (setup without use)
 - Scrape failure rate improved: 37% (v2) → 26% (v3)
 - 24hr review-to-approval conversion: 51.8%
 
 **Context Graph (POC)**
+
 - Goal: AI "next best action" recommendations using historical sales precedents
 - Signal prioritization: Bombora intent, website visitors, job changes, funding events, news events
 - OKR: CC 3.0 to 100% by 3/4, Context Graph baseline delivered
 - Missing data in Snowflake: funding events (partial), news events (missing)
 
 **Claude/MCP Connector**
+
 - GA launch with Anthropic partnership
 - Customer-facing Apollo MCP server
 - MCP usage trackable via `FCT_MONGO_HTTP_REQUESTS_V3_RT_VW` filtered by `user_agent = 'Apollo-MCP/1.0'`
 
 ### What needs to be measured
+
 | Metric | Notes |
 |---|---|
 | AI WAT (weekly active teams) | By segment, paid vs free |
@@ -89,18 +97,20 @@ Daily active days is the #1 retention signal — 26+ days = 76% retention vs <40
 | AI credit consumption | AI credits excluded from unified pool |
 
 ### Relevant tables
+
 - `FCT_EVENTS` / Amplitude — AI feature events
 - `FCT_MONGO_HTTP_REQUESTS_V3_RT_VW` — MCP usage
 - `AGG_TEAM_CREDITS` — AI credit types (ai_email, ai_credit)
 - Context Graph signals: Bombora, website visitors, job changes (various raw tables)
 
----
+______________________________________________________________________
 
 ## Strategic Pillar 3: Inbound Product
 
 **Why it matters:** New revenue line. $4M base / $10M stretch target. 3-year opportunity: $45M ARR. Funded with 7-8 engineers + tiger team.
 
 ### Financial model
+
 | Metric | Value |
 |---|---|
 | Current pricing | $149/team/mo ($119 annual) |
@@ -112,13 +122,15 @@ Daily active days is the #1 retention signal — 26+ days = 76% retention vs <40
 | Exit ARPT | $3.3k |
 
 ### Product themes & ARR targets
+
 1. Supercharged add-on — $1.5M
-2. Simple onboarding — $500k
-3. Inbound+Outbound orchestration — $500k
-4. Replace Chili Piper for MM — $1M
-5. Foray into MAP (marketing automation) — $500k (incubate Q3, launch Q4)
+1. Simple onboarding — $500k
+1. Inbound+Outbound orchestration — $500k
+1. Replace Chili Piper for MM — $1M
+1. Foray into MAP (marketing automation) — $500k (incubate Q3, launch Q4)
 
 ### What needs to be measured
+
 | Metric | Current | Target |
 |---|---|---|
 | Inbound add-on adoption rate | ? | 0.6% self-serve, 4.6% rep-driven |
@@ -132,23 +144,26 @@ Daily active days is the #1 retention signal — 26+ days = 76% retention vs <40
 | Contact-level website visitor GA | Pre-GA | GA target April 8 (CBR #11) |
 
 **OKR detail (CBR #11 — Inbound):**
+
 - Q1 pacing ~$1.2M vs $1.5M OKR goal — tracking behind, may need acceleration
 - Contact-level website visitors (not just form submissions) is the key unlock for volume
 - Website visitor WATs (contact-level) target 250+ is aggressive; forms-only target 50+ is conservative
 
 ### Relevant tables
+
 - Website visitor events (needs identification)
 - Inbound form submission data
 - Workflow execution tables
 - Revenue / billing tables for ARPT
 
----
+______________________________________________________________________
 
 ## Strategic Pillar 4: Upmarket Readiness
 
 **Why it matters:** MM+Ent rep-driven ARR growing 64% YoY ($13.5M → $21.8M). New logo targets: 488 → 680 teams (+39%).
 
 ### What needs to be measured
+
 | Metric | Current | Target |
 |---|---|---|
 | MM+Ent rep-driven ARR | $13.5M | $21.8M (+64%) |
@@ -160,18 +175,20 @@ Daily active days is the #1 retention signal — 26+ days = 76% retention vs <40
 | Sales coverage model | ? | By segment |
 
 ### Relevant tables
+
 - SFDC opportunity data
 - `LU_TEAMS` — segment, plan type
 - Pipeline / stage change events
 - PQL/PQA scoring tables
 
----
+______________________________________________________________________
 
 ## Strategic Pillar 5: Pricing & Packaging
 
 **Why it matters:** P&P delivered $16M+ incremental ARR in FY26. FY27 continuing with $10M+ from existing initiatives + new experiments.
 
 ### Active experiments and initiatives
+
 - **AB59 higher price variant** — Testing price sensitivity on basic plan
 - **Expiring credits nudge** — Meaningful gains for free users during trials
 - **Trial preview badges** — Paid feature previews to drive engagement
@@ -179,6 +196,7 @@ Daily active days is the #1 retention signal — 26+ days = 76% retention vs <40
 - **Soft-cap daily credit limit** — Proposed (Data Sparring), Karthik owns A/B test
 
 ### What needs to be measured
+
 | Metric | Notes |
 |---|---|
 | FTP conversion at Week 2 | 4.0% current, 4.5% target |
@@ -189,18 +207,20 @@ Daily active days is the #1 retention signal — 26+ days = 76% retention vs <40
 | Feature gate reach and conversion | Which gates drive upgrades |
 
 ### Relevant tables
-- `AGG_TEAM_CREDITS` / `GOLD_TEAM_CREDITS` — Credit usage and limits
+
+- `AGG_TEAM_CREDITS` — Credit usage and limits
 - Amplitude experiment data
 - Billing / subscription tables
 - `FCT_EVENTS` — Feature gate impressions
 
----
+______________________________________________________________________
 
 ## Strategic Pillar 6: Waterfall Enrichment & Data Quality
 
 **Why it matters:** Apollo positioning as "data provider to intelligence engine." Data quality is table stakes for upmarket.
 
 ### What needs to be measured
+
 | Metric | Notes |
 |---|---|
 | Waterfall enrichment hit rates | Email and phone, by provider |
@@ -209,11 +229,12 @@ Daily active days is the #1 retention signal — 26+ days = 76% retention vs <40
 | Enrichment by channel | CSV, API, in-app, AI Sheets |
 
 ### Relevant tables
+
 - Waterfall enrichment event tables
 - Contact/People enrichment results
 - `FCT_MONGO_HTTP_REQUESTS_V3_RT_VW` — API enrichment calls
 
----
+______________________________________________________________________
 
 ## Onboarding & Activation (Cross-Cutting Theme)
 
@@ -227,7 +248,7 @@ Daily active days is the #1 retention signal — 26+ days = 76% retention vs <40
 
 **Data need:** "Record Actioned" definition needs clarification — what events constitute actioning a record? Likely combination of email send, call, task completion on a contact/lead.
 
----
+______________________________________________________________________
 
 ## Key Data & Analytics Gaps (from OKR Review)
 
@@ -242,7 +263,7 @@ These are measurement gaps surfaced by the Goals Repository that Analytics needs
 | "Record Actioned" event definition | Onboarding OKR depends on this; unclear what events qualify | Medium |
 | Inbound pipeline attribution end-to-end | Meeting booked → opportunity → revenue attribution for inbound channel | Medium |
 
----
+______________________________________________________________________
 
 ## What's Being Defunded / Descoped
 
@@ -254,30 +275,31 @@ These are measurement gaps surfaced by the Goals Repository that Analytics needs
 | Legacy onboarding team | Reduced, being rebuilt |
 | Non-brand SEO | Declining due to AI Overviews — strategic pivot needed |
 
----
+______________________________________________________________________
 
 ## People & Operations Metrics
 
 | Metric | Target |
 |---|---|
 | Employee engagement score | 80% by end of FY27 |
-| Regrettable attrition | <8% |
-| Overall attrition | <25% by end of FY27 |
+| Regrettable attrition | \<8% |
+| Overall attrition | \<25% by end of FY27 |
 | Cost of hire | $9k/hire |
 | People team cost as % of ARR | 3.2% |
 
----
+______________________________________________________________________
 
 ## Comprehensive Data Availability Mapping (Updated 2026-03-06)
 
 Source: Snowflake schema exploration + leadgenie monorepo model analysis.
 
 **IMPORTANT — Trust hierarchy for this analysis:**
+
 1. **ANALYTICS_DATAPLATFORM** — Raw Mongo mirrors. Trustworthy as source-of-record.
-2. **RAW_MONGO_DB.RAW_COLLECTIONS** — Raw Mongo exports. Trustworthy.
-3. **Stripe / Salesforce staging tables** — Fivetran-synced. Trustworthy for billing/CRM.
-4. **ANALYTICS schema** — Mixed quality. Some tables authoritative, others legacy. Verify before depending.
-5. **ANALYTICS_DATASCIENCE** — Data science team's derived tables. **Data quality is suspect.** Useful as a *reference for what should be measured* and what event types exist, but we must trace upstream to raw sources for anything we depend on. Do NOT treat these as final data assets.
+1. **RAW_MONGO_DB.RAW_COLLECTIONS** — Raw Mongo exports. Trustworthy.
+1. **Stripe / Salesforce staging tables** — Fivetran-synced. Trustworthy for billing/CRM.
+1. **ANALYTICS schema** — Mixed quality. Some tables authoritative, others legacy. Verify before depending.
+1. **ANALYTICS_DATASCIENCE** — Data science team's derived tables. **Data quality is suspect.** Useful as a *reference for what should be measured* and what event types exist, but we must trace upstream to raw sources for anything we depend on. Do NOT treat these as final data assets.
 
 ### Pillar 1: NRR & Retention
 
@@ -309,12 +331,13 @@ Source: Snowflake schema exploration + leadgenie monorepo model analysis.
 `PRODUCT_METRICS_NRR`, `PRODUCT_METRICS_ARR`, `PRODUCT_METRICS_CONVERSION`, `PRODUCT_METRICS_ACQUISITION`, `DIM_ACTIVE_TEAMS_DAILY`, `FEATURE_RETENTION_TEAM_COHORTS_WEEKLY`, `TEAM_DAILY_SOLUTION_USAGE`, `WEEKLY_TEAM_SIGNALS`. These tell us *what the DS team thought was important to measure* and can guide our own pipeline design.
 
 **Gaps:**
+
 - Churn *reason* taxonomy — Zendesk tickets provide some signal, and `CANCELLATION_SURVEYS` exists in RAW_MONGO_DB (leadgenie `packs/billing/app/models/cancellation_survey.rb` captures structured churn reasons). Needs investigation: what fields are captured, how complete is coverage, and is it synced to ANALYTICS_DATAPLATFORM?
 - "Record Actioned" event definition — undefined, critical for onboarding OKR
 - R&D vs GTM retention definition alignment — still unresolved
 - Cohort-based M3 NRR — verify if `FCT_ACCOUNT_QUARTERLY_NRR` implements this or a different methodology
 
----
+______________________________________________________________________
 
 ### Pillar 2: AI-Native GTM
 
@@ -335,12 +358,13 @@ Source: Snowflake schema exploration + leadgenie monorepo model analysis.
 **Raw source for AI events:** Likely Amplitude events flowing through `INT_AMPLITUDE_EVENTS_DAILY` (127M, ANALYTICS_DATASCIENCE). Need to identify the specific Amplitude event names that correspond to each AI action type, then build from those raw events.
 
 **Gaps:**
+
 - AI → outcome correlation — no join between AI-generated emails and reply/meeting rates. Would need to tag emails in `FCT_MONGO_EMAILER_MESSAGES` with AI generation source, then join to email outcome events.
 - Context Center v3 scrape failure rate — likely in Amplitude, not yet surfaced
 - Context Graph signal coverage — funding events (partial), news events (DIM_MONGO_ORGANIZATION_INTENT_NEWS exists with 609M rows)
 - AI credit consumption behavioral baseline — needs to be established from `FCT_MONGO_CREDIT_USAGES`
 
----
+______________________________________________________________________
 
 ### Pillar 3: Inbound Product
 
@@ -361,19 +385,21 @@ Source: Snowflake schema exploration + leadgenie monorepo model analysis.
 `USER_INBOUND_ACTIONS_DAILY` (585K) tracks: website_visitors_filter_applied_in_search, website_visitors_on_hover_viewed, inbound_router_form_enriched, standalone_form_enriched, meeting_booked_via_apollo_scheduler. Categories: inbound_website_visitors, inbound_form_enrichment, inbound_router. Small volume (585K total) confirms product is early-stage.
 
 **Leadgenie models (upstream source tracing for inbound):**
+
 - `packs/1p_intent/app/models/website_visits/website_visitor.rb` — Has `new_reveal` (boolean), `total_visits`, `unique_sessions` fields. This is the contact-level identification model.
 - `packs/1p_intent/app/models/website_visits/intent_event.rb` — Raw events with `contact_identified` and `deanonymised` boolean fields. These are the signals that power contact-level website visitor identification.
 - `packs/plays/app/models/form_enrichment_daily_stat.rb` — Daily stats for inbound form enrichment conversion funnel.
 - `INTENT_EVENTS` collection exists in RAW_MONGO_DB — raw intent event data is flowing to Snowflake.
 
 **Gaps (SIGNIFICANT — this is the weakest pillar):**
-1. **Contact-level website visitor identification** — Product feature targeting GA April 8 (CBR #11). Leadgenie models exist (`website_visitor.rb` with `new_reveal`, `intent_event.rb` with `contact_identified`/`deanonymised`). `INTENT_EVENTS` exists in RAW_MONGO_DB but need to verify if contact-level identification fields are populated pre-GA. `DIM_MONGO_INTENT_EVENTS` (8.5B rows) in ANALYTICS_DATAPLATFORM may already have these fields — needs column-level investigation.
-2. **Inbound conversion funnel** — No visitor → identified → engaged → meeting → opportunity → revenue pipeline. `FormEnrichmentDailyStat` model in leadgenie tracks daily form enrichment stats — check if this surfaces in Snowflake.
-3. **Inbound revenue attribution** — Cannot tie inbound to revenue end-to-end
-4. **Inbound ARPT tracking** — Need join of inbound feature usage to Stripe billing
-5. **Contact-level website visitor WATs target (250+)** — Need a table to track this metric against OKR
 
----
+1. **Contact-level website visitor identification** — Product feature targeting GA April 8 (CBR #11). Leadgenie models exist (`website_visitor.rb` with `new_reveal`, `intent_event.rb` with `contact_identified`/`deanonymised`). `INTENT_EVENTS` exists in RAW_MONGO_DB but need to verify if contact-level identification fields are populated pre-GA. `DIM_MONGO_INTENT_EVENTS` (8.5B rows) in ANALYTICS_DATAPLATFORM may already have these fields — needs column-level investigation.
+1. **Inbound conversion funnel** — No visitor → identified → engaged → meeting → opportunity → revenue pipeline. `FormEnrichmentDailyStat` model in leadgenie tracks daily form enrichment stats — check if this surfaces in Snowflake.
+1. **Inbound revenue attribution** — Cannot tie inbound to revenue end-to-end
+1. **Inbound ARPT tracking** — Need join of inbound feature usage to Stripe billing
+1. **Contact-level website visitor WATs target (250+)** — Need a table to track this metric against OKR
+
+______________________________________________________________________
 
 ### Pillar 4: Upmarket Readiness
 
@@ -399,11 +425,12 @@ Source: Snowflake schema exploration + leadgenie monorepo model analysis.
 | Security config (real-time) | `DIM_MONGO_SECURITY_CONFIGS_RT_VW` | ANALYTICS_DATAPLATFORM | Real-time security settings view |
 
 **Gaps:**
-1. **SSO/SCIM adoption** — **CONFIRMED GAP.** Leadgenie `packs/iam/app/models/sso_config.rb` exists with `active` boolean, `idp` enum (gmail, ms_exchange, okta, entra_id), and `scim_api_key` field. However, `SSO_CONFIGS` is NOT synced to any Snowflake table — no `DIM_MONGO_SSO_CONFIGS` exists. **Action needed:** Request ANALYTICS_DATAPLATFORM team add this collection to the Mongo mirror pipeline. Until then, MFA adoption via `DIM_MONGO_MFA_CONFIGS` (31K rows) is the closest enterprise security adoption signal.
-2. **PQL/PQA scoring** — No dedicated table found. May live in Salesforce or an external system (e.g., MadKudu). Check with GTM analytics.
-3. **Enterprise feature usage aggregation** — Raw permission data exists but no "enterprise readiness score" or adoption aggregate. MFA (31K teams) + permission sets (13.6M) could be combined into a composite signal.
 
----
+1. **SSO/SCIM adoption** — **CONFIRMED GAP.** Leadgenie `packs/iam/app/models/sso_config.rb` exists with `active` boolean, `idp` enum (gmail, ms_exchange, okta, entra_id), and `scim_api_key` field. However, `SSO_CONFIGS` is NOT synced to any Snowflake table — no `DIM_MONGO_SSO_CONFIGS` exists. **Action needed:** Request ANALYTICS_DATAPLATFORM team add this collection to the Mongo mirror pipeline. Until then, MFA adoption via `DIM_MONGO_MFA_CONFIGS` (31K rows) is the closest enterprise security adoption signal.
+1. **PQL/PQA scoring** — No dedicated table found. May live in Salesforce or an external system (e.g., MadKudu). Check with GTM analytics.
+1. **Enterprise feature usage aggregation** — Raw permission data exists but no "enterprise readiness score" or adoption aggregate. MFA (31K teams) + permission sets (13.6M) could be combined into a composite signal.
+
+______________________________________________________________________
 
 ### Pillar 5: Pricing & Packaging
 
@@ -414,7 +441,7 @@ Source: Snowflake schema exploration + leadgenie monorepo model analysis.
 | Measurement | Trusted Source Table(s) | Schema | Notes |
 |---|---|---|---|
 | Credit usage (raw events) | `FCT_MONGO_CREDIT_USAGES`, `FCT_MONGO_CREDIT_USAGE_DETAILS` | ANALYTICS_DATAPLATFORM | Raw Mongo — event-level |
-| Credit aggregation | `AGG_TEAM_CREDITS`, `GOLD_TEAM_CREDITS` | ANALYTICS / ANALYTICS_DATAPLATFORM | We own these, verified |
+| Credit aggregation | `AGG_TEAM_CREDITS` | ANALYTICS | We own this, verified. (GOLD_TEAM_CREDITS deprecated 2026-04-15) |
 | Credit limits | `LU_CREDIT_QUOTA` → `STG_CREDIT_QUOTA` | ANALYTICS_DATAPLATFORM | Raw Mongo |
 | Plan edition changes | `FCT_ACCOUNT_EDITION_CHANGES` | ANALYTICS | Upgrade/downgrade events |
 | Stripe subscriptions | `STG_STRIPE__SUBSCRIPTION` (997K) | ANALYTICS | Raw Stripe, trustworthy |
@@ -426,9 +453,9 @@ Source: Snowflake schema exploration + leadgenie monorepo model analysis.
 
 > **Experiment platform (2026-03-19):** Statsig is **deprecated**. Current platform is **Amplitude**. `DIM_USER_SPLIT_TEST_ALLOCATIONS` and `EXPORT_TEAMS_DAILY_STATSIG` are both deprecated. Use `INT_TEAM_CONTROL_AND_TREATMENT` for Snowflake-side experiment joins. For full results, go to Amplitude directly. User-level assignment table TBC — ask Andrew Green or Pubudu.
 
-**This pillar is well-covered by trusted sources.** Our own AGG_TEAM_CREDITS/GOLD_TEAM_CREDITS work directly supports it.
+**This pillar is well-covered by trusted sources.** Our own AGG_TEAM_CREDITS work directly supports it.
 
----
+______________________________________________________________________
 
 ### Pillar 6: Data Quality & Waterfall Enrichment
 
@@ -451,7 +478,7 @@ Source: Snowflake schema exploration + leadgenie monorepo model analysis.
 
 **This pillar has the deepest raw data coverage.** 27.4B field enrichment status rows give field-level enrichment tracking. 658M waterfall step results give per-provider hit rates. All in ANALYTICS_DATAPLATFORM (trusted).
 
----
+______________________________________________________________________
 
 ## Revised Gap Analysis (Post-Investigation)
 
@@ -478,7 +505,7 @@ Source: Snowflake schema exploration + leadgenie monorepo model analysis.
 | 8 | **"Record Actioned" definition** | Onboarding | LOW | Agreed event definition for OKR | Needs cross-functional alignment, not a data problem |
 | 9 | **NRR methodology verification** | NRR & Retention | MEDIUM | Verify `FCT_ACCOUNT_QUARTERLY_NRR` implements M3 cohort NRR per OKR definition | Trace upstream to Stripe subscription changes |
 
----
+______________________________________________________________________
 
 ## Leadgenie Monorepo: Data Model Mapping
 
@@ -533,7 +560,7 @@ This maps critical leadgenie models to their Snowflake availability, highlightin
 
 **Key takeaway:** Most billing, enrichment, and core entity models are well-synced. The biggest pipeline gaps are in **IAM** (SSO not synced) and **inbound** (contact-level identification pre-GA). The `CANCELLATION_SURVEYS` collection exists in RAW_MONGO but hasn't been promoted to ANALYTICS_DATAPLATFORM — this is a quick win for churn reason analysis.
 
----
+______________________________________________________________________
 
 ## Key Reference Documents
 

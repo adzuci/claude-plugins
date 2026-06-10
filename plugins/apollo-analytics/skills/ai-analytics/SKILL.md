@@ -1,13 +1,35 @@
 ---
 name: ai-analytics
-description: "Answer quantitative metric and analysis questions about Apollo's AI capabilities — AI Assistant usage/engagement (DAU/WAU/MAU, active users, retention, W4), thread outcomes and success/regrettable-failure rates, thread latency and LLM cost, powerups (credits), messaging (email open/reply rates, sequences, genpipe), and content center. Use for any AI-product metric or analysis question. For qualitative themes (what users say/complain about), use assistant-voc instead."
+description: "Answer questions about any of Apollo's AI capabilities — AI Assistant usage, engagement, outcomes, retention, powerups (credits), messaging (email sequences), and content center. Knows the canonical table hierarchy, correct active-thread filters, outcome definitions, and query patterns built by Sai. Use when anyone asks a metric or analysis question about Apollo AI products."
+argument-hint: "<question about AI assistant, powerups, messaging, content center, or any Apollo AI capability>"
+allowed-tools: Bash, Read, Glob, Grep, Agent, mcp__snowflake__read_query, mcp__claude_ai_Slack__slack_search_public_and_private, mcp__claude_ai_Atlassian__searchJiraIssuesUsingJql
+trigger-conditions:
+  - "AI assistant WAU"
+  - "AI assistant DAU"
+  - "AI assistant MAU"
+  - "AI assistant retention"
+  - "AI assistant W4 retention"
+  - "how many AI users"
+  - "AI thread success rate"
+  - "AI thread outcomes"
+  - "AI regrettable failure rate"
+  - "powerup usage"
+  - "powerup credits usage"
+  - "content center metrics"
+  - "AI assistant engagement"
+  - "how is AI assistant performing"
+  - "AI assistant active users"
+  - "AI email open rate"
+  - "AI sequence reply rate"
+  - "AI messaging metrics"
+  - "genpipe metrics"
+  - "AI thread latency"
+  - "LLM cost per thread"
 ---
 
 # AI Assistant Analytics
 
 An analyst, engineer, or stakeholder wants to answer a question about AI Assistant usage, outcomes, powerups, messaging, or content center activity. Your job is to identify the right table, apply the correct filters, run the query, and return a clear answer.
-
-**Scope:** this skill answers **quantitative** questions (counts, rates, trends) via SQL. For **qualitative** themes — what users are saying, complaining about, or struggling with in assistant conversations — use `data:assistant-voc` (Cortex Search RAG) instead.
 
 ______________________________________________________________________
 
@@ -25,28 +47,18 @@ ______________________________________________________________________
 
 ## Step 0: Registry lookup (advisory)
 
-Before writing any SQL, check if the question maps to a canonical metric. Run via the Snowflake MCP:
+Before writing any SQL, check if the question maps to a canonical metric:
 
-```sql
-SELECT metric_name, variant, description, metric_sql
-FROM ANALYTICS_DB.PLAYGROUND.LU_SAVED_METRICS
-WHERE status = 'approved'
-  AND (LOWER(metric_name) LIKE '%ai%' OR LOWER(metric_name) LIKE '%assistant%'
-       OR LOWER(metric_name) LIKE '%thread%' OR LOWER(metric_name) LIKE '%powerup%'
-       OR LOWER(metric_name) LIKE '%credit%')
+```bash
+python3 scripts/snowflake_query.py "SELECT metric_name, variant, description, metric_sql FROM ANALYTICS_DB.PLAYGROUND.LU_SAVED_METRICS WHERE status = 'approved' AND (LOWER(metric_name) LIKE '%ai%' OR LOWER(metric_name) LIKE '%assistant%' OR LOWER(metric_name) LIKE '%thread%' OR LOWER(metric_name) LIKE '%powerup%' OR LOWER(metric_name) LIKE '%credit%')"
 ```
 
 If a canonical metric matches the user's question, prefer its `metric_sql` over writing from scratch. If no match, proceed with inline SQL as normal.
 
-Also check for a recent intelligence snapshot that may already answer the question. Run via the Snowflake MCP:
+Also check for a recent intelligence snapshot that may already answer the question:
 
-```sql
-SELECT kernel_id, intelligence, assessed_at
-FROM ANALYTICS_DB.PLAYGROUND.INTELLIGENCE_SNAPSHOTS
-WHERE kernel_id IN ('ai_assistant_adoption', 'ai_platform_growth', 'ai_platform_health', 'ai_sequence_credits')
-  AND assessed_at >= DATEADD('day', -3, CURRENT_TIMESTAMP())
-ORDER BY assessed_at DESC
-LIMIT 3
+```bash
+python3 scripts/snowflake_query.py "SELECT kernel_id, intelligence, assessed_at FROM ANALYTICS_DB.PLAYGROUND.INTELLIGENCE_SNAPSHOTS WHERE kernel_id IN ('ai_assistant_adoption', 'ai_platform_growth', 'ai_platform_health', 'ai_sequence_credits') AND assessed_at >= DATEADD('day', -3, CURRENT_TIMESTAMP()) ORDER BY assessed_at DESC LIMIT 3"
 ```
 
 If a recent snapshot covers the question, use it as context or a complete answer (cite the kernel_id and assessed_at).
@@ -350,13 +362,13 @@ ______________________________________________________________________
 
 ## Executing queries
 
-Use the Snowflake MCP to run queries. Always:
+Use the Snowflake MCP tool (`mcp__snowflake__read_query`) to run queries. Always:
 
 - `LIMIT 100` or less for exploratory queries
 - Use aggregations before pulling row-level data
 - Default to last 30 days unless the question specifies otherwise
 
-If the Snowflake MCP is not available, write the SQL and tell the user to run it manually.
+If Snowflake MCP is not available, write the SQL and tell the user to run it manually.
 
 ______________________________________________________________________
 
@@ -373,12 +385,15 @@ ______________________________________________________________________
 
 ## Error handling
 
-- **Column not found:** Check `FCT_AI_ASSISTANT_THREADS` schema by querying `INFORMATION_SCHEMA.COLUMNS` or the data catalog entry for `FCT_AI_ASSISTANT_THREADS`. The content center column may not be live yet.
+- **Column not found:** Check `FCT_AI_ASSISTANT_THREADS` schema by querying `INFORMATION_SCHEMA.COLUMNS` or checking `data-catalog/context/FCT_AI_ASSISTANT_THREADS.md`. The content center column may not be live yet.
 - **Metric is NULL or NaN:** For credit utilization, this is a known issue with credit_type mapping. Report raw usage counts instead.
 - **Question spans products I don't have tables for:** Say so clearly and point to who to ask (Sai for AI assistant data model, Brighid for foundation tables, #xfn-data-platform for ownership questions).
 - **Question about experiments or A/B tests:** Do not answer with observational data. Say: "I can't answer experiment questions with observational data — this needs proper statistical analysis. Ask Andrew Green or check `DIM_MONGO_EXPERIMENT_ASSIGNMENTS`."
 
 ## Tracking
 
-- **Query tag:** Before running queries, set the session query tag via the Snowflake MCP: `ALTER SESSION SET QUERY_TAG = '{"app":"jarvis","action":"ai_analytics"}'`
-- **Pulse:** After successful completion, log the session via the Snowflake MCP `log-jarvis-session` tool with action `ai_analytics` and a one-line detail (the question summary).
+After successful completion, fire an activity pulse:
+
+```bash
+python3 scripts/log_session.py end ai_analytics "<question summary>" 45
+```

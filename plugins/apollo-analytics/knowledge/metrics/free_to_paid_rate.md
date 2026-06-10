@@ -87,7 +87,7 @@ What teams should be excluded from the signup population?
 ```
 YOUR ANSWER:
 - **is_suspicious_team = false** — hard filter on dim_salesforce_apollo_teams.
-- No other hard exclusions on the signup side.
+- **has_fraud_abuse_flag = false** — hard filter on dim_salesforce_apollo_teams. ALWAYS exclude fraud/abuse-flagged teams from the FTP denominator. Without this filter, fraudulent signups inflate the denominator and suppress the conversion rate. This is a mandatory filter for the Conversion team's FTP KR — never omit it.
 ```
 
 ### 5. Full reference SQL
@@ -108,6 +108,7 @@ with signups as (
     where
         st.team_created_date >= '2024-10-01'
         and st.is_suspicious_team = false
+        and st.has_fraud_abuse_flag = false
         -- optional: and sa.is_core_account = true
         -- optional: and sa.account_segment = :segment
 )

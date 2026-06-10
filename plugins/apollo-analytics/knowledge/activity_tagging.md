@@ -1,14 +1,32 @@
 # Jarvis Activity Tagging — Mandatory Protocol
 
-Every meaningful Jarvis action must fire an activity pulse to Snowflake for tracking adoption, usage patterns, and ROI. This is non-negotiable for GA.
+Every meaningful Jarvis action must fire an activity pulse to Snowflake for
+tracking adoption, usage patterns, and ROI. This is non-negotiable for GA.
 
-## How Pulses Work
+> **Migration complete — 2026-04-16.** All `--pulse` callsites have been
+> migrated off `scripts/snowflake_query.py`. Skills now use either the
+> MCP-native tagged `SELECT` described below, or the canonical CLI wrapper
+> `python3 scripts/log_session.py end <action> "<detail>" <est_min_saved>`
+> (which buffers locally and flushes via MCP at session boundary). The
+> legacy Python wrapper has been retired.
 
-```bash
-python3 scripts/snowflake_query.py --pulse <action_name> --detail "<context>"
+## How Pulses Work (MCP-native)
+
+Fire a pulse by running a tagged `SELECT 'pulse'` via the Snowflake MCP
+(`mcp__snowflake__read_query`). The tag is a JSON comment at the start of
+the SQL, which lands in `SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY` alongside
+the session's native `USER_NAME` and `START_TIME`.
+
+```sql
+/* {"app":"jarvis","action":"<action_name>","detail":"<context>"} */
+SELECT 'pulse' AS status
 ```
 
-This fires a `SELECT 'pulse'` with a JSON comment tag that lands in `SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY`. The tag includes: app=jarvis, action, detail, user email, and timestamp. Queryable via:
+That's the whole protocol. `user` and timestamp are populated by Snowflake
+itself (no need to stuff them into the JSON tag — `USER_NAME` and
+`START_TIME` are native columns).
+
+### Reading pulses back
 
 ```sql
 SELECT
@@ -25,7 +43,8 @@ ORDER BY START_TIME DESC
 
 ## When to Fire Pulses
 
-**Every skill must fire a pulse on successful completion.** The pulse fires AFTER the work is done, not before. If the skill errors out, no pulse.
+**Every skill must fire a pulse on successful completion.** The pulse fires
+AFTER the work is done, not before. If the skill errors out, no pulse.
 
 | Skill / Action | Pulse action name | Detail format |
 |---|---|---|
@@ -39,28 +58,37 @@ ORDER BY START_TIME DESC
 | `source-catalog` | `catalog_search` | Source system + object |
 | `credit-analysis` | `credit_analysis` | Segment or focus area |
 | `share-report` | `draft` | Report title + backend |
+| `function-debrief` | `function_debrief` | Function name |
 | Ad-hoc Snowflake query | `ad_hoc_query` | Brief description |
 | Domain explanation | `domain_explanation` | Topic |
 | Metric lookup (registry) | `metric_lookup` | Metric name |
 
-## Pulse Command Templates
+## Pulse Examples (MCP-native)
 
-```bash
-# After a product debrief completes
-python3 scripts/snowflake_query.py --pulse product_debrief --detail "AI Assistant + Enrichment debrief"
+```sql
+-- After a product debrief completes
+/* {"app":"jarvis","action":"product_debrief","detail":"AI Assistant + Enrichment debrief"} */
+SELECT 'pulse'
 
-# After a metric movement diagnosis
-python3 scripts/snowflake_query.py --pulse metric_movement --detail "WAT paid declined 3% WoW"
+-- After a metric movement diagnosis
+/* {"app":"jarvis","action":"metric_movement","detail":"WAT paid declined 3% WoW"} */
+SELECT 'pulse'
 
-# After an account deep dive
-python3 scripts/snowflake_query.py --pulse account_deep_dive --detail "acme.com full profile"
+-- After an account deep dive
+/* {"app":"jarvis","action":"account_deep_dive","detail":"acme.com full profile"} */
+SELECT 'pulse'
 
-# After answering an ad-hoc question
-python3 scripts/snowflake_query.py --pulse ad_hoc_query --detail "churn by segment Q1 FY27"
+-- After answering an ad-hoc question
+/* {"app":"jarvis","action":"ad_hoc_query","detail":"churn by segment Q1 FY27"} */
+SELECT 'pulse'
 
-# After a metric registry lookup
-python3 scripts/snowflake_query.py --pulse metric_lookup --detail "M3 Cohort NRR"
+-- After a metric registry lookup
+/* {"app":"jarvis","action":"metric_lookup","detail":"M3 Cohort NRR"} */
+SELECT 'pulse'
 ```
+
+Escape embedded double-quotes in `detail` as `\"`. Keep the JSON comment on
+a single line — Snowflake's query-history regex match depends on it.
 
 ## Integration with Usage Logs
 
@@ -78,11 +106,24 @@ When creating or updating a skill, add this block at the end of the skill's step
 ```markdown
 ## Tracking
 
-After successful completion, fire an activity pulse:
-\`\`\`bash
-python3 scripts/snowflake_query.py --pulse <action_name> \
-  --detail "<brief description of what was produced>"
+After successful completion, fire an activity pulse via `mcp__snowflake__read_query`:
+
+\`\`\`sql
+/* {"app":"jarvis","action":"<action_name>","detail":"<brief description>"} */
+SELECT 'pulse'
 \`\`\`
 ```
 
 Replace `<action_name>` with the appropriate name from the table above.
+
+## Canonical CLI wrapper (preferred for skill `## Tracking` blocks)
+
+```bash
+python3 scripts/log_session.py end <action_name> "<detail>" <est_min_saved>
+```
+
+`log_session.py` buffers the record to a local JSONL and lets the next
+SessionStart / `/jarvis` invocation flush it to `FCT_JARVIS_SESSIONS` via
+the Snowflake MCP. Captures `est_min_saved` (which the tagged-SELECT
+approach cannot). For ad-hoc pulses outside a skill, the MCP-native
+tagged `SELECT` above is also fine.

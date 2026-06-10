@@ -2,7 +2,7 @@
 
 Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table sources, metric definitions, section structure, and business rules.
 
----
+______________________________________________________________________
 
 ## 1. Onboarding Activation and Retention
 
@@ -11,6 +11,7 @@ Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table so
 **Last run (at extract time):** 2025-10-20 (stale; auto-refreshes after 10 hours, ~42 min runtime)
 
 ### Section Structure
+
 - Onboarding: % Qualified Teams Going Through HVO, Activation post-HVO, Retention post-HVO, GDR comparison
 - Activation: Do people activate what they claim they are here to do? (survey goal → use case)
 - Retention: D28 use case retention for intended use case
@@ -43,13 +44,15 @@ Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table so
 | HVO Retention Rate | % of teams that performed the trained action during days 22–28 post-meeting |
 
 ### Survey Goal → Use Case Mapping
+
 1. `%set automations%` → Genpipe
-2. `%optimize meetings%` → Win Close
-3. `%use apollo as my crm%` → CRM
-4. `%enrich my crm%` → Enrichment
-5. Everything else → Leads/Data
+1. `%optimize meetings%` → Win Close
+1. `%use apollo as my crm%` → CRM
+1. `%enrich my crm%` → Enrichment
+1. Everything else → Leads/Data
 
 ### Use Case Activation Definitions (within 28 days)
+
 - **Genpipe**: sequence_created, sequence, ai_sequence, email_sent (manual/auto/extension), workflow, email
 - **Win Close**: meeting_assistant, scheduler
 - **CRM**: deals, crm_record_management
@@ -57,6 +60,7 @@ Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table so
 - **Leads/Data**: record_actioned
 
 ### HVO Topic → Action Mapping
+
 | HVO Topic | Activation Event | Retention Event |
 |-----------|-----------------|-----------------|
 | Create a contact list | Views Set Up | Views Set Up |
@@ -66,11 +70,12 @@ Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table so
 | Set-up browser extension | Extension Used | Extension Used |
 
 ### Key Performance Numbers (as of last run)
+
 - Paid teams vs. free — Activation: 57.6% vs 33.9% (+23.7 pp); W4 Retention: 57.1% vs 25.5% (+31.6 pp)
 - Use Case Hierarchy: Leads/Data > Genpipe > CRM > Enrichment > Win Close (lowest: 3.2% free, 23.9% paid)
 - Tier activation surprisingly consistent (37–39.5%); retention better for Tiers 1–3 vs Tier 4
 
----
+______________________________________________________________________
 
 ## 2. Growth Expansion
 
@@ -79,6 +84,7 @@ Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table so
 **Primary data source:** Daily team audit report from MongoDB, enriched with Salesforce metadata and revenue data.
 
 ### Section Structure
+
 - Edition Changes
 - Average Seats Per Team
 - Paying Teams: Expansion / Upgrade ARR From Feature Gates
@@ -105,22 +111,23 @@ Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table so
 ### Key Business Rules
 
 1. **ARR Annualization**: `(value / billing_interval_months) * 12`
-2. **Edition Mapping**: `enterprise` and `organization` → `Custom`
-3. **Edition Hierarchy**: basic=1 < professional=2 < custom=3 (upgrade/downgrade detection)
-4. **Legacy Coupon Discount**: Excluded from calculated ARR (commented out, inaccurate as of 12/17/25)
-5. **Seat ARR Workaround**: Expansion events use `reported_arr` filtered to `normal_seat` component
-6. **New Credit Purchase**: `CREDIT_AMOUNT > 0 AND COALESCE(PREV_CREDIT_AMOUNT, 0) = 0`
-7. **Feature Gate Attribution Window**: 2 days prior to purchase date
-8. **Cohort Expansion Window**: 90 days (13 weeks) for weekly; 12 months for Custom edition monthly
-9. **Cohort Entry**: First paid plan >= 2025-06-01 for weekly cohort; 2025 calendar year for Custom
-10. **Core Account Filter**: Optional toggle → `is_core_account = true` via Salesforce
-11. **UC Pricing Variant Filter**: `pricing_variant ilike '%uc%'`
+1. **Edition Mapping**: `enterprise` and `organization` → `Custom`
+1. **Edition Hierarchy**: basic=1 < professional=2 < custom=3 (upgrade/downgrade detection)
+1. **Legacy Coupon Discount**: Excluded from calculated ARR (commented out, inaccurate as of 12/17/25)
+1. **Seat ARR Workaround**: Expansion events use `reported_arr` filtered to `normal_seat` component
+1. **New Credit Purchase**: `CREDIT_AMOUNT > 0 AND COALESCE(PREV_CREDIT_AMOUNT, 0) = 0`
+1. **Feature Gate Attribution Window**: 2 days prior to purchase date
+1. **Cohort Expansion Window**: 90 days (13 weeks) for weekly; 12 months for Custom edition monthly
+1. **Cohort Entry**: First paid plan >= 2025-06-01 for weekly cohort; 2025 calendar year for Custom
+1. **Core Account Filter**: Optional toggle → `is_core_account = true` via Salesforce
+1. **UC Pricing Variant Filter**: `pricing_variant ilike '%uc%'`
 
 ### Input Parameters
+
 - `pricing_variants` — Multi-select filter (from `fct_mongo_daily_team_audit_reports` since 2025-11-12)
 - `core_filter` — Boolean toggle for core account restriction
 
----
+______________________________________________________________________
 
 ## 3. Pricing Dashboard
 
@@ -130,12 +137,13 @@ Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table so
 **Last run (at extract time):** 2025-12-10 (auto-refreshes after 1 hour; ~2 min runtime)
 
 ### Section Structure
+
 1. Global Parameters
-2. New Teams — Last 14 days (BAN cards)
-3. New Teams — Week over week (charts)
-4. Migrated Teams — Last 14 days (BAN cards)
-5. Migrated Teams — Week over week (charts)
-6. Recent Migrations: Before and After (under development)
+1. New Teams — Last 14 days (BAN cards)
+1. New Teams — Week over week (charts)
+1. Migrated Teams — Last 14 days (BAN cards)
+1. Migrated Teams — Week over week (charts)
+1. Recent Migrations: Before and After (under development)
 
 ### SQL Queries & Table Sources
 
@@ -155,15 +163,16 @@ Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table so
 ### Key Business Rules
 
 1. **Minimum teams threshold** (`input__min_teams_created`): Variants below threshold excluded from all views
-2. **New purchase**: `change_category = 'new'` for new teams; `change_category in ('new', 'upgrade')` for migrated
-3. **Parent account exclusion**: `is_parent_account = false` everywhere
-4. **Purchase rate maturity**: Rates nulled out if insufficient time has passed for the cohort
-5. **Paid at migration**: `fct_weekly_revenue.arr > 0` in the week before migration
-6. **First paid before lookback**: Only includes teams whose first paid week was before the lookback window start (for "Paid @ Migration Only" filter)
-7. **Churn exclusion**: Teams with churn events 4 days (C24) or 6 days (C41) before migration can be excluded
-8. **Week definition**: Sunday-based `date_trunc(week, date + 1) - 1`
+1. **New purchase**: `change_category = 'new'` for new teams; `change_category in ('new', 'upgrade')` for migrated
+1. **Parent account exclusion**: `is_parent_account = false` everywhere
+1. **Purchase rate maturity**: Rates nulled out if insufficient time has passed for the cohort
+1. **Paid at migration**: `fct_weekly_revenue.arr > 0` in the week before migration
+1. **First paid before lookback**: Only includes teams whose first paid week was before the lookback window start (for "Paid @ Migration Only" filter)
+1. **Churn exclusion**: Teams with churn events 4 days (C24) or 6 days (C41) before migration can be excluded
+1. **Week definition**: Sunday-based `date_trunc(week, date + 1) - 1`
 
 ### Global Input Parameters
+
 - `input__start_date` — Start date (created or migrated on or after)
 - `input__min_teams_created` — Minimum teams created threshold for variant inclusion
 - `input__exclude_current_week` — Boolean
@@ -174,9 +183,10 @@ Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table so
 - `input__migration_pivots__paid_at_migration` / `input__migration_pivots__free_at_migration` — Boolean
 
 ### Dev Note
+
 `dbt_development_db.dbt_khlavka.temp__paid_migration_cohorts` is a dbt dev table (not production). Contains 30 migration batches.
 
----
+______________________________________________________________________
 
 ## 4. FY27 R&D Performance Dashboard
 
@@ -184,24 +194,26 @@ Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table so
 **Purpose:** Tracks R&D performance across Apollo's product surface to help XFNs monitor Horizon 1, Horizon 2, and Horizon 3 initiatives. Sourced from the [FY-27 R&D Performance Dashboard Notion doc](https://www.notion.so/apolloio/FY-27-R-D-Performance-Dashboard-306ab2b3b49680fabdb9db83d973fe7a).
 
 ### Section Structure (12 collapsible sections)
+
 1. Filters / Global Parameters
-2. Seat Limits
-3. Tara's Queries (master queries: platform_actives, paid_penetration, conversion_rates, nrr_segment, retention, participation_rate)
-4. Paid Penetration
-5. Active Teams and Users
-6. Conversion Rates
-7. NRR
-8. Retention
-9. Participation Rate
-10. Activation
-11. Support Conversations
-12. Data Quality (email deliverability, dialer connect rate)
-13. Integration Connections
-14. Credits
-15. Match Rate / Fill Rate
-16. Inbound & Parallel Dialer
+1. Seat Limits
+1. Tara's Queries (master queries: platform_actives, paid_penetration, conversion_rates, nrr_segment, retention, participation_rate)
+1. Paid Penetration
+1. Active Teams and Users
+1. Conversion Rates
+1. NRR
+1. Retention
+1. Participation Rate
+1. Activation
+1. Support Conversations
+1. Data Quality (email deliverability, dialer connect rate)
+1. Integration Connections
+1. Credits
+1. Match Rate / Fill Rate
+1. Inbound & Parallel Dialer
 
 ### Global Input Parameters
+
 | Parameter | Description |
 |-----------|-------------|
 | `country` | Filter by `shipping_country` |
@@ -246,17 +258,19 @@ Extracted 2026-03-20 from 4 Hex notebooks via Threads Agent. Covers SQL table so
 ### Key Business Rules
 
 1. **Account Segment Derivation**: `CASE WHEN coalesce(is_core_account,0) = 0 THEN 'non-core' ELSE coalesce(account_segment, 'unavailable') END`
-2. **Segment String Parsing**: 4th regex capture group from `paid|not_paid_core|not_core_tier_N_segment_...`
-3. **Excluded Team IDs**: `551e3ef07261695147160000` (Apollo RevOps), `68127710414502001d3312fd`, `620210171b9d04008e2ac0e0`, `5b33b1e1079cc732d656a677`
-4. **Credit Exclusions**: `feature_type NOT IN ('ai_email', 'conversation')`, `credit_type NOT IN ('conversation_credit')`
-5. **Inbound/Dialer ARR pricing (hard-coded)**: Monthly=$149×12/yr, Yearly=$119×12/yr, Quarterly=$149×12/yr
-6. **Opportunity Matching**: Closed-won opps matched to plan start dates within ±1 day; Rep-Led > Self-Serve, New Business > Upsell > Renewal > Other
-7. **Email Stats Filters**: Non-SendGrid/Mailgun channels, `outreach_automatic_email` type, 26-week window
-8. **NRR**: Month-end dates only. `nrr_rate = (starting + upgrade + churned_downgraded) / starting`
-9. **Activation Gate**: Team must have converted to paid within `activation_window` days of creation
+1. **Segment String Parsing**: 4th regex capture group from `paid|not_paid_core|not_core_tier_N_segment_...`
+1. **Excluded Team IDs**: `551e3ef07261695147160000` (Apollo RevOps), `68127710414502001d3312fd`, `620210171b9d04008e2ac0e0`, `5b33b1e1079cc732d656a677`
+1. **Credit Exclusions**: `feature_type NOT IN ('ai_email', 'conversation')`, `credit_type NOT IN ('conversation_credit')`
+1. **Inbound/Dialer ARR pricing (hard-coded)**: Monthly=$149×12/yr, Yearly=$119×12/yr, Quarterly=$149×12/yr
+1. **Opportunity Matching**: Closed-won opps matched to plan start dates within ±1 day; Rep-Led > Self-Serve, New Business > Upsell > Renewal > Other
+1. **Email Stats Filters**: Non-SendGrid/Mailgun channels, `outreach_automatic_email` type, 26-week window
+1. **NRR**: Month-end dates only. `nrr_rate = (starting + upgrade + churned_downgraded) / starting`
+1. **Activation Gate**: Team must have converted to paid within `activation_window` days of creation
 
 ### Central Data Source: `product_metrics_daily`
+
 The `analytics_db.analytics_datascience.product_metrics_daily` table is the canonical source for:
+
 - Platform actives (DAU/WAU/MAU, DAT/WAT/MAT)
 - Paid penetration
 - Conversion rates (d7, d14)
@@ -266,7 +280,70 @@ The `analytics_db.analytics_datascience.product_metrics_daily` table is the cano
 
 Segment column is a compound string with format `paid|not_paid_core|not_core_tier_N_vsb|smb|mid_market|enterprise|unknown` — parse with 4th regex capture group.
 
----
+______________________________________________________________________
+
+______________________________________________________________________
+
+## 5. Apollo Integration Health Dashboard
+
+**Link:** https://app.hex.tech/apollo/hex/Draft-Apollo-Integration-Health-Dashboard---Preview-032dRf3Go6vU2CLSrQRq7C/draft/logic
+**Purpose:** Tracks CRM integration health across the funnel — Interested → Configured → Connected → Active. Primary audience: product and GTM teams monitoring integration adoption, reliability, and engagement depth.
+**Status at extract time (2026-04-27):** Draft. 53 cells.
+
+> **Canonical domain knowledge is in `domain/crm_integration.md`** — funnel metric definitions, event ID reference, table decision guide, all SQL patterns, and known data gaps. Do not duplicate here.
+
+### Table Sources (summary)
+
+| Table | Used For |
+|---|---|
+| `FCT_AMPLITUDE_EVENTS` | Funnel events (push/pull/configured/connected/interested) |
+| `FCT_USER_CRM_INTEGRATION_STATUS_DAILY` | CRM type breakdown; point-in-time WAT |
+| `DIM_MONGO_CRM_JOBS` | Reliability errors |
+
+______________________________________________________________________
+
+## 6. MCP Product Operating Metrics & Health 🔱 SOURCE OF TRUTH FOR MCP
+
+**Link:** https://app.hex.tech/apollo/hex/v0-MCP-Product-Operating-Metrics-Health-032tHIa3sHMEzsCAk5F3af
+**Purpose:** Canonical dashboard for MCP (Model Context Protocol) connector health — adoption, usage, credit consumption, ARR attribution, segment cuts. **Any MCP analytics question must reconcile to this Hex.** Maintained by Mounica Sonikar (Hydro).
+**Status:** v0 — operating metrics layer for the MCP connector launched 2026-02-23 with Anthropic partnership.
+
+### Why this is the source of truth
+
+- Surface attribution for MCP credits uses `FCT_MONGO_CREDIT_USAGE_DETAILS.SURFACE = 'mcp'` — not the upstream `FCT_MONGO_CREDIT_USAGES` (which has no surface tag) and not the request-id join through `FCT_MONGO_HTTP_REQUESTS_V3` (DEVELOPER_ROLE blocked + over-counts). Multiple analysts have produced inflated MCP credit numbers by skipping the canonical surface column.
+- MCP user/team identification uses the columns Shyam landed in `DIM_USERS` / `DIM_TEAMS` 2026-03-23: `FIRST_ACTIVE_DATE_MCP_API_CALLS`, `ACTIVE_DAYS_MCP_API_CALLS`, `ACTIVE_COUNTS_MCP_API_CALLS`. Or for request-volume: `AGG_MONGO_HTTP_REQUESTS_DAILY` filtered to `USER_AGENT ILIKE 'Apollo-MCP%'` and `GODMODE = FALSE`.
+- ARR attribution uses moderate-correlation (±7d window between MCP first-use and first paid date) per `domain/mcp_analytics.md`.
+
+### Canonical data sources used in the Hex
+
+| Topic | Source | Filter |
+|-------|--------|--------|
+| MCP user/team identification | `DIM_USERS`, `DIM_TEAMS` (ANALYTICS_DATASCIENCE) | `FIRST_ACTIVE_DATE_MCP_API_CALLS IS NOT NULL` |
+| MCP request volume | `AGG_MONGO_HTTP_REQUESTS_DAILY` (ANALYTICS_DATASCIENCE) | `USER_AGENT ILIKE 'Apollo-MCP%' AND GODMODE = FALSE AND NUMBER_OF_SUCCESSFUL_REQUESTS > 0` |
+| MCP credit consumption (by surface) | `FCT_MONGO_CREDIT_USAGE_DETAILS` (ANALYTICS_DATAPLATFORM) | `SURFACE = 'mcp'` |
+| Active users / teams (Apollo overall comparator) | `DIM_USERS_DAILY`, `DIM_TEAMS_DAILY` (ANALYTICS_DATASCIENCE) | `IS_ACTIVE_L1 = TRUE` |
+| New ARR (moderate correlation) | `FCT_DAILY_REVENUE` (ANALYTICS) | `CHANGE_CATEGORY IN ('new', 'new_reactivated') AND IS_ACTIVE = TRUE AND IS_PARENT_ACCOUNT = FALSE` |
+| Paid teams universe | `DIM_TEAMS` (ANALYTICS_DATASCIENCE) | `IS_PAID_IND = 1` |
+| Team size (registered users) | `DIM_MONGO_USERS` (ANALYTICS_DATAPLATFORM) | `COUNT(DISTINCT USER_ID) GROUP BY TEAM_ID` |
+| Segment | `DIM_TEAMS.ACCOUNT_SEGMENT` | join on `APOLLO_TEAM_ID` |
+
+### Reconciliation rule
+
+If a Snowflake query disagrees with the Hex by more than rounding, the Hex wins. Steps to resolve:
+
+1. Locate the matching cell/chart/SQL in the Hex.
+1. Compare filters, joins, and date windows.
+1. Adjust the Snowflake query to match.
+1. Document the divergence in `worklog/henry_errors.jsonl` with the corrected logic.
+
+### Common pitfalls to avoid
+
+- **Do not** sum `ACTIVE_USER_COUNTS_L1` across days then divide by `COUNT(DISTINCT team)` — that produces user-days-per-team-week (an artifact), not WAU/WAT or DAU/DAT.
+- **Do not** estimate MCP credits by summing all credits from MCP-using teams — that includes UI/extension credits and over-counts ~10×.
+- **Do not** use exact match on `USER_AGENT = 'Apollo-MCP/1.0'` — version drift kills the filter; use `ILIKE 'Apollo-MCP%'`.
+- **Do not** skip the `GODMODE = FALSE` filter — Apollo employee impersonation traffic inflates MCP team counts.
+
+______________________________________________________________________
 
 ## Cross-Notebook Table Source Index
 
@@ -277,7 +354,7 @@ Segment column is a compound string with format `paid|not_paid_core|not_core_tie
 | `dim_teams_daily` | `analytics_datascience` | FY27 R&D (seats, credits), Pricing Dashboard |
 | `dim_users` | `analytics_datascience` | FY27 R&D (seats, CRM integrations), Onboarding Activation |
 | `dim_users_daily` | `analytics_datascience` | FY27 R&D (Inbound/Dialer WAT) |
-| `fct_user_crm_integration_status_daily` | `analytics_datascience` | FY27 R&D (CRM integrations) |
+| `fct_user_crm_integration_status_daily` | `analytics_datascience` | FY27 R&D (CRM integrations), Integration Health Dashboard |
 | `int_team_product_info_cleaned` | `analytics_datascience` | Growth Expansion (cohort expansion) |
 | `user_dialer_actions_daily` | `analytics_datascience` | FY27 R&D (Parallel Dialer WAT) |
 | `user_inbound_actions_daily` | `analytics_datascience` | FY27 R&D (Inbound WAT) |
@@ -292,7 +369,8 @@ Segment column is a compound string with format `paid|not_paid_core|not_core_tie
 | `fct_monthly_revenue` | `analytics` | Growth Expansion (Custom expansion), Pricing Dashboard (debug) |
 | `fct_revenue_stats_monthly` | `analytics` | Onboarding Activation (GDR) |
 | `fct_pricing_variant_changes` | `analytics` | Growth Expansion (feature gates), Pricing Dashboard |
-| `fct_amplitude_events` | `analytics` | Growth Expansion (feature gate attribution), Onboarding Activation |
+| `fct_amplitude_events` | `analytics` | Growth Expansion (feature gate attribution), Onboarding Activation, Integration Health Dashboard |
+| `dim_mongo_crm_jobs` | `analytics_dataplatform` | Integration Health Dashboard (reliability errors) |
 | `fct_account_edition_changes` | `analytics` | Growth Expansion (Custom plan seat expansion) |
 | `fct_apollo_daily_seat_limits` | `analytics` | Growth Expansion (Custom plan seat expansion) |
 | `fct_apollo_monthly_seat_limits` | `analytics` | Growth Expansion (Custom plan seat expansion) |

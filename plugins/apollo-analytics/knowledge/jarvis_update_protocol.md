@@ -2,20 +2,18 @@
 
 **Owner:** Bridie Meredith
 **Updated:** 2026-03-31
-**Audience:** internal-admin — Analytics team, Leo, Bridie, Deepak (not for exec-facing responses)
-**Load-on:** jarvis-admin, sync, knowledge-update
 
 How to update Jarvis's knowledge base. This document is the canonical reference for anyone (Analytics team, Leo, Deepak) who needs to add or change what Jarvis knows.
 
 > **POLICY: Direct edits to `jarvis/knowledge/` are prohibited for all synced files.** Edits made there will be overwritten on the next sync. Always edit analytics-copilot first, then run `/sync-jarvis`. The only files editable directly in jarvis are `JARVIS_KNOWLEDGE_BASE_MANIFEST.md` and `domain_context.md` (jarvis-native, not synced).
 
----
+______________________________________________________________________
 
 ## Architecture in one sentence
 
 `analytics-copilot/domain/` is the source of truth. `jarvis/knowledge/` is a read-only sync export. **Edit analytics-copilot first, then sync.**
 
----
+______________________________________________________________________
 
 ## How Jarvis Gets Updated
 
@@ -27,14 +25,16 @@ analytics-copilot/domain/    →  sync-jarvis.sh  →  jarvis/knowledge/
 ### Step-by-step
 
 1. **Edit the canonical source** in `analytics-copilot`:
+
    - Domain knowledge → `domain/`
    - Table documentation → `data-catalog/context/`
    - Metric definitions → `metrics/`
    - SQL patterns / glossary → `domain/sql_patterns.md`, `data-catalog/glossary_entries.md`
 
-2. **Run `/sync-jarvis`** (recommended) — handles the sync script + commits in both repos automatically.
+1. **Run `/sync-jarvis`** (recommended) — handles the sync script + commits in both repos automatically.
 
    Or manually:
+
    ```bash
    bash scripts/sync-jarvis.sh
 
@@ -45,7 +45,7 @@ analytics-copilot/domain/    →  sync-jarvis.sh  →  jarvis/knowledge/
    git add knowledge/ && git commit -m "context(sync): knowledge updated from analytics-copilot YYYY-MM-DD" && git push
    ```
 
----
+______________________________________________________________________
 
 ## What the Sync Covers
 
@@ -63,7 +63,7 @@ analytics-copilot/domain/    →  sync-jarvis.sh  →  jarvis/knowledge/
 
 See `scripts/sync-jarvis.sh` for the authoritative list.
 
----
+______________________________________________________________________
 
 ## What the Sync Does NOT Cover
 
@@ -74,15 +74,15 @@ These files live natively in `jarvis/` and are **not overwritten** by the sync:
 
 Edit these directly in the `jarvis` repo.
 
----
+______________________________________________________________________
 
 ## Adding a New Knowledge File to the Sync
 
 1. Create the file in the appropriate `analytics-copilot` source directory (usually `domain/`)
-2. Add a `cp` line to `scripts/sync-jarvis.sh` (follow the existing pattern)
-3. Run the sync and commit both repos
+1. Add a `cp` line to `scripts/sync-jarvis.sh` (follow the existing pattern)
+1. Run the sync and commit both repos
 
----
+______________________________________________________________________
 
 ## Who Does What
 
@@ -94,7 +94,7 @@ Edit these directly in the `jarvis` repo.
 | Jarvis-native files (`domain_context.md`, manifest) | Bridie |
 | Snowflake MCP connection / infra | Deepak Kumar |
 
----
+______________________________________________________________________
 
 ## Why This Architecture
 

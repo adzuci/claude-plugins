@@ -7,16 +7,18 @@ description: Qualitative Voice of Customer insights from Apollo AI Assistant con
 
 Surface qualitative themes, user issues, complaints, and feedback patterns from Apollo AI Assistant conversations using Cortex Search RAG.
 
-**This skill is qualitative only.** For quantitative metrics (DAU, WAU, success rate, retention, powerups, messaging), use `data:ai-analytics`; for product/weekly rollups, use `data:product-debrief` or `data:weekly-insights`.
+**This skill is qualitative only.** For metrics (DAU, WAU, success rate, retention), use `data:product-debrief` or `data:weekly-insights`.
 
 ______________________________________________________________________
 
-## Step 1 — Run the RAG query
+## Step 1 — Run the RAG query via Snowflake MCP
 
-> **Pre-condition:** `DBT_DEVELOPMENT_DB.DBT_SAI_DATASCIENCE.ASSISTANT_MSG_SEARCH_SVC` must exist and be
-> queryable. If the search service is missing or unpopulated, the query returns `chunks_retrieved = 0`.
+> **Pre-condition:** `DBT_DEVELOPMENT_DB.DBT_SAI_DATASCIENCE.ASSISTANT_MSG_SEARCH_SVC` must be added to
+> `LU_DATA_CATALOG` before MCP can execute this query. Until then, use the local skill
+> (`.claude/skills/assistant-voc/`) which uses the Snowflake MCP (`mcp__claude_ai_Snowflake_MCP_-_Corp_Eng_Dev`) directly.
+> Track catalog addition: promote search service to prod schema → add to catalog → re-test here.
 
-Run the Cortex Search + Complete query below via the Snowflake MCP.
+Use `mcp__analytics-mcp-sso__execute-sql` to run the Cortex Search + Complete query.
 
 Substitute `<SEARCH_KEYWORDS>`, `<USER_QUESTION>`, and `<DATE_FILTER>` before running.
 
@@ -109,9 +111,4 @@ ______________________________________________________________________
 
 Always append:
 
-> *Source: Cortex Search over assistant conversations (`DBT_DEVELOPMENT_DB.DBT_SAI_DATASCIENCE.ASSISTANT_MSG_SEARCH_SVC`). Qualitative signal only.*
-
-## Tracking
-
-- **Query tag:** Before running queries, set the session query tag via the Snowflake MCP: `ALTER SESSION SET QUERY_TAG = '{"app":"jarvis","action":"assistant_voc"}'`
-- **Pulse:** After surfacing insights, log the session via the Snowflake MCP `log-jarvis-session` tool with action `assistant_voc` and a one-line detail of the themes surfaced and timeframe.
+> *Source: Cortex Search over assistant conversations (`DBT_DEVELOPMENT_DB.DBT_SAI_DATASCIENCE.MSG_SEARCH_SVC`). Qualitative signal only.*

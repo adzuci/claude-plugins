@@ -6,7 +6,7 @@
 **Date:** 2026-03-30
 **Owner:** Bridie Meredith, Leo Liu (strategy)
 
----
+______________________________________________________________________
 
 ## Horizon Framework
 
@@ -26,7 +26,7 @@ Products that define Apollo's core value prop. Mature, high volume, essential to
 
 **Investment approach:** Optimize (not maximize). Maintain high NRR, improve COGS, drive attach through multi-product.
 
----
+______________________________________________________________________
 
 ### **Horizon 2 (H2) — Strategic Bets**
 
@@ -35,23 +35,25 @@ Products proving repeatable business model, in scale-up phase. Each has ARR targ
 | Product | ARR Target (FY27) | Intended Buyer | Launch Status | Bet Graduation Criteria |
 |---------|------------|-----------------|----------------|--------------------------|
 | **Dialer Add-on** | $4.1M | Field reps, AEs | GA (soft launch) | M3 NRR 90%+, attach 20%+ |
-| **Inbound Router Add-on** | $6.4M | SDRs, BDRs | Beta→GA (Q2) | M3 NRR 90%+, attach 15%+ |
+| **Inbound Add-on** (website visitor tracking + router; see `domain/inbound.md`) | $6.4M | SDRs, BDRs | Beta→GA (Q2) | M3 NRR 90%+, attach 15%+ |
 | **AI Sheets / Agentic Workflows** | Stretch (TBD) | GTM Engineer (RevOps) | Pilot (Persona TBD) | Persona definition Q2; then 10K WAU by Q4 |
 
 **Investment approach:** Scale. Feature launch, GTM motion, sales enablement, product iteration based on early signals.
 
 **Graduation criteria** (when a bet becomes H1):
+
 - ARR achievement: Dialer $4.1M, Inbound $6.4M (both by EOY)
 - Retention: Cohort NRR ≥ 90% at M3 (indicates repeatable unit economics)
 - Attach rate: 20%+ of core customers using feature (indicates scalable motion)
-- Churn risk: <10% of product attach churned due to product quality (indicates sustainable)
+- Churn risk: \<10% of product attach churned due to product quality (indicates sustainable)
 
 **Demotion criteria** (when a bet should be slowed or cut):
+
 - By end of Q2, if Dialer M3 NRR < 85% → consider slowdown
 - By end of Q2, if Inbound attach rate < 10% → reconsider GTM
 - If AI Sheets persona not defined by Q2 → deprioritize
 
----
+______________________________________________________________________
 
 ### **Horizon 3 (H3) — Experiments**
 
@@ -68,18 +70,19 @@ Early-stage ideas, limited cohorts, not yet in AOP.
 
 **Graduation criteria:** Product-market fit signals (cohort NRR 110%+ OR attach rate 25%+), then move to H2.
 
----
+______________________________________________________________________
 
 ## How to Use This Framework
 
 ### For Jarvis answering "Is this bet on track?"
 
 1. **Identify the product** in the table above (is it H1, H2, or H3?)
-2. **Find its target** (ARR, attach rate, NRR, etc.)
-3. **Query current performance**
-4. **Evaluate vs. graduation criteria**
+1. **Find its target** (ARR, attach rate, NRR, etc.)
+1. **Query current performance**
+1. **Evaluate vs. graduation criteria**
 
 **Example:**
+
 > **Exec:** "Is Dialer add-on on track?"
 >
 > **Jarvis:** "Dialer is an H2 bet with $4.1M FY27 ARR target. Current: $300k (60 days in). Graduation criteria: M3 NRR ≥ 90%, attach ≥ 20%. Early data shows ~170 teams (2.7% of potential market), suggesting attach may undershoot. M3 cohort retention due mid-April — that read will determine whether to accelerate, maintain, or slow. Currently tracking as "on plan but early."
@@ -94,7 +97,7 @@ When a product reaches the end of a quarter without hitting its H2 metrics:
 | ARR behind but M3 NRR 85-90%, attach 10-15% | **Maintain:** Fix go-to-market, iterate product |
 | M3 NRR < 85% or attach < 10% | **Slow or cut:** Product-market fit unproven; redeploy resources |
 
----
+______________________________________________________________________
 
 ## Mapping to Data Tables
 
@@ -104,7 +107,7 @@ When a product reaches the end of a quarter without hitting its H2 metrics:
 | **H2 Bets** | `FCT_MONGO_DAILY_TEAM_AUDIT_REPORTS` (add-ons by source), `TEAM_AI_ASSISTANT_DAILY` (AI metrics) | Team × Day | Daily |
 | **H3 Experiments** | Product-owned dashboards (not yet synced; Hex/Amplitude) | TBD | Ad-hoc |
 
----
+______________________________________________________________________
 
 ## Known Gaps / Caveats
 
@@ -112,7 +115,7 @@ When a product reaches the end of a quarter without hitting its H2 metrics:
 - **Dialer:** M3 retention due mid-April; only 60 days of data so far. Early signals are positive but not yet decisive.
 - **Inbound:** Unclear if $300k attach is incremental or cannibalization from Dialer. Next phase: product team to clarify positioning.
 
----
+______________________________________________________________________
 
 ## Related Files
 

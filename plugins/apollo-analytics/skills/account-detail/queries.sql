@@ -1,9 +1,7 @@
 -- account-detail skill — named SQL blocks
 -- Each block is consumed by SKILL.md steps 1–9.
--- Substitute {team_id} with the resolved team_id string before running via the Snowflake MCP.
+-- Substitute {team_id} with the resolved team_id string before passing to mcp__snowflake__read_query.
 -- Single-quote the value inline: WHERE APOLLO_TEAM_ID = '{team_id}'
--- SECURITY: {input} and {team_id} are user-supplied. Before substituting, escape any
--- single quotes (' -> '') so free-text company names / domains cannot break or inject SQL.
 
 
 -- ─────────────────────────────────────────────────────────────────────────────
@@ -46,8 +44,8 @@ SELECT dt.APOLLO_TEAM_ID AS TEAM_ID, dt.TEAM_NAME, dt.WEBSITE_DOMAIN,
 FROM ANALYTICS_DB.ANALYTICS_DATASCIENCE.DIM_TEAMS dt
 JOIN ANALYTICS_DB.ANALYTICS_DATASCIENCE.DIM_TEAMS_DAILY t
   ON t.APOLLO_TEAM_ID = dt.APOLLO_TEAM_ID
-WHERE (dt.TEAM_NAME ILIKE '%{input}%'
-    OR dt.ACCOUNT_NAME ILIKE '%{input}%')
+WHERE (LOWER(dt.TEAM_NAME) ILIKE LOWER('%{input}%')
+    OR LOWER(dt.ACCOUNT_NAME) ILIKE LOWER('%{input}%'))
   AND t.DATE = (
     SELECT MAX(DATE) FROM ANALYTICS_DB.ANALYTICS_DATASCIENCE.DIM_TEAMS_DAILY
     WHERE APOLLO_TEAM_ID = dt.APOLLO_TEAM_ID
@@ -194,7 +192,7 @@ JOIN ANALYTICS_DB.ANALYTICS.INT_MONGO_APOLLO_CUSTOMER_DATA_CUSTOM_FIELD_CONTACTS
 WHERE p.value:is_internal_participant::boolean = false
   AND p.value:contact_id IS NOT NULL
   AND cf.APOLLO_TEAM_ID = '{team_id}'
-ORDER BY 2 DESC  -- col 2 = DATE alias; raw h.DATE is invalid under SELECT DISTINCT
+ORDER BY h.DATE DESC
 LIMIT 10;
 
 
@@ -230,7 +228,7 @@ JOIN ANALYTICS_DB.ANALYTICS.INT_MONGO_APOLLO_CUSTOMER_DATA_CUSTOM_FIELD_CONTACTS
 WHERE p.value:is_internal_participant::boolean = false
   AND p.value:contact_id IS NOT NULL
   AND cf.APOLLO_TEAM_ID = '{team_id}'
-ORDER BY 2 DESC  -- col 2 = DATE alias; raw g.DATE is invalid under SELECT DISTINCT
+ORDER BY g.DATE DESC
 LIMIT 10;
 
 

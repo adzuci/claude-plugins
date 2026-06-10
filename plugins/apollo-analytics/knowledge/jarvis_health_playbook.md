@@ -2,12 +2,10 @@
 
 **Owner:** Bridie Meredith
 **Updated:** 2026-03-31
-**Audience:** internal-admin — Analytics team, Leo, Bridie, Deepak (not for exec-facing responses)
-**Load-on:** jarvis-admin, setup, sync, update-protocol
 
 How to keep Jarvis accurate, current, and improving. Covers three systems: the knowledge sync pipeline, the weekly business context refresh, and the quality scorecard.
 
----
+______________________________________________________________________
 
 ## Mental Model
 
@@ -25,7 +23,7 @@ analytics-copilot/
 
 **Rule:** Never edit `jarvis/knowledge/` files directly (except `domain_context.md` and `JARVIS_KNOWLEDGE_BASE_MANIFEST.md`, which are Jarvis-native).
 
----
+______________________________________________________________________
 
 ## System 1 — Knowledge Sync
 
@@ -42,6 +40,7 @@ analytics-copilot/
 That skill runs `scripts/sync-jarvis.sh`, commits `analytics-copilot`, and commits `jarvis/knowledge/`. It's the only approved way to update Jarvis's knowledge base.
 
 Or manually:
+
 ```bash
 bash scripts/sync-jarvis.sh
 # then commit analytics-copilot and jarvis separately
@@ -61,16 +60,17 @@ bash scripts/sync-jarvis.sh
 | `plugin/claude-plugins-export/knowledge/team_roster.md` | `team_roster.md` |
 
 ### What does NOT get synced (edit these directly in jarvis)
+
 - `jarvis/knowledge/domain_context.md` — Jarvis-specific orientation doc
 - `jarvis/knowledge/JARVIS_KNOWLEDGE_BASE_MANIFEST.md` — Jarvis's own index
 
 ### Adding a new file to the sync
 
 1. Create the file in `analytics-copilot/domain/` (or appropriate source directory)
-2. Add a `cp` line to `scripts/sync-jarvis.sh`
-3. Run `/sync-jarvis`
+1. Add a `cp` line to `scripts/sync-jarvis.sh`
+1. Run `/sync-jarvis`
 
----
+______________________________________________________________________
 
 ## System 2 — Weekly Business Context Refresh
 
@@ -109,11 +109,11 @@ After Stage 2 completes, run `/sync-jarvis` to push the updated `business_state.
 ### What it pulls from
 
 1. **Slack** — `#dept-analytics-updates`, past 7 days: decisions, blockers, metric callouts, directional shifts
-2. **Repo changes** — `scripts/sweep_recent_changes.py --days 7`: new domain files, updated metrics, schema changes (skips mechanical commits)
-3. **Snowflake** — `scripts/export_registry.py`: current values for OKR metrics in `business_state.md`
-4. **Product insights** — meeting transcripts in `teammates/*/meeting_transcripts/`, `domain/business_state.md` current state
+1. **Repo changes** — `scripts/sweep_recent_changes.py --days 7`: new domain files, updated metrics, schema changes (skips mechanical commits)
+1. **Snowflake** — `scripts/export_registry.py`: current values for OKR metrics in `business_state.md`
+1. **Product insights** — meeting transcripts in `teammates/*/meeting_transcripts/`, `domain/business_state.md` current state
 
----
+______________________________________________________________________
 
 ## System 3 — Quality Scorecard
 
@@ -178,12 +178,13 @@ python3 scripts/eval_trends.py --csv        # CSV for spreadsheet
 New cases start as `status: draft`. Promote to `active` only after validating the expected answer against real Snowflake output. Never promote a draft you haven't independently verified.
 
 The 4 mining sources (in priority order):
-1. Product Insights (`business_state.md`, weekly updates, meeting transcripts)
-2. DS/AE Outputs (teammate directories, weekly signals, Slack)
-3. Metric Definitions (`metrics/`, `data-catalog/`)
-4. Snowflake Query History (actual DS/AE queries, last 30 days)
 
----
+1. Product Insights (`business_state.md`, weekly updates, meeting transcripts)
+1. DS/AE Outputs (teammate directories, weekly signals, Slack)
+1. Metric Definitions (`metrics/`, `data-catalog/`)
+1. Snowflake Query History (actual DS/AE queries, last 30 days)
+
+______________________________________________________________________
 
 ## Recommended Cadence
 
@@ -195,7 +196,7 @@ The 4 mining sources (in priority order):
 | **Monthly** | Run `/jarvis-eval update` to mine new test cases; promote validated drafts |
 | **On critical fail** | Fix the underlying knowledge file immediately, re-sync, re-run eval |
 
----
+______________________________________________________________________
 
 ## Escalation
 
@@ -204,10 +205,10 @@ The 4 mining sources (in priority order):
 | Jarvis returns stale metric values | Run `/weekly-context-refresh` + `/sync-jarvis` |
 | Jarvis uses wrong table for a query | Update `data-catalog/context/` and `domain/sql_patterns.md`; sync |
 | Guardrail compliance < 50 in eval | Find and fix the misleading knowledge file before next exec interaction |
-| Snowflake MCP broken | Use `scripts/snowflake_query.py` instead; escalate to Deepak Kumar |
+| Snowflake connector issues | Check `.snowflake_user`, `.venv`, Keychain token; re-run `bash scripts/install.sh` |
 | Sync script fails on a missing file | Check `sync-jarvis.sh` — file was deleted or renamed; update the script |
 
----
+______________________________________________________________________
 
 ## Files Reference
 

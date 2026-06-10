@@ -6,21 +6,21 @@
 > **Date:** 2026-03-09
 > **Status:** Requirements complete, ready for build
 
----
+______________________________________________________________________
 
 ## Why
 
 `DIM_TEAMS_DAILY` is the most-used analytics table at Apollo (40K+ queries, 49 users in 90 days). But it has serious problems:
 
 1. **Misnomer.** It's a fact table at `(team_id, date)` grain with 160+ activity columns — not a dimension.
-2. **Kitchen sink.** Bakes in revenue (ARR), credit usage, dimension attributes (segment, core flag), AND feature activity. Changes to any domain require backfilling the entire 8.5B-row table.
-3. **DS-owned, dbt-dependent.** Refresh has been fragile (stuck at Jan 11 in one incident). Schema changes require full incremental backfill.
-4. **Trust concerns.** Lives in `ANALYTICS_DATASCIENCE` — not DE-maintained.
-5. **Dead weight.** 15 columns used by ≤2 people. 18 columns were already dropped (ordinal gaps).
+1. **Kitchen sink.** Bakes in revenue (ARR), credit usage, dimension attributes (segment, core flag), AND feature activity. Changes to any domain require backfilling the entire 8.5B-row table.
+1. **DS-owned, dbt-dependent.** Refresh has been fragile (stuck at Jan 11 in one incident). Schema changes require full incremental backfill.
+1. **Trust concerns.** Lives in `ANALYTICS_DATASCIENCE` — not DE-maintained.
+1. **Dead weight.** 15 columns used by ≤2 people. 18 columns were already dropped (ordinal gaps).
 
 **The fix:** Decompose into focused building blocks, each with a clear domain, raw source lineage, and Airflow ownership.
 
----
+______________________________________________________________________
 
 ## Architecture Overview
 
@@ -59,8 +59,8 @@
 │                    EXISTING TABLES (no changes)                    │
 │                                                                   │
 │  FCT_DAILY_REVENUE ──── ARR, churn, edition (ANALYTICS)           │
-│  FCT_TEAM_CREDITS_DAILY ── credit usage/limits (rename from       │
-│                             GOLD_TEAM_CREDITS)                    │
+│  FCT_TEAM_CREDITS_DAILY ── credit usage/limits (NEW — replaces    │
+│                             deprecated GOLD_TEAM_CREDITS)         │
 │  DIM_MONGO_TEAMS ──── raw team metadata (ANALYTICS_DATAPLATFORM)  │
 └──────────────────────────────────────────────────────────────────┘
 
@@ -77,7 +77,7 @@
                     └────────────────────────┘
 ```
 
----
+______________________________________________________________________
 
 ## Naming Conventions
 
@@ -91,11 +91,11 @@
 
 | Current | Rename To | Why |
 |---|---|---|
-| `GOLD_TEAM_CREDITS` | `FCT_TEAM_CREDITS_DAILY` | It's a daily fact table, not a "gold" tier |
+| `GOLD_TEAM_CREDITS` | `FCT_TEAM_CREDITS_DAILY` | DEPRECATED — data unreliable (Cat Zhou 2026-04-15). Rebuild as foundation table. |
 | `DIM_TEAM_ATTRIBUTES` (proposed) | `LU_TEAM_ATTRIBUTES` | Lookup, not a dimension |
 | `DIM_FISCAL_CALENDAR` (proposed) | `LU_FISCAL_CALENDAR` | Lookup, not a dimension |
 
----
+______________________________________________________________________
 
 ## What Each Table Contains
 
@@ -126,6 +126,7 @@
 | `conversation_intel_setup_users` | Amplitude/Mongo (setup event) | |
 
 **Join path (all raw):**
+
 ```sql
 DIM_MONGO_TEAMS t
 LEFT JOIN RAW_FIVETRAN_DB.SALESFORCE.APOLLO_TEAM_C bridge
@@ -245,11 +246,12 @@ LEFT JOIN DIM_MONGO_MFA_CONFIGS mfa
 
 Note: Support only has L1/L7 (no L28) — matches current DIM_TEAMS_DAILY.
 
----
+______________________________________________________________________
 
 ## How AEs Use This
 
 ### Example: "NRR by segment this quarter"
+
 ```sql
 SELECT
     lu.account_segment,
@@ -265,6 +267,7 @@ GROUP BY 1, 2
 ```
 
 ### Example: "Paid WAT by segment"
+
 ```sql
 SELECT
     lu.account_segment,
@@ -280,6 +283,7 @@ GROUP BY 1, 2
 ```
 
 ### Example: "Multi-product teams"
+
 ```sql
 SELECT
     lu.account_segment,
@@ -335,7 +339,7 @@ LEFT JOIN FCT_TEAM_GENPIPE_DAILY g USING (team_id, ds)
 LEFT JOIN FCT_TEAM_WINCLOSE_DAILY w USING (team_id, ds)
 ```
 
----
+______________________________________________________________________
 
 ## Build Priority & Dependencies
 
@@ -376,7 +380,7 @@ NOT migrating (keep dbt-owned):
   DIM_SALESFORCE_CAMPAIGNS ────── niche, 4 users
 ```
 
----
+______________________________________________________________________
 
 ## SFDC Table Migrations (P0.5)
 
@@ -438,7 +442,7 @@ Nearly 1:1 with raw source — minimal transformation needed.
 | `role` | `USER.USER_ROLE_ID` → resolve via `SALESFORCE.USER_ROLE` |
 | `is_active` | `USER.IS_ACTIVE` |
 
----
+______________________________________________________________________
 
 ## User-Level Lookups (P1.5)
 
@@ -466,7 +470,7 @@ Tracks: first login, first email sent, first enrichment, first sequence, etc.
 
 Tracks: first paid date, first active user, first email campaign, etc.
 
----
+______________________________________________________________________
 
 ## Raw Source Inventory
 
@@ -483,7 +487,7 @@ Tracks: first paid date, first active user, first email campaign, etc.
 | `ANALYTICS_DATAPLATFORM.DIM_MONGO_TEAMS` | DE mirror | LU_TEAM_ATTRIBUTES |
 | `ANALYTICS_DATAPLATFORM.DIM_MONGO_MFA_CONFIGS` | DE mirror | LU_TEAM_ATTRIBUTES (enterprise signal) |
 
----
+______________________________________________________________________
 
 ## What This Replaces
 
@@ -496,7 +500,7 @@ Tracks: first paid date, first active user, first email campaign, etc.
 | `DIM_TEAMS_DAILY` winclose columns | `FCT_TEAM_WINCLOSE_DAILY` |
 | `DIM_TEAMS_DAILY` activity columns | `FCT_TEAM_ACTIVITY_DAILY` |
 | `DIM_TEAMS_DAILY` support columns | `FCT_TEAM_SUPPORT_DAILY` |
-| `DIM_TEAMS_DAILY` credit columns | `FCT_TEAM_CREDITS_DAILY` (rename GOLD_TEAM_CREDITS) |
+| `DIM_TEAMS_DAILY` credit columns | `FCT_TEAM_CREDITS_DAILY` (new build — GOLD_TEAM_CREDITS deprecated) |
 | `DIM_ACTIVE_TEAMS_DAILY` | Not needed — AEs filter `FCT_TEAM_ACTIVITY_DAILY WHERE active_user_count_l1 > 0` |
 | `DIM_SALESFORCE_ACCOUNTS` | `LU_SFDC_ACCOUNTS` |
 | `DIM_SALESFORCE_APOLLO_TEAMS` | `LU_SFDC_APOLLO_TEAMS` |
@@ -509,7 +513,7 @@ Tracks: first paid date, first active user, first email campaign, etc.
 
 **Not migrating:** DIM_SALESFORCE_OPPORTUNITIES (complex pipeline stage logic), DIM_SALESFORCE_CONTACTS (niche, complex matching), DIM_SALESFORCE_CAMPAIGNS (4 users).
 
----
+______________________________________________________________________
 
 ## Change Log
 

@@ -127,9 +127,34 @@ td { padding: 12px; border-bottom: 1px solid var(--border); }
 tr:hover { background: var(--surface-hover); }
 ```
 
+## Related Dashboards Footer
+
+Injected by `refresh_site.py` — do not hardcode in individual dashboards. Markers:
+
+```html
+<!-- related-dashboards-start -->
+<!-- related-dashboards-end -->
+```
+
+```css
+.related-section { margin-top: 48px; padding-top: 24px; border-top: 2px solid var(--border); }
+.related-section h4 { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+.related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.related-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px 12px 18px; text-decoration: none; color: var(--text); position: relative; display: block; }
+.related-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.related-card .rc-bar { position: absolute; top: 0; left: 0; width: 3px; height: 100%; border-radius: 8px 0 0 8px; }
+.related-card .rc-title { font-size: 0.85rem; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
+.related-card .rc-meta { font-size: 0.7rem; color: var(--muted); }
+.lifecycle-badge { font-size: 0.6rem; padding: 1px 6px; border-radius: 8px; font-weight: 600; }
+.lifecycle-live { background: rgba(63,185,80,0.15); color: var(--green); }
+.lifecycle-snapshot { background: rgba(139,148,158,0.1); color: var(--muted); }
+.lifecycle-stale { background: rgba(210,153,34,0.15); color: var(--yellow); }
+```
+
 ## File Naming
 
 Save HTML reports to `/tmp/` with format: `<topic>_<date>.html`
+
 - Example: `/tmp/ai_assistant_debrief_2026_04_10.html`
 - Example: `/tmp/credit_analysis_mid_market_2026_04_10.html`
 

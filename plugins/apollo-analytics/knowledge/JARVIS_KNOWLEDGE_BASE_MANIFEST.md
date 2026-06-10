@@ -1,203 +1,292 @@
 # Jarvis Knowledge Base Manifest
 
-**Purpose:** Inventory of Jarvis's live knowledge base — what Jarvis knows, how confident it is, and what's blocked.
+**Purpose:** Complete inventory of Jarvis's live knowledge base — what's here, how it's organized, and how to maintain it.
 
-**Date:** 2026-03-31
+**Date:** 2026-04-14
 **Status:** Live
 **Maintained by:** Bridie Meredith
 
 > **All files in `jarvis/knowledge/` (except this file and `domain_context.md`) are managed by one-way sync from `analytics-copilot`.** Do not edit synced files directly — changes will be overwritten. To update Jarvis's knowledge, edit the source in `analytics-copilot` and run `/sync-jarvis`. The authoritative list of synced files is `analytics-copilot/domain/SYNC_MANIFEST.md`.
 
----
+______________________________________________________________________
 
 ## Overview
 
-Compiled documentation that enables Jarvis to answer 15 executive questions without requiring exploration. The knowledge base bridges the gap between "raw data access" and "contextual understanding."
+| Category | Count |
+|---|---|
+| Top-level knowledge files | 107 |
+| Table context files (`context/`) | 132 (131 tables + template) |
+| Metric definitions (`metrics/`) | 6 |
+| Analyst suits (`suits/`) | 7 + index |
+| **Total files** | **253** |
 
-### Key Stats
-- **9 new/updated domain docs**
-- **1 segment lookup table + refresh automation (LU_TEAM_SEGMENT)**
-- **8 executable business questions** (Q1, Q2, Q4, Q8, Q9, Q11, Q12, Q15)
-- **7 blocked questions with explicit gap documentation** (Gaps 2, 3, 5, 6, 7, 14, and pending Gap 10)
-- **10 structured data requirements** (REQ-1 through REQ-10)
+Three indexes exist — use the right one:
 
----
+- **This file** — human-readable capability inventory (what's here and why)
+- **`domain_context.md`** — auto-generated LLM topic router (129 files, key-fact summaries). This is what Jarvis routes on at query time.
+- **`README.md`** — quick-start guide for contributors (how to add/update knowledge)
 
-## What's Included (Ready to Transfer)
+______________________________________________________________________
 
-### Tier 1: Strategy & Context (Required Reading for Jarvis)
+## Tier 1: Strategy & Business Context
 
-| File | Purpose | Use Case | Status |
-|------|---------|----------|--------|
-| **annual_targets.md** | FY27 OKR targets by metric | Exec asks "On track?" → Jarvis looks up target, queries actual, shows delta | ✅ LIVE |
-| **theory_of_change.md** | Causal chain driving growth strategy | Exec asks "Why?" → Jarvis explains the chain: activation → habit → retention → expansion | ✅ LIVE |
-| **business_state.md** | Current momentum snapshot (living doc) | Exec asks "How are we?" → Jarvis references live status of each lever + known risks | ✅ LIVE |
-| **product_portfolio_taxonomy.md** | H1/H2/H3 classification + graduation criteria | Exec asks "Is [product] on track?" → Jarvis finds product, looks up target + criteria | ✅ LIVE |
-| **pending_definitions.md** | Inventory of data gaps + how to handle them | Exec asks about blocked question → Jarvis explains blocker + ETA | ✅ LIVE |
-| **rnd_okr_structure.md** | R&D OKR structure for FY27 Q1 — how product teams organize and track progress | "What is Bela's org working on?", "OKR status?" → R&D team structure + scorecard | ✅ LIVE (snapshot — goes stale; prefer live Snowflake for actuals) |
-| **executive_profiles.md** | What each exec cares about, data consumption style, how to engage | Tailor response tone, depth, and framing to the exec asking the question | ✅ LIVE |
-| **fiscal_calendar.md** | Apollo FY27 quarter boundaries (Feb-start fiscal year) | Correctly interpret "Q1", "Q2", "this quarter" in exec questions | ✅ LIVE |
-| **decisions_log.md** | Authoritative record of strategic decisions by Analytics/Data Leads | Prevent re-litigating settled questions; explain "why is it designed this way?" | ✅ LIVE |
-
-### Tier 1-Admin: Jarvis Maintenance (Internal Only — not for exec-facing responses)
-
-| File | Purpose | Audience | Status |
-|------|---------|----------|--------|
-| **jarvis_health_playbook.md** | How to keep Jarvis accurate: sync pipeline, weekly refresh, quality scorecard | Analytics team (Bridie, Leo, Deepak) | ✅ LIVE |
-| **jarvis_update_protocol.md** | How to update Jarvis's knowledge base; sync workflow and policy | Analytics team contributors | ✅ LIVE |
-| **contribution_guidelines.md** | Protected files, edit policies, contribution rules for analytics-copilot | Analytics team, DS contributors | ✅ LIVE |
-| **jarvis_action_log.md** | Running record of Jarvis improvements shipped + pending work items | Analytics team (Bridie) | ✅ LIVE |
-
----
-
-### Tier 2: Metric Methodologies (Reference for Specific Questions)
-
-| File | Metric | Purpose | Status |
-|------|--------|---------|--------|
-| **activation_methodology.md** | F14D Habit RA Rate | Explains what/why; definition for Q7 | ✅ LIVE (methodology) |
-| **churn_taxonomy_draft.md** | Churn reasons by category | Framework for Q3; awaiting product/VoC finalization | 🟡 DRAFT (taxonomy) |
-| **ai_sheets_user_definition.md** | GTM Engineer cohort definition | Placeholder for Q5 granularity; awaiting product persona definition | 🟡 DRAFT (pending Gap 2) |
-| **inbound_team_identification.md** | Inbound add-on revenue attribution | Data source + mapping for Q6; awaiting product flag definition | 🟡 DRAFT (pending Gap 6) |
-
----
-
-### Tier 3: Domain Knowledge (Created in Prior Session)
+Always-on references. Jarvis reads these regardless of question type.
 
 | File | Purpose | Status |
 |------|---------|--------|
-| **segment_join_canonical.md** | Segment join patterns — LU_TEAM_SEGMENT preferred; SFDC join as legacy fallback | ✅ UPDATED 2026-04-07 (LU_TEAM_SEGMENT is now canonical; SFDC join demoted to legacy) |
-| **lu_team_segment_patterns.md** | 5 reusable SQL patterns for segment queries using LU_TEAM_SEGMENT | ✅ LIVE (new 2026-03-30) |
-| **product_debrief_template.md** | Canonical 3-step execution framework for all product area debriefs | ✅ LIVE — referenced by product-debrief skill; WAT source guidance updated 2026-04-07 |
-| **product_disambiguation.md** | Which table/column to use for each "product" lens (feature/plan/add-on/credit) | ✅ LIVE — use when exec says "product" ambiguously |
-| **sql_patterns.md** | Canonical SQL patterns and conventions for Apollo analytics queries | ✅ LIVE — reference before writing ad-hoc queries |
+| `annual_targets.md` | FY27 OKR targets by metric. "Are we on track?" → target vs actual | LIVE |
+| `theory_of_change.md` | Causal chain: activation → habit → retention → expansion | LIVE |
+| `business_state.md` | Current momentum snapshot — updated weekly via `/weekly-context-refresh` | LIVE |
+| `product_portfolio_taxonomy.md` | H1/H2/H3 classification + graduation criteria | LIVE |
+| `pending_definitions.md` | Known data gaps, fallback responses, and ETAs | LIVE |
+| `fiscal_calendar.md` | Apollo FY27 quarter boundaries (Feb-start fiscal year) | LIVE |
+| `decisions_log.md` | Authoritative record of strategic decisions by Analytics/Data Leads | LIVE |
+| `executive_profiles.md` | What each exec cares about, data consumption style, how to engage | LIVE |
+| `active_personas.md` | Background voices (Jarvis, Pepper, Rhodey) that interject when triggered | LIVE |
+| `support_channel_context.md` | Guidelines for handling #jarvis-support-qs questions | LIVE |
+| `product_disambiguation.md` | "Product" means four different things — which lens to use | LIVE |
 
----
+## Tier 1a: AOP & Exec Priorities
 
-### Tier 4: Data Catalog Updates (Created in Prior Session)
+Strategic planning documents — FY27 annual operating plans by org.
 
-| File | Change | Status |
-|------|--------|--------|
-| **data-catalog/glossary_entries.md** | Added "Account Segment (Lookup Table)" entry | ✅ UPDATED 2026-03-30 |
-| **data-catalog/table_inventory.md** | Added "Lookup Tables — Denormalization Bypasses" section with LU_TEAM_SEGMENT | ✅ UPDATED 2026-03-30 |
-| **data-catalog/lu_team_segment.md** | Schema, distribution, refresh automation for LU_TEAM_SEGMENT | ✅ LIVE 2026-03-30 |
+| File | Purpose | Status |
+|------|---------|--------|
+| `aop_fy27_strategic_priorities.md` | Company-wide FY27 strategic priorities | LIVE |
+| `aop_execution_alignment_20260324.md` | FY27 AOP vs actual execution cross-check (2026-03-24 snapshot) | LIVE (snapshot) |
+| `executive_priorities_fy27.md` | What needs to be measured per exec priority | LIVE |
+| `executive_measurement_requirements.md` | Dimensions, grains, and data gaps for exec questions | LIVE |
+| `fy27_aop_analytics.md` | Analytics org AOP | LIVE |
+| `fy27_aop_growth_acquisition.md` | Growth & Acquisition AOP | LIVE |
+| `fy27_aop_gtme_partnerships_support.md` | GTME, Partnerships & Support AOP | LIVE |
+| `fy27_aop_org_map.md` | Org map & ownership reference | LIVE |
+| `fy27_aop_rnd.md` | R&D AOP | LIVE |
+| `rnd_okr_structure.md` | R&D OKR structure for FY27 — team organization + scorecard | LIVE (snapshot) |
+| `conversion_team_q2_fy27_okr.md` | Conversion team Q2 FY27 — 3 KRs: Trial W2 CVR, W2 FTP, SS Annual Purchase Rate | LIVE |
+| `aop_execution_alignment_20260420.md` | FY27 AOP vs actual execution cross-check (2026-04-20 snapshot) | LIVE (snapshot) |
+| `expansion_team_q2_fy27_okr.md` | Expansion team Q2 FY27 OKRs — Obj 2 improve NRR (H1) | LIVE |
+| `q2_fy27_rnd_product_strategy.md` | Q2 FY27 R&D product strategy across all product teams — compiled cross-team reference | LIVE |
 
----
+## Tier 2: Metric Methodologies
 
-## Which Executive Questions Can Jarvis Answer Now?
+Loaded when the question is metric-specific.
 
-### Answerable TODAY (8/15)
+| File | Metric/Domain | Status |
+|------|---------------|--------|
+| `activation_methodology.md` | F14D Habit RA Rate — formula, golden population, caveats | LIVE |
+| `churn_taxonomy_draft.md` | Churn reasons by category — framework for "why churning?" | DRAFT |
+| `ai_sheets_user_definition.md` | GTM Engineer cohort definition | DRAFT (pending product confirmation) |
+| `inbound_team_identification.md` | Inbound add-on revenue attribution — data source + mapping | DRAFT (pending product flag) |
+| `new_trial_influenced_ss_arr.md` | Trial-influenced self-serve ARR — 14-day attribution window | LIVE |
+| `credit_types.md` | Canonical credit type reference (waterfall, enrichment, etc.) | LIVE |
+| `credit_utilization_and_retention.md` | Credit utilization & retention findings (data sparring) | LIVE |
+| `hvo_activation_findings.md` | HVO activation & retention findings — dialer lift, segment impact | LIVE |
+| `deliverability.md` | Email deliverability domain reference | LIVE |
+| `mcp_analytics.md` | MCP connector analytics — user identification, adoption cohorts | LIVE |
+| `credits.md` | Canonical credit cap utilization reference — supersedes utilization narrative in credit_types.md | LIVE |
+| `nrr_segment_definition.md` | Canonical NRR/GRR segment definition validated by Leo Liu (2026-04-24) | LIVE |
+| `m0_credit_attach_signal.md` | M0 credit attach = churn risk flag (61% M3 churn); M1+ attach = healthy signal | LIVE |
+| `phantom_churn_reactivation.md` | Phantom churn/reactivation events in FCT_DAILY_REVENUE caused by Salesforce renewal cycling | LIVE |
 
-| Q | Question | Status | Jarvis Strategy |
-|---|----------|--------|-----------------|
-| **Q2** | Churn rate by segment? | ✅ YES | Query + show by segment |
-| **Q4** | Use cases per paid team? | ⚠️ PARTIAL | Accept DS table quality; caveat |
-| **Q8** | Credit engagement experiment? | ✅ YES | Query GOLD_TEAM_CREDITS |
-| **Q9** | MM+Ent pipeline health? | ✅ YES | Standard SFDC query |
-| **Q11** | ARR by segment × motion? | ✅ YES | FCT_DAILY_REVENUE + segment join |
-| **Q12** | Growth accounting bridge? | ✅ YES | CHANGE_CATEGORY grouping |
-| **Q15** | Waterfall hit rates? | ✅ YES | Standard WATERFALL query |
-| **Q1** | NRR on track? | ⚠️ PARTIAL | Aggregate quarterly yes; M3 cohort NO (Gap 3) |
+### Metric Definitions (`metrics/`)
 
-### Blocked / Partially Blocked (7/15)
+AE-owned metric definitions — the spec for each metric before it enters `LU_SAVED_METRICS`.
 
-| Q | Question | Blocker | ETA to Unblock |
-|---|----------|---------|----------------|
-| **Q3** | Why churning? | Gap 5 (churn taxonomy) | Mid-April |
-| **Q5** | AI adoption? | Gap 2 (AI Sheets persona) | End of Q2 |
-| **Q6** | Inbound pacing? | Gap 6 (inbound flag) | End of Q1 |
-| **Q7** | Activation rate? | Gap 7 (Snowflake version) | Mid-April |
-| **Q10** | SSO/SCIM adoption? | Gap 9 (data source) | 1-2 days |
-| **Q13** | NRR annualized? | Gap 3 (segment) | Early April |
-| **Q14** | Revenue per employee? | Gap 14 (headcount source) | 1 day (Finance clarification) |
+| File | Metric |
+|------|--------|
+| `metrics/f14d_habit_ra_rate.md` | F14D Habit Record Action Rate |
+| `metrics/free_to_paid_rate.md` | Free-to-Paid Conversion Rate |
+| `metrics/inbound_revenue_attribution.md` | Inbound Revenue Attribution |
+| `metrics/m3_cohort_nrr.md` | M3 Cohort NRR |
+| `metrics/ss_annual_purchase_rate.md` | Self-Serve Annual Purchase Rate |
+| `metrics/trial_w2_conversion_rate.md` | Trial W2 Conversion Rate |
 
----
+## Tier 3: Domain Knowledge
 
-### Tier 5: Analyst Suits (Synced from analytics-copilot)
+SQL patterns, join logic, revenue structure, add-on tracking.
 
-| File | Analyst | Domain | Status |
-|------|---------|--------|--------|
-| **suits/leo_analyst_suit.md** | Leo Liu | NRR/GRR, cohort retention, mix-shift decomposition, segment economics, ARR modeling | ✅ LIVE |
-| **suits/leo_leader_suit.md** | Leo Liu | Management coaching, career advice, analytics integrity, feedback delivery | ✅ LIVE |
-| **suits/index.md** | — | Routing rules: explicit + implicit triggers for suit activation | ✅ LIVE (jarvis-native) |
+| File | Purpose | Status |
+|------|---------|--------|
+| `sql_patterns.md` | Canonical SQL patterns for common analytical questions | LIVE |
+| `segment_join_canonical.md` | How to join segment data — LU_TEAM_SEGMENT is canonical | LIVE |
+| `lu_team_segment_patterns.md` | 5 reusable SQL patterns for segment-sliced queries | LIVE |
+| `lu_saved_metrics.sql` | Registry SQL for saved metrics | LIVE |
+| `glossary_entries.md` | Metric and term definitions | LIVE |
+| `revenue_org_structure.md` | Revenue org structure — how to debrief revenue, motion splits | LIVE |
+| `sales_motion_definitions.md` | Rep-driven vs self-serve definition inventory | LIVE |
+| `stripe_billing_patterns.md` | Apollo's Stripe billing patterns — critical for Stripe data analysis | LIVE |
+| `dialer_addon_churn.md` | Dialer add-on churn tracker | LIVE |
+| `dialer_addon_purchases.md` | Dialer add-on purchases | LIVE |
+| `inbound_addon_churn.md` | Inbound add-on churn tracker | LIVE |
+| `inbound_addon_purchases.md` | Inbound add-on purchases | LIVE |
+| `de_owned_tables_architecture.md` | FCT table architecture — DE-owned building blocks for team analytics | LIVE |
+| `dim_table_infrastructure.md` | DIM table landscape, lineage, and rebuild plan | LIVE |
+| `signal_sources.md` | Signals pipeline — source reference for WEEKLY_TEAM_SIGNALS | LIVE |
+| `cbr_data_sources.md` | CBR data sources & methodology | LIVE |
+| `hex_cbr_notebooks.md` | Hex CBR & Growth notebook context extract | LIVE |
+| `hex_notebooks_context.md` | Hex notebooks — SQL table sources, metric definitions, business rules | LIVE |
+| `amplitude_event_check.md` | Amplitude event check — skill reference for investigating metric moves | LIVE |
+| `amplitude_protected_events.md` | Protected Amplitude event_type_ids — cannot be renamed/deleted | LIVE |
+| `source_catalog.md` | Source catalog skill reference | LIVE |
+| `ask_henry_query_guide.md` | Ground-truth table/filter/assumption guide for Ask Henry answers | LIVE |
+| `ask_henry_questions.md` | Bank of real questions from #ask-henry Slack bot | LIVE |
+| `mongo_collection_check.md` | Audit recent code changes affecting Mongo collections | LIVE |
+| `crm_integration.md` | CRM integration analytics — which table to use, metric definitions, data gaps | LIVE |
+| `dialer.md` | Dialer product, access, and entitlement — modes, metering, Jan 2026 add-on structural break | LIVE |
+| `domain_compact.md` | Auto-generated compact summary of 127 domain files — LLM router reference | LIVE |
+| `finance.md` | Master index for all finance, revenue, and billing knowledge | LIVE |
+| `gtme_did_playbook.md` | Reusable DiD causal playbook for GTME CSM effectiveness analysis | LIVE |
+| `gtme_interventions_status_l26w.md` | GTME interventions status over last 26 weeks from analytics_datascience.interventions | LIVE |
+| `gtme_managed_teams.md` | Definition and identification of GTME managed teams (paid + custom plan + gtme_name) | LIVE |
+| `hex_notebooks_context_v2.md` | Hex notebook context extract v2 — addendum covering 14 projects not in v1 | LIVE |
+| `hex_project_catalog.md` | Full inventory of all Hex projects in Apollo org, organized by product area | LIVE |
+| `partnerships.md` | Partnerships domain context — tech partnerships, data sources, analytics coverage | LIVE |
+| `partnerships_identification.md` | How to identify partnership teams via FCT_AMPLITUDE_EVENTS partner_id (no native logging) | LIVE |
+| `cbr_weekly_context.md` | Live OKR status and business metrics from CBR #18 (Apr 28-29 2026) | LIVE (snapshot) |
 
-Suits teach Jarvis to think and communicate like a specific analyst. Routing logic is in `suits/index.md` — suits activate explicitly ("use Leo's suit") or implicitly when the task matches the suit's domain keywords. Suit content files are synced from `analytics-copilot/teammates/`; the index is jarvis-native.
+## Tier 4: Org & People
 
-**Sync verification:** `python3 ~/workspace/analytics-copilot/scripts/verify_suit_sync.py` checks for content drift and index completeness.
+Team structure, department profiles, squad coverage.
 
----
+| File | Purpose | Status |
+|------|---------|--------|
+| `team_roster.md` | Apollo analytics team roster | LIVE |
+| `department_profiles.md` | Department → analytics partner mapping | LIVE |
+| `squad_profiles.md` | Squad-level profiles, identifies gaps in analytics support | LIVE |
+| `player_cards.md` | Analytics Pokemon Trainer Cards (team fun) | LIVE |
+| `pokemon_compendium.md` | Full trainer card compendium reference | LIVE |
+| `zone_assignments.yaml` | DS/AE zone coverage — source of truth for who owns what | LIVE |
+| `org_pulse.md` | Org pulse snapshot (generated via `/org-pulse-scan`) | LIVE (snapshot) |
+| `analytics_org_tree.md` | Analytics/Data org reporting chain from LU_DARWINBOX_POSITIONS (2026-04-20 snapshot) | LIVE (snapshot) |
+| `squad_summaries_current.md` | Auto-generated squad activity summaries — week of 2026-05-11 | LIVE (snapshot) |
 
-## How to Use This Knowledge Base
+## Tier 5: Table Context (`context/`)
 
-### For Jarvis Developers
+One `.md` file per approved Snowflake table — schema, trust tier, join patterns, caveats. **132 files** (131 tables + `_TEMPLATE.md`). The query guardrail enforces that every queried table has a context file.
 
-1. **System prompt:** Import `annual_targets.md`, `theory_of_change.md`, `business_state.md` into Jarvis's system prompt
-2. **Fallback docs:** Wire in `pending_definitions.md` so Jarvis knows what to say when blocked
-3. **MCP/Tools:** When Jarvis gets a query, it should:
-   - Recognize the intent (e.g., "Are we on track?" → leads to annual_targets.md)
-   - Look up the relevant doc
-   - Query Snowflake for current data
-   - Blend the two and respond
+Not listed individually here — see `context/` directory. Key tables:
 
-4. **Metric-specific:** For queries mentioning F14D, churn, AI Sheets, or Inbound:
-   - Reference the corresponding methodology file
-   - Explain what's live vs. what's pending
+| File | Table | Domain |
+|------|-------|--------|
+| `context/FCT_DAILY_REVENUE.md` | `FCT_DAILY_REVENUE` | Revenue/ARR |
+| `context/FCT_MONTHLY_REVENUE.md` | `FCT_MONTHLY_REVENUE` | Revenue/NRR |
+| `context/AGG_TEAM_CREDITS.md` | `AGG_TEAM_CREDITS` | Credit pipeline |
+| `context/DIM_TEAMS_DAILY.md` | `DIM_TEAMS_DAILY` | Team snapshots |
+| `context/DIM_USERS_DAILY.md` | `DIM_USERS_DAILY` | User snapshots |
+| `context/PRODUCT_METRICS_DAILY.md` | `PRODUCT_METRICS_DAILY` | WAT, feature usage |
+| `context/WEEKLY_TEAM_SIGNALS.md` | `WEEKLY_TEAM_SIGNALS` | Signals pipeline |
+| `context/LU_TEAM_SEGMENT.md` | `LU_TEAM_SEGMENT` | Segment lookup |
+| `context/LU_EMPLOYEE_ACTIVITY.md` | `LU_EMPLOYEE_ACTIVITY` | Employee activity digest |
 
-### For Analytics Team
+## Tier 6: Analyst Suits (`suits/`)
 
-1. **Weekly refresh:** Update `business_state.md` with new momentum signals (every Monday)
-2. **Monitor blockers:** Track ETA on Gaps 2, 3, 5, 6, 7, 14 in `pending_definitions.md`
-3. **Validate queries:** Use `segment_join_canonical.md` and `lu_team_segment_patterns.md` as templates
-4. **New metric:** If adding a new KPI, create a methodology file (see activation_methodology.md as template)
+Suits teach Jarvis to think and communicate like a specific analyst. See `suits/index.md` for full routing rules.
 
-### For Executives / Stakeholders
+| File | Codename | Analyst | Domain |
+|------|----------|---------|--------|
+| `suits/index.md` | — | — | Routing rules, domain triggers, Iron Legion roster |
+| `suits/mark_l.md` | Mark L | Leo Liu | NRR/GRR, cohort retention, mix-shift, dark-mode HTML |
+| `suits/friday.md` | Friday | Leo Liu (leader) | Coaching, career, team direction |
+| `suits/war_machine.md` | War Machine | Pubudu | MECE, stat-sig, experiments |
+| `suits/iron_patriot.md` | Iron Patriot | Pubudu (SQL) | Auto-invoked by War Machine for SQL |
+| `suits/pepper.md` | Pepper | Bridie | Credits, foundation, infrastructure, critic mode |
+| `suits/veronica.md` | Veronica | Shyam | Signals, cross-domain, enrichment |
+| `suits/jarvis_protocol.md` | Jarvis Protocol | Andrew | Metric methodology, experiment rigor |
 
-1. **What can Jarvis answer?** This manifest (section "Which executive questions can Jarvis answer now?")
-2. **Why is Jarvis blocked on [X]?** See `pending_definitions.md` for blocker + ETA
-3. **What are we targeting?** See `annual_targets.md`
-4. **What's the strategy?** See `theory_of_change.md`
-5. **How are we doing?** See `business_state.md`
+## Tier 7: Templates & Report Standards
 
----
+Reusable frameworks for analysis output.
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `product_debrief_template.md` | Canonical 3-step execution framework for product debriefs | LIVE |
+| `template_answer_scaffolding.md` | Step-by-step question → answer workflow | LIVE |
+| `template_cbr_report.md` | Company Business Review report template | LIVE |
+| `template_cpo_okr_report.md` | CPO OKR cadence report — execution template (no cached data) | LIVE |
+| `template_metric_definition.md` | Metric definition spec for handoff to analytics | LIVE |
+| `template_question_patterns.md` | Reusable patterns for common question types | LIVE |
+| `template_alert_anomaly.md` | Structure for proactive alert notifications to execs | LIVE |
+| `template_common_assumptions.md` | Default assumptions when answering questions | LIVE |
+| `template_data_source.md` | Template for documenting new data sources | LIVE |
+| `template_eval_test_case.md` | Format for scorecard eval test case definitions | LIVE |
+| `template_stakeholder_update.md` | Lightweight ad-hoc update format for exec stakeholders | LIVE |
+| `html_report_standard.md` | Shared dark-mode HTML styling for all Jarvis reports | LIVE |
+| `REPORT_TEMPLATE_REGISTRY.md` | Registry of available report templates | LIVE |
+| `handoff_template.md` | Reusable handoff template — owner handoff and consumer adoption tracks | LIVE |
+| `personal_action_board.md` | The next_up.md pattern — Tony-voice action board template for teammates | LIVE |
+| `finance_onboarding.md` | Finance team Jarvis onboarding guide — pre-read and first-week reference | LIVE |
+| `finance_onboarding_facilitator_runbook.md` | Facilitator runbook for Finance × Jarvis live onboarding session (30 min) | LIVE |
+
+## Tier 8: Jarvis Internal (Maintenance & Ops)
+
+Not for exec-facing responses — used by the analytics team to maintain Jarvis.
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `jarvis_identity.md` | Jarvis identity & relationships (Leo = father, Bridie = godmother) | LIVE |
+| `jarvis_characters.md` | Character backstory: Henry, Shyam, Papa Curl, Pride & Dignity protocol | LIVE |
+| `jarvis_health_playbook.md` | How to keep Jarvis accurate: sync, refresh, scorecard | LIVE |
+| `jarvis_update_protocol.md` | How to update the knowledge base; sync workflow and policy | LIVE |
+| `jarvis_action_log.md` | Improvements shipped + backlog | LIVE |
+| `contribution_guidelines.md` | Protected files, edit policies, contribution rules | LIVE |
+| `quality_check_process.md` | Context quality control process | LIVE |
+| `measurement_gap_tracker.md` | Standing tracker for executive measurement gaps | LIVE |
+| `activity_tagging.md` | Activity pulse protocol — mandatory tagging for every action | LIVE |
+| `mcp_tool_guidelines.md` | Token-efficient MCP usage (Glean, Notion, Gmail, Snowflake) | LIVE |
+| `pepper_watchlist.yaml` | Live gap registry — Pepper checks on every data question | LIVE |
+| `pepper_audit_log.jsonl` | Pepper audit trail | LIVE |
+| `authoring_guide.md` | Best practices for domain files and skill authoring | LIVE |
+| `jarvis_pain_points.md` | Accumulated improvement signals and resolution actions | LIVE |
+| `jarvis_registry_health.md` | LU_SAVED_METRICS status and table accessibility report | LIVE |
+| `jarvis_schema_drift.md` | Documentation vs Snowflake schema comparison report | LIVE |
+| `offboarding_protocol.md` | Standard process for analytics team member departure | LIVE |
+| `persistent_claude_session.md` | How-to for long-running Claude Code sessions in terminals | LIVE |
+| `skill_registry.md` | All analytics copilot skills with status and validation | LIVE |
+| `snowflake_mcp_setup.md` | Connect Claude Code to Snowflake via MCP server | LIVE |
+| `table_registration_checklist.md` | Three-location registration requirement for new tables | LIVE |
+| `hammer.md` | Bad analytics archive — documented flawed analyses and the failure modes behind them | LIVE |
+| `jarvis_pulse_runbook.md` | Load-bearing runbook for Jarvis usage measurement system — ops, ownership, break-glass | LIVE |
+
+## Tier 9: Point-in-Time Reports & Project Docs
+
+Snapshots and project-specific docs. Not evergreen — retained for historical context.
+
+| File | Purpose | Status |
+|------|---------|--------|
+| `analytics_report_2026_03_19.md` | Copilot analytics snapshot (2026-03-18) | Snapshot |
+| `ask_henry_plugin_test_report.md` | Plugin validation against 60 real exec questions | Snapshot |
+| `copilot_roi.md` | ROI quantification — what was built, speed, what it replaced | Snapshot |
+| `dept_assessment_2026-03-11.md` | Analytics team state snapshot (2026-03-11) | Snapshot |
+| `dim_teams_daily_v2_gap_analysis.md` | Column coverage verification before V2 promotion | Snapshot |
+| `jarvis_slack_bot.md` | FastAPI + Bolt architecture for dedicated Slack app | Reference |
+| `metrics_on_demand_architecture.md` | Design for custom metric measurement infrastructure | Reference |
+| `project_dim_teams_daily_rebuild.md` | Foundation table rebuild project tracking | Reference |
+| `biweekly_insights_findings_2026-05-06.md` | Durable findings from 2026-05-06 bi-weekly product insights review (MCP, dialer, etc.) | Snapshot |
+| `support_perception_analysis_apr2026.md` | Apollo support perception multi-source analysis (Notion, 2026-04-03) | Snapshot |
+
+______________________________________________________________________
+
+## Files NOT Managed by Sync
+
+Edit these directly in the jarvis repo:
+
+| File | Why |
+|---|---|
+| `JARVIS_KNOWLEDGE_BASE_MANIFEST.md` | This file — jarvis-native capability inventory |
+| `domain_context.md` | Auto-generated by `scripts/build_domain_context.py` from `analytics-copilot/domain/index.md` |
+
+______________________________________________________________________
 
 ## How This Knowledge Base Is Maintained
 
-All files in `jarvis/knowledge/` (except `JARVIS_KNOWLEDGE_BASE_MANIFEST.md` and `domain_context.md`) are **automatically synced** from `analytics-copilot` via `scripts/sync-jarvis.sh`.
+All synced files flow from `analytics-copilot` via `scripts/sync-jarvis.sh`. The sync is one-way and intentional.
 
-**Never edit synced files directly.** Edit the source in `analytics-copilot` and run `/sync-jarvis`.
+**To update something Jarvis knows:** Edit the source in `analytics-copilot`, then run `/sync-jarvis`.
+**To add a new file:** Create in `analytics-copilot/domain/`, add to `SYNC_MANIFEST.md`, add a `cp` line to `sync-jarvis.sh`, run `/sync-jarvis`.
 
-For the full list of synced files and instructions, see `analytics-copilot/domain/SYNC_MANIFEST.md`.
+For the full sync reference, see `README.md` in this directory.
 
----
+______________________________________________________________________
 
-## Known Limitations & Caveats
-
-1. **Living documents:** `business_state.md` should be updated weekly; others (targets, strategy) quarterly
-2. **Blocked questions:** 7 of 15 are blocked on data infrastructure gaps; these should unblock progressively (March → June timeline)
-3. **Draft documents:** `churn_taxonomy_draft.md`, `ai_sheets_user_definition.md`, `inbound_team_identification.md` awaiting product/VoC finalization
-4. **Personas:** No standardized persona → data filter mapping yet (Gap 2); ICP vocabulary still under development
-
----
-
-## Success Metrics (for Transfer)
-
-Once transferred to Jarvis:
-
-1. **Jarvis can answer 8/15 questions on first try** (no exploration needed)
-2. **Jarvis properly blocks on 7/15** (explains blocker + ETA, not "I don't know")
-3. **Weekly business_state.md updates** (kept current by analytics team)
-4. **Data gaps close on schedule** (Gap 3, 5, 7 by mid-April; Gap 2 by end of Q2)
-
----
-
-## Questions?
-
-For questions on any of these docs, contact:
-- **Strategy & context:** Bridie Meredith (Analytics)
-- **Metric definitions:** Adhiraj Yadav (Metrics owner)
-- **Product bets:** Leo Liu (Strategy)
-- **Data infrastructure:** Data Engineering team
-
----
-
-**Last updated:** 2026-04-09
-**Next review:** Weekly (business_state.md), Quarterly (all others)
+**Last updated:** 2026-05-13
+**Next review:** Weekly (business_state.md, org_pulse.md), Quarterly (all others)

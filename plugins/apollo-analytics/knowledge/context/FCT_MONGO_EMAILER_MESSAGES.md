@@ -51,13 +51,34 @@ Ranked by actual usage (90 days, distinct users):
 ## How It's Used
 
 ### Common query patterns
+
 - Filtered by `TYPE IN ('outreach_automatic_email', 'outreach_manual_email')` for sequence/outreach analysis
 - Recipients parsed as semi-structured: `recipients:domain::string`
 - Exploratory `SELECT *` with LIMIT for investigating specific cases
 
 ### Key consumers
+
 - Analysts (ad-hoc email analysis)
 - Valeriya Satsevich (recent heavy user)
+
+## AI Variables in Emails
+
+The `ai_variables_used` column (VARIANT, JSON array) tracks which AI/power-up variables were used in an email's content. Tracking started **2026-02-18**; use `completed_at >= '2026-02-22'` for the first full week.
+
+**Default Fields in email:** Flatten and filter for `qualify_contact` or `qualify_account`:
+
+```sql
+SELECT DISTINCT eml.team_id, DATE(eml.completed_at) AS send_date
+FROM   ANALYTICS_DB.ANALYTICS_DATAPLATFORM.FCT_MONGO_EMAILER_MESSAGES eml
+     , LATERAL FLATTEN(input => eml.ai_variables_used) ai
+WHERE  eml.status IN ('Completed', 'Failed')
+  AND  eml.type IN ('outreach_automatic_email', 'outreach_manual_email', 'extension_email')
+  AND  eml.completed_at >= '2026-02-22'
+  AND  eml.ai_variables_used IS NOT NULL AND eml.ai_variables_used <> '[]'
+  AND  (ai.value::string LIKE '%qualify_contact%' OR ai.value::string LIKE '%qualify_account%')
+```
+
+**Note:** Adoption is extremely low as of Mar 2026 — only 11 teams used DF variables in email across the full analysis window. The field may be sparsely populated.
 
 ## Known Issues & Gotchas
 

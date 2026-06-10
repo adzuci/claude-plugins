@@ -7,9 +7,7 @@
 **Owner:** Adhiraj Yadav (metric owner), Bridie Meredith (Jarvis context)
 **Status:** Measured in Amplitude/Hex; Snowflake version in progress (Gap 7)
 
-> **Context:** This is a drill-down of Phase 1 (Activation) in [theory_of_change.md](theory_of_change.md). The full causal chain ACTIVATION → HABIT → RETENTION → EXPANSION → NRR is documented there.
-
----
+______________________________________________________________________
 
 ## The Metric
 
@@ -33,51 +31,54 @@ F14D_HABIT_RA_RATE =
 **Current baseline (FY26):** ~12%
 **FY27 target:** 17% (+5 percentage points)
 
----
+______________________________________________________________________
 
 ## What is a Record Action (RA)?
 
 A Record Action is a user interaction with an Apollo-tracked contact or account. **14 qualifying actions** (canonical list):
 
 1. **Email outreach** — Sent prospecting email (Outreach)
-2. **Email manual** — Sent manual email (not sequence)
-3. **Email extension** — Used email extension
-4. **Win/Close** — Logged deal (Win/Close feature)
-5. **API enrichment** — Enriched contact via API
-6. **CRM enrichment** — Enriched via CRM integration
-7. **CSV enrichment** — Enriched via bulk upload
-8. **Waterfall enrichment** — Enrichment pipeline step completed
-9. **GenPipe Traditional** — Generated leads manually
-10. **GenPipe NextGen** — Generated leads via AI
-11. **Meeting Assistant** — Meeting scheduled/recorded
-12. **Scheduler** — Used meeting scheduling
-13. **Notes** — Added notes to contact/account
-14. **CRM record mgmt** — Modified CRM record
+1. **Email manual** — Sent manual email (not sequence)
+1. **Email extension** — Used email extension
+1. **Win/Close** — Logged deal (Win/Close feature)
+1. **API enrichment** — Enriched contact via API
+1. **CRM enrichment** — Enriched via CRM integration
+1. **CSV enrichment** — Enriched via bulk upload
+1. **Waterfall enrichment** — Enrichment pipeline step completed
+1. **GenPipe Traditional** — Generated leads manually
+1. **GenPipe NextGen** — Generated leads via AI
+1. **Meeting Assistant** — Meeting scheduled/recorded
+1. **Scheduler** — Used meeting scheduling
+1. **Notes** — Added notes to contact/account
+1. **CRM record mgmt** — Modified CRM record
 
 **NOT counted:** Login (friction signal, not value), viewing results (passive), settings changes.
 
----
+______________________________________________________________________
 
 ## Why 4 RAs in 14 Days?
 
 **Empirical basis:**
-- Analysis of FY26 cohorts shows teams reaching 4+ RAs by Day 14 have 78% M3 retention vs. 32% for teams with <4 RAs.
+
+- Analysis of FY26 cohorts shows teams reaching 4+ RAs by Day 14 have 78% M3 retention vs. 32% for teams with \<4 RAs.
 - Threshold of 4 is strategic sweet spot: high enough to signal intent (not random clicks), low enough to be achievable in onboarding window.
 - 14-day window aligns with trial period (critical onboarding window before purchase decision).
 
 **What it signals:**
+
 - **Habit formation initiation:** User is repeating actions, not one-time trial
 - **Product value discovery:** User found a use case and exercised it
 - **Organizational buy-in:** Likely >1 user engaged (vs. solo trial user)
 - **Retention predictor:** Exponential lift in M3 retention vs. non-activators
 
 **Why it's the #1 OKR for growth:**
+
 - Early signal: Activation is measurable by Day 14 (vs. NRR lag of 90 days)
 - Causality: Activation drives habit → retention; not just correlation
 - Actionable: FUX improvements, onboarding timing, value messaging all move this metric
 - Balanced scorecard: Tracks customer success (activation) not just sales (ARR)
 
----
+______________________________________________________________________
 
 ## Measurement Window (Golden Population Only)
 
@@ -88,14 +89,15 @@ A Record Action is a user interaction with an Apollo-tracked contact or account.
 - **Domain:** Not free-email (@gmail.com, @hotmail.com, etc.) — signal of company legitimacy
 
 **Why this restriction?**
-- VSB teams have <20 employees; lower attachment potential; different product fit
+
+- VSB teams have \<20 employees; lower attachment potential; different product fit
 - APAC/India have data quality issues (enrichment accuracy, email deliverability)
 - Freemail teams are often personal side projects (not evaluating for company use)
 - **Net effect:** Measurement population is ~60% of all signups (high-intent, high-retention cohort)
 
 **Caveat for Jarvis:** When exec asks "What's our activation rate?" Jarvis must clarify: "This is Golden Pop activation (17% target). Overall activation including all segments/regions is lower (~10%). We focus on Golden Pop because that's where we expect the NRR improvement."
 
----
+______________________________________________________________________
 
 ## Current Status (as of 2026-03-27)
 
@@ -103,16 +105,18 @@ A Record Action is a user interaction with an Apollo-tracked contact or account.
 **Q1 2026 Current:** 11.0% (flat to slightly down)
 
 **Why it's not moving:**
+
 1. **Onboarding friction:** New teams hitting 4 RAs by Day 14 requires successful first-run experience
-2. **Value clarity:** If product value isn't obvious in first 14 days, no RAs happen
-3. **Competing priorities:** Large accounts may delay onboarding; smaller accounts may drop if value unclear
+1. **Value clarity:** If product value isn't obvious in first 14 days, no RAs happen
+1. **Competing priorities:** Large accounts may delay onboarding; smaller accounts may drop if value unclear
 
 **What we're trying:**
+
 - **FUX redesign (mid-April):** Simplified onboarding; 5-step → 2-step flow → earlier value delivery
 - **Success criteria:** 2-3pp lift (13-14%) within 2 weeks post-launch
 - **If flat:** Suggests value problem, not UX problem
 
----
+______________________________________________________________________
 
 ## How Snowflake Version Will Work (Gap 7)
 
@@ -142,7 +146,7 @@ ORDER BY signup_date DESC;
 **Refresh:** Daily
 **ETA:** Mid-April 2026
 
----
+______________________________________________________________________
 
 ## Targets & Milestones
 
@@ -156,16 +160,17 @@ ORDER BY signup_date DESC;
 
 **Escalation threshold:** If Q2 activation < 14% after FUX redesign, recommend product team deep-dive into early churn (are teams discovering value?)
 
----
+______________________________________________________________________
 
 ## How Jarvis Uses This
 
 When exec asks: "How are we doing on activation?"
 
 **Jarvis response:**
+
 > "F14D Habit RA Rate is currently **11%** (target: 17%). That's 6 points behind where we need to be. This is the #1 leading indicator for whether our NRR +10pt improvement plan is working. The team is launching onboarding redesign in mid-April that should move this 2-3 points. Until we see that lift (or failure), we won't know if the value problem is UX friction or product quality. Current status: **at risk** unless FUX redesign delivers."
 
----
+______________________________________________________________________
 
 ## See Also
 

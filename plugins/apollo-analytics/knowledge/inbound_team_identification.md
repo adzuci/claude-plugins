@@ -7,32 +7,34 @@
 **Owner:** Bridie Meredith (Analytics), Product team (data source)
 **Status:** In progress; Q1 traction validated; mapping to revenue tables TBD (Gap 6)
 
----
+______________________________________________________________________
 
-## What is Inbound Router?
+## What is Inbound?
 
-**Product:** Inbound Router add-on (beta → GA path planned Q2)
+> **Note:** For the full canonical product reference — features, access model, structural breaks, and reference queries — see [`inbound.md`](inbound.md) (Owner: Anvitha, updated 2026-05-13). This file focuses specifically on team identification and revenue attribution.
 
-**Value prop:** Automate inbound lead routing and qualification. Routes cold inbound leads to right AE/SDR based on rules + AI scoring.
+**Product:** Inbound Add-on (website visitor tracking + router). "Inbound" at Apollo almost always means **website visitor tracking** — the ability to see which companies (and now individual contacts) are visiting your website. Router and form enrichment usage is minimal.
 
-**Target buyer:** SDRs, BDRs, sales ops (own inbound qualification process)
+**Target buyer:** SDRs, BDRs, sales ops
 
-**Business model:** Per-message or per-routed-lead fee (TBD based on usage model)
+**Business model:** Team-level add-on purchase — unlocks higher usage tier for website visitor identifications
 
----
+______________________________________________________________________
 
-## Current Traction (Q1 2026)
+## Current Traction (Q1 2026 — STALE, for historical reference only)
+
+> **These numbers are from early Q1 2026 and are outdated.** For current add-on purchase and churn data, see [`inbound_addon_purchases.md`](inbound_addon_purchases.md) and [`inbound_addon_churn.md`](inbound_addon_churn.md). FY27 ARR target: $6.4M (H2 strategic bet).
 
 | Metric | Value | Notes |
 |--------|-------|-------|
-| **Teams adopted** | ~170 | Early beta; manually identified |
-| **Total ARR** | $300k+ | Estimated from Mongo audit data |
-| **Monthly growth** | ~60 teams/month | Based on 60-day sample |
-| **Attach rate (paid teams)** | ~2.7% | 170 / 6.3M paid teams |
+| **Teams adopted** | ~170 | Early beta; manually identified (Q1 2026 snapshot) |
+| **Total ARR** | $300k+ | Estimated from Mongo audit data (Q1 2026 snapshot) |
+| **Monthly growth** | ~60 teams/month | Based on 60-day sample (Q1 2026 snapshot) |
+| **Attach rate (paid teams)** | ~2.7% | 170 / 6.3M paid teams (Q1 2026 snapshot) |
 
 **Source:** `FCT_MONGO_DAILY_TEAM_AUDIT_REPORTS` (Lens 3: `ADDITIONAL_FEE_BY_SOURCE`)
 
----
+______________________________________________________________________
 
 ## Data Identification Approaches
 
@@ -53,15 +55,17 @@ ORDER BY monthly_inbound_arr DESC
 ```
 
 **Limitations:**
+
 - Only captures fee-bearing usage (ignores free tier, pilots)
 - Requires nested JSON parsing (error-prone)
 - Refresh lag (daily, but diagnostic only)
 
----
+______________________________________________________________________
 
 ### Future (Scalable, Permanent)
 
 **Option A: Mongo Inbound Flag**
+
 ```
 Teams.inbound_router_enabled: TRUE/FALSE
 Teams.inbound_router_activated_at: TIMESTAMP
@@ -73,6 +77,7 @@ Teams.inbound_router_tier: 'free' | 'paid'
 **Estimate:** Product team to provide flag definition (1-2 hours) + DE to sync (2-3 hours)
 
 **Option B: Revenue Table Flag**
+
 ```
 FCT_DAILY_REVENUE
   - INBOUND_ROUTER_ARR column (denormalized)
@@ -84,6 +89,7 @@ FCT_DAILY_REVENUE
 **Estimate:** 1-2 days for DE schema update + backfill
 
 **Option C: Lookup Table**
+
 ```
 DIM_INBOUND_TEAMS:
   - team_id (PK)
@@ -96,18 +102,20 @@ DIM_INBOUND_TEAMS:
 
 **Estimate:** 1-2 days (requires source flag from option A)
 
----
+______________________________________________________________________
 
 ## ARR Attribution
 
 **Current method (Q1):** `FCT_MONGO_DAILY_TEAM_AUDIT_REPORTS` fees
 
 **Limitations:**
+
 - Doesn't tie to `FCT_DAILY_REVENUE` (revenue table of record)
 - Can't blend with other revenue metrics (churn, expansion, etc.)
 - Inbound usage may be misclassified as other features
 
 **Future method (Goal):**
+
 ```
 V_INBOUND_ARR_BY_SEGMENT:
   SELECT
@@ -125,7 +133,7 @@ V_INBOUND_ARR_BY_SEGMENT:
   ORDER BY inbound_arr DESC
 ```
 
----
+______________________________________________________________________
 
 ## Retention & Expansion Analysis
 
@@ -138,16 +146,16 @@ V_INBOUND_ARR_BY_SEGMENT:
 | **Inbound expansion ARR** | Sum of ACV increases in inbound cohorts | Secondary growth within product |
 | **Competitive overlap** | % of Inbound teams also using Dialer | Cannibalization check |
 
----
+______________________________________________________________________
 
 ## Known Questions (Product Clarification Needed)
 
 1. **Is Inbound independent or bundled?** (affects pricing model + ARR counting)
-2. **Free tier vs. paid?** (affects TAM calculation + attach rate)
-3. **Primary user persona?** (SDR vs. sales ops vs. marketing — affects GTM targeting)
-4. **Seasonal adoption pattern?** (is Q1 traction representative?)
+1. **Free tier vs. paid?** (affects TAM calculation + attach rate)
+1. **Primary user persona?** (SDR vs. sales ops vs. marketing — affects GTM targeting)
+1. **Seasonal adoption pattern?** (is Q1 traction representative?)
 
----
+______________________________________________________________________
 
 ## Data Table Requirements
 
@@ -166,7 +174,7 @@ Refresh: Daily
 Source: Mongo DIM_MONGO_TEAMS.inbound_router_enabled flag
 ```
 
----
+______________________________________________________________________
 
 ## Timeline
 
@@ -180,20 +188,25 @@ Source: Mongo DIM_MONGO_TEAMS.inbound_router_enabled flag
 
 **Estimate total:** 3-5 days if product provides flag immediately
 
----
+______________________________________________________________________
 
 ## How Jarvis Uses This
 
 **Current (before live):**
+
 > "Inbound add-on revenue isn't yet flagged in our warehouse. From Mongo we can see ~170 teams adopted it in Q1 (early beta), generating $300k+ ARR. But I can't query 'inbound ARR by segment' or track cohort NRR yet. Product team is providing the data source — should have this live by end of Q1."
 
 **Future (after implementation):**
+
 > "Inbound Router ARR: $300k (Q1 data). SMB adoption: 60%, Mid-Market: 30%, Enterprise: 10%. Attach rate is 2.7% of paid teams (170 teams), which is light for early GA. Cohort NRR data coming next week; that read will determine if this is product-market fit or pricing issue."
 
----
+______________________________________________________________________
 
 ## Related Files
 
+- [`inbound.md`](inbound.md) — **Canonical Inbound product reference** (features, access model, structural breaks, reference queries)
+- [`inbound_addon_purchases.md`](inbound_addon_purchases.md) — Current add-on purchase tracking
+- [`inbound_addon_churn.md`](inbound_addon_churn.md) — Current add-on churn tracking
 - `pending_definitions.md` — Gap 6 (full context)
 - `product_portfolio_taxonomy.md` — Inbound as H2 bet
 - `annual_targets.md` — $6.4M FY27 target

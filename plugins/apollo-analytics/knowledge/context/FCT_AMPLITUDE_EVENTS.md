@@ -60,12 +60,14 @@ WHERE evnt.event_type_id = 813627141
 ```
 
 Key `event_properties` fields:
+
 - `source::string` — **use this to identify Default Fields enrichments**: only two values exist: `'default_field'` and `'custom_field'`. `source = 'default_field'` is the canonical filter for Default Fields.
 - `enrichment_origin::string` — alternative for Default Fields: `IN ('auto_enrichment', 'autoenrichment')` (both spellings exist; `auto_enrichment` is dominant at 12.4M vs `autoenrichment` at 39K). Slightly undercounts vs `source = 'default_field'` (~12.5M vs 12.9M). For AI Assistant origin: `IN ('aiassistant', 'assistant')`.
 - `number_of_records` — records enriched in this event
 - `number_of_credits_consumed` — credits consumed in this event; **numbers may not be reliable before 2026-02-25** — always flag when citing pre-2026-02-25 credit figures
 
 ### Records enriched query (Paid Core, weekly)
+
 ```sql
 SELECT
     DATE_TRUNC('week', evnt.event_date) AS week_starting_sun,
@@ -87,9 +89,47 @@ GROUP BY 1 ORDER BY 1;
 
 Run the same query without DIM_TEAMS_DAILY join for the all-users view.
 
+## Power-up Downstream Usage Events
+
+Three additional events track how teams use power-up fields (including Default Fields) *after* enrichment:
+
+### Power-up Filter applied (event_type_id 817191114)
+
+Teams that filtered search results using a power-up field. `event_properties:field_name::string` identifies the field — Default Fields are `'Qualify Account'` and `'Qualify Contact'` (title case).
+
+### Power-up CTA Clicked (event_type_id 813587111)
+
+Teams that clicked a CTA on a power-up field. Same `field_name` property and values as above (title case).
+
+### AI Default Fields Actioned (event_type_id 870395875)
+
+Teams that clicked "filter with field" from the Default Fields UI. Filter: `event_properties:action::string = 'filter_with_field_clicked'`. **Note:** `field_name` values are **lowercase** (`'qualify_account'`, `'qualify_contact'`) — different from the two events above. Always join with `DIM_TEAMS.is_internal_domain = false` to exclude internal test teams.
+
+See `teammates/pubudu_wariyapola/Context/data_sources.md` for full query patterns and code samples.
+
+## AI Assistant Entry Point View Events
+
+Amplitude events used to measure "view" (exposure) for AI Assistant entry points. These map to `at.source` values on `DIM_MONGO_ASSISTANT_THREADS`. Not all thread entry points have a corresponding view event — omni_search, assistant_user_prompt, assistant_welcome, assistant_nudge, welcome_home_preset, and sequence_new have no view event.
+
+| Amplitude Event | Filters | Maps to Entry Point |
+|---|---|---|
+| `Assistant Onboarding Viewed` | — | `assistant_setup` |
+| `Campaign Template Card CTA Clicked` | — | `project_guided_setup` |
+| `[CIO] Email Opened` | `event_properties:transactional_message_id = 223` | `assistant_setup_email` |
+| `Onboarding Survey Actioned` | `event_properties:source = 'assistant start'` | `onboarding` |
+| `Onboarding Wizard Actioned` | `event_properties:step_id = 'ai-assistant-start'` | `onboarding` |
+| `Empty State: Shown` | `event_properties:source = 'accounts'` | `companies_empty_state` |
+| `Empty State: Shown` | `event_properties:source = 'people'` | `people_empty_state` |
+| `Activation Notification Actioned` | `action = 'viewed'`, `contextual_tip_name = 'AI Assistant Multiple Keywords'` | `people_keywords_tip` |
+| `Activation Notification Actioned` | `action = 'viewed'`, `contextual_tip_name = 'AI Assistant View Filters'` | `people_refine_filters_tip` |
+| `Activation Notification Actioned` | `action = 'viewed'`, `contextual_tip_name = 'AI Assistant Researching People Companies Tip'` | `people_research_tip` |
+
+**Coverage note (2026-04-13):** `people_empty_state` is the dominant first-exposure surface (~97% of first-time viewers). The `Assistant Onboarding Viewed` event captures \<6% of `assistant_setup` thread starters — most users reach assistant_setup via navigation after seeing another view event first.
+
 ## AI Messaging (event_type_id 15184751)
 
 Tracks AI-generated emails sent in sequences. Key fields in `event_properties`:
+
 - `num_emails_sent_*` variants — email send counts by type
 
 ## Known Issues & Gotchas
@@ -111,3 +151,5 @@ Tracks AI-generated emails sent in sequences. Key fields in `event_properties`:
 | Date | Change | Author |
 |---|---|---|
 | 2026-03-20 | Created — website visitor data issue gotcha, inbound churn usage pattern | Leo (via Claude) |
+| 2026-04-07 | Added Power-up downstream usage events (817191114, 813587111, 870395875) — filter, CTA, DF Actioned | Pubudu (via Jarvis) |
+| 2026-04-13 | Added AI Assistant entry point view events — 10 Amplitude events mapped to 9 thread entry points; coverage note on people_empty_state dominance | Pubudu (via Jarvis) |

@@ -32,12 +32,14 @@ AI Assistant thread dimension. Tracks conversations with Apollo's AI Assistant p
 | USER_ID | TEXT | User who created the thread | ⚠️ NOT `apollo_user_id` — join to DIM_USERS on `du.apollo_user_id = at.user_id`; team_id not on this table |
 | CREATION_TYPE_CD | TEXT | Classification of thread origin | ⚠️ NOT `thread_type`; NULL or non-'proactive' = user-initiated; 'proactive' = system-initiated |
 | CREATED_AT_UTC | TIMESTAMP | When the thread was created | ⚠️ NOT `created_at`; use for date windowing |
+| SOURCE | TEXT | Entry point that initiated the thread | Available from ~2026-02-25. 20 known values: `assistant_setup`, `omni_search`, `assistant_user_prompt`, `people_empty_state`, `companies_empty_state`, `sequence_new`, `assistant_welcome`, `companies_research_tip`, `people_keywords_tip`, `workflow_new`, `people_refine_filters_tip`, `people_research_tip`, `assistant_nudge`, `welcome_home_preset`, `sequences_optimization`, `prompt_share`, `report_new`, `assistant_setup_email`, `recommendation`, NULL. Use `at.source` for entry point analysis. |
 
 ## How It's Used
 
 ### Canonical base query (confirmed 2026-03-26)
 
 **Actual column names** (differ from what was originally documented):
+
 - `at.user_id` — thread owner (NOT `apollo_user_id`)
 - `at.creation_type_cd` — thread type (NOT `thread_type`)
 - `at.created_at_utc` — date (NOT `created_at`)
@@ -86,11 +88,12 @@ actives AS (
 **Canonical file:** `teammates/pubudu_wariyapola/ai_assistant_retention_all_weeks.sql`
 
 **Rules — non-negotiable:**
+
 1. **NEVER add a date floor to find first_active_date.** Query ALL history (`thread_date < current_date()` only).
-2. **NEVER use calendar-week alignment for retention.** Always compute W_N as days relative to each user's `first_active_date`, then aggregate by cohort.
-3. **No date ceiling on the activity lookup.** The actives CTE has no date filter — intentional.
-4. **Run with `ALTER SESSION SET WEEK_START = 7`** so `DATE_TRUNC('week', ...)` returns Sunday-start weeks.
-5. **All team types flow through `ai_assistant_active`** — Paid Core filter goes in `user_week_retention`, not in `threads`. Team type is resolved at each user's first activation date.
+1. **NEVER use calendar-week alignment for retention.** Always compute W_N as days relative to each user's `first_active_date`, then aggregate by cohort.
+1. **No date ceiling on the activity lookup.** The actives CTE has no date filter — intentional.
+1. **Run with `ALTER SESSION SET WEEK_START = 7`** so `DATE_TRUNC('week', ...)` returns Sunday-start weeks.
+1. **All team types flow through `ai_assistant_active`** — Paid Core filter goes in `user_week_retention`, not in `threads`. Team type is resolved at each user's first activation date.
 
 ```sql
 alter session set week_start = 7;
@@ -191,6 +194,7 @@ order by    1, 2;
 | 13 | F7D high-value action completion rate | sequence activated, workflow run, power up, report/dashboard within 7 days of activation |
 
 **Additional column facts confirmed by these queries:**
+
 - `atm.sent_at_utc` — message timestamp on `FCT_MONGO_ASSISTANT_THREAD_MESSAGES`
 - `atm.author_role_cd` — `'user'` or `'assistant'`
 - Apollo RevOps instance exclusion: `apollo_team_id <> '551e3ef07261695147160000'`
@@ -198,6 +202,7 @@ order by    1, 2;
 - `FCT_AMPLITUDE_EVENTS.event_type_id = 839645913` = 'Assistant Opened'
 
 **Additional tables referenced in this query library:**
+
 - `ANALYTICS_DB.ANALYTICS.DIM_SUPPORT_CONVERSATIONS` — support tickets (query 11)
 - `ANALYTICS_DB.ANALYTICS.DIM_INTERCOM_CUSTOMER_CHAT_LOGS` — chat log bodies joined via `ticket_or_conversation_id` (query 11)
 - `ANALYTICS_DB.ANALYTICS_DATAPLATFORM.FCT_MONGO_EMAILER_CAMPAIGNS` — sequences; `creation_type_cd = 'ai_assistant'` for AI-created (query 13)
@@ -207,12 +212,14 @@ order by    1, 2;
 - `feedback_cd` — column on `DIM_MONGO_ASSISTANT_THREADS` (thumbs up/down); join to messages via `assistant_thread_id` to get the message text (query 12)
 
 **Pattern notes:**
+
 - Queries 1–5 and 7–10 omit `DIM_TEAMS_DAILY` (commented out) — use `DIM_USERS_DAILY` or no team filter when team segmentation isn't needed; saves significant cost
 - Query 6 combines Amplitude opens + first thread datetime to get true first open (Amplitude timestamps can lag)
 - Query 4 counts messages from ALL threads in W1, not just tool-call threads — different denominator from the standard active definition
 - Query 13: F7D window is `first_active_date` to `first_active_date + 7`; cohorts where the F7D window hasn't elapsed are NULLed out via `CASE WHEN first_active_week < date_trunc(week, current_date() - 7)`
 
 ### Key consumers
+
 - AI product debrief (run_ai_debrief.py — canonical WAU source)
 - Data Science (WAU reporting)
 - Product Analytics (AI feature team)
@@ -231,3 +238,4 @@ order by    1, 2;
 | 2026-03-24 | Added key columns, WAU definition + full query pattern, thread_type filter logic, date window pattern | Pubudu (via Claude) |
 | 2026-03-26 | Updated retention query to canonical all-weeks W1–W12 methodology; added engagement query library (10 queries) | Pubudu (via Jarvis) |
 | 2026-03-31 | Fixed Key Columns table: actual column names are USER_ID (not APOLLO_USER_ID), CREATION_TYPE_CD (not THREAD_TYPE), CREATED_AT_UTC (not CREATED_AT) — confirmed across all production SQL | Pubudu (via Jarvis) |
+| 2026-04-13 | Added SOURCE column (entry point); 20 known values documented; available from ~2026-02-25 | Pubudu (via Jarvis) |

@@ -1,15 +1,29 @@
 ---
 name: account-detail
-description: Fetch and render a full Apollo account profile for a given domain, team name, team ID, or user ID. Use when someone asks to pull up an account, show account details, look up a company in Apollo, do an account deep dive, fetch a team profile, get account info or overview, or see account history (e.g. "account detail datadog.com").
+description: Fetch and render a full Apollo account profile for a given domain, team ID, or user ID.
+user_invocable: true
+trigger-conditions:
+  - "pull up account profile for"
+  - "show me account details for"
+  - "look up this company in apollo"
+  - "account deep dive for"
+  - "fetch team profile for"
+  - "what do we know about this account"
+  - "get account info for"
+  - "account overview for"
+  - "pull the apollo profile for"
+  - "show account history for"
+argument-hint: "<domain | team-id | user-id | team-name>  e.g. datadog.com"
+allowed-tools: Bash, Read, mcp__snowflake__read_query
 ---
 
 # Account Detail Skill
 
 ## Overview
 
-This skill runs a two-phase flow: **execute 9 SQL queries via the Snowflake MCP**, assemble results into the renderer's JSON contract, then pipe that JSON through `scripts/render_account_profile.py` (stdlib-only: no pandas, no connectors). The rendered HTML is written to `drafts/` and opened locally.
+The legacy `scripts/account_lookup.py` depended on `.venv`, `pandas`, and `snowflake.connector` — none of which exist in the jarvis repo or in Claude Enterprise plugin contexts. This rewrite replaces that with a two-phase flow: **Jarvis executes 9 SQL queries via the Snowflake MCP tool**, assembles results into the renderer's JSON contract, then pipes that JSON through `scripts/render_account_profile.py` (stdlib-only: no pandas, no connectors). The rendered HTML is written to `drafts/` and opened locally.
 
-The SQL for every step lives in `queries.sql` (named blocks) alongside this file. The JSON contract each query maps to is defined at the top of `scripts/render_account_profile.py`. If either file needs updating, edit both — they are the source of truth.
+The SQL for every step lives in `.claude/skills/account-detail/queries.sql` (named blocks). The JSON contract each query maps to is defined at the top of `scripts/render_account_profile.py` (lines 15–155). If either file needs updating, edit both — they are the source of truth.
 
 ______________________________________________________________________
 
@@ -30,8 +44,6 @@ python3 scripts/check_debrief_cache.py check "<input>" --entity "<input>" --type
 ______________________________________________________________________
 
 ## Step 1 — Resolve identifier → team_id
-
-**Sanitize first:** `{input}` and `{team_id}` are user-supplied. Before substituting either into any SQL block, escape single quotes (`'` → `''`) so a free-text company name or domain can't break or inject SQL.
 
 Examine the user's input and pick the correct branch. Run only one.
 
@@ -56,7 +68,7 @@ ______________________________________________________________________
 
 ## Steps 2–9 — Data fetches
 
-Run all 8 queries via the Snowflake MCP. They can be fired in parallel (no dependencies between them after team_id is resolved). For each, substitute `{team_id}` with the resolved value inline — wrap in single quotes where the SQL shows `'{team_id}'`.
+Run all 8 queries via `mcp__snowflake__read_query`. They can be fired in parallel (no dependencies between them after team_id is resolved). For each, substitute `{team_id}` with the resolved value inline — wrap in single quotes where the SQL shows `'{team_id}'`.
 
 ### Step 2: account → contract key `"acct"`
 
@@ -70,8 +82,8 @@ Expected columns (all verbatim — no renames needed):
 
 Coercions:
 
-- `FIRST_TEAM_ACTIVE_DATE` and `SNAPSHOT_DATE` — cast to `"YYYY-MM-DD"` string (the SQL already does `::DATE`; the Snowflake MCP may return these as ISO strings — keep first 10 chars).
-- `IS_PAID_IND`, `IS_CORE_ACCOUNT_IND` — must be JSON `true`/`false` (boolean), not `"Y"`/`"N"`. If the query returns strings, convert: `"Y"` → `true`, anything else → `false`.
+- `FIRST_TEAM_ACTIVE_DATE` and `SNAPSHOT_DATE` — cast to `"YYYY-MM-DD"` string (the SQL already does `::DATE`; Snowflake MCP may return these as ISO strings — keep first 10 chars).
+- `IS_PAID_IND`, `IS_CORE_ACCOUNT_IND` — must be JSON `true`/`false` (boolean), not `"Y"`/`"N"`. If MCP returns strings, convert: `"Y"` → `true`, anything else → `false`.
 - `ARR` — float. If null, use JSON `null`.
 
 Result shape: list with exactly 1 dict. If 0 rows returned, set `"acct": []`.
@@ -219,7 +231,7 @@ print(json.dumps(payload, default=str))
 " > /tmp/account_<slug>.json
 ```
 
-Replace `<paste … rows as Python list>` with the actual query result data (list of dicts).
+Replace `<paste … rows as Python list>` with the actual MCP result data (list of dicts).
 Replace `<slug>` with the domain or `team_<team_id[:8]>`.
 
 Verify the file was written:
@@ -261,7 +273,11 @@ Report back to the user with key stats pulled from the assembled data:
 - Whether HVO or GTME calls are present
 - Any open support tickets in the last 90 days
 
-Then log the session via the Snowflake MCP `log-jarvis-session` tool with action `account_detail` and a one-line detail (`<domain or team_id>`).
+Then fire the activity pulse:
+
+```bash
+python3 scripts/log_session.py end account_deep_dive "<domain or team_id>" 60
+```
 
 ______________________________________________________________________
 

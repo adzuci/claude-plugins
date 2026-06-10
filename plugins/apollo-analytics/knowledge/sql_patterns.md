@@ -2,11 +2,21 @@
 
 Canonical query patterns for the Apollo analytics team. When in doubt, follow these.
 
----
+______________________________________________________________________
 
-## HVO calls → apollo_team_id (verified, DEVELOPER_ROLE, 2026-03-20)
+## HVO calls → apollo_team_id (updated 2026-05-27)
 
-`HVO_CALLS_AI_PROCESSING` has no `apollo_team_id`. Use the calendar event path via `ONBOARDING_HIGH_VELOCITY_TEAMS`:
+**Preferred: direct join** — `HVO_CALLS_AI_PROCESSING` now has a direct `APOLLO_TEAM_ID` column (added ~2026-04, verified via INFORMATION_SCHEMA). Use it for all new queries. The calendar event bridge below is retained as fallback for legacy records where `APOLLO_TEAM_ID` is NULL.
+
+```sql
+-- Preferred (post-2026-04)
+SELECT ai.*, dt.ACCOUNT_SUB_SEGMENT, dt.ARR
+FROM ANALYTICS_DB.ANALYTICS_DATAPLATFORM.HVO_CALLS_AI_PROCESSING ai
+JOIN ANALYTICS_DB.ANALYTICS_DATASCIENCE.DIM_TEAMS dt ON dt.APOLLO_TEAM_ID = ai.APOLLO_TEAM_ID
+WHERE ai.APOLLO_TEAM_ID IS NOT NULL;
+```
+
+**Fallback: calendar event bridge** — use when `APOLLO_TEAM_ID` is NULL on older records:
 
 ```sql
 WITH hvo_meetings AS (
@@ -38,10 +48,11 @@ WHERE dt.website_domain IS NOT NULL
 **Gotcha:** `APOLLO_TEAM_ID` in `ONBOARDING_HIGH_VELOCITY_TEAMS` has extra quotes — always `REPLACE(..., '"', '')`.
 
 **Warning — wrong tables:**
+
 - `FCT_MONGO_CONVERSATIONS.TEAM_ID` — this is the **rep's** team, not the customer's. Do not use.
 - `DIM_MONGO_CONTACTS.TEAM_ID` — resolves to only 1 distinct team (Apollo internal contacts). Not a valid substitute.
 
----
+______________________________________________________________________
 
 ## GTME calls → apollo_team_id (verified, DEVELOPER_ROLE, 2026-03-20, 97.6% match)
 
@@ -69,7 +80,7 @@ WHERE c.APOLLO_TEAM_ID IS NOT NULL
 
 **Join chain:** `GTME_CALLS_AI_ANALYSIS` → `FCT_MONGO_CONVERSATIONS` (flatten `CONVERSATION_PARTICIPANTS`) → `INT_MONGO_APOLLO_CUSTOMER_DATA_CUSTOM_FIELD_CONTACTS` → `APOLLO_TEAM_ID`
 
----
+______________________________________________________________________
 
 ## Sequence engagement + deliverability by account (verified, DEVELOPER_ROLE, 2026-03-21)
 
@@ -106,10 +117,11 @@ LIMIT 20;
 **Note:** Meeting booked is not available per sequence — no FK from emailer messages to calendar/meeting events in Snowflake.
 
 **Source hierarchy (sequence email analysis):**
+
 - **Sequence-level** (open rate, reply rate, bounce rate, interested rate by sequence) → `ANALYTICS_DATASCIENCE.SEQUENCES` ✅ default
 - **Message/contact-level** (per-contact open tracking, individual message status, row-level filtering) → `FCT_MONGO_EMAILER_MESSAGES`
 
----
+______________________________________________________________________
 
 ## Segmentation — Default to ACCOUNT_SUBSEGMENT
 
@@ -125,7 +137,7 @@ GROUP BY 1;
 
 Only fall back to the boolean Paid Core filter (`is_paid_ind = TRUE AND is_core_account_ind = TRUE AND is_free_email_domain_ind = FALSE`) when ACCOUNT_SUBSEGMENT is unavailable or the question is specifically and explicitly about Paid Core.
 
----
+______________________________________________________________________
 
 ## WAT / WAU — Use DIM_TEAMS_DAILY with L7 columns
 
@@ -153,13 +165,14 @@ GROUP BY 1 ORDER BY 1 DESC;
 | DAU (daily active users) | `DIM_USERS_DAILY` — `IS_ACTIVE_L1 = TRUE` on a specific date |
 | Feature WAU (user-level) | `DIM_USERS_DAILY` — `_COUNTS_L7 > 0` joined to `DIM_TEAMS_DAILY` for segment filter |
 
----
+______________________________________________________________________
 
 ## NRR — Cohort-Based Methodology
 
 **Cohort entry point:** `FIRST_PAID_DATE` from `ANALYTICS_DATASCIENCE.DIM_TEAMS` (team-level). Cohort month = `DATE_TRUNC('month', FIRST_PAID_DATE)`.
 
 **Window:** **Default to 12M** unless specifically asked for M3. Both use the same cohort logic — only the lookback window differs.
+
 - **12M NRR:** ARR at `cohort_month + 12 months` / ARR at M0
 - **M3 NRR:** ARR at `cohort_month + 3 months` / ARR at M0 (target: 90%)
 
@@ -202,10 +215,11 @@ LEFT JOIN arr_at_window aw ON aw.APOLLO_TEAM_ID = a0.APOLLO_TEAM_ID;
 **Key:** `DIM_TEAMS` is in `ANALYTICS_DATASCIENCE`, NOT `ANALYTICS`. Dec 2025 M3 NRR = 78.1% (target 90%).
 
 ### Dedup gotchas
+
 - Use `QUALIFY ROW_NUMBER() OVER (PARTITION BY APOLLO_TEAM_ID ...)` on `DIM_SALESFORCE_APOLLO_TEAMS` when joining for segmentation — teams can have multiple SFDC records
 - `IS_PARENT_ACCOUNT` in FCT_DAILY_REVENUE is NOT a reliable account-level dedup — only 4,790 teams on 2025-03-01 had it set vs 72K total paying teams. Group by SFDC_ACCOUNT_ID instead.
 
----
+______________________________________________________________________
 
 ## Feature WAT % (penetration rate, 8-week trend)
 
@@ -239,7 +253,7 @@ ORDER BY 1;
 
 **Interpretation note:** % can decline even when absolute WAT grows — check if it's denominator-driven (new teams not activating). Mar 2026: AI Platform dropped 3.1pp purely because new paid teams (paid_teams +12.1%) aren't activating AI at same rate as existing base.
 
----
+______________________________________________________________________
 
 ## Org Plan (Custom Edition) Retention
 
@@ -270,7 +284,7 @@ LEFT JOIN still_paying sp ON sp.APOLLO_TEAM_ID = ct.APOLLO_TEAM_ID;
 
 **Mar 2026 baseline:** 6,773 custom teams → 5,447 retained = 80.4% (target: 60%).
 
----
+______________________________________________________________________
 
 ## Support Tickets — Correct Filter
 
@@ -289,11 +303,12 @@ ORDER BY 1;
 
 **Known anomaly (2026-03-02+):** `IS_CONVERSATION_TURNED_TICKET` spiked from ~3K/week to 34K–51K/week. Likely Intercom classification rule change. Do NOT use `IS_CONVERSATION_TURNED_TICKET` for trending — use `IS_CONVERSATION_SUPPORT_TEAM_HANDLED` instead. Also: `CONVERSATION_STATUS` is unreliably populated — do not use for resolution rate.
 
----
+______________________________________________________________________
 
 ## Inbound ARR Attribution
 
 **Two source tables serve different purposes:**
+
 - `fct_mongo_daily_team_audit_reports` — daily `inbound_fee` (from `additional_fee_by_source:"inbound"::number`), billing fields, used to compute ARR time series
 - `dim_mongo_teams_rt_vw` — current plan state, `product_infos` array flattened to identify which teams are on inbound plans (for SFDC opp matching)
 
@@ -434,16 +449,18 @@ ORDER BY 1, 2, 3;
 ```
 
 **Key design decisions (applies to both Inbound and Dialer):**
+
 - Fee is a semi-structured JSON extract from `additional_fee_by_source` — only 3 keys exist: `inbound`, `dialer`, `platform_fee`
 - Sales motion **persistence**: first-ever Rep-Led/Self-Serve label per team sticks to all future plans (not per-plan)
 - SFDC match priority: Rep-Led > Self-Serve → New Business > Upsell > Renewal > Other → highest ARR
 - Teams with no matched opp default to `Self-Serve`
 
----
+______________________________________________________________________
 
 ## Dialer ARR Attribution
 
 Same structure as Inbound ARR above. Two substitutions:
+
 - Fee field: `additional_fee_by_source:"dialer"::number`
 - Plan filter: `pf.value:"plan_id"::string ILIKE '%dialer%'`
 
@@ -534,7 +551,7 @@ GROUP BY 1, 2, 3
 ORDER BY 1, 2, 3;
 ```
 
----
+______________________________________________________________________
 
 ## NNARR / Revenue Waterfall (RevOps)
 
@@ -559,6 +576,7 @@ Numbers differ between the two cuts. When someone asks about ARR without context
 **CHANGE_CATEGORY values:** `new`, `new_reactivated`, `upgrade`, `downgrade`, `churn`, `reactivation`
 
 **Standard joins + filters:**
+
 ```sql
 FROM ANALYTICS_DB.ANALYTICS.FCT_MONTHLY_REVENUE AS r
 LEFT JOIN ANALYTICS_DB.ANALYTICS.DIM_SALESFORCE_APOLLO_TEAMS AS sat
@@ -573,6 +591,7 @@ WHERE r.DATE_PERIOD >= <start>
 ```
 
 **New / Reactivation ARR** — simple delta:
+
 ```sql
 -- New ARR (REP motion example)
 SUM(CASE WHEN CHANGE_CATEGORY IN ('new', 'new_reactivated') AND IS_PARENT_ACCOUNT
@@ -584,6 +603,7 @@ SUM(CASE WHEN CHANGE_CATEGORY = 'reactivation' AND IS_PARENT_ACCOUNT
 ```
 
 **Upgrade ARR attribution** — motion-aware, falls back to `ARR_CHANGE` when only one motion is active:
+
 ```sql
 -- Upgrade ARR attributed to REP motion:
 CASE
@@ -599,6 +619,7 @@ END
 ```
 
 **Churn / Downgrade:**
+
 ```sql
 SUM(CASE WHEN CHANGE_CATEGORY = 'churn'     AND IS_PARENT_ACCOUNT THEN ARR_CHANGE ELSE 0 END)
 SUM(CASE WHEN CHANGE_CATEGORY = 'downgrade' AND IS_PARENT_ACCOUNT THEN ARR_CHANGE ELSE 0 END)
@@ -613,11 +634,31 @@ SUM(CASE WHEN CHANGE_CATEGORY = 'downgrade' AND IS_PARENT_ACCOUNT THEN ARR_CHANG
 **New team ACV** = `SUM(ARR_CHANGE WHERE CHANGE_CATEGORY IN ('new','new_reactivated') AND IS_PARENT_ACCOUNT = false)` / `COUNT(DISTINCT APOLLO_TEAM_ID WHERE IS_PAID_ACTIVE AND CHANGE_CATEGORY = 'new')` from `FCT_APOLLO_MONTHLY_SEAT_LIMITS`.
 
 **Key notes:**
+
 - `IS_PARENT_ACCOUNT` in `FCT_MONTHLY_REVENUE` IS reliable as the account-level dedup (unlike `FCT_DAILY_REVENUE`)
 - `IS_CORE_ACCOUNT` filter is a no-op — population controlled by `ACCOUNT_SEGMENT IN ('Enterprise', 'Mid-Market', 'SMB', 'VSB')`
 - `arr_labs` is lowercase (unlike the uppercase convention for other ARR columns)
 
----
+**Gotchas — Henry-logged:**
+
+- **ARR vs ARR_CHANGE:** For upgrade/downgrade/reactivation deltas, ALWAYS use `ARR_CHANGE` (the incremental delta). `ARR` is the TOTAL ARR at that account — using it for expansion overstates by 3-4×. Only use `ARR` for new/churn categories where delta = full value.
+- **Reactivation predecessor lookup:** Never `LAG()` over reactivation-only rows to find the prior churn event — LAG returns the *previous reactivation*, not the preceding churn. Correct pattern: separate `churn_rows` CTE joined to reactivation rows by `APOLLO_TEAM_ID WHERE churn_month < reactivation_month`.
+- **Org Plan edition filter:** `ZP_OPPORTUNITY_EDITION_V_2_C` has 16+ variants (`custom_unified_v2/v3/v4`, `custom_EC_W/X/Y/Z`, etc.). Use `ILIKE '%custom%'`, never `= 'Custom'` — literal match misses 90% of Org Plan deals.
+
+______________________________________________________________________
+
+## Darwinbox (LU_DARWINBOX_POSITIONS)
+
+**Lookup key:** Always search by `WORK_EMAIL`, never `FULL_NAME`. Darwinbox stores legal names (e.g., "Xuze Liu"), not display names ("Leo Liu"). FULL_NAME matches are unreliable and can return stale records from earlier months.
+
+```sql
+SELECT DESIGNATION, DEPARTMENT, FULL_NAME, DATE_OF_JOINING
+FROM ANALYTICS_DB.ANALYTICS_DATAPLATFORM.LU_DARWINBOX_POSITIONS
+WHERE WORK_EMAIL = 'user@apollo.io'
+QUALIFY ROW_NUMBER() OVER (ORDER BY EFFECTIVE_FROM DESC) = 1
+```
+
+______________________________________________________________________
 
 ## Weekly Signups by UTM Channel (Growth)
 
@@ -648,11 +689,12 @@ ORDER BY 1 DESC;
 ```
 
 **Key notes:**
+
 - `IS_CORE_ACCOUNT` filter in Growth Looker queries is a no-op — same pattern as RevOps
 - This is SFDC contacts, not `DIM_MONGO_CONTACTS` (Apollo-native) or `DIM_USERS` (product)
 - Channel is last-touch attribution at signup time
 
----
+______________________________________________________________________
 
 ## Credit Consumption — Standard Exclusions
 
@@ -673,6 +715,7 @@ AND FEATURE_TYPE IS NOT NULL  -- NULL = ~342M admin/system rows, exclude
 ```
 
 **Waterfall-specific filter:**
+
 ```sql
 WHERE FEATURE_TYPE IN ('waterfall_enrichment', 'waterfall_mobile_enrichment', 'api_waterfall_enrichment')
 ```
@@ -681,7 +724,7 @@ See `data-catalog/context/AGG_TEAM_CREDITS.md` for the full verified FEATURE_TYP
 
 These exclusions are standard across all R&D dashboards and CBR credit metrics.
 
----
+______________________________________________________________________
 
 ## Sales Funnel — New Business Pipeline (Stage 1 → Stage 2 CVR)
 
@@ -690,6 +733,7 @@ These exclusions are standard across all R&D dashboards and CBR credit metrics.
 **Key concept:** Stage 1 count anchors on `CREATED_AT` (opp creation date). Stage 1 → Stage 2 CVR = `SQO count / total opps created`. Channel dimension: `LEAD_SOURCE_BUCKET`.
 
 **Standard filters (always apply):**
+
 - `TYPE = 'New Business'` — new logo opps only
 - `owner.NAME <> 'Marketo Sync'` (allow NULL — Looker uses OR IS NULL)
 - Standard segment + suspicious team filters
@@ -737,19 +781,21 @@ ORDER BY 1 DESC;
 | Stage 6 — Won | `IS_WON = true` | Closed-won |
 
 **Key notes:**
+
 - Date anchor is `CREATED_AT` — Looker Stage 1 standard. `DISCOVERY_STAGE_DATE` exists but is a stage-entry date field, not the standard Stage 1 anchor.
 - `LEAD_SOURCE_BUCKET` is the channel dimension (not `TO_F_SALES_BUCKET`)
 - `NEW_ARR` is a pre-computed ARR column on the opp (use over `ARR_C` for won deals)
 - `IS_CORE_ACCOUNT` is a no-op — omit from direct SQL; only Looker includes it for historical reasons
 - `IS_SQO` flag drives Stage 2; `SQO_DATE_C` available if you need SQO date as the anchor instead
 
----
+______________________________________________________________________
 
 ## Closed Won ARR by Motion × Segment (Rep-Driven)
 
 **Source:** `DIM_SALESFORCE_OPPORTUNITIES` anchored on `CLOSED_AT` + `IS_WON`.
 
 **Segment:** Derived from `DIM_SALESFORCE_ACCOUNTS.ACCOUNT_SALES_DEPARTMENT_TIER` (not `ACCOUNT_SEGMENT`):
+
 - Tier 1 / Tier 2 → `'MM'`
 - Tier 3 / Tier 4 → `'SMB'`
 
@@ -782,18 +828,20 @@ ORDER BY 1 DESC;
 ```
 
 **Key notes:**
+
 - Use `ACCOUNT_SALES_DEPARTMENT_TIER` (not `ACCOUNT_SEGMENT`) for rep-driven segment — it maps to MM/SMB rep coverage tiers
 - Manager exclusion (`Tania Garcia Chavez`) removes a renewals/CS manager; rep-driven view is AE/BDR only
 - `IS_CORE_ACCOUNT` is a no-op — omit
 - For Upsell ARR reporting, same query — just include `'Upsell'` in TYPE filter
 
----
+______________________________________________________________________
 
 ## Email Deliverability — Weekly Trend by Channel
 
 Canonical deliverability query. Source: `FCT_MONGO_EMAILER_MESSAGES` joined to `DIM_MONGO_EMAIL_ACCOUNTS`.
 
 **Key design decisions:**
+
 - `channel` split: `SendGrid/Mailgun` vs `Direct` — based on `ea.type_cd`
 - Time anchor: `COMPLETED_AT` (not sent time)
 - Week boundary: `<= CURRENT_DATE - DAYOFWEEK(CURRENT_DATE) + 1` — most recent Sunday (excludes partial current week)
@@ -867,17 +915,19 @@ ORDER BY 1 DESC, 2;
 ```
 
 **For full 1-year trend**, change the date filter to:
+
 ```sql
 AND DATE(eml.completed_at) >= DATE_TRUNC('WEEK', DATEADD(year, -1, CURRENT_DATE()))
 ```
 
----
+______________________________________________________________________
 
 ## Feature Activation Rate — Cohort-based (Paid Teams, F7D)
 
 Measures % of paid teams that use a given feature within their first N days after creation, broken down by team creation week. Only weeks with complete observation windows are included.
 
 **Key design decisions:**
+
 - **Team creation date** = `min(apollo_user_created_date)` from `DIM_USERS_DAILY` where `is_paid_ind = 1` — not team creation timestamp
 - **Activation join** = left join to `user_inbound_actions_daily` (or swap for any other feature action table) within the observation window
 - **Maturity guard** = `dateadd(day, 6 + 7, team_created_week) <= current_date` — ensures 7-day observation window + 1 week data lag before including a cohort
@@ -936,7 +986,44 @@ order by 1;
 
 **To change the window (F14D, F28D):** change `+ 6` → `+ 13` or `+ 27`, and update the maturity guard `6 + 7` → `13 + 7` or `27 + 7`.
 
----
+______________________________________________________________________
+
+## W2 FTP Rate — Cohort Maturity Guard {#W2-FTP-Maturity}
+
+**Why this is different from day-based maturity guards:** Snowflake `DATEDIFF('week', signup_date, payment_date)` counts *Sunday calendar boundaries crossed*, not elapsed days. A team that signed up on a Sunday needs the *next* Sunday (+7d) to cross 1 week boundary and the Sunday after that (+14d) to cross 2. This means the maturity requirement for W2 is not simply `signup_date + 14 <= today` — it depends on the day of the week of signup.
+
+**The safe formula:** A cohort week (Monday-start) is fully mature for W2 analysis when its last day (Sunday = week_start + 6) has had 2 Sunday boundaries pass. That means:
+
+```
+last_day_of_cohort (Sunday) <= last_sunday - 14 days
+⟹ week_start <= last_sunday - 20 days
+⟹ DATE_TRUNC('week', week_start) <= DATE_TRUNC('week', DATEADD('day', -14, last_sunday))
+```
+
+**Canonical SQL filter — use this in every W2 FTP and W2 Trial CVR query:**
+
+```sql
+-- Drop immature cohorts (W2 window not yet closed for all teams in the week)
+AND DATE_TRUNC('week', team_created_date) <=
+    DATE_TRUNC('week',
+        DATEADD('day', -14,
+            DATEADD('day', -DAYOFWEEK(CURRENT_DATE()), CURRENT_DATE())
+        )
+    )
+```
+
+**Worked example (today = Mon Apr 20, 2026):**
+
+- `DAYOFWEEK(Apr 20)` = 1 (Monday)
+- Last Sunday = `DATEADD(-1, Apr 20)` = Apr 19
+- `last_sunday - 14` = Apr 5
+- `DATE_TRUNC('week', Apr 5)` = **Mar 30** ← last mature cohort week start
+- Apr 6 cohort: last day = Apr 12 → DATEDIFF('week', Apr 12, Apr 20) = 1 → **immature, exclude**
+- Mar 30 cohort: last day = Apr 5 → DATEDIFF('week', Apr 5, Apr 20) = 2 → **mature, include**
+
+**Additional anomaly guardrail:** after applying the maturity filter, check if any included week's signup count is >1.5× the rolling 8-week average. Flag those weeks as unreliable (bot/spam spike, not caught by `is_suspicious_team = false`). Do not use anomalous weeks in OKR reporting.
+
+______________________________________________________________________
 
 ## Inbound WAU/WAT — Daily Rolling 7-Day, by Action Type
 
@@ -945,6 +1032,7 @@ Daily rolling WAU/WAT for all inbound actions, broken down by action type and pa
 **Join pattern:** `dim_users_daily.date BETWEEN event_date AND event_date + 6` — for each calendar day, counts distinct users/teams active in the 7-day window ending that day (rolling WAU).
 
 **Known action types in `user_inbound_actions_daily`:**
+
 - `website_visitors_filter_applied_in_search` — visitor search filter used
 - `website_visitors_tracking_filter_applied_in_company_search` — visitor tracking filter in company search
 - `website_visitors_on_hover_viewed` — visitor hover card viewed
@@ -996,13 +1084,14 @@ where dim_users_daily.date >= current_date - 180  -- trailing 6 months
 group by all;
 ```
 
----
+______________________________________________________________________
 
 ## Inbound — Interest to Activation Rate (F7D, by User)
 
 Measures F7D activation rate for users who expressed interest in inbound via in-app onboarding survey, by creation week and paid/free status.
 
 **Key design decisions:**
+
 - **Interest signal**: `has_in_app_onboarding_goal_inbound_solution = TRUE` on `DIM_USERS` — survey-expressed intent
 - **Activation**: any action in `USER_INBOUND_ACTIONS_DAILY` within 7 days of user creation
 - **Join on DIM_USERS** (not DIM_USERS_DAILY) — static user creation date, not a daily snapshot
@@ -1041,18 +1130,20 @@ group by all;
 
 **Note:** `has_in_app_onboarding_goal_inbound_solution` is on `DIM_USERS` (static snapshot), not `DIM_USERS_DAILY`. Use `DIM_USERS` here — joining daily would inflate the cohort.
 
----
+______________________________________________________________________
 
 ## Inbound Churn Analysis — Feature Setup + Days Used
 
 Analyzes which inbound features churned teams set up before churning, and how long they used the add-on. Requires upstream CTEs `sku_purchased` (teams that bought inbound) and `churned_teams` (with `max_date_active` = last active date before churn).
 
 **Three setup signals tracked:**
+
 1. `standalone_form_setup_event` — first `standalone_form_enriched` from `user_inbound_actions_daily`
-2. `inbound_router_setup_event` — first `inbound_router_published` from `user_inbound_actions_daily`
-3. `website_visitor_set_up_event` — first `Website Visitor Company Identified` from `FCT_AMPLITUDE_EVENTS` (reliable from 2025-11-06 only — data issues prior)
+1. `inbound_router_setup_event` — first `inbound_router_published` from `user_inbound_actions_daily`
+1. `website_visitor_set_up_event` — first `Website Visitor Company Identified` from `FCT_AMPLITUDE_EVENTS` (reliable from 2025-11-06 only — data issues prior)
 
 **Key metrics:**
+
 - `days_used_inbound_add_on` = `datediff('day', inbound_start_date, max_date_active)` — how long from purchase to churn
 - `website_visitor_inbound_set_up` = boolean — did the team actually set up visitor tracking?
 
@@ -1101,12 +1192,13 @@ join churned_teams t2
 ```
 
 **Upstream CTEs needed (not shown — build from FCT_MONTHLY_REVENUE / DIM_SALESFORCE_APOLLO_TEAMS):**
+
 - `sku_purchased` — teams that have an active inbound add-on; columns: `apollo_team_id`, `team_name`, `sales_motion_label`, `inbound_start_date`
 - `churned_teams` — teams that have churned off inbound; columns: `apollo_team_id`, `max_date_active`
 
 **Gotcha:** `FCT_AMPLITUDE_EVENTS.Website Visitor Company Identified` has data issues before 2025-11-06 — always filter `event_date >= '2025-11-06'` for this event type.
 
----
+______________________________________________________________________
 
 ## ARR Lookup — Use DIM_TEAMS (Don't Over-Engineer)
 
@@ -1137,12 +1229,14 @@ WHERE WEBSITE_DOMAIN = 'rippling.com'
 | NRR / cohort retention analysis | FCT_MONTHLY_REVENUE |
 | Parent account rollup (RevOps view) | FCT_MONTHLY_REVENUE + IS_PARENT_ACCOUNT=true |
 
----
+______________________________________________________________________
 
 ## MCP User Cohort Analysis (verified 2026-03-24)
 
 ### Who counts as an MCP user
+
 Use `DIM_USERS` (ANALYTICS_DATASCIENCE). Shyam added MCP-specific columns 2026-03-23:
+
 - `FIRST_ACTIVE_DATE_MCP_API_CALLS` — first day user made an MCP API call
 - `ACTIVE_DAYS_MCP_API_CALLS` — total days active via MCP
 - `ACTIVE_COUNTS_MCP_API_CALLS` — total MCP API call count
@@ -1150,6 +1244,7 @@ Use `DIM_USERS` (ANALYTICS_DATASCIENCE). Shyam added MCP-specific columns 2026-0
 MCP user = `FIRST_ACTIVE_DATE_MCP_API_CALLS IS NOT NULL`. Do NOT use FCT_MONGO_HTTP_REQUESTS_V3_RT_VW for this — DIM_USERS is the preferred source for standard MCP analytics.
 
 ### Fixed observation window cohort (prevents cohort age bias)
+
 ```sql
 -- MCP user analysis — 14-day fixed window
 -- Cohort: signed up Feb 23 onward (MCP launch), restricted to users with ≥14 days tenure
@@ -1195,6 +1290,7 @@ ORDER BY 1 DESC, 2, 3;
 ```
 
 ### Lookalike matching (stratified comparison)
+
 Only compare MCP users to non-MCP peers from the same strata (signup_week × paid × segment). Prevents enterprise-vs-VSB comparisons from polluting lift calculations.
 
 ```sql
@@ -1222,6 +1318,7 @@ JOIN strata_with_mcp s
 ```
 
 ### MCP controller/action breakdown (raw request-level)
+
 For understanding WHAT MCP users are doing (not just that they're using it), use FCT_MONGO_HTTP_REQUESTS_V3_RT_VW. Requires DEVELOPER_ROLE or higher.
 
 ```sql
@@ -1250,12 +1347,14 @@ LIMIT 50;
 ```
 
 **Key finding (Mar 2026 cohort):** Top MCP controllers by volume:
+
 - `people/search` — Prospecting (781 web users, MCP heavily used)
 - `contacts/create` — CRM write (MCP-dominant)
 - `people/match` — Person Enrichment (MCP-dominant: 838 MCP vs 89 web users)
 - `emailer_campaigns/add_contact_ids` — 111 MCP users added contacts to existing sequences (MCP CAN interact with sequences; just can't CREATE them)
 
 ### FTP (Free-to-Paid) rate for MCP users
+
 ```sql
 SELECT
     is_mcp_user,
@@ -1278,7 +1377,7 @@ GROUP BY 1, 2
 ORDER BY 1 DESC, 2;
 ```
 
----
+______________________________________________________________________
 
 ## Rep-Driven (Sales) ARR — Recognized Revenue
 
@@ -1311,13 +1410,14 @@ ORDER BY 1 DESC;
 ```
 
 **Key notes:**
+
 - `IS_REP_DRIVEN` and `ARR_REP` are the columns for rep-driven ARR in both FCT_MONTHLY_REVENUE and FCT_DAILY_REVENUE
 - `CHANGE_CATEGORY IN ('new','new_reactivated')` = new logos; `'upgrade'` = expansion
 - Always separate new ARR from expansion — execs want to see both
 - `ARR_REP` column = the subset of ARR attributed to rep motion; always use this not `ARR` when filtering IS_REP_DRIVEN
 - This gives recognized revenue (what billing recorded); DIM_SALESFORCE_OPPORTUNITIES gives booking/pipeline ARR
 
----
+______________________________________________________________________
 
 ## Total User and Team Counts (Org-wide)
 
@@ -1341,11 +1441,12 @@ FROM ANALYTICS_DB.ANALYTICS_DATAPLATFORM.DIM_MONGO_USERS;
 | Paid team user count | `ANALYTICS_DB.PLAYGROUND.LU_TEAM_ATTRIBUTES` | `user_count` column (static snapshot) |
 
 **Key notes:**
+
 - DIM_MONGO_TEAMS and DIM_MONGO_USERS are the canonical sources for **total org-wide counts** — do not use revenue tables for this
 - Always clarify the as-of date when reporting totals
 - Do NOT present paid-team user counts as "total users" — the org has ~4.3M total users across 3.4M teams
 
----
+______________________________________________________________________
 
 ## Change Log
 
@@ -1362,5 +1463,6 @@ FROM ANALYTICS_DB.ANALYTICS_DATAPLATFORM.DIM_MONGO_USERS;
 | 2026-03-20 | Added Inbound WAU/WAT by action type; rolling 7-day join pattern, canonical action type list for user_inbound_actions_daily | Leo |
 | 2026-03-20 | Added Inbound Interest-to-Activation (F7D); DIM_USERS survey goal flag, user-level cohort | Leo |
 | 2026-03-20 | Added Inbound Churn Analysis; feature setup dates, days used, FCT_AMPLITUDE_EVENTS data issue before 2025-11-06 | Leo |
+| 2026-04-20 | Added W2 FTP Cohort Maturity Guard — canonical formula, worked example, anomaly guardrail note | Andrew |
 | 2026-03-24 | Added MCP user cohort analysis — fixed window, lookalike matching, controller breakdown, FTP pattern | Leo |
 | 2026-03-22 | Added ARR Lookup pattern — DIM_TEAMS for current ARR, not FCT_MONTHLY_REVENUE | Leo |

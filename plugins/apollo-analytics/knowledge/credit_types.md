@@ -3,7 +3,7 @@
 **Owner:** Leo Liu | **Updated:** 2026-03-22
 **Source:** [Credit Data Meaning spreadsheet](https://docs.google.com/spreadsheets/d/1f6QZ30OgwJ4TgH35ZC_Wf1Pt31cjbZvTnrHMyUcgqsI/edit?gid=0#gid=0) (Leo Liu, last updated Nov 17 2025)
 
----
+______________________________________________________________________
 
 ## Credit Type Reference
 
@@ -35,7 +35,7 @@
 | Salesloft / Pipedrive / HubSpot / Salesforce / Outreach / Zapier Push | CRM/integration sync | No | Free — integration actions | |
 | Conversation | Conversation intelligence (transcripts, summaries) | No | Free — included feature | Not credit-billed |
 
----
+______________________________________________________________________
 
 ## Key Facts for Analysis
 
@@ -46,6 +46,7 @@
 **Critical:** Filter by `FEATURE_TYPE`, not `CREDIT_TYPE`. `CREDIT_TYPE` has duplicate naming variants (snake_case vs Title Case) and is inconsistently populated. `FEATURE_TYPE` is the stable, canonical filter.
 
 ### Waterfall Enrichment Credit Complexity
+
 Waterfall uses **waterfall trial credits first**, then falls back to unified credits.
 
 **Waterfall FEATURE_TYPE values in AGG_TEAM_CREDITS (verified 2026-03-22):**
@@ -57,6 +58,7 @@ Waterfall uses **waterfall trial credits first**, then falls back to unified cre
 | `api_waterfall_enrichment` | API-triggered waterfall enrichment | ~12–29K credits, ~30–64 teams |
 
 **Standard query pattern:**
+
 ```sql
 SELECT
     DATE_TRUNC('week', DS) AS week_start,
@@ -73,13 +75,17 @@ ORDER BY 1 DESC, 4 DESC;
 Note: The ≈1 credit per record is a simplification — vendor data queries can trigger multiple attempts, especially with stop condition SS1 (stop on verified only), which runs every vendor before finding a match.
 
 ### Phone Number Pricing Gap
+
 **Direct Dial = 3–10 unified credits per number (region-based).** Support tickets report customers told 1 credit/number in demos, then charged 9–35. The 3–10 range from this doc vs 9–35 in support tickets suggests:
+
 - Phone enrichment via **waterfall** (trying multiple vendors) multiplies credit cost
 - Or regional pricing for international numbers hits the high end
 - The demo pricing mismatch is not just communication — the actual credit math differs from what's documented here
 
 ### What NOT to count as customer-facing credit consumption
+
 Credit types where `Consumes Unified Credits = No` should **not** be included in customer credit consumption metrics:
+
 - AI Email (AI Word Credits pool, not customer-billed)
 - CRM push actions (Salesforce, HubSpot, Pipedrive, etc.)
 - Conversation intelligence
@@ -88,9 +94,25 @@ Credit types where `Consumes Unified Credits = No` should **not** be included in
 - Dialer Minutes (separate $ pool)
 
 ### Open question (as of Nov 2025 — Leo + Bridie)
+
 Whether `Consumes Unified Credits = No` rows should be excluded from `dbt_development_db.dbt_adhoc.agg_user_credit_consumption` was an open question. Status unknown — verify before using that table for customer-facing credit metrics.
 
----
+### SURFACE attribution — read this before any "credit by surface" query (verified 2026-04-17)
+
+`FCT_MONGO_CREDIT_USAGE_DETAILS.SURFACE` has ~80% null rate on `unified_lead_credit` in the last 30 days. **The null is structural, not a tagging bug.** SURFACE's actual meaning is **"UI surface that triggered a UI-initiated credit charge"** — it doesn't apply to API traffic or async background jobs.
+
+**Three attribution axes — use the right one:**
+| Traffic class | Filter | Primary attribution column |
+|---|---|---|
+| API / OAuth | `FROM_API_CLIENT = TRUE` | `API_ENDPOINT` (format: `controller#action`) |
+| Async / sidekiq | `SIDEKIQ_JOB_ID IS NOT NULL` | `REQUEST_TYPE` (EmailVerifyRequest, DirectDialVerifyRequest, CsvEnrichmentJob, TypedCustomFieldAutoGenerateWorkflowRequest, etc.) |
+| UI (session auth) | `FROM_API_CLIENT = FALSE` AND non-sidekiq | `SURFACE` (populated ~34% of the time — real gap, ~147M credits affected in last 30d) |
+
+**Extension attribution: NEVER use `SURFACE = 'extension'`.** Upper-ups' hypothesis that extension traffic is disproportionately un-tagged was **falsified** on 2026-04-17. The correct method is to join `FCT_MONGO_CREDIT_USAGE_DETAILS` to `AGG_MONGO_HTTP_REQUESTS_DAILY` (DS-owned, Kirk Hlavka) on `(event_date, team_id, user_id, controller, action)` and weight credits by `is_extension_call` request share. Extension share of unified_lead_credit is low (~0.01% of the joinable null-surface pool).
+
+Full writeup: `teammates/bridie_meredith/reports/surface_attribution_trust_2026-04-17.md`.
+
+______________________________________________________________________
 
 ## Change Log
 
