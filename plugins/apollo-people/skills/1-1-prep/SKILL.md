@@ -41,7 +41,7 @@ ______________________________________________________________________
 
 ## Step 2: Connector Check
 
-Before searching, confirm each connector responds: make one minimal search (the direct report's name) against Slack, Notion, and Glean and Google Drive if available, then report status to the manager. Slack and Notion are required; Glean and Google Drive are optional.
+Before searching, confirm each connector responds: make one minimal search (the direct report's name) against each available connector — Slack and Notion (required), plus Glean and Google Drive when they're connected (optional) — then report status to the manager.
 
 Full test procedure, status-report format, and fallback handling are in [`references/connectivity-test.md`](references/connectivity-test.md). If the manager needs setup help, share [`references/connector-setup.md`](references/connector-setup.md).
 
@@ -70,7 +70,9 @@ ______________________________________________________________________
 
 ## Step 4: Data Gathering
 
-Work through the numbered steps below **in order**. Complete every step for each connected source — don't stop early because a step returns little. If a step finds nothing, record "nothing found" and move on.
+Work through the numbered steps below **in order**, covering every connected source — don't drop a source because a query returns little; if a step finds nothing, record "nothing found" and move on.
+
+> **Exception — Slack when Glean is connected:** Glean already indexes Slack, so Step 4.2 narrows to follow-up only. See that step for details.
 
 **Step 4.1 — Glean (if connected)**
 
@@ -178,11 +180,13 @@ Based on the above, you might ask:
 
 ______________________________________________________________________
 
-## Step 6: Data Hygiene & Tracking Tips
+## Step 6: Sharper-Prep Suggestion (gap-triggered)
 
-After the summary, add a short section that helps the manager improve documentation so future prep is sharper. Generate it **dynamically** from the gaps you hit during Step 4 — missing docs, stale pages, empty channels, unconnected tools — and pull in one or two proactive tracking habits worth adopting. Keep it brief and optional in tone; skip it entirely if every source was rich and current.
+If — and only if — you hit a real data gap during the connector check or data gathering (no source-of-truth tracker or 1:1 doc, no record of the last 1:1's commitments, blockers that were vague or missing, or a tool the manager clearly uses but isn't connected), add a short footer with **one** suggestion to improve next week's prep.
 
-The tip catalog, proactive-habit suggestions, and closing line are in [`references/data-hygiene.md`](references/data-hygiene.md).
+Anchor it to Apollo's existing operating system — the Source of Truth tracker (DDR) and the 1:1 model (AME) — so it reads as reinforcement of what managers were trained on, not new process. Each suggestion should serve one of the three things the manager needs: **blockers, development, or coaching.** Surface at most one tip, framed as optional. Skip the footer entirely if every source was rich and current.
+
+The gap-to-tip catalog, the Apollo template to offer, connector gating, and the closing line are in [`references/data-hygiene.md`](references/data-hygiene.md).
 
 ______________________________________________________________________
 

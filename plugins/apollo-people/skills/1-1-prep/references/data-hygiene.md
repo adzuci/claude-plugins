@@ -1,32 +1,40 @@
-# Data Hygiene & Tracking Tips — 1:1 Prep
+# Sharper-Prep Suggestions — 1:1 Prep
 
-The quality of this prep depends on how well context is captured across the manager's tools. Use this file to (a) surface gaps from the current run and (b) suggest durable tracking habits that make future prep sharper.
+The quality of this prep depends on the inputs managers capture *between* 1:1s. These suggestions reinforce Apollo's existing operating system — the **Source of Truth tracker** (DDR workshop) and the **1:1 model** (AME workshop) — rather than inventing new process. Every tip exists to improve one of the three things the manager actually needs from prep: **blockers, development, coaching.**
 
 ## How to use in a run
 
-Generate the "Data Hygiene & Tracking Tips" section **dynamically**. Only include a tip when it maps to something you actually hit during data gathering — a missing doc, a stale page, an empty channel, an unconnected tool. If every source was rich and current, keep the section to a single line of positive reinforcement and skip the suggestions. Keep the tone optional and low-pressure — these are ways to get more out of the skill, not mandates.
+- Generate the footer **only** when you hit a real data gap during the connector check or data gathering — a missing tracker or 1:1 doc, no record of the last 1:1's commitments, vague or absent blockers, or a tool the manager clearly uses that isn't connected.
+- Surface **at most one** tip — the highest-leverage one for what was missing. (Mirrors the AME workshop's "name one change" close and the adaptive-leadership principle: one next step, not five.)
+- If every source was rich and current, **skip the footer entirely.**
+- Frame as optional reinforcement of the operating system managers were trained on — never a checklist, never a judgment.
+- **Gate connector tips on actual access:** only suggest Glean or Google Drive if they exist in this workspace. Never tell a manager to connect a tool just to chase coverage.
+- Recognition can be sparse week-to-week — don't flag "no kudos" unless you looked back at least a few weeks.
 
-## Gap-based tips (surface only when relevant)
+## Tip catalog — pick the one that matches the gap
 
-- *No 1:1 notes page found in Notion* → "Consider keeping a shared 1:1 doc (e.g. '[Name] \<> [Manager]') so past action items and topics are searchable for future prep."
-- *No OKR/KR page found* → "If [Name]'s goals aren't tracked in Notion, a KR page would make goal progress visible in future runs."
-- *1:1 page exists but is stale* → "The 1:1 notes page was last updated [timeframe] ago — updating it after each meeting makes it far more useful as a reference."
-- *No recognition found in #kudos* → "No recent recognition surfaced. If [Name] had wins this period, a shoutout in #kudos creates a durable, searchable record."
-- *Google Drive not connected* → "Connecting Google Drive would surface shared docs and OKR sheets not captured in Notion."
-- *Glean not connected* → "Connecting Glean would let future runs search Slack, Drive, and more in one pass — often catching context per-channel searches miss."
+**Blockers**
 
-## Proactive tracking habits to recommend
+- *No source-of-truth tracker found* → "I couldn't find a source-of-truth tracker for [Name]'s work. Keeping it current — Status · Risks & Blockers · Next steps — is the highest-leverage habit for prep, since it's where I find what to help unblock. Want me to drop in the Apollo tracker template?"
+- *Blockers vague or missing in updates* → "Updates didn't surface risks clearly. Apollo's update format — [Status] + [Achieved] + [Blockers] + [Next steps], with a proposed solution on anything yellow/red — makes blockers show up here automatically."
 
-Pull one or two of these in when they fit the gaps you saw — frame as optional, low-effort practices:
+**Coaching**
 
-- **Keep one consistent 1:1 doc per report**, updated within a day of each meeting while it's fresh.
-- **Use a predictable naming convention** ("[Report] \<> [Manager] 1:1") so search reliably finds it.
-- **Log action items with an owner and a date** so open loops are unambiguous next time.
-- **Capture recognition in #kudos / #eoq-celebration** rather than DMs or verbal-only, so wins leave a searchable trail.
-- **Refresh OKR/KR pages at the start of each cycle** and check off progress as you go.
-- **Note DRIs on project pages** so a report's ownership is discoverable.
-- **Connect optional tools (Glean, Google Drive) once** — it widens coverage for every future run.
+- *No record of the last 1:1's commitments* → "I couldn't find what was decided in your last 1:1 with [Name]. Closing each one with next steps + owner + close-the-loop date (the 'Decide' step) gives me open loops to follow up on — so coaching builds on itself instead of restarting each week."
+- *Updates happening live instead of async* → "Looks like status gets shared in the meeting rather than before it. A 3-bullet async pre-read (going well / blocked / needs input) keeps live 1:1 time for coaching and gives me a data layer to prep from. (1:1s are for Discuss / Develop / Decide — not status updates.)"
+
+**Development**
+
+- *Only this-week data, no longitudinal picture* → "I can only see this week for [Name]. A one-line note in their 1:1 doc when something notable happens — a win, a risk, a hard conversation — builds the picture that makes development and coaching-vs-performance conversations feel grounded instead of reactive."
+
+**Goal visibility** (replaces the old "make a KR page" tip — works for outcome KRs *and* process-based goals)
+
+- *Couldn't locate the team's goals* → "I couldn't find [Name]'s team goals. Pointing me to your source-of-truth tracker or your department AOP location lets me tie prep to what matters this quarter — whether those goals are outcome KRs or process commitments."
+
+## Offer to generate a starter template
+
+When the gap is a missing tracker or 1:1 doc, offer to generate a starter inline, using the Apollo Source of Truth schema: **Team KRs** (linked to dept/company KRs) · **single DRI** per deliverable · **Status** (On track / At Risk / Off Track) · **Risks & Blockers** · **Update Summary** in `[Status] + [Achieved] + [Blockers] + [Next steps]` form.
 
 ## Closing line
 
-End the section with: *"Better documentation across your tools means sharper prep — these are optional ways to get more out of this skill over time."*
+End the footer with: *"This reinforces the operating system from AME — better inputs between 1:1s mean sharper prep and more room for coaching. Pick one if it's useful; ignore if not."*
