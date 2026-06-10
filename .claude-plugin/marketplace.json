@@ -123,6 +123,13 @@
       "description": "Talent Acquisition skills for Apollo's TA team — company knowledge for candidate briefings and project planning tools for TA initiatives.",
       "category": "people",
       "tags": ["cowork", "talent", "recruiting"]
+    },
+    {
+      "name": "apollo-procurement",
+      "source": "./plugins/apollo-procurement",
+      "description": "Procurement & Finance Operations assistant — answers questions about travel & expense (Navan), procurement intake (Zip), accounts payable, corporate cards (Ramp/Brex), and contracts (IronClad) by grounding every answer in the canonical FAQ.",
+      "category": "finance",
+      "tags": ["cowork", "finance", "procurement", "expense"]
     }
   ]
 }
