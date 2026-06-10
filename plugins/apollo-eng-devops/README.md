@@ -12,6 +12,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 
 | Invoke command | Purpose |
 |---|---|
+| `/apollo-eng-devops:check-apdex` | Snowflake-first Apdex dip investigation with Grafana deep triage |
 | `/apollo-eng-devops:devops` | SRE devops — applies reliability engineering to any production task |
 | `/apollo-eng-devops:kubernetes-specialist` | Kubernetes debugging and rollout specialist for Apollo's GKE clusters |
 | `/apollo-eng-devops:grafana-observability` | Grafana dashboard design and alert quality specialist |
@@ -48,6 +49,8 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 **`kubernetes-specialist`** — Enable when working with pods, deployments, HPAs, node pools, or GKE-level issues. Provides structured kubectl workflows so debugging doesn't skip steps.
 
 **`grafana-observability`** — Enable when creating or reviewing dashboards, tuning alerts, or auditing alert fatigue. Ensures every alert is actionable and every dashboard follows USE/RED method.
+
+**`check-apdex`** — Invoke directly when checking whether Apollo Admin Apdex dipped. Starts with Snowflake and escalates to Grafana only for deep triage.
 
 **`incident-response`** — Enable when declaring an incident, running a war room, writing stakeholder comms, or conducting a postmortem. Provides severity model, comms templates, and blameless postmortem structure.
 
