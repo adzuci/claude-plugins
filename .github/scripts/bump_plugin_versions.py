@@ -3,7 +3,7 @@
 
 Invoked by the release workflow on push to ``main``. For each plugin directory
 changed within a git revision range, it inspects the commits that touched that
-plugin and bumps the ``version`` field in its ``plugin.json`` using the same
+plugin and bumps the ``version`` field in both Claude and Codex manifests using the same
 Conventional Commits → semver rules as the repo-wide ``bump-version.yml``:
 
     MAJOR  feat!: / BREAKING CHANGE
@@ -84,20 +84,25 @@ def bump_changed_plugins(rev_range: str) -> list[str]:
     """Bump every plugin changed in ``rev_range``; return summary lines."""
     summary = []
     for plugin in sorted(_changed_plugins(rev_range)):
-        manifest = PLUGINS_DIR / plugin / ".claude-plugin" / "plugin.json"
-        if not manifest.exists():
+        claude_manifest = PLUGINS_DIR / plugin / ".claude-plugin" / "plugin.json"
+        codex_manifest = PLUGINS_DIR / plugin / ".codex-plugin" / "plugin.json"
+        if not claude_manifest.exists():
             continue
         level = classify_bump(_commits_for_plugin(rev_range, plugin))
         if level == "none":
             continue
-        data = json.loads(manifest.read_text())
+        data = json.loads(claude_manifest.read_text())
         old = data.get("version", "0.0.0")
         new = bump_version(old, level)
         if new == old:
             continue
         data["version"] = new
         # ensure_ascii=False keeps em-dashes etc. intact; trailing newline matches repo style.
-        manifest.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
+        claude_manifest.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
+        if codex_manifest.exists():
+            codex_data = json.loads(codex_manifest.read_text())
+            codex_data["version"] = new
+            codex_manifest.write_text(json.dumps(codex_data, indent=2, ensure_ascii=False) + "\n")
         summary.append(f"{plugin}: {old} -> {new} ({level})")
     return summary
 

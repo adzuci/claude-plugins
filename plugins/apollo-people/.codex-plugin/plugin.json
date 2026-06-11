@@ -1,0 +1,15 @@
+{
+  "name": "apollo-people",
+  "version": "0.2.0",
+  "description": "People Enablement skills for Apollo employees — performance reviews, career development, and growth tools",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo People",
+    "shortDescription": "People Enablement skills for Apollo employees — performance reviews, career development, and growth tools",
+    "developerName": "Apollo",
+    "category": "People",
+    "brandColor": "#1F2937"
+  }
+}

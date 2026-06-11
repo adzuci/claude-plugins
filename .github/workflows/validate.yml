@@ -4,7 +4,10 @@ on:
   pull_request:
     paths:
       - "plugins/**"
+      - ".claude/skills/**"
       - ".claude-plugin/**"
+      - ".agents/plugins/**"
+      - ".github/workflows/validate.yml"
       - "template/**"
 
 jobs:

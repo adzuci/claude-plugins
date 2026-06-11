@@ -1,0 +1,15 @@
+{
+  "name": "apollo-gtm",
+  "version": "0.1.0",
+  "description": "Go-to-market strategy, sales enablement, and demand generation",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Go-to-Market",
+    "shortDescription": "Go-to-market strategy, sales enablement, and demand generation",
+    "developerName": "Apollo",
+    "category": "GTM",
+    "brandColor": "#1F2937"
+  }
+}

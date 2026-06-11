@@ -1,0 +1,15 @@
+{
+  "name": "apollo-eng",
+  "version": "1.0.0",
+  "description": "Shared engineering skills for Apollo repos",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Engineering",
+    "shortDescription": "Shared engineering skills for Apollo repos",
+    "developerName": "Apollo",
+    "category": "Engineering",
+    "brandColor": "#1F2937"
+  }
+}

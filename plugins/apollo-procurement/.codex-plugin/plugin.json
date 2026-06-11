@@ -1,10 +1,15 @@
 {
   "name": "apollo-procurement",
-  "displayName": "Apollo Procurement",
   "version": "1.0.0",
   "description": "Procurement & Finance Operations assistant — answers questions about travel & expense (Navan), procurement intake (Zip), accounts payable, corporate cards (Ramp/Brex), and contracts (IronClad) by grounding every answer in the canonical FAQ.",
-  "author": {
-    "name": "Tyler Davis"
-  },
-  "license": "UNLICENSED"
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Procurement",
+    "shortDescription": "Procurement and finance operations FAQ for travel, intake, AP, cards, and contracts.",
+    "developerName": "Apollo",
+    "category": "Operations",
+    "brandColor": "#1F2937"
+  }
 }

@@ -113,6 +113,42 @@
       "category": "RND"
     },
     {
+      "name": "apollo-gtm-systems",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-gtm-systems"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "GTM"
+    },
+    {
+      "name": "apollo-legal",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-legal"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Legal"
+    },
+    {
+      "name": "apollo-people",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-people"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "People"
+    },
+    {
       "name": "apollo-marketing",
       "source": {
         "source": "local",

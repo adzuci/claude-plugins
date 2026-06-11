@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - "plugins/**/SKILL.md"
+      - "plugins/**/.claude-plugin/plugin.json"
+      - ".claude-plugin/marketplace.json"
+      - ".github/scripts/update-skill-inventory.py"
   workflow_dispatch:
 
 permissions:
@@ -17,11 +20,11 @@ jobs:
       labels: general-low
     steps:
       - uses: actions/checkout@v6
-      - name: Regenerate inventory table
+      - name: Regenerate inventory files
         run: python3 .github/scripts/update-skill-inventory.py
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md
+          git add README.md SKILL_INVENTORY.md
           git diff --staged --quiet || (git commit -m "chore: update skill inventory [skip ci]" && git push)

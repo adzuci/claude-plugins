@@ -1,0 +1,16 @@
+{
+  "name": "apollo-gtm-systems",
+  "version": "0.1.0",
+  "description": "Apollo's GTM Systems concierge for GTM stack, Salesforce data model, ownership, routing, access, and integration diagnostics.",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Apollo Go-to-Market Systems",
+    "shortDescription": "GTM stack, Salesforce data model, ownership, routing, access, and integration diagnostics.",
+    "developerName": "Apollo",
+    "category": "GTM",
+    "brandColor": "#1F2937"
+  }
+}

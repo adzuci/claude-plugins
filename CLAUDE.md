@@ -8,21 +8,36 @@ This is Apollo's shared Claude Code and Codex skills marketplace. Skills live in
 
 ## Adding a Skill
 
+- For a new top-level plugin, use `/add-plugin` first. It keeps Claude Code and Codex manifests, marketplace entries, docs, and validation in sync.
+- For a skill in an existing plugin, use `/add-skill` first. It wraps general skill-authoring guidance and adds Apollo checks for frontmatter, direct-only invocation, token efficiency, validation, and review readiness.
+- For skill script tests, use `/test-skill`. It keeps pytest layout, dependency installation, targeted runs, and marketplace validation consistent.
+- For removals, use `/remove-plugin` or `/remove-skill` so marketplace entries, references, default-install risk, and validation are checked together.
 - Copy `template/skills/example/SKILL.md` to `plugins/<plugin>/skills/<skill-name>/SKILL.md`
 - Set `name` in frontmatter to match the directory name exactly (enforced by CI)
-- Set `description` to one line describing what the skill does and when to activate it
+- Set `description` to one concise line describing what the skill does. Avoid long trigger lists unless natural-language activation is intentional.
+- Default new skills to `disable-model-invocation: true` so they do not add routing context unless the user calls them. Only omit it when natural-language activation is intentional.
 - Invoke commands are `/plugin-name:skill-name` (e.g. `/apollo-eng:pr-description`)
+- If a direct-invoked skill needs inputs, document them in the skill body as concise usage examples (e.g. `/plugin-name:skill-name <target> --flag value`). Do not add unsupported `arguments` frontmatter.
 - Keep both plugin manifests when adding or changing a plugin: `.claude-plugin/plugin.json` for Claude Code and `.codex-plugin/plugin.json` for Codex
 - Keep both marketplace files in sync: `.claude-plugin/marketplace.json` for Claude Code and `.agents/plugins/marketplace.json` for Codex
+- Repo-local `.claude/skills` must work for Claude Code users who do not have Codex installed. Do not make those skills depend on Codex-only commands.
 
 ## Validation
 
 ```bash
+mdformat .
 claude plugin validate .
-codex plugin validate .
+codex plugin validate .  # if available
+python -m pytest tests/test_marketplace.py -q
 ```
 
-Run these before committing. CI also runs the Claude validation on every PR.
+Run these before committing. If the local Codex CLI does not expose `plugin validate`, note that Codex validation was unavailable.
+
+CI enforces Markdown formatting, Claude plugin validation, marketplace parity, plugin manifest schema, Codex display metadata and asset paths, skill frontmatter naming, and cross-plugin skill name uniqueness. Keep this section updated when CI checks change.
+
+For pre-push review, use `/review`. It loads `skill-review-rubric.md` and scales review depth to the change size; use it especially for large or complex skills with long instructions, scripts, references, broad routing, external data access, or cross-team impact. Reviewers should flag new skills that omit `disable-model-invocation: true` unless natural-language activation is justified.
+
+Use `/update-review-rubric` to inspect recent PR review-bot output, propose evidence-backed rubric improvements, and ask which ones to implement before editing review rules.
 
 ## Formatting
 
@@ -42,14 +57,11 @@ mdformat <file.md>
 mdformat .
 ```
 
-CI runs `mdformat --check .` on every PR and will fail if files are not formatted.
+CI runs `mdformat --check` and markdownlint on changed Markdown files in each PR.
 
 ## Testing
 
-If a skill ships executable code (e.g. Python in `scripts/`), add pytest tests
-in a sibling `tests/` directory. CI runs `python -m pytest -q` from the repo root
-(Python 3.9 and 3.11 matrix) and auto-installs any `plugins/**/scripts/requirements.txt`
-or `plugins/**/tests/requirements.txt` it finds.
+If a skill ships executable code, use `/test-skill` and add pytest tests in a sibling `tests/` directory. CI runs `python -m pytest -q` from the repo root on Python 3.9 and 3.11.
 
 - Keep pure helpers at module scope so they can be imported and tested directly.
 - Use `pytest.importorskip("module_name")` at the top of each test file so the
@@ -60,7 +72,7 @@ or `plugins/**/tests/requirements.txt` it finds.
 - Install deps with `pip install -r tests/requirements.txt` and run
   `python -m pytest -q` before committing.
 
-See the README "Testing Skill Scripts" section for the full convention.
+See the README "Testing Skill Scripts" section for the concise convention.
 
 ## Documentation
 
@@ -85,7 +97,7 @@ installing skills). Keep that audience in mind when editing docs.
 - **Commits**: Use Conventional Commits format (e.g. `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `test:`). Prefix with a ticket if one exists, otherwise keep messages concise.
 - Keep commit messages short, meaningful, and descriptive. Focus on the reason for the change and what it solves — do not list individual code changes (that information is in the diff).
 - Always run the `apollo-eng:pr-description` skill before creating a PR
-- The README skill inventory table is auto-updated by CI on merge — do not edit it manually
+- The README plugin inventory and `SKILL_INVENTORY.md` are generated by `.github/scripts/update-skill-inventory.py` — do not edit those generated tables manually
 
 ## Self-Improvement
 

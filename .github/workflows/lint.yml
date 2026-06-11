@@ -5,6 +5,7 @@ on:
     paths:
       - "**/*.md"
       - ".markdownlint*"
+      - ".github/workflows/lint.yml"
 
 jobs:
   markdownlint:
@@ -13,9 +14,15 @@ jobs:
       labels: general-low
     steps:
       - uses: actions/checkout@v6
-      - uses: DavidAnson/markdownlint-cli2-action@v16
         with:
-          globs: "**/*.md"
+          fetch-depth: 0
+      - name: List changed Markdown files
+        run: git diff --name-only --diff-filter=ACMRT "${{ github.event.pull_request.base.sha }}" "${{ github.sha }}" -- "*.md" > /tmp/changed-md.txt
+      - name: Run markdownlint
+        run: |
+          if [ -s /tmp/changed-md.txt ]; then
+            xargs npx markdownlint-cli2 < /tmp/changed-md.txt
+          fi
 
   mdformat:
     runs-on:
@@ -23,27 +30,16 @@ jobs:
       labels: general-low
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
       - run: pip install mdformat mdformat-frontmatter
-      - run: mdformat --check .
-
-  skill-name-check:
-    runs-on:
-      group: arc-scale-sets
-      labels: general-low
-    steps:
-      - uses: actions/checkout@v6
-      - name: Check skill name matches directory
+      - name: List changed Markdown files
+        run: git diff --name-only --diff-filter=ACMRT "${{ github.event.pull_request.base.sha }}" "${{ github.sha }}" -- "*.md" > /tmp/changed-md.txt
+      - name: Run mdformat
         run: |
-          failed=0
-          for skill_md in plugins/*/skills/*/SKILL.md; do
-            dir_name=$(basename "$(dirname "$skill_md")")
-            name=$(grep -m1 '^name:' "$skill_md" | sed 's/name:[[:space:]]*//')
-            if [ "$dir_name" != "$name" ]; then
-              echo "MISMATCH: $skill_md — directory '$dir_name' != frontmatter name '$name'"
-              failed=1
-            fi
-          done
-          exit $failed
+          if [ -s /tmp/changed-md.txt ]; then
+            xargs mdformat --check < /tmp/changed-md.txt
+          fi

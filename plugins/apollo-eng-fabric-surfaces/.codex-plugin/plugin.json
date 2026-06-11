@@ -1,0 +1,15 @@
+{
+  "name": "apollo-eng-fabric-surfaces",
+  "version": "1.0.0",
+  "description": "Skills specific to the Fabric Surfaces team",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Engineering Fabric Surfaces",
+    "shortDescription": "Skills specific to the Fabric Surfaces team",
+    "developerName": "Apollo",
+    "category": "Engineering",
+    "brandColor": "#1F2937"
+  }
+}

@@ -61,3 +61,22 @@ def test_classify_bump_picks_highest_across_commits():
 )
 def test_bump_version(version, level, expected):
     assert bpv.bump_version(version, level) == expected
+
+
+def test_bump_changed_plugins_updates_claude_and_codex_manifests(tmp_path, monkeypatch):
+    plugin_dir = tmp_path / "apollo-test"
+    claude_dir = plugin_dir / ".claude-plugin"
+    codex_dir = plugin_dir / ".codex-plugin"
+    claude_dir.mkdir(parents=True)
+    codex_dir.mkdir(parents=True)
+    (claude_dir / "plugin.json").write_text('{"name": "apollo-test", "version": "1.2.3"}\n')
+    (codex_dir / "plugin.json").write_text('{"name": "apollo-test", "version": "1.2.3"}\n')
+
+    monkeypatch.setattr(bpv, "PLUGINS_DIR", tmp_path)
+    monkeypatch.setattr(bpv, "_changed_plugins", lambda rev_range: {"apollo-test"})
+    monkeypatch.setattr(bpv, "_commits_for_plugin", lambda rev_range, plugin: "feat: add test skill")
+
+    assert bpv.bump_changed_plugins("v1.0.0..HEAD") == ["apollo-test: 1.2.3 -> 1.3.0 (minor)"]
+
+    assert '"version": "1.3.0"' in (claude_dir / "plugin.json").read_text()
+    assert '"version": "1.3.0"' in (codex_dir / "plugin.json").read_text()

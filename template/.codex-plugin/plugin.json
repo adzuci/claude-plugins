@@ -1,0 +1,12 @@
+{
+  "name": "template-plugin",
+  "version": "1.0.0",
+  "description": "Replace with short description of this skill pack",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Template Plugin",
+    "shortDescription": "Replace with short description of this skill pack",
+    "developerName": "Apollo",
+    "category": "Productivity"
+  }
+}

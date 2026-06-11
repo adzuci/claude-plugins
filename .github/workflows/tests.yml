@@ -6,8 +6,14 @@ on:
       - "tests/**"
       - "plugins/**/tests/**"
       - "plugins/**/scripts/**"
+      - "plugins/**/skills/**"
       - "plugins/**/.claude-plugin/**"
+      - "plugins/**/.codex-plugin/**"
+      - ".agents/plugins/**"
+      - ".claude/skills/**"
       - ".claude-plugin/**"
+      - ".github/scripts/bump_plugin_versions.py"
+      - ".github/workflows/bump-version.yml"
       - ".github/workflows/tests.yml"
 
 jobs:

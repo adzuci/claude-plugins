@@ -1,0 +1,6 @@
+# Apollo Plugins marketplace for Codex Team Config.
+# Codex reads this repo-local config when the project is trusted.
+
+[marketplaces.apollo-plugins]
+source_type = "git"
+source = "https://github.com/apolloio/claude-plugins.git"

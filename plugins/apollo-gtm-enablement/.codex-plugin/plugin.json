@@ -1,7 +1,16 @@
 {
   "name": "apollo-gtm-enablement",
-  "displayName": "Apollo GTM Enablement",
   "version": "1.0.0",
   "description": "Creates facilitator-ready enablement decks for Apollo's GTM teams (Sales, CS, Product). Pulls topics from Notion calendars, validates with Salesforce activity and Gong conversations, and produces Apollo-branded training materials backed by real evidence.",
-  "license": "UNLICENSED"
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Apollo GTM Enablement",
+    "shortDescription": "Creates facilitator-ready enablement decks for Apollo's GTM teams (Sales, CS, Product). Pulls topics from Notion calendars, validates with Salesforce activity and Gong conversations, and produces Apollo-branded training materials backed by real evidence.",
+    "developerName": "Apollo",
+    "category": "GTM",
+    "brandColor": "#1F2937"
+  }
 }

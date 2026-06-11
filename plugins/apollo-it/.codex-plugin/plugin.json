@@ -1,0 +1,15 @@
+{
+  "name": "apollo-it",
+  "version": "0.1.0",
+  "description": "IT management, infrastructure, security, and support",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Information Technology",
+    "shortDescription": "IT management, infrastructure, security, and support",
+    "developerName": "Apollo",
+    "category": "IT",
+    "brandColor": "#1F2937"
+  }
+}

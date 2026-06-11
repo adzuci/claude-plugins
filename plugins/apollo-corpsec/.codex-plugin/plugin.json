@@ -1,11 +1,19 @@
 {
   "name": "apollo-corpsec",
-  "displayName": "Apollo Corporate Security",
   "version": "1.0.0",
   "description": "Apollo IT CorpSec skills: device & managed-endpoint policy, external storage rules, a device-rules FAQ, and policy exception requests.",
+  "repository": "https://github.com/apolloio/claude-plugins",
   "author": {
     "name": "Apollo",
     "email": "ramiro.meyer@apollo.io"
   },
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Corporate Security",
+    "shortDescription": "Apollo IT CorpSec skills: device & managed-endpoint policy, external storage rules, a device-rules FAQ, and policy exception requests.",
+    "developerName": "Apollo",
+    "category": "Security",
+    "brandColor": "#1F2937"
+  }
 }

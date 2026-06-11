@@ -1,0 +1,15 @@
+{
+  "name": "apollo-product",
+  "version": "0.1.0",
+  "description": "Product management, roadmap, and lifecycle processes",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Product",
+    "shortDescription": "Product management, roadmap, and lifecycle processes",
+    "developerName": "Apollo",
+    "category": "Product",
+    "brandColor": "#1F2937"
+  }
+}

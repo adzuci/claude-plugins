@@ -1,5 +1,5 @@
 ---
-name: comp-plugin-setup
+name: comp-connector-setup
 description: >-
   Initial connector setup guide for the Apollo IT Employee Plugin. Use on first
   interaction with the plugin, or when a user reports features aren't working

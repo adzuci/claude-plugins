@@ -1,0 +1,16 @@
+{
+  "name": "apollo-legal",
+  "version": "1.0.0",
+  "description": "End-to-end contract review for Apollo's Commercial Legal team. Triages vendor contracts and NDAs, classifies by type, applies Apollo's legal playbooks, generates redlined Word documents with tracked changes, and outputs summary reports.",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Apollo Legal",
+    "shortDescription": "End-to-end contract review for Apollo's Commercial Legal team. Triages vendor contracts and NDAs, classifies by type, applies Apollo's legal playbooks, generates redlined Word documents with tracked changes, and outputs summary reports.",
+    "developerName": "Apollo",
+    "category": "Legal",
+    "brandColor": "#1F2937"
+  }
+}

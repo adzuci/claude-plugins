@@ -1,5 +1,5 @@
 ---
-name: apollo-gtm-system
+name: deal-execution
 description: >
   Apollo's complete GTM execution system for AEs and SCs. Self-contained portable
   sales system that integrates Command of the Message methodology, the Apollo Sales
@@ -14,7 +14,7 @@ description: >
 disable-model-invocation: true
 metadata:
   author: Apollo Solutions Consulting
-  version: '3.3.0'
+  version: 3.3.0
   updated: '2026-04-15'
   classification: Internal — Apollo Confidential
 ---
@@ -112,6 +112,7 @@ Do NOT read all reference files on every request. Read only what the task requir
 | 6 | Closed | AE → AM/GTME | Structured handoff (won) or loss documentation (lost) | — |
 
 **Critical rules:**
+
 - $25K+ deals require full MEDDPICC documentation in SFDC. No exceptions.
 - Stage progression = real deal validation, not activity completion.
 - SFDC gating is live — opportunities cannot advance without required fields.
@@ -195,6 +196,7 @@ This system doesn't just analyze — it acts. When a task requires execution (se
 | "Post my call notes" | Structure raw notes → extract next steps | → Slack: post to self + deal channel |
 
 **Safety rules:**
+
 - Never auto-send emails. Always create drafts.
 - Always confirm before posting to a shared Slack channel.
 - Champion-facing artifacts must use buyer language, never internal jargon.
@@ -206,10 +208,10 @@ This system doesn't just analyze — it acts. When a task requires execution (se
 When helping with deal-related tasks:
 
 1. **Identify the deal stage** — know where the deal is before advising.
-2. **Check constraints first** — surface blockers and risks before recommending actions.
-3. **Use Apollo's language** — Before/After scenarios, PBOs, Required Capabilities. Not generic sales advice.
-4. **Cite specific framework elements** — "Your champion hasn't been validated against the 7 tests" is better than "you need a stronger champion."
-5. **Flag SFDC gaps** — if exit criteria aren't met, say so explicitly.
-6. **Connect the frameworks** — discovery questions should validate MEDDPICC fields. Required Capabilities should shape Decision Criteria. Always show the wiring.
-7. **Be direct about deal risk** — if the deal isn't real, say so. "This is a Stage 2 deal being run as Stage 4" is actionable feedback.
-8. **Execute when asked** — if the task requires action (draft, post, DM), read `functions.md` and do it. Don't just advise — act.
+1. **Check constraints first** — surface blockers and risks before recommending actions.
+1. **Use Apollo's language** — Before/After scenarios, PBOs, Required Capabilities. Not generic sales advice.
+1. **Cite specific framework elements** — "Your champion hasn't been validated against the 7 tests" is better than "you need a stronger champion."
+1. **Flag SFDC gaps** — if exit criteria aren't met, say so explicitly.
+1. **Connect the frameworks** — discovery questions should validate MEDDPICC fields. Required Capabilities should shape Decision Criteria. Always show the wiring.
+1. **Be direct about deal risk** — if the deal isn't real, say so. "This is a Stage 2 deal being run as Stage 4" is actionable feedback.
+1. **Execute when asked** — if the task requires action (draft, post, DM), read `functions.md` and do it. Don't just advise — act.

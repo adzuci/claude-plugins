@@ -1,7 +1,15 @@
 {
   "name": "apollo-risk",
-  "displayName": "Apollo Risk",
   "version": "1.0.0",
   "description": "Privacy and compliance skills for Apollo's Legal Risk team — DSR response drafting, privacy queue triage, and regulatory compliance workflows.",
-  "license": "UNLICENSED"
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Risk",
+    "shortDescription": "Privacy and compliance skills for Apollo's Legal Risk team — DSR response drafting, privacy queue triage, and regulatory compliance workflows.",
+    "developerName": "Apollo",
+    "category": "Legal",
+    "brandColor": "#1F2937"
+  }
 }

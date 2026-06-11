@@ -1,15 +1,14 @@
 ---
 name: which-model
-description: >-
-  Look up available AI models in Claude Code, Cursor, and Windsurf, compare
-  recent benchmarks, and report which models to use for what. Activate when the
-  user asks about model selection, which model to use, model availability, or
-  coding model benchmarks.
+description: Manual-invocation only. Look up available AI coding models in Claude Code, Cursor, Windsurf, and Codex, compare recent benchmarks, and recommend which models to use for specific coding workflows. Run via /apollo-eng-devops:which-model.
+disable-model-invocation: true
 ---
 
 # Which Model
 
 Report on available models across AI coding tools, recent benchmarks, and recommendations.
+
+This skill is intentionally direct-invocation only. Do not activate from natural-language model-selection questions unless the user explicitly invokes `/apollo-eng-devops:which-model`.
 
 ## Instructions
 
@@ -20,6 +19,7 @@ When activated, perform these steps:
    - Claude Code: `docs.claude.com model configuration`
    - Cursor: `cursor.com/help/models-and-usage/available-models`
    - Windsurf: `docs.windsurf.com chat/models` and `docs.windsurf.com plugins/cascade/models`
+   - Codex: `developers.openai.com/codex/models`
 
 1. **Search for benchmark data** — web-search for recent results:
 
@@ -52,6 +52,11 @@ When activated, perform these steps:
 ### Windsurf
 | Model | Type | Notes |
 |-------|------|-------|
+| (populate from search) |
+
+### Codex
+| Model | Context | Notes |
+|-------|---------|-------|
 | (populate from search) |
 
 ## Benchmark Snapshot

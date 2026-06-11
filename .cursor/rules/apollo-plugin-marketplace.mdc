@@ -1,0 +1,19 @@
+---
+description: Apollo plugin marketplace packaging invariants
+globs:
+  - plugins/**
+  - .claude-plugin/marketplace.json
+  - .agents/plugins/marketplace.json
+  - template/**
+alwaysApply: false
+---
+
+# Apollo Plugin Marketplace
+
+- Keep Claude Code and Codex plugin packaging in sync.
+- Every published plugin must have `plugins/<plugin>/.claude-plugin/plugin.json` and `plugins/<plugin>/.codex-plugin/plugin.json`.
+- `plugin.json` `name` must match the plugin directory exactly.
+- Add or remove plugins from both `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json` in the same change.
+- Codex marketplace entries need `policy.installation`, `policy.authentication`, and `category`.
+- Codex manifests should include `skills: "./skills/"` when `skills/` exists and `mcpServers: "./.mcp.json"` only when `.mcp.json` exists.
+- Do not manually edit generated skill inventory tables in README.md or SKILL_INVENTORY.md.

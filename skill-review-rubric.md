@@ -1,4 +1,4 @@
-Review new or modified files under `plugins/` as Skills Marketplace submissions.
+Review new or modified files under `plugins/` and `.claude/skills/` as Skills Marketplace or repo-local skill submissions.
 
 This is an **internal, private repository**. All skills are for Apollo employees only.
 Internal organizational details (employee names, revenue targets, org structure, financial
@@ -9,23 +9,27 @@ Focus on high-signal issues only. Prefer concrete, file-specific feedback.
 
 Frontmatter
 
-- Confirm `SKILL.md` exists at `plugins/<plugin>/skills/<skill-name>/SKILL.md`. Do NOT expect a SKILL.md at the plugin root — plugins contain multiple skills in subdirectories.
-- Require YAML frontmatter with `name` and `description`. Also allow `disable-model-invocation: true` for skills that should only activate by explicit command.
+- Confirm `SKILL.md` exists at `plugins/<plugin>/skills/<skill-name>/SKILL.md` or `.claude/skills/<skill-name>/SKILL.md`. Do NOT expect a SKILL.md at the plugin root — plugins contain multiple skills in subdirectories.
+- Require YAML frontmatter with `name` and `description`. Expect `disable-model-invocation: true` for skills that should only activate by explicit command, and flag omissions as context bloat unless natural-language activation is clearly intentional.
 - Check that `name` matches the skill directory name and uses lowercase letters, digits, and hyphens.
-- Check that `description` explains both what the skill does and when to use it.
-- Prefer trigger-rich wording with explicit user intents, contexts, or phrases that should activate the skill.
-- Flag vague descriptions that are too generic to trigger reliably.
+- Check that new skill names are unique across all plugins and repo-local `.claude/skills`. Flag cross-plugin duplicates even when the duplicate skills live in different plugins.
+- Check that `description` concisely explains what the skill does. Do not reward long trigger lists by default.
+- For skills with `disable-model-invocation: true`, prefer short command/catalog descriptions.
+- Only ask for activation examples when natural-language activation is intentionally enabled.
+- Do not ask authors to add unsupported `arguments` frontmatter. If a direct-invoked skill has required or useful optional inputs, expect a concise `Usage` or `Inputs` section in the body instead.
 
 Descriptions — skill vs plugin
 
-- **Plugin descriptions** (in `plugin.json` and `marketplace.json`) are short catalog blurbs identifying the team and broad scope. Do not demand trigger-rich wording in plugin descriptions.
-- **Skill descriptions** (in `SKILL.md` frontmatter) are where activation triggers, user intents, and context phrases belong. Apply the trigger-richness checks only to skill-level descriptions.
+- **Plugin descriptions** (in `plugin.json` and `marketplace.json`) are short catalog blurbs identifying the team and broad scope. Do not demand activation examples in plugin descriptions.
+- **Skill descriptions** (in `SKILL.md` frontmatter) should be short by default. Activation triggers, user intents, and context phrases belong there only for skills that intentionally omit `disable-model-invocation: true`.
 
 Routing and activation
 
-- Check new or changed skill descriptions for trigger overlap with existing skills that the same user might have active. Flag broad or generic wording that could route common requests away from a more specific skill.
-- Prefer descriptions that make the skill's audience and activation boundary clear, especially for company-wide or cross-team skills.
-- Prefer `disable-model-invocation: true` for new skills unless the skill needs natural-language activation. If it is omitted, look for a clear reason the user would not know to invoke the skill explicitly.
+- Default new skills to `disable-model-invocation: true`. This keeps inactive skills from consuming routing context and avoids accidental activation.
+- If a new or changed skill omits `disable-model-invocation: true`, require a clear reason the user would not know to invoke it explicitly.
+- For direct-invoked skills, arguments can be passed as text in the slash-command invocation. Review for clear, concise usage examples rather than longer descriptions.
+- For natural-language activated skills, check descriptions for trigger overlap with existing skills that the same user might have active. Flag broad or generic wording that could route common requests away from a more specific skill.
+- Prefer descriptions that make the skill's audience and activation boundary clear without becoming a long list of phrases.
 
 Structure
 
@@ -61,7 +65,7 @@ Review policy
 
 - Report only meaningful issues.
 - Use severity `error` for structural breakage, unsafe content, or blockers.
-- Use severity `warning` for likely quality or trigger problems.
+- Use severity `warning` for likely quality, routing, or context-bloat problems.
 - Use severity `suggestion` for polish and maintainability improvements.
 
 Verdict rules

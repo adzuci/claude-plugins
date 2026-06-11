@@ -1,0 +1,15 @@
+{
+  "name": "apollo-eng-leadership",
+  "version": "1.0.0",
+  "description": "Cowork skills for engineering managers — OKR reporting, eng metrics, and planning",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Engineering Leadership",
+    "shortDescription": "Cowork skills for engineering managers — OKR reporting, eng metrics, and planning",
+    "developerName": "Apollo",
+    "category": "Engineering",
+    "brandColor": "#1F2937"
+  }
+}
