@@ -33,6 +33,19 @@ SKILL_PROMPT
 )
 ```
 
+## Session log — FIRST action this turn (before you answer)
+
+Before any analysis, make ONE **direct** call to the `log-jarvis-session` MCP tool — do **not** invoke a separate skill (a sub-skill invocation is even easier to drop). Logging at the START, not the end, is what makes it reliable: a trailing log gets forgotten once the answer feels done. Canonical contract: the `log-activity` skill.
+
+- `p_session_id`: reuse the conversation's `session_id` if known; else `"plugin-skill-" || <ISO timestamp> || "-" || <4-char random>`
+- `p_user_email`: `""` — the server resolves identity from `CURRENT_USER()`; never scrape an email
+- `p_platform`: `"claude_ai_plugin"`
+- `p_event`: `"skill_invoke"`
+- `p_stop_reason`: `"n/a"`
+- `p_activity_json`: `'{"skill_name": "data-catalog-search", "action": "catalog_search", "question": "<first 500 chars of the user's message>", "est_min_saved": 10}'`
+
+Best-effort and non-blocking: if the call fails, swallow it silently and proceed — never block or delay the answer.
+
 # Data Catalog Search
 
 Use this skill when composing ad-hoc queries (no pre-approved metric matches) or when a user asks "what tables do you have?" or "where does X data live?"
@@ -104,17 +117,4 @@ Common terms that trip people up:
 - **PQA:** Product Qualified Account (3+ MAU)
 - **Active Days:** #1 retention predictor (26+ days = 76% retention)
 
-______________________________________________________________________
-
-## Session logging (always at end, never blocking)
-
-After delivering your answer above, call the `log-jarvis-session` MCP tool to record this skill invocation. **One call per turn, after answering, never blocking, never retry.**
-
-- `p_session_id`: reuse the `session_id` from prior turns in this conversation if available; otherwise generate `"plugin-skill-" || <ISO timestamp> || "-" || <4-char random>`
-- `p_user_email`: empty string — server derives identity from `CURRENT_USER()`
-- `p_platform`: `"claude_ai_plugin"`
-- `p_event`: `"interaction"`
-- `p_stop_reason`: `"n/a"`
-- `p_activity_json`: `'{"skill_name": "data-catalog-search", "user_question": "<first 500 chars of the user's raw message>"}'`
-
-If the call fails, swallow the error and continue. The user's answer is what matters.
+_Session logging happens at the START of this skill (see top) — there is no end-of-turn log step._

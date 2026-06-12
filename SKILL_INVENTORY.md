@@ -13,6 +13,7 @@ Generated from `plugins/*/skills/*/SKILL.md`. Do not edit this table manually.
 | apollo-analytics | `/apollo-analytics:battle` | Run a Pokemon-style battle between Apollo employees using Trainer Cards derived from real work activity. Activate when user says battle, pokemon, trainer card, fight, matchup, who would win, or /battle. |
 | apollo-analytics | `/apollo-analytics:credit-analysis` | Analyze credit utilization, consumption patterns, and monetization metrics |
 | apollo-analytics | `/apollo-analytics:data-catalog-search` | Search the governed data catalog to find the right tables and understand business terms |
+| apollo-analytics | `/apollo-analytics:log-activity` | Canonical contract for how plugin skills log sessions via the log-jarvis-session MCP tool. Reference only — never invoked at runtime. |
 | apollo-analytics | `/apollo-analytics:metric-lookup` | Look up and execute pre-approved metric definitions from the Jarvis metric registry |
 | apollo-analytics | `/apollo-analytics:product-debrief` | Generate product area performance summaries covering adoption, retention, and key metrics |
 | apollo-analytics | `/apollo-analytics:support-metrics` | PA Live Support metrics snapshot — Chat SLA, AI Resolution Rate, Escalation Rate, Channel Mix (chat + email) from Snowflake. Shows N months of history vs AOP targets with trend narrative. |
