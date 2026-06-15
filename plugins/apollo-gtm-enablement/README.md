@@ -46,21 +46,14 @@ claude plugin marketplace add apollo-plugins
 claude plugin install apollo-gtm-enablement@apollo-plugins
 ```
 
-### First run
+### Use it
 
-```
-/gtme-setup
-```
+Ask in natural language — the `apollo-gtme-enablement-deck` skill activates automatically and runs the full flow end to end (checks connectors → resolves the topic → pulls evidence from Notion, Salesforce, and Gong → builds the Apollo-branded deck → verifies it):
 
-This checks which connectors are active and guides you through any missing setup.
+- "Build a GTME enablement deck on AI Prospecting Tools" — uses the topic you name.
+- "Build the deck for the next session on the GTME calendar" — pulls the next scheduled topic from Notion.
 
-### Build a deck
-
-```
-/gtme-init                          # pull topic from Notion calendar
-/gtme-build "AI Prospecting Tools"  # build a specific topic
-/gtme-run-next                      # build the next upcoming session
-```
+If you don't name a topic, it uses the next one from the enablement calendar. The finished `.pptx` is saved to `/tmp/gtme-decks/<topic-slug>.pptx`.
 
 ## Kill criteria
 

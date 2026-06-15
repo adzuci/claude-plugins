@@ -1,6 +1,6 @@
 ---
 name: apollo-branding-enablement
-description: Apollo brand reference for GTM Enablement PPTX decks. Activated by apollo-gtm-enablement plugin commands. Use when building or polishing any Apollo GTME deck. Gives the design DNA (palette, fonts, type scale, card patterns, chrome) from the reference decks that look good, lets you design each slide freely with python-pptx, and guarantees the output renders cleanly via a post-build verifier.
+description: Apollo brand reference for GTM Enablement PPTX decks. Pulled in by the apollo-gtme-enablement-deck skill. Use when building or polishing any Apollo GTME deck. Gives the design DNA (palette, fonts, type scale, card patterns, chrome) from the reference decks that look good, lets you design each slide freely with python-pptx, and guarantees the output renders cleanly via a post-build verifier.
 disable-model-invocation: true
 ---
 

@@ -1,5 +1,5 @@
 {
-  "_notes": "All MCPs below are enterprise-provisioned via Apollo's Claude enterprise deployment. Run /gtme-setup to verify connectivity before first use.",
+  "_notes": "All MCPs below are enterprise-provisioned via Apollo's Claude enterprise deployment. The skill verifies connectivity automatically at the start of each run.",
   "mcpServers": {
     "notion": {
       "description": "Notion read-only — GTM enablement calendar, supporting docs",
