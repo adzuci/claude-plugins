@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vendor Negotiation Support"
+  short_description: "Manager vendor renewal and email help"
+  default_prompt: "Use $vendor-negotiation-support email to draft a vendor renewal response with ask math."
