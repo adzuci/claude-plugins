@@ -36,6 +36,7 @@ Structure
 - Expect the standard pattern: `SKILL.md` plus optional `scripts/`, `references/`, and `assets/`.
 - Flag unnecessary support docs such as `README.md`, `CHANGELOG.md`, `INSTALLATION_GUIDE.md`, or similar extra process docs inside a skill.
 - Check that optional resources directly support repeated execution of the skill.
+- For each new `agents/<agent-name>.md`, consider a concise `suggestion` asking the author to add an agent README when it would help future maintainers understand why the agent exists, when to use it instead of a skill, and what operational contract or ownership expectations it carries.
 
 Progressive disclosure
 
@@ -53,6 +54,15 @@ Instruction quality
 - Prefer concise examples over long explanation blocks.
 - Reward instructions that explain why a step matters when that improves correctness.
 - Flag missing examples or missing decision guidance when the task is fragile or ambiguous.
+
+Agent and skill design
+
+- For complex or repeatable skills or agents, consider one concise `suggestion` that asks the author to clarify the workflow contract only when the review shows unclear determinism, unclear agent judgment boundaries, or an unclear next-step arc:
+  - what should be deterministic, such as scripts, templates, fixed commands, or rubrics
+  - what the agent should be allowed to interpret, explain, draft, or decide
+  - what the user should be able to do next after the skill or agent runs
+- Prefer this nudge for skills or agents that involve scoring, reviews, incidents, oncall, deployments, security, data changes, handoffs, or other workflows where inconsistent agent behavior would be costly.
+- Keep this feedback advisory and concise. Use severity `suggestion` unless the same concern also creates a concrete execution, safety, or routing problem covered elsewhere in this rubric.
 
 Security and safety
 
