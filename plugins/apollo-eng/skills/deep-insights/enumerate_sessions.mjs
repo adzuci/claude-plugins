@@ -55,7 +55,10 @@ const PROJECT_HASH = flag('--project-hash', null)
 // that should invalidate cached leaf findings (the fingerprint keys on session state,
 // not on how it was analyzed — so without this, a re-run would serve stale findings
 // generated under the old prompt). v2: compaction-aware cache_break framing + opusplan.
-const ANALYSIS_VERSION = 'v2'
+// v3: per-session revive classification (SESSION_SCHEMA gains a required `revivals`
+// array) — pre-v3 leaves lack it, so they MUST roll or a cache hit would return a
+// finding the new schema rejects.
+const ANALYSIS_VERSION = 'v3'
 
 // thresholds (tunable)
 const CACHE_BREAK = 100000 // uncached input on a single call → cache break

@@ -166,7 +166,7 @@ log(`Analyzing ${sessionIds.length} flagged sessions from ${worklistPath}`)
 const SESSION_SCHEMA = {
   type: 'object',
   additionalProperties: false,
-  required: ['session', 'burn_vs_output', 'underspecified', 'opus_small', 'context_bloat', 'behavior_notes'],
+  required: ['session', 'burn_vs_output', 'underspecified', 'opus_small', 'context_bloat', 'revivals', 'behavior_notes'],
   properties: {
     session: { type: 'string' },
     burn_vs_output: {
@@ -248,6 +248,33 @@ const SESSION_SCHEMA = {
         },
       },
     },
+    revivals: {
+      type: 'array',
+      description:
+        'One entry per LARGE resume/idle cold re-ingest on this session (a cache_break with post_compaction=false and >~100k uncached tokens — a long session resumed after its 5-min prompt cache lapsed). Classify each per the `classification` enum. Skip post_compaction=true breaks (not a revive) and small re-ingests; empty array if none. Be conservative — default to unclear, never guess unjustified. See reviewer STEP 2.5 for the full judgment guidance.',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['classification', 'est_reingest_tokens', 'evidence'],
+        properties: {
+          classification: {
+            type: 'string',
+            enum: ['justified', 'unjustified', 'unclear'],
+            description:
+              'justified = the post-revive turns actually USED the loaded context (continued the prior thread, referenced/built on earlier work, the first prompt only makes sense given what was already in context) — the cold re-ingest bought needed continuity. unjustified = the post-revive work was a FRESH, self-contained task that did not need the old context, so re-sending days of transcript cold was avoidable. unclear = cannot tell from the data — DEFAULT to this when in doubt; never guess unjustified.',
+          },
+          est_reingest_tokens: {
+            type: 'number',
+            description: 'uncached tokens re-sent on this cold re-ingest (the cache_break `uncached` value)',
+          },
+          evidence: {
+            type: 'string',
+            description:
+              'one line, concrete: what the FIRST turns after the re-ingest actually did, and why that shows the loaded context was or was not needed (e.g. "next prompt opened an unrelated new feature with no reference to the prior 3 days — context went unused").',
+          },
+        },
+      },
+    },
     behavior_notes: {
       type: 'array',
       items: { type: 'string' },
@@ -312,40 +339,57 @@ const SYNTH_SCHEMA = {
             },
           },
         },
+        revivals: {
+          type: 'array',
+          description:
+            'OPTIONAL — ONLY the UNJUSTIFIED large resume/idle cold re-ingests flagged by the per-session reviewers (classification === "unjustified"). Each is a precise, evidence-backed cost callout naming the session and the avoidable cold-re-ingest. EXCLUDE every justified and unclear revive — a deliberate revive of a long session is NOT waste and must not appear. Omit the field (or empty array) when there are no unjustified revives; do NOT manufacture entries. This is a per-session burn-ledger callout, NOT a team_harness lever — NEVER turn it into a blanket "use /clear / don\'t revive long sessions / start fresh" rule.',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['session', 'evidence'],
+            properties: {
+              session: { type: 'string', description: 'short session id (first 8 chars) — match the spend ranking' },
+              est_cost_usd: {
+                type: 'number',
+                description:
+                  'approximate $ the avoidable cold re-ingest cost on this session (estimate from the re-ingest token size relative to this session\'s spend; 0 or omit if you cannot estimate)',
+              },
+              est_reingest_tokens: { type: 'number', description: 'uncached tokens re-sent cold' },
+              evidence: {
+                type: 'string',
+                description: 'one line: why this revive was unjustified — what the post-revive turns did instead of using the loaded context',
+              },
+            },
+          },
+        },
       },
     },
     team_harness: {
       type: 'array',
       description:
-        'Changes that move the burn needle. TWO kinds, tagged by `audience`: (1) AGENT-applicable harness artifacts (settings.json / CLAUDE.md rule / hook / skill / script / config) the agent reads-and-obeys or that configure the runtime — written to disk; (2) OPERATOR habits the human performs in the Claude Code REPL (e.g. `/clear` between tasks, starting fresh sessions) — guidance, never written to disk.',
+        'Concrete, shippable harness changes that move the burn needle — each an AGENT-applicable artifact (settings.json / CLAUDE.md rule / hook / skill / script / config) the agent reads-and-obeys or that configures the runtime, written to disk with a paste-ready body. These are TEAM-WIDE, durable levers, not per-user manual habits. Do NOT emit advice the human performs by hand in the REPL (e.g. `/clear`, starting fresh sessions, not reviving long-idle ones) — that is a deliberate operator choice, not a harness change, and does not belong here.',
       items: {
         type: 'object',
         additionalProperties: false,
-        required: ['audience', 'artifact', 'change', 'rationale', 'target_path', 'ready_to_apply'],
+        required: ['artifact', 'change', 'rationale', 'target_path', 'ready_to_apply'],
         properties: {
-          audience: {
-            type: 'string',
-            enum: ['agent', 'operator'],
-            description:
-              "'agent' = a harness artifact the agent/runtime can act on, written to target_path. 'operator' = a workflow habit the HUMAN performs (slash commands like /clear, session hygiene); the agent CANNOT do these, so they are never written to a CLAUDE.md/settings file — they are advice for the person driving the session.",
-          },
           artifact: {
             type: 'string',
-            enum: ['settings.json', 'CLAUDE.md', 'hook', 'skill', 'script', 'config', 'operator-habit'],
+            enum: ['settings.json', 'CLAUDE.md', 'hook', 'skill', 'script', 'config'],
             description:
-              "the kind of change. Use 'operator-habit' WHEN AND ONLY WHEN audience='operator'. All other values require audience='agent'.",
+              'the kind of harness artifact this change lands as — all are agent/runtime-applicable and written to disk.',
           },
           change: { type: 'string', description: 'a full sentence describing the edit/addition' },
           rationale: { type: 'string', description: 'which observed pattern it fixes, in a sentence' },
           target_path: {
             type: 'string',
             description:
-              'For audience=agent: where this lands, e.g. "~/.claude/settings.json", "<repo>/CLAUDE.md", "~/.claude/hooks/precompact.sh" (~/.claude for user-global, <repo> for project-level). For audience=operator: "N/A — operator action, not written to disk".',
+              'where this lands, e.g. "~/.claude/settings.json", "<repo>/CLAUDE.md", "~/.claude/hooks/precompact.sh" (~/.claude for user-global, <repo> for project-level).',
           },
           ready_to_apply: {
             type: 'string',
             description:
-              'For audience=agent: the PASTE-READY artifact — the exact text/JSON/script block to drop into target_path (a complete CLAUDE.md paragraph, a valid settings.json fragment, a runnable script); literal content, not a description; this is what the skill offers to write to disk. For audience=operator: the habit stated as guidance for the human (e.g. "Run /clear when you switch to an unrelated task"); the skill never writes this anywhere.',
+              'the PASTE-READY artifact — the exact text/JSON/script block to drop into target_path (a complete CLAUDE.md paragraph, a valid settings.json fragment, a runnable script); literal content, not a description; this is what the skill offers to write to disk.',
           },
         },
       },
@@ -370,10 +414,12 @@ ${cachePath ? `Leaf-cache path for this session: ${cachePath}` : ''}
 STEP 0 — CACHE CHECK (do this FIRST).${cachePath
     ? ` Run:
   cat ${cachePath} 2>/dev/null
-If the file EXISTS and is valid JSON, this session is UNCHANGED since it was last analyzed —
-return that exact object via the structured-output tool, unmodified, and STOP. Do NOT re-analyze,
-do NOT re-judge, do NOT read the transcript. The cached leaf is authoritative. Only if the file is
-absent or unparseable do you continue to STEP 1.`
+If the file EXISTS, is valid JSON, AND already contains every field the structured-output schema
+requires (in particular a \`revivals\` array — older leaves predate it), this session is UNCHANGED since
+it was last analyzed: return that exact object via the structured-output tool, unmodified, and STOP. Do
+NOT re-analyze, do NOT re-judge, do NOT read the transcript. The cached leaf is authoritative. If the
+file is absent, unparseable, OR missing a now-required field (a pre-version-bump leaf), treat it as a
+MISS and continue to STEP 1 — do NOT return a leaf the current schema would reject.`
     : ' (No cache configured — continue to STEP 1.)'}
 
 STEP 1 — load your slice (run via Bash):
@@ -415,6 +461,22 @@ Confirm only GENUINE instances:
   re-stating cd is REQUIRED, expected harness behavior, not thrash. Ignore it entirely.
   For everything you do confirm, give concrete one-line evidence + est wasted tokens, and skip
   anything trivial in magnitude (a few thousand tokens is noise; focus on material waste).
+
+STEP 2.5 — REVIVE CHECK (populate \`revivals\`). Separately from the cache_break waste flag above,
+classify whether each LARGE resume/idle cold re-ingest on this session was WORTH it. These are the
+cache_breaks with post_compaction=false and a big \`uncached\` re-ingest (>~100k tokens): the session was
+resumed after its 5-min prompt cache lapsed and re-sent its whole context cold at full input price.
+Reviving a long-lived, multi-day session is usually a DELIBERATE, correct choice to reuse accumulated
+context — so a big resume re-ingest is NOT automatically waste. For each such break, read the turns
+IMMEDIATELY AFTER the re-ingest and judge:
+- justified: those turns actually USED the loaded context (continued the prior thread, referenced or
+  built on earlier work, the first prompt only makes sense given what was already in context).
+- unjustified: the post-revive work was a FRESH, self-contained task that did not need the old context,
+  so re-sending days of transcript cold was avoidable. REQUIRES concrete evidence the context went unused.
+- unclear: you cannot tell from the data. DEFAULT to this when in doubt — do NOT guess unjustified.
+Be conservative: a wrong "unjustified" wrongly scolds a deliberate, correct revive, so most calls should
+be justified or unclear. post_compaction=true breaks are NOT revives — skip them here. Empty \`revivals\`
+if the session had no large resume/idle re-ingest.
 
 STEP 3 — judge BURN vs OUTPUT for this session (the headline question). Using the session-level
 cost_usd, span_days, and output signals (commits / edits / files_touched / test_runs / reverts) PLUS
@@ -463,14 +525,15 @@ const findings = (
 ).filter(Boolean)
 
 // roll up confirmed counts for the synthesis prompt (and as a deterministic backstop)
-const roll = { underspecified: 0, opus_small: 0, context_bloat: 0 }
+const roll = { underspecified: 0, opus_small: 0, context_bloat: 0, revivals_unjustified: 0 }
 for (const f of findings) {
   roll.underspecified += (f.underspecified || []).length
   roll.opus_small += (f.opus_small || []).length
   roll.context_bloat += (f.context_bloat || []).length
+  roll.revivals_unjustified += (f.revivals || []).filter(r => r && r.classification === 'unjustified').length
 }
 log(
-  `Confirmed → underspecified:${roll.underspecified} opus_small:${roll.opus_small} context_bloat:${roll.context_bloat}`,
+  `Confirmed → underspecified:${roll.underspecified} opus_small:${roll.opus_small} context_bloat:${roll.context_bloat} unjustified-revives:${roll.revivals_unjustified}`,
 )
 
 // Tag each finding with its ISO week + project (deterministic, from the enumerator)
@@ -545,10 +608,19 @@ sessions compacted ${compEvents} time(s) (${compAuto} automatic). Of ${cbTotal} 
 lapsed (5-min TTL) and re-sent its whole context cold at full input price. THEREFORE:
 - NEVER say a session "was never compacted" / "never /clear'd or /compact'd" when ${compEvents} > 0.
 - The cache_break burn is NOT a missing-compaction problem and NOT fixed by compacting more (compaction
-  itself busts the cache). It is a SESSION-LONGEVITY problem: reviving multi-day sessions re-ingests
-  cold, repeatedly.
-- Correct levers: \`/clear\` between unrelated tasks; start fresh, shorter-lived sessions instead of
-  reviving long-idle ones; do NOT carry one giant context across days. ${
+  itself busts the cache). It is resume/idle cold re-ingest on long-lived sessions whose 5-min prompt
+  cache lapsed.
+- This is a COST OBSERVATION, not necessarily waste, and NOT a team_harness recommendation. Reviving a
+  multi-day session is frequently a DELIBERATE, correct choice — the human needed that accumulated
+  context, and the cold re-ingest is the price of the continuity they wanted, not a mistake. The
+  per-session reviewers separately classified each large resume/idle re-ingest as justified / unjustified
+  / unclear by reading the turns that followed it; their findings carry a \`revivals\` array. A revive is
+  waste ONLY when a reviewer marked it \`unjustified\` with evidence the loaded context went unused. So:
+  surface ONLY those unjustified revives, as a precise per-session burn-ledger callout naming the session
+  and the avoidable $ (burn_analysis.revivals) — exclude every justified/unclear one. Do NOT generalize
+  even an unjustified revive into a "use /clear / don't revive long sessions / start fresh" rule: that is
+  a per-user manual habit and a deliberate operator call, never a shippable harness lever, and it stays
+  out of team_harness. ${
     acOn
       ? `Autocompaction is ALREADY ON${acWin ? ` at a ${acWin}-token window` : ''} — do NOT recommend enabling it or "adding an auto-compact hook".`
       : `(Autocompaction status unknown — but enabling it would NOT address resume cold re-ingest, so don't lead with it.)`
@@ -693,33 +765,37 @@ write commit-discipline recommendations or verdicts that assume commits track la
      LANDED and was worth the price vs exploration / thrash / abandoned effort. Be WEEK-AWARE: name
      the peak-burn / peak-churn week and the trend across weeks, and call out the biggest burner by
      name. Be honest, even unflattering. This is the answer to "was the 3x worth it?"
+   - revivals: scan the per-session findings for \`revivals\` entries and surface ONLY the ones the
+     reviewer marked \`unjustified\`. For each, emit a precise callout: the session id, the approximate
+     avoidable $ (derive from the re-ingest token size relative to that session's spend), the re-ingest
+     token size, and the one-line evidence. EXCLUDE every \`justified\` and \`unclear\` revive — a
+     deliberate revive of a long session is the price of needed continuity, NOT waste, and must not be
+     listed. If there are no unjustified revives, omit the field entirely (do not invent any). This is a
+     per-session cost callout for the burn ledger ONLY — it is NOT a team_harness recommendation and must
+     NEVER be generalized into a "use /clear / start fresh / don't revive" rule.
 
 2. team_harness — 3-5 CONCRETE, shippable harness changes (settings.json / CLAUDE.md / hook / skill /
-   script / config) that move the BURN needle (not micro-habits): cut re-ingest on long sessions,
-   gather org context up-front, reduce STUCK churn. Each a full sentence naming the artifact and
-   exact change, grounded in an observed pattern. At least one must address gathering org/codebase
-   context up-front (a Glean-first rule for cross-team tasks). DO NOT recommend "plan before editing"
-   or "reduce reverts" as a blanket rule — reverts split into STUCK (wall-banging, real waste) and
-   PIVOT (a deliberate change of mind, HEALTHY). reverts_stuck is the only revert signal that
-   justifies a harness change; a high reverts_pivot count is exploration working as intended and must
-   NOT be framed as a problem or trigger a plan-gating recommendation. RESPECT THE COMPACTION REALITY
-   block above — the cache_break burn is RESUME/IDLE cold re-ingest on long sessions, NOT missing
-   compaction; recommend the correct lever (\`/clear\` between tasks, shorter/fresh sessions, don't
-   revive multi-day contexts), and NEVER "enable autocompaction" or "compact more". If the OPUSPLAN
-   CANDIDATE data supports it (high Opus share spent on execution, not deep reasoning), you MAY include
-   an opusplan recommendation — with its trade-off stated — but don't force it.
+   script / config) that move the BURN needle (not micro-habits): gather org context up-front, reduce
+   STUCK churn, right-size the model. Each a full sentence naming the artifact and the exact change,
+   grounded in an observed pattern, with a real target_path and a literal, paste-ready ready_to_apply
+   block (not a description). The biggest lever is a TEAM-WIDE, durable harness change — something
+   written to disk once that every future session inherits — NOT a per-user manual habit. At least one
+   item must address gathering org/codebase context up-front (a Glean-first rule for cross-team tasks).
+   DO NOT recommend "plan before editing" or "reduce reverts" as a blanket rule — reverts split into
+   STUCK (wall-banging, real waste) and PIVOT (a deliberate change of mind, HEALTHY). reverts_stuck is
+   the only revert signal that justifies a harness change; a high reverts_pivot count is exploration
+   working as intended and must NOT be framed as a problem or trigger a plan-gating recommendation. If
+   the OPUSPLAN CANDIDATE data supports it (high Opus share spent on execution, not deep reasoning), you
+   MAY include an opusplan recommendation — with its trade-off stated — but don't force it.
 
-   AUDIENCE — tag every item. The agent reads CLAUDE.md/settings; it CANNOT run slash commands or
-   manage sessions. So NEVER emit a CLAUDE.md/settings/hook/script artifact that instructs the agent to
-   run \`/clear\`, \`/compact\`, "start a fresh session", or "don't resume" — the agent literally cannot
-   do those, and writing such a rule to disk is a category error. Those session-longevity levers are
-   OPERATOR habits: set audience='operator', artifact='operator-habit', target_path='N/A — operator
-   action, not written to disk', and put the habit in ready_to_apply as guidance for the human (e.g.
-   "Run /clear when you switch to an unrelated task; start a fresh session rather than reviving a
-   multi-day one"). Everything that genuinely configures the agent/runtime (opusplan in settings.json,
-   a Glean-first CLAUDE.md rule, a verification-scope rule, a hook, a script) is audience='agent' with a
-   real target_path and a literal, paste-ready ready_to_apply block (not a description). Aim for a mix:
-   the biggest cost lever here is an operator habit, so at least one operator-habit item is expected.
+   DO NOT emit per-user session-hygiene advice as a recommendation — \`/clear\`, \`/compact\`, "start a
+   fresh session", "don't revive long-idle sessions", "shorter-lived sessions". The agent cannot run
+   those (they are REPL-only human actions), AND reviving a long session is frequently a DELIBERATE,
+   correct choice to reuse needed context — so dressing it up as a fixable harness change is wrong on
+   both counts. Per the COMPACTION REALITY block, resume/idle cold re-ingest is a cost observation for
+   the burn narrative, not a team_harness item; and NEVER recommend "enable autocompaction" or "compact
+   more". Every team_harness item must be a real artifact written to a real target_path; if you cannot
+   express a lever as a disk-written artifact, it does not belong in team_harness.
 
 3. one_screen — assemble the FINAL report, ready to print verbatim. HARD CONSTRAINTS:
    - <= 46 lines total, and EVERY line <= 96 columns (hard ceiling — wrap before 96 so it never
@@ -733,6 +809,9 @@ write commit-discipline recommendations or verdicts that assume commits track la
          "wk MM-DD: $X (in progress, day N/7) · too early to call"), then the top-spend sessions as a compact readable
          ledger: one line each with $ + roi/outcome + the deterministic efficiency label
          (lean/loose/thrashy) from the spend ranking + the verdict
+       then, ONLY IF burn_analysis.revivals is non-empty, an "AVOIDABLE REVIVES" callout: one line per
+         unjustified revive (session + ≈$ + the one-line evidence), <=96 cols. Omit this block entirely
+         when there are none — do NOT add a "no avoidable revives" line, and never a /clear suggestion.
        TEAM HARNESS — the harness changes as readable sentences, one per recommendation
    - Lead with the spend reality and name the biggest burner. Be specific, not generic. Ledger lines
      may be tight but must stay readable and <= 96 cols.

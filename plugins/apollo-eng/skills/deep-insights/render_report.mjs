@@ -155,20 +155,40 @@ const burnRows = (burn.sessions || [])
   )
   .join('\n')
 
+// Avoidable revives — ONLY the unjustified resume/idle cold re-ingests the reviewers flagged
+// (justified/unclear ones are deliberately excluded upstream). A per-session cost callout, never a
+// /clear recommendation. Absent/empty array → the whole block is omitted from the document.
+const revivals = Array.isArray(burn.revivals) ? burn.revivals : []
+const revivalRows = revivals
+  .map((r) => {
+    const cost = typeof r.est_cost_usd === 'number' && r.est_cost_usd > 0 ? `≈${money(r.est_cost_usd)}` : ''
+    const toks = typeof r.est_reingest_tokens === 'number' && r.est_reingest_tokens > 0
+      ? `${Math.round(r.est_reingest_tokens / 1000)}k cold re-ingest`
+      : ''
+    const meta = [cost, toks].filter(Boolean).join(' · ')
+    return `
+    <div class="revive">
+      <div class="revive-head">
+        <span class="sid">${esc(r.session)}</span>
+        ${meta ? `<span class="revive-cost">${esc(meta)}</span>` : ''}
+      </div>
+      <p class="why">${esc(r.evidence)}</p>
+    </div>`
+  })
+  .join('\n')
+
 const harnessRows = harness
   .map((h, i) => {
-    const isOperator = h.audience === 'operator' || h.artifact === 'operator-habit'
-    // Operator habits are something the human types in the REPL (e.g. /clear) — the agent can't run
-    // them, so they're shown as guidance, NOT as a paste-to-disk artifact with a file target.
+    // Every team-harness item is an agent-applicable artifact written to disk — a paste-ready
+    // block with a real target_path. (Per-user REPL habits like /clear are deliberately NOT
+    // emitted by the workflow: they aren't shippable harness changes.)
     const code = !h.ready_to_apply
       ? ''
-      : isOperator
-        ? `<div class="habit"><span class="habit-tag">you type this — the agent can't</span><code>${esc(h.ready_to_apply)}</code></div>`
-        : `<details><summary>paste-ready artifact${h.target_path ? ` → <code>${esc(h.target_path)}</code>` : ''}</summary><pre><button class="copy" onclick="cp(this)">copy</button><code>${esc(h.ready_to_apply)}</code></pre></details>`
+      : `<details><summary>paste-ready artifact${h.target_path ? ` → <code>${esc(h.target_path)}</code>` : ''}</summary><pre><button class="copy" onclick="cp(this)">copy</button><code>${esc(h.ready_to_apply)}</code></pre></details>`
     return `
-    <div class="rec${isOperator ? ' rec-operator' : ''}">
+    <div class="rec">
       <div class="rec-head"><span class="num">${i + 1}</span>
-        <span class="kind">${esc(isOperator ? 'operator habit' : h.artifact || 'change')}</span>
+        <span class="kind">${esc(h.artifact || 'change')}</span>
         <span class="rec-title">${esc(h.change)}</span>
       </div>
       ${h.rationale ? `<p class="why">${esc(h.rationale)}</p>` : ''}
@@ -232,6 +252,10 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)
 .badge.warn{background:rgba(210,153,34,.16);color:var(--warn)}
 .badge.bad{background:rgba(248,81,73,.16);color:var(--bad)}
 .badge.mute{background:rgba(110,118,129,.18);color:var(--mut)}
+.revive{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--warn);
+  border-radius:10px;padding:11px 15px;margin-bottom:10px}
+.revive-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.revive-cost{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;color:var(--warn);font-size:13px}
 .legend{color:var(--mut);font-size:12px;margin:-4px 0 14px}
 .legend b{color:var(--ink);font-weight:600}
 .verdict{margin:9px 0 0;color:var(--ink)}
@@ -242,11 +266,6 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)
 .kind{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);
   border:1px solid var(--line);border-radius:5px;padding:1px 6px}
 .rec-title{font-weight:600}
-.rec-operator{border-style:dashed}
-.habit{margin-top:9px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-.habit-tag{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);
-  border:1px dashed var(--line);border-radius:5px;padding:1px 6px;flex:none}
-.habit code{background:var(--panel2);border-radius:5px;padding:2px 7px;font-size:13px}
 .why{margin:8px 0 0;color:var(--mut);font-size:13.5px}
 details{margin-top:10px}
 summary{cursor:pointer;color:var(--acc);font-size:13px}
@@ -284,7 +303,16 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
     <i>computed</i> from revert/re-read/thrash/cache-break signals, not judged.
     Green = good, amber = mixed, red = weak. They can disagree (e.g. landed but overpriced).</p>
   ${burnRows || '<p class="why">No high-spend sessions in this window.</p>'}
-
+${revivals.length
+  ? `
+  <h2>Avoidable Revives — cold re-ingest that didn't earn its keep</h2>
+  <p class="legend">A long session resumed after its 5-min prompt cache lapsed re-sends its whole
+    context cold at full price. That's usually the fair price of needed continuity — these are only the
+    cases a reviewer judged the reloaded context went <b>unused</b>. A per-session cost note, not a
+    rule against reviving sessions.</p>
+  ${revivalRows}
+`
+  : ''}
   <h2>Team Harness — shippable changes that move the burn needle</h2>
   ${harnessRows || '<p class="why">No material harness changes recommended.</p>'}
 
