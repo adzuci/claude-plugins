@@ -130,6 +130,13 @@
       "description": "Procurement & Finance Operations assistant — answers questions about travel & expense (Navan), procurement intake (Zip), accounts payable, corporate cards (Ramp/Brex), and contracts (IronClad) by grounding every answer in the canonical FAQ.",
       "category": "finance",
       "tags": ["cowork", "finance", "procurement", "expense"]
+    },
+    {
+      "name": "apollo-accounting",
+      "source": "./plugins/apollo-accounting",
+      "description": "Accounting and finance skills for Apollo's Finance team — contract clause analysis, ASC 606 revenue recognition assessment, and Ironclad contract review workflows.",
+      "category": "finance",
+      "tags": ["cowork", "finance", "accounting", "contracts"]
     }
   ]
 }

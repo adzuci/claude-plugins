@@ -219,6 +219,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Finance"
+    },
+    {
+      "name": "apollo-accounting",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-accounting"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Finance"
     }
   ]
 }

@@ -6,6 +6,7 @@ Generated from `plugins/*/skills/*/SKILL.md`. Do not edit this table manually.
 
 | Plugin | Command | Description |
 | --- | --- | --- |
+| apollo-accounting | `/apollo-accounting:contract-clause-analyzer` | Analyzes contracts clause-by-clause against Apollo's standard templates and flags legal, financial, and revenue-recognition deviations. Accepts direct file uploads or Ironclad scans, and produces a flagged report plus an ASC 606 assessment workbook. |
 | apollo-analytics | `/apollo-analytics:account-deep-dive` | Generate a comprehensive profile for a specific team/account combining revenue, credits, support, email, and events |
 | apollo-analytics | `/apollo-analytics:account-detail` | Fetch and render a full Apollo account profile for a given domain, team ID, or user ID. |
 | apollo-analytics | `/apollo-analytics:ai-analytics` | Answer questions about any of Apollo's AI capabilities — AI Assistant usage, engagement, outcomes, retention, powerups (credits), messaging (email sequences), and content center. Knows the canonical table hierarchy, correct active-thread filters, outcome definitions, and query patterns built by Sai. Use when anyone asks a metric or analysis question about Apollo AI products. |

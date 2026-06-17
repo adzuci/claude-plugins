@@ -36,6 +36,7 @@ EXPECTED_DISPLAY_NAMES = {
     "apollo-corpsec": "Apollo Corporate Security",
     "apollo-talent": "Apollo Talent",
     "apollo-procurement": "Apollo Procurement",
+    "apollo-accounting": "Apollo Accounting",
 }
 
 

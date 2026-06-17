@@ -70,6 +70,7 @@ See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill comman
 | `apollo-corpsec` | Apollo IT CorpSec skills: device & managed-endpoint policy, external storage rules, a device-rules FAQ, and policy exception requests. | 4 |
 | `apollo-talent` | Talent Acquisition skills for Apollo's TA team — company knowledge for candidate briefings and project planning tools for TA initiatives. | 2 |
 | `apollo-procurement` | Procurement & Finance Operations assistant — answers questions about travel & expense (Navan), procurement intake (Zip), accounts payable, corporate cards (Ramp/Brex), and contracts (IronClad) by grounding every answer in the canonical FAQ. | 1 |
+| `apollo-accounting` | Accounting and finance skills for Apollo's Finance team — contract clause analysis, ASC 606 revenue recognition assessment, and Ironclad contract review workflows. | 1 |
 
 <!-- PLUGIN-INVENTORY-END -->
 

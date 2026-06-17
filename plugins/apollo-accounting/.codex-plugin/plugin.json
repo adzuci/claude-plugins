@@ -1,0 +1,15 @@
+{
+  "name": "apollo-accounting",
+  "version": "1.0.0",
+  "description": "Accounting and finance skills for Apollo's Finance team — contract clause analysis, ASC 606 revenue recognition assessment, and Ironclad contract review workflows.",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Accounting",
+    "shortDescription": "Contract clause analysis and ASC 606 revenue recognition assessment for Apollo's Finance team.",
+    "developerName": "Apollo",
+    "category": "Finance",
+    "brandColor": "#1F2937"
+  }
+}
