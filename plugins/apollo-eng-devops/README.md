@@ -14,7 +14,8 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 |---|---|
 | `/apollo-eng-devops:check-apdex` | Snowflake-first Apdex dip investigation with Grafana deep triage |
 | `/apollo-eng-devops:devops` | SRE devops — applies reliability engineering to any production task |
-| `/apollo-eng-devops:kubernetes-specialist` | Kubernetes debugging and rollout specialist for Apollo's GKE clusters |
+| `/apollo-eng-devops:kubernetes-specialist` | Kubernetes debugging and rollout specialist — **invoke explicitly** (not auto-routed) |
+| `/apollo-eng-devops:sidekiq-worker-specialist` | Tune Sidekiq worker Helm values — max_workers, resources, autoscaling |
 | `/apollo-eng-devops:grafana-observability` | Grafana dashboard design and alert quality specialist |
 | `/apollo-eng-devops:logs-ingestion-rate` | Investigate Apollo's Grafana Cloud logs ingestion rate alert and alert quality |
 | `/apollo-eng-devops:incident-response` | Incident commander guide for Apollo production incidents |
@@ -27,31 +28,36 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 
 **Recommended combinations:**
 
-- **Incident investigation**: `devops` + `kubernetes-specialist` + `incident-response`
+- **Incident investigation**: `devops` + `/apollo-eng-devops:kubernetes-specialist` + `incident-response`
 - **New service launch**: `devops` + `grafana-observability`
 - **Alert tuning sprint**: `grafana-observability` + `devops` (for SLO context)
 - **Vendor announcement review**: `news-feed` + `grafana-observability` when Grafana changes affect dashboards, alerts, IRM, or telemetry cost
 - **Logs ingestion alert**: `logs-ingestion-rate` + `grafana-observability`
 - **Architecture design review**: `devops` (design review path)
 - **Postmortem writing**: `incident-response`
+- **Sidekiq worker specialist PR**: `sidekiq-worker-specialist` + `/apollo-eng-devops:kubernetes-specialist` (post-deploy verification)
 
 ## Example Prompts
 
 | Prompt | Skills activated |
 |---|---|
-| "We're seeing 500s spike after today's deploy" | devops (incident path) + kubernetes-specialist + incident-response |
-| "Pod keeps restarting with OOMKilled" | kubernetes-specialist OOMKilled triage |
+| "We're seeing 500s spike after today's deploy" | devops (incident path) + `/apollo-eng-devops:kubernetes-specialist` + incident-response |
+| "Pod keeps restarting with OOMKilled" | `/apollo-eng-devops:kubernetes-specialist` OOMKilled triage |
 | "Alert noise is too high in the payments service" | grafana-observability alert audit |
 | "Investigate the logs ingestion rate alert" | logs-ingestion-rate |
 | "Postmortem for Feb 14 incident" | incident-response postmortem template |
 | "Design review: new async ingestion pipeline" | devops (design review path) |
 | "We need SLOs for the Elasticsearch cluster" | devops (SLOs module) + grafana-observability |
+| "Bump max_workers for my_queue_worker" | sidekiq-worker-specialist |
+| "Add a new Sidekiq queue to production" | sidekiq-worker-specialist |
 
 ## When to Enable Each Skill
 
 **`devops`** — Enable for any production-touching task. It sets the reliability frame for everything else.
 
-**`kubernetes-specialist`** — Enable when working with pods, deployments, HPAs, node pools, or GKE-level issues. Provides structured kubectl workflows so debugging doesn't skip steps.
+**`kubernetes-specialist`** — Invoke explicitly via `/apollo-eng-devops:kubernetes-specialist` when working with pods, deployments, HPAs, node pools, or GKE-level issues. Does not auto-activate from natural-language prompts.
+
+**`sidekiq-worker-specialist`** — Enable when editing `kubernetes/production/sidekiq-workers/values.yaml`: new queues, `max_workers` / `threads_per_pod` tuning, resource changes, or shared-cluster queue additions.
 
 **`grafana-observability`** — Enable when creating or reviewing dashboards, tuning alerts, or auditing alert fatigue. Ensures every alert is actionable and every dashboard follows USE/RED method.
 

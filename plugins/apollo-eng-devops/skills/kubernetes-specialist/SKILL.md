@@ -1,6 +1,7 @@
 ---
 name: kubernetes-specialist
 description: Kubernetes debugging and rollout specialist for Apollo's GKE clusters. Activate when debugging pod crashes, CrashLoopBackOff, OOMKilled, readiness or liveness failures, deployment rollouts, HPA scaling, or resource limit tuning.
+disable-model-invocation: true
 ---
 
 # Kubernetes Specialist
@@ -245,6 +246,14 @@ Common mistakes:
 # Check if containers are CPU-throttled
 kubectl exec -it <pod-name> -n <namespace> -- cat /sys/fs/cgroup/cpu/cpu.stat | grep throttled
 ```
+
+______________________________________________________________________
+
+## Sidekiq worker values
+
+For **adding or tuning** Sidekiq entries in `kubernetes/production/sidekiq-workers/values.yaml` **in the [`apolloio/leadgenie`](https://github.com/apolloio/leadgenie) repo**, use the [`sidekiq-worker-specialist`](../sidekiq-worker-specialist/SKILL.md) skill (handles cluster selection, impact calculation, and CI validation).
+
+This `kubernetes-specialist` skill covers **runtime debugging** of deployed `sidekiq-<worker-name>` pods and their HPAs after changes have been applied.
 
 ______________________________________________________________________
 
