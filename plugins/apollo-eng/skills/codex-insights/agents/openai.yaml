@@ -1,0 +1,6 @@
+# OpenAI Codex interface metadata. Claude Code ignores this file; the runtime
+# contract lives in SKILL.md.
+interface:
+  display_name: Codex Insights
+  short_description: Analyze Codex token usage and context habits.
+  default_prompt: Use /apollo-eng:codex-insights to analyze my Codex token usage and build a private report.
