@@ -81,9 +81,8 @@ ENV_SIGNAL_LABELS = {
     "claudeignore_configured":    "Has .claudeignore configured",
     "claude_md_lean":             "Keeps CLAUDE.md lean (≤200 lines)",
     "mcp_count_reasonable":       "Only necessary MCPs/plugins enabled",
-    "budget_guardrail_set":       "Has --max-turns or token budget configured",
     "permission_mode_non_auto":   "Uses non-auto-accept permission mode",
-    "tool_search_tuned":          "Tool Search threshold tuned below default",
+    "tool_search_efficient":      "Tool Search at efficient default (MCP tools deferred on demand)",
     "memory_populated":           "Caches repeated context in memory",
     "default_model_not_opus":     "Default model set to Sonnet/Haiku (not Opus)",
 }
@@ -92,8 +91,8 @@ CONTEXT_SIGNAL_LABEL = "context_clean"
 CONTEXT_SIGNAL_DESC = "Context baseline is clean (≤15%, no problematic items)"
 
 
-def _verdict(score, max_score=22):
-    # Thresholds scale with max_score. Default 22 = without context (8 env + 14 answers).
+def _verdict(score, max_score=21):
+    # Thresholds scale with max_score. Default 21 = without context (7 env + 14 answers).
     # - Ready: 82%+
     # - Almost There: 55-81%
     # - Building Habits: <55%

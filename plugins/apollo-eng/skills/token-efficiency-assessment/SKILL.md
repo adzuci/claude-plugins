@@ -73,7 +73,7 @@ Example:
 Auto-detected signals:
   ✓ .claudeignore configured
   ✓ CLAUDE.md is lean (45 lines)
-  ✗ Tool Search threshold not tuned — set toolSearchThreshold: 0.05 in settings.json
+  ✗ Tool Search not at efficient default — ENABLE_TOOL_SEARCH=false loads all MCP tools upfront; remove the override or set "ENABLE_TOOL_SEARCH": "auto:3" in the env block of ~/.claude/settings.json
   ...
 ```
 
@@ -204,7 +204,7 @@ Read the `red_flags` list from the score output (these are the "Growth Areas" sh
 
 Show in this order:
 
-1. Numeric score: "Score: **N/M**" where M is `score_max` from the score output (22 without context signal, 23 with)
+1. Numeric score: "Score: **N/M**" where M is `score_max` from the score output (21 without context signal, 22 with)
 1. Verdict: "Efficiency level: **Ready** / **Almost There** / **Building Habits**"
    - Ready — strong habits across the board
    - Almost There — a few targeted improvements will make a big difference

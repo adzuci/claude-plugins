@@ -125,31 +125,6 @@ def check_mcp_count():
     return _sig(1 if reasonable else 0, count, fix)
 
 
-def check_budget_guardrail():
-    settings = _load_settings()
-    env_block = settings.get("env", {})
-
-    max_turns = settings.get("maxTurns")
-    env_val = (
-        env_block.get("CLAUDE_MAX_TURNS")
-        or env_block.get("CLAUDE_BUDGET_TOKENS")
-        or os.environ.get("CLAUDE_MAX_TURNS")
-        or os.environ.get("CLAUDE_BUDGET_TOKENS")
-    )
-
-    has = bool(max_turns or env_val)
-    value = max_turns or env_val or None
-    fix = (
-        ""
-        if has
-        else (
-            'Add to ~/.claude/settings.json:\n  "maxTurns": 20\n'
-            "This caps runaway loops before they burn a large budget."
-        )
-    )
-    return _sig(1 if has else 0, value, fix)
-
-
 def check_permission_mode():
     settings = _load_settings()
     mode = settings.get("defaultMode", "default")
@@ -167,27 +142,51 @@ def check_permission_mode():
     return _sig(1 if good else 0, mode, fix)
 
 
-def check_tool_search_threshold():
+def check_tool_search_efficient():
+    """Score 1 when Tool Search is at the efficient default (all tools deferred on demand).
+
+    The real knob is ENABLE_TOOL_SEARCH in the settings.json env block.
+    Unset / 'true' / 'auto' / 'auto:N' with N<=10 all defer tools efficiently.
+    'false' loads everything upfront (worst). 'auto:N' with N>10 also loads more upfront.
+    """
     settings = _load_settings()
-    threshold = settings.get("toolSearchThreshold")
-    if threshold is None:
+    env_block = settings.get("env", {})
+    sentinel = object()
+    raw = env_block.get("ENABLE_TOOL_SEARCH", sentinel)
+    val = str(raw) if raw is not sentinel else os.environ.get("ENABLE_TOOL_SEARCH")
+
+    if val is None or val == "true":
+        return _sig(1, val)
+
+    if val == "false":
         return _sig(
             0,
-            None,
-            "toolSearchThreshold is at default (0.10). "
-            "Setting it to 0.05 reduces per-request token cost with minimal quality loss:\n"
-            '  "toolSearchThreshold": 0.05  # in ~/.claude/settings.json',
+            val,
+            "ENABLE_TOOL_SEARCH=false loads ALL MCP tools upfront on every request.\n"
+            "Remove the override to restore the default (full deferral — most efficient):\n"
+            "  Remove ENABLE_TOOL_SEARCH from the env block in ~/.claude/settings.json",
         )
-    tuned = threshold < 0.10
-    fix = (
-        ""
-        if tuned
-        else (
-            f"toolSearchThreshold is {threshold} (default). "
-            'Lower to 0.05:\n  "toolSearchThreshold": 0.05'
-        )
-    )
-    return _sig(1 if tuned else 0, threshold, fix)
+
+    if val == "auto":
+        return _sig(1, val)
+
+    if val.startswith("auto:"):
+        try:
+            pct = int(val.split(":")[1])
+            if pct <= 10:
+                return _sig(1, val)
+            return _sig(
+                0,
+                val,
+                f"ENABLE_TOOL_SEARCH={val} loads tools upfront when they fit in {pct}% of context.\n"
+                "The default (unset) defers all tools — the most efficient setting.\n"
+                "If you want threshold mode, use auto:3 or lower:\n"
+                '  "ENABLE_TOOL_SEARCH": "auto:3"  # in env block of ~/.claude/settings.json',
+            )
+        except (IndexError, ValueError):
+            pass
+
+    return _sig(1, val)
 
 
 def check_default_model():
@@ -246,9 +245,8 @@ def main():
             "claudeignore_configured": check_claudeignore(),
             "claude_md_lean": check_claude_md_lean(),
             "mcp_count_reasonable": check_mcp_count(),
-            "budget_guardrail_set": check_budget_guardrail(),
             "permission_mode_non_auto": check_permission_mode(),
-            "tool_search_tuned": check_tool_search_threshold(),
+            "tool_search_efficient": check_tool_search_efficient(),
             "memory_populated": check_memory_populated(),
             "default_model_not_opus": check_default_model(),
         },

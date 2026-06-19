@@ -4,6 +4,14 @@ score = pytest.importorskip("score")
 
 
 class TestVerdictScaling:
+    def test_verdict_max_21(self):
+        # 82% of 21 = 17.22, so need 18+ for "Ready"
+        # 55% of 21 = 11.55, so need 12+ for "Almost There"
+        assert score._verdict(18, 21) == "Ready"
+        assert score._verdict(17, 21) == "Almost There"
+        assert score._verdict(12, 21) == "Almost There"
+        assert score._verdict(11, 21) == "Building Habits"
+
     def test_verdict_max_22(self):
         # 82% of 22 = 18.04, so need 19+ for "Ready"
         # 55% of 22 = 12.1, so need 13+ for "Almost There"
@@ -11,14 +19,6 @@ class TestVerdictScaling:
         assert score._verdict(18, 22) == "Almost There"
         assert score._verdict(13, 22) == "Almost There"
         assert score._verdict(12, 22) == "Building Habits"
-
-    def test_verdict_max_23(self):
-        # 82% of 23 = 18.86, so need 19+ for "Ready"
-        # 55% of 23 = 12.65, so need 13+ for "Almost There"
-        assert score._verdict(19, 23) == "Ready"
-        assert score._verdict(18, 23) == "Almost There"
-        assert score._verdict(13, 23) == "Almost There"
-        assert score._verdict(12, 23) == "Building Habits"
 
 
 class TestContextSignalScoring:
@@ -67,7 +67,7 @@ class TestContextSignalScoring:
         )
         max_score = len(env_scored) + len(context_scored) + len(answer_scored)
 
-        assert max_score == 23
+        assert max_score == 22
         assert context_scored[score.CONTEXT_SIGNAL_LABEL]["score"] == 1
         assert total == 15  # env=0, context=1, answers=14
 
@@ -95,8 +95,8 @@ class TestContextSignalScoring:
 class TestMaxScoreCalculation:
     def test_max_score_without_context(self):
         max_score = len(score.ENV_SIGNAL_LABELS) + len(score.ANSWER_LABELS)
-        assert max_score == 22
+        assert max_score == 21
 
     def test_max_score_with_context(self):
         max_score = len(score.ENV_SIGNAL_LABELS) + 1 + len(score.ANSWER_LABELS)
-        assert max_score == 23
+        assert max_score == 22
