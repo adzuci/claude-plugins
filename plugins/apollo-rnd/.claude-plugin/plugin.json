@@ -3,5 +3,14 @@
   "displayName": "Apollo Research and Development",
   "version": "0.2.0",
   "description": "Research and development skills for Apollo R&D",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "permissions": {
+    "skill": ["book-hvo-shadow", "prd-one-pager", "setup-fabric-studio"],
+    "command": [
+      "Bash(python3 scripts/main.py*)",
+      "Bash(*/bin/python scripts/main.py*)",
+      "Bash(python3 -m venv*)",
+      "Bash(*/bin/pip install*)"
+    ]
+  }
 }
