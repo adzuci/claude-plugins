@@ -8,6 +8,8 @@ Scopes: Calendar (read/write own calendar) + Sheets (read/write booking sheet).
 from __future__ import annotations
 
 import json
+import subprocess
+import urllib.request
 from pathlib import Path
 
 SCOPES = [
@@ -17,20 +19,45 @@ SCOPES = [
 
 CONFIG_DIR = Path.home() / ".config" / "hvo-shadow"
 TOKEN_PATH = CONFIG_DIR / "token.json"
-
-# Secret is never bundled in the repo — users place it at this path.
-# Obtain it from the Apollo GCP project (data-platform-stg) OAuth credentials page.
 SECRET_PATH = CONFIG_DIR / "client_secret.json"
 
-_SECRET_INSTRUCTIONS = """
-OAuth client secret not found at {path}
+_CREDENTIALS_SERVICE_URL = (
+    "https://hvoshadow-token-server-429930285989.us-central1.run.app"
+)
 
-To set up:
-  1. Download client_secret.json from 1Password:
-     https://share.1password.com/s#S72iwphVK0aTnq_mqaicCQlKUUKnAS_dE81eZaHxzWU
-  2. Save it to: {path}
-  3. Re-run this command
-""".strip()
+
+def _fetch_and_write_secret() -> None:
+    """Pull OAuth credentials from the Apollo GCP token server and write client_secret.json."""
+    try:
+        token = subprocess.check_output(
+            ["gcloud", "auth", "print-identity-token"],
+            stderr=subprocess.DEVNULL,
+        ).decode().strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        raise RuntimeError(
+            "Could not obtain a Google identity token.\n"
+            "Run: gcloud auth login\n"
+            "Then re-run this command."
+        )
+
+    req = urllib.request.Request(
+        _CREDENTIALS_SERVICE_URL,
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    with urllib.request.urlopen(req) as resp:
+        data = json.loads(resp.read())
+
+    secret_json = {
+        "installed": {
+            "client_id": data["client_id"],
+            "client_secret": data["client_secret"],
+            "redirect_uris": ["http://localhost"],
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+        }
+    }
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    SECRET_PATH.write_text(json.dumps(secret_json))
 
 
 def get_credentials():
@@ -53,7 +80,7 @@ def get_credentials():
             creds.refresh(Request())
         else:
             if not SECRET_PATH.exists():
-                raise FileNotFoundError(_SECRET_INSTRUCTIONS.format(path=SECRET_PATH))
+                _fetch_and_write_secret()
             flow = InstalledAppFlow.from_client_secrets_file(str(SECRET_PATH), SCOPES)
             creds = flow.run_local_server(port=0)
 
