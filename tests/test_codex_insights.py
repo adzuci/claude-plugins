@@ -143,6 +143,220 @@ def test_enumerator_missing_value_flags_fall_back_to_defaults(tmp_path: Path) ->
     assert data["snapshot"]["sessions_reported"] == 1
 
 
+def test_enumerator_normalizes_prompt_input_path_alias_failure(tmp_path: Path) -> None:
+    codex_home = tmp_path / "codex"
+    outdir = tmp_path / "scratch"
+    env = isolated_env(tmp_path, codex_home)
+    bin_dir = Path(env["PATH"])
+    fake_codex = bin_dir / "codex"
+    fake_codex.write_text(
+        """#!/bin/sh
+echo "WARNING: proceeding, even though we could not create PATH aliases: Operation not permitted (os error 1)" >&2
+echo "Error: Operation not permitted (os error 1)" >&2
+exit 1
+"""
+    )
+    fake_codex.chmod(0o755)
+    session_id = "55555555-5555-5555-5555-555555555555"
+    write_jsonl(codex_home / "sessions" / f"{session_id}.jsonl", [token_count("2999-01-04T00:05:00Z", 200)])
+
+    run_node(
+        "enumerate_codex_sessions.mjs",
+        "--since",
+        "all",
+        "--outdir",
+        str(outdir),
+        env=env,
+    )
+
+    data = json.loads((outdir / "compact.json").read_text())
+    error = data["prompt_input"]["error"]
+    assert "current sandbox" in error
+    assert "PATH alias creation is denied" in error
+    assert "WARNING:" not in error
+
+
+def test_enumerator_audits_mcp_plugins_projects_and_runtime_verification(tmp_path: Path) -> None:
+    codex_home = tmp_path / "codex"
+    outdir = tmp_path / "scratch"
+    project = tmp_path / "support-project"
+    stale = tmp_path / "missing-project"
+    project_config = project / ".codex" / "config.toml"
+    session_id = "55555555-5555-5555-5555-555555555555"
+    codex_home.mkdir()
+    project_config.parent.mkdir(parents=True)
+    project_config.write_text(
+        """
+[mcp_servers.granola]
+url = "https://mcp.granola.ai/mcp"
+
+[plugins."notion@openai-curated"]
+enabled = true
+""".strip()
+        + "\n"
+    )
+    (codex_home / "config.toml").write_text(
+        f"""
+model = "gpt-5.5"
+model_reasoning_effort = "high"
+
+[projects."{project}"]
+trust_level = "trusted"
+
+[projects."{stale}"]
+trust_level = "trusted"
+
+[projects."{stale}"]
+trust_level = "trusted"
+
+[features]
+memories = true
+js_repl = false
+
+[desktop]
+show-context-window-usage = true
+
+[tui]
+status_line = ["context-remaining", "used-tokens"]
+
+[memories]
+use_memories = true
+generate_memories = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."unused@apollo-plugins"]
+enabled = false
+
+# Disabled for lean mode: [mcp_servers.sentry]
+# url = "https://mcp.sentry.dev/mcp"
+
+[mcp_servers.glean_default]
+url = "https://apollo-io-be.glean.com/mcp/default"
+
+[mcp_servers.context7]
+enabled = false
+url = "https://mcp.context7.com/mcp"
+""".strip()
+        + "\n"
+    )
+    write_jsonl(codex_home / "sessions" / f"{session_id}.jsonl", [token_count("2999-01-04T00:05:00Z", 200)])
+
+    result = run_node(
+        "enumerate_codex_sessions.mjs",
+        "--since",
+        "all",
+        "--outdir",
+        str(outdir),
+        env=isolated_env(tmp_path, codex_home),
+    )
+
+    assert "1 exact sessions found" in result.stdout
+    data = json.loads((outdir / "compact.json").read_text())
+    config = data["config"]
+    assert config["mcp_servers"] == ["glean_default"]
+    assert config["plugins"] == ["browser@openai-bundled", "notion@openai-curated"]
+    assert config["feature_flags"]["desktop"]["show-context-window-usage"] is True
+    assert config["feature_flags"]["tui"]["status_line"] == ["context-remaining", "used-tokens"]
+    assert config["mcp_audit"]["enabled_global"][0]["status"] == "globally enabled"
+    assert {row["name"] for row in config["mcp_audit"]["disabled_global"]} == {"context7", "sentry"}
+    assert config["mcp_audit"]["project_scoped"][0]["name"] == "granola"
+    assert config["mcp_audit"]["project_scoped"][0]["project_path"] == str(project)
+    assert config["mcp_audit"]["runtime_verification"]["ok"] is False
+    assert config["spend_monitoring"]["monitoring_api_spend"] is False
+    assert config["spend_monitoring"]["codexbar_available"] is False
+    assert "tmux_status_right_references_script" not in config["spend_monitoring"]
+    assert "tmux_conf_existing_paths" not in config["spend_monitoring"]
+    assert config["stale_project_entries"][0]["path"] == str(stale)
+    assert config["duplicate_project_entries"][0]["path"] == str(stale)
+    assert data["snapshot"]["enabled_global_mcp_count"] == 1
+    assert data["snapshot"]["disabled_global_mcp_count"] == 2
+    assert data["snapshot"]["project_scoped_mcp_count"] == 1
+    assert "Project Scope" in {rec["mode"] for rec in data["recommendations"]}
+
+
+def test_enumerator_skips_multiline_toml_values_without_poisoning_following_keys(tmp_path: Path) -> None:
+    codex_home = tmp_path / "codex"
+    outdir = tmp_path / "scratch"
+    session_id = "66666666-6666-6666-6666-666666666666"
+    codex_home.mkdir()
+    (codex_home / "config.toml").write_text(
+        """
+[tui]
+status_line = [
+  "context-remaining",
+  "used-tokens",
+]
+status_line_use_colors = true
+
+[mcp_servers.glean_default]
+url = "https://apollo-io-be.glean.com/mcp/default"
+""".strip()
+        + "\n"
+    )
+    write_jsonl(codex_home / "sessions" / f"{session_id}.jsonl", [token_count("2999-01-04T00:05:00Z", 200)])
+
+    run_node(
+        "enumerate_codex_sessions.mjs",
+        "--since",
+        "all",
+        "--outdir",
+        str(outdir),
+        env=isolated_env(tmp_path, codex_home),
+    )
+
+    config = json.loads((outdir / "compact.json").read_text())["config"]
+    assert config["feature_flags"]["tui"]["status_line"] == ["context-remaining", "used-tokens"]
+    assert config["feature_flags"]["tui"]["status_line_use_colors"] is True
+    assert config["mcp_servers"] == ["glean_default"]
+
+
+def test_enumerator_summarizes_skill_usage_and_mcp_attribution(tmp_path: Path) -> None:
+    codex_home = tmp_path / "codex"
+    outdir = tmp_path / "scratch"
+    session_id = "77777777-7777-7777-7777-777777777777"
+    (codex_home / "skills" / "used-skill").mkdir(parents=True)
+    (codex_home / "skills" / "used-skill" / "SKILL.md").write_text(
+        "---\nname: used-skill\ndescription: Used in test.\n---\n"
+    )
+    (codex_home / "skills" / "unused-skill").mkdir(parents=True)
+    (codex_home / "skills" / "unused-skill" / "SKILL.md").write_text(
+        "---\nname: unused-skill\ndescription: Unused in test.\n---\n"
+    )
+    write_jsonl(
+        codex_home / "sessions" / f"{session_id}.jsonl",
+        [
+            token_count("2999-01-04T00:05:00Z", 200),
+            {"type": "event_msg", "payload": {"type": "user_message", "text": "$used-skill /usage"}},
+            {"type": "response_item", "payload": {"type": "function_call", "name": "mcp__glean_default__search"}},
+            {"type": "response_item", "payload": {"type": "function_call_output", "output": "Original token count: 1200\nresult"}},
+        ],
+    )
+
+    run_node(
+        "enumerate_codex_sessions.mjs",
+        "--since",
+        "all",
+        "--outdir",
+        str(outdir),
+        env=isolated_env(tmp_path, codex_home),
+    )
+
+    data = json.loads((outdir / "compact.json").read_text())
+    skill_usage = data["skill_usage"]
+    assert skill_usage["inventory_count"] == 2
+    assert skill_usage["usage_seen"] is True
+    assert skill_usage["status_seen"] is False
+    assert skill_usage["invoked"][0]["invocation"] == "$used-skill"
+    assert skill_usage["unused_model_invoked"][0]["invocation"] == "$unused-skill"
+
+    attribution = data["mcp_attribution"]
+    assert attribution["exact_credit_attribution_available"] is False
+    assert attribution["servers"][0]["server"] == "glean_default"
+    assert attribution["servers"][0]["estimated_tool_output_tokens"] == 1200
+
+
 def test_shipped_codex_insights_files_are_portable() -> None:
     for path in SKILL_DIR.rglob("*"):
         if path.is_file():
@@ -177,10 +391,13 @@ def test_obsidian_updater_disabled_does_not_require_compact_input(tmp_path: Path
     assert "Obsidian disabled" in result.stdout
 
 
-def test_private_report_mentions_memory_setup(tmp_path: Path) -> None:
+def test_private_report_uses_dense_action_sections(tmp_path: Path) -> None:
     compact = tmp_path / "compact.json"
     report = tmp_path / "report.html"
-    compact.write_text(json.dumps(minimal_compact(tmp_path)))
+    data = minimal_compact(tmp_path)
+    data["flags"]["context_load"] = 1
+    data["totals"]["input_tokens"] = 100000
+    compact.write_text(json.dumps(data))
 
     run_node(
         "render_report.mjs",
@@ -191,8 +408,82 @@ def test_private_report_mentions_memory_setup(tmp_path: Path) -> None:
     )
 
     html = report.read_text()
-    assert "Karpathy LLM Wiki memory system" in html
-    assert "/apollo-eng:memory-setup" in html
+    assert "Measured Action Plan" in html
+    assert "Workflow Rules" in html
+    assert "Durable memory:" in html
+    assert "Context reset discipline" in html
+    assert "/compact" in html
+    assert "targeted search first" in html
+    assert "/apollo-eng:token-efficiency-assessment" in html
+    assert "Skill surface hygiene" in html
+    assert "MCP credit attribution: estimate only" in html
+    assert "Shareable Codex Site" not in html
+    assert "Power Modes" not in html
+    assert "Two-Agent Intervention" not in html
+    assert "Karpathy LLM Wiki memory system" not in html
+    assert "/apollo-eng:memory-setup" not in html
+    assert "self-cost: unavailable" not in html
+
+
+def test_private_report_recommends_codexbar_without_tmux_audit(tmp_path: Path) -> None:
+    compact = tmp_path / "compact.json"
+    report = tmp_path / "report.html"
+    data = minimal_compact(tmp_path)
+    data["config"]["spend_monitoring"] = {
+        "monitoring_api_spend": False,
+        "codexbar_available": True,
+        "codex_cost_script_path": str(tmp_path / "home" / ".local" / "bin" / "codex-cost.sh"),
+        "codex_cost_script_exists": False,
+        "codex_status_line_mentions_spend": False,
+    }
+    data["config"]["feature_flags"] = {
+        "desktop": {"show-context-window-usage": True},
+        "tui": {
+            "status_line": [
+                "current-dir",
+                "git-branch",
+                "model-with-reasoning",
+                "context-remaining",
+                "used-tokens",
+                "total-input-tokens",
+                "total-output-tokens",
+                "five-hour-limit",
+                "weekly-limit",
+            ],
+            "status_line_use_colors": True,
+        },
+    }
+    compact.write_text(json.dumps(data))
+
+    run_node(
+        "render_report.mjs",
+        str(compact),
+        "--out",
+        str(report),
+        env=isolated_env(tmp_path, tmp_path / "codex"),
+    )
+
+    html = report.read_text()
+    assert "Insights / Suggestions" in html
+    assert "API spend monitor: codexbar installed" in html
+    assert "Tmux integration missing" not in html
+    assert "Tmux config" not in html
+    assert "Codex status line: detected with extra items" in html
+    assert "extra status items not included" in html
+    assert "Remove five-hour-limit, weekly-limit" in html
+    assert "brew install --cask codexbar" in html
+    assert "cat &gt; ~/.local/bin/codex-cost.sh &lt;&lt;'EOF'" in html
+    assert "OUTPUT=$(codexbar cost --provider codex 2&gt;/dev/null)" in html
+    assert "CUSTOM_COST=$(awk -v creds=&quot;$CREDITS&quot; 'BEGIN {printf &quot;%.2f&quot;, creds * 0.04}')" in html
+    assert "echo &quot;Codex: \\$${CUSTOM_COST}&quot;" in html
+    assert "chmod +x ~/.local/bin/codex-cost.sh" in html
+    assert "set -g status-right &quot;#[fg=green]#( ~/.local/bin/codex-cost.sh )&quot;" in html
+    assert "[desktop]" in html
+    assert "show-context-window-usage = true" in html
+    assert "[tui]" in html
+    assert 'status_line = [&quot;current-dir&quot;, &quot;git-branch&quot;, &quot;model-with-reasoning&quot;, &quot;context-remaining&quot;, &quot;used-tokens&quot;, &quot;total-input-tokens&quot;, &quot;total-output-tokens&quot;]' in html
+    assert "status_line_use_colors = true" in html
+    assert 'status_line = [&quot;current-dir&quot;, &quot;git-branch&quot;, &quot;model-with-reasoning&quot;, &quot;context-remaining&quot;, &quot;used-tokens&quot;, &quot;total-input-tokens&quot;, &quot;total-output-tokens&quot;, &quot;five-hour-limit&quot;, &quot;weekly-limit&quot;]' not in html
 
 
 def test_public_site_bundle_scrubs_sensitive_data_and_builds(tmp_path: Path) -> None:
@@ -238,8 +529,14 @@ def test_public_site_bundle_scrubs_sensitive_data_and_builds(tmp_path: Path) -> 
     index_html = (site_dir / "public" / "index.html").read_text()
 
     assert public_json["sessions"][0]["label"] == "Session 1"
-    assert "Karpathy LLM Wiki memory system" in index_html
-    assert "/apollo-eng:memory-setup" in index_html
+    assert "Sessions analyzed" in index_html
+    assert "Top sessions shown" in index_html
+    assert "Insights / Suggestions" in index_html
+    assert "Measured Action Plan" in index_html
+    assert "Skill hygiene" in index_html
+    assert "MCP attribution" in index_html
+    assert "Karpathy LLM Wiki memory system" not in index_html
+    assert "/apollo-eng:memory-setup" not in index_html
     for forbidden in [
         "Private customer incident thread",
         "raw private final message",

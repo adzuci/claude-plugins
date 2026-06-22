@@ -125,6 +125,23 @@ function renderPublicIndex(safe) {
     </tr>`).join('')
   const recs = (safe.recommendations || []).slice(0, 5).map(rec => `
     <li><strong>${esc(rec.title)}</strong><br><span>${esc(rec.rationale)}</span></li>`).join('')
+  const spend = safe.config?.spend_monitoring || {}
+  const spendStatus = spend.monitoring_api_spend
+    ? 'detected'
+    : spend.codexbar_available
+      ? 'codexbar installed'
+      : 'not detected'
+  const memoryOn = safe.config?.memories_enabled || safe.config?.feature_flags?.memories?.use_memories === true
+  const obsidianProject = (safe.config?.project_entries || []).find(project => /obsidian-vault/.test(project.path || ''))
+  const memoryStatus = memoryOn || obsidianProject ? 'detected' : 'not detected'
+  const statusItems = safe.config?.feature_flags?.tui?.status_line || []
+  const legacyStatusItems = statusItems.filter(item => ['five-hour-limit', 'weekly-limit'].includes(item))
+  const toolOutputShare = pct(safe.totals?.tool_output_tokens, safe.totals?.total_tokens)
+  const cacheShare = pct(safe.totals?.cached_input_tokens, (safe.totals?.input_tokens || 0) + (safe.totals?.cached_input_tokens || 0))
+  const replayTokens = (safe.totals?.input_tokens || 0) + (safe.totals?.cached_input_tokens || 0)
+  const showContextReset = (safe.flags?.context_load || 0) > 0 || replayTokens >= 100000 || (safe.snapshot?.sessions_found || 0) >= 20
+  const skillUsage = safe.skill_usage || {}
+  const mcpAttribution = safe.mcp_attribution || {}
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -146,20 +163,46 @@ li{margin:10px 0} code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 <p class="mut">Generated ${esc(safe.generated_at)} from ${esc(safe.source_confidence)}. ${esc(safe.public_bundle.privacy)}</p>
 <div class="grid">
   <div class="card"><div class="value">${esc(fmt(safe.totals?.total_tokens))}</div><div class="mut">Exact tokens</div></div>
-  <div class="card"><div class="value">${esc(safe.snapshot?.sessions_found || 0)}</div><div class="mut">Sessions found</div></div>
-  <div class="card"><div class="value">${esc(safe.snapshot?.sessions_reported || 0)}</div><div class="mut">Sessions reported</div></div>
+  <div class="card"><div class="value">${esc(safe.snapshot?.sessions_found || 0)}</div><div class="mut">Sessions analyzed</div></div>
+  <div class="card"><div class="value">${esc(safe.snapshot?.sessions_reported || 0)}</div><div class="mut">Top sessions shown</div></div>
   <div class="card"><div class="value">${esc(fmt(safe.totals?.reasoning_output_tokens))}</div><div class="mut">Reasoning tokens</div></div>
 </div>
+<h2>Insights / Suggestions</h2>
+<div class="grid">
+  <div class="card"><strong>API spend monitor</strong><br><span class="mut">${esc(spendStatus)}</span></div>
+  <div class="card"><strong>Durable memory</strong><br><span class="mut">${esc(memoryStatus)}</span></div>
+  <div class="card"><strong>Status line</strong><br><span class="mut">${legacyStatusItems.length ? `remove legacy items: ${legacyStatusItems.join(', ')}` : 'no legacy limit items detected'}</span></div>
+  <div class="card"><strong>Skill hygiene</strong><br><span class="mut">${esc(skillUsage.unused_model_invoked_count || 0)} unused model-invoked skills</span></div>
+  <div class="card"><strong>MCP attribution</strong><br><span class="mut">${esc(mcpAttribution.exact_credit_attribution_available === false ? 'estimate only' : 'available')}</span></div>
+</div>
+<h2>Measured Action Plan</h2>
+<table><thead><tr><th>Signal</th><th>Next Move</th></tr></thead><tbody>
+  <tr><td>${esc(fmt(safe.totals?.tool_output_tokens))} tool-output tokens (${esc(toolOutputShare)})</td><td>Route large logs, diffs, and generated artifacts to files, then inspect targeted snippets.</td></tr>
+  <tr><td>${esc(safe.flags?.repeated_tooling || 0)} repeated-tooling sessions</td><td>After the third similar search/read, write a short source ledger and validate a hypothesis.</td></tr>
+  <tr><td>${esc(safe.flags?.context_load || 0)} large-context sessions</td><td>Start a new thread when changing repos, incidents, support cases, or report-generation modes.</td></tr>
+  <tr><td>${esc(cacheShare)} cache share</td><td>Keep durable context in files or Obsidian and restart from the relevant note instead of replaying broad threads.</td></tr>
+</tbody></table>
+${showContextReset ? `<h2>Context Reset Discipline</h2>
+<table><thead><tr><th>Rule</th><th>Apply It</th></tr></thead><tbody>
+  <tr><td>Fresh thread</td><td>Start a fresh thread for each unrelated task; avoid resuming huge old sessions unless their context is truly needed.</td></tr>
+  <tr><td><code>/compact</code> / <code>/clear</code></td><td>Use <code>/compact</code> when a task gets long and <code>/clear</code> when switching tasks.</td></tr>
+  <tr><td>Point to sources</td><td>Provide files, logs, PRs, or paths instead of large pasted blobs.</td></tr>
+  <tr><td>Targeted search</td><td>For investigations, ask for targeted search first, then an evidence summary.</td></tr>
+  <tr><td>Cheap repo search</td><td>Avoid subagents for simple repo search; <code>rg</code>, <code>sed</code>, <code>git diff</code>, and focused file reads are cheaper.</td></tr>
+</tbody></table>
+<p class="mut">Prompt example: <code>In ~/code/apolloio/devops, check whether PR/change X affects prod Mongo networking. Use rg/git diff first, read only relevant Terraform modules/workspaces, and give me findings with file links. Do not make edits.</code></p>` : ''}
 <h2>Recommendations</h2>
 <ol>${recs || '<li>No material recommendations generated.</li>'}</ol>
-<h2>Memory Depth</h2>
-<p class="mut">Future reports will be more detailed if a Karpathy LLM Wiki memory system is set up. Use the beta <code>/apollo-eng:memory-setup</code> skill to set this up, then rerun this report after Codex has richer durable context to inspect.</p>
 <h2>Reported Sessions</h2>
 <table><thead><tr><th>Session</th><th>Tokens</th><th>Basis</th><th>Flags</th></tr></thead><tbody>${rows || '<tr><td colspan="4">No sessions reported.</td></tr>'}</tbody></table>
 <h2>Privacy</h2>
 <p class="mut">The private local report path is intentionally omitted from this bundle. This bundle uses safer summary data and does not include raw messages, token histories, full token payloads, or sensitive local paths.</p>
 </main></body></html>
 `
+}
+
+function pct(n, d) {
+  return d ? `${Math.round((n / d) * 100)}%` : 'n/a'
 }
 
 function buildScript() {

@@ -42,7 +42,7 @@ run `/apollo-eng:deep-insights` instead.
 node <skill-dir>/scripts/enumerate_codex_sessions.mjs --since 7d --sessions 20
 ```
 
-It writes `/tmp/codex-insights/compact.json` and `/tmp/codex-insights/source-ledger.md`. It reads `~/.codex/sessions`, `~/.codex/archived_sessions`, and `~/.codex/session_index.jsonl`; exact `token_count` events are the source of truth. If `ccusage` is installed, the enumerator also captures `ccusage codex daily/weekly/session --json` as a cross-check.
+It writes `/tmp/codex-insights/compact.json` and `/tmp/codex-insights/source-ledger.md`. It reads `~/.codex/sessions`, `~/.codex/archived_sessions`, and `~/.codex/session_index.jsonl`; exact `token_count` events are the source of truth. It also parses `~/.codex/config.toml`, trusted project entries, project-local `.codex/config.toml` files when present, MCP/plugin state, and feature flags that affect context/tool surface. If safe and available, it captures `codex mcp list` as runtime verification and labels it separately from config parsing. If `ccusage` is installed, the enumerator also captures `ccusage codex daily/weekly/session --json` as a cross-check.
 
 1. Render the report:
 
@@ -53,7 +53,9 @@ node <skill-dir>/scripts/render_report.mjs /tmp/codex-insights/compact.json --ou
 
 The report is self-contained HTML with no external assets. It may include scrubbed local session
 detail for the current user. It includes: Where Tokens Went, Context Load, MCP and Plugin Surface,
-Two-Agent Intervention, Power Modes, and Paste-Ready Changes.
+Project Scope Audit, Project Split Recommendations, How to Configure This, Insights / Suggestions,
+Skill Surface Hygiene, MCP Credit Attribution, Measured Action Plan, Workflow Rules, Paste-Ready
+Changes, Other Context-Reduction Moves, and the Implementation Checklist.
 
 1. Unless `--no-site` was passed, build a local Codex Sites-ready bundle:
 
@@ -95,14 +97,40 @@ points to a valid vault or `OBSIDIAN_VAULT` points to a valid vault.
 
 - Prefer measured facts over advice. If a field is missing, say it is missing.
 - Label `ccusage` as a cross-check, not the source of truth, when exact Codex `token_count` events are present.
+- Treat parsed config and runtime MCP verification as separate evidence. If they disagree, say runtime reflects what this Codex build actually loaded for the current project.
+- Prefer project-local `.codex/config.toml` over global MCP enablement when a tool is only useful for a narrow workflow. Project-local config only loads for trusted projects.
+- For API spend monitoring, check whether `codexbar` or the local cost script exists, but do not
+  inspect Tmux config or report Tmux integration as missing. Always provide the paste-ready Tmux line
+  as setup guidance.
+- Recommend the Apollo-style Codex status line using supported built-ins that apply to Apollo currently: current directory, git branch, model/reasoning, context remaining, and token counters.
+- Check for unused skills in the measured window. For specialized skills that were not explicitly
+  invoked, suggest `disable-model-invocation: true` and remind users to call them with `$skill` or
+  `$plugin:skill` only when the skill matches the task.
+- Suggest `/usage` for current token/credit visibility and `/status` for current session/model/runtime
+  status when those checks would help interpret the report.
+- Do not claim exact credit usage per MCP. Codex logs expose exact session-level token counts; MCP
+  attribution is only an estimate from MCP call counts and session-level tool-output tokens unless
+  additional instrumentation is available.
 - Keep findings material. Do not report tiny token amounts or expected setup overhead as problems.
-- Frame recommendations as capability modes: Full Power, Lean, Research, and Intervention. The goal is range and control, not rationing.
+- Frame recommendations as measured workflow moves: use full power when connectors and context are
+  needed, use lean mode for local code/search/shell loops, and restart from durable notes when work
+  changes shape.
+- When prior notes or the current report show context accumulation across large sessions, say plainly
+  that the biggest lever is context reset discipline. Recommend fresh threads for unrelated tasks,
+  `/compact` when a task gets long, `/clear` when switching tasks, file/path pointers instead of large
+  pasted blobs, one clear task per message, targeted search before broad reads, and no subagents for
+  simple repo search.
+- Include a token-efficient prompt example when helpful: name the repo/path, identify the target
+  change or investigation, request `rg`/`git diff` first, constrain reads to relevant files, define the
+  desired output, and say whether edits are allowed.
+- Offer `/apollo-eng:token-efficiency-assessment` as a follow-up for a deeper habits assessment when
+  the user asks for coaching beyond the report.
 - When `~/.codex/lean.config.toml` exists, recommend using `codex -p lean` instead of recommending profile creation.
 - Read `references/intervention-framework.md` when wording the final user-facing summary.
 - Read `references/sources.md` only when an Obsidian vault update is explicitly enabled.
 
 ## Final Response
 
-Return the report path, site bundle path, actual measured date range, number of sessions analyzed,
-Obsidian status (`not configured`, `disabled`, or `updated`), and the top three recommendations. Keep
-it short.
+Return the report path, optional local site bundle path, actual measured date range, number of
+sessions analyzed, Obsidian status (`not configured`, `disabled`, or `updated`), and the top three
+recommendations. Keep it short.

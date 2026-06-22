@@ -1,0 +1,14 @@
+# Obsidian workspace state
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/plugins/*/data.json
+
+# System files
+.DS_Store
+
+# Claude Code
+.claude/
+.claudian/
+
+# Trash
+.trash/
