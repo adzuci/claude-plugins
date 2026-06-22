@@ -1,5 +1,7 @@
 # Detection Signals
 
+Bundled reference shipped under `./references` for `/apollo-support:support-kb-gap-agent`.
+
 What code changes signal a KB update is needed, and what the coverage limitations are.
 
 ______________________________________________________________________

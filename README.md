@@ -58,6 +58,7 @@ See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill comman
 | `apollo-eng-leadership` | Cowork skills for engineering managers — OKR reporting, eng metrics, and planning | 7 |
 | `apollo-gtm` | Go-to-market strategy, sales enablement, and demand generation | 5 |
 | `apollo-it` | IT management, infrastructure, security, and support | 7 |
+| `apollo-support` | Support and Customer Care skills for KB maintenance, customer escalations, and support operations | 1 |
 | `apollo-product` | Product management, roadmap, and lifecycle processes | 1 |
 | `apollo-eng-fabric-surfaces` | Skills specific to the Fabric Surfaces team | 4 |
 | `apollo-rnd` | Research and development skills for Apollo R&D | 2 |

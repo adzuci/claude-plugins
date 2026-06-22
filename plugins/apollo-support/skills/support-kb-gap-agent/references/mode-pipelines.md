@@ -1,4 +1,6 @@
-# Mode Pipelines — kb-gap-agent
+# Mode Pipelines — support-kb-gap-agent
+
+Bundled reference shipped under `./references` for `/apollo-support:support-kb-gap-agent`.
 
 ## Timing — Required for Every Run
 
@@ -9,12 +11,12 @@ SKILL_START=$(date +%s)
 RUN_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")   # Capture actual UTC timestamp — use for all [ISO date] fields
 ```
 
-At the end of every run, just before writing the Usage Log:
+At the end of every run, just before following the post-run Notion flow:
 
 ```bash
 SKILL_END=$(date +%s)
 SKILL_DURATION=$(( SKILL_END - SKILL_START ))
-# Use $SKILL_DURATION as the Duration (s) value in the Usage Log row
+# Use $SKILL_DURATION as the Duration (s) value in the Usage Tracker row
 ```
 
 ______________________________________________________________________
@@ -50,7 +52,7 @@ Use the PR title and body as additional context when summarizing code changes (R
    — include PR title/body as part of Step A when available
 8. Compare summaries → identify gaps
 9. Generate gap report → output (see output-format.md)
-10. Append run to .kb-cache/usage-log.jsonl
+10. Follow [post-run-notion.md](post-run-notion.md) to create the Usage Tracker database row, or write `.kb-cache/usage-log.jsonl` only if Notion MCP is unavailable.
 ```
 
 **Edge cases:**
@@ -96,7 +98,7 @@ ______________________________________________________________________
 7. Compare articles against owned code files for gaps
 8. Optional: check if any KB articles from the index have titles clearly matching this surface's in-product features AND aren't linked from ContextualHelp → flag as INVISIBLE_ARTICLE (LOW confidence only). Do NOT flag guides, best practices, or troubleshooting articles.
 9. Generate gap report → output
-10. Append run to .kb-cache/usage-log.jsonl
+10. Follow [post-run-notion.md](post-run-notion.md) to create the Usage Tracker database row, or write `.kb-cache/usage-log.jsonl` only if Notion MCP is unavailable.
 ```
 
 ______________________________________________________________________
@@ -136,7 +138,7 @@ ______________________________________________________________________
    - Gap report (drift + missing KB coverage)
    - KB draft: suggested new article or update text for each gap
    → output
-8. Append run to .kb-cache/usage-log.jsonl
+8. Follow [post-run-notion.md](post-run-notion.md) to create the Usage Tracker database row, or write `.kb-cache/usage-log.jsonl` only if Notion MCP is unavailable.
 ```
 
 For full PRD/ERD/Jira parsing patterns, see: [prd-erd-patterns.md](prd-erd-patterns.md)
@@ -185,7 +187,7 @@ Static analysis only. No git, no comparison, no AI. Completes in seconds.
     Expected: 1 (kbLinkUtils.ts line 9 — missing ESLint rule for openKBLink)
 
 Output: structured report with counts per category. No AI, no article comparison.
-Append run to .kb-cache/usage-log.jsonl
+Then follow [post-run-notion.md](post-run-notion.md) to create the Usage Tracker database row, or write `.kb-cache/usage-log.jsonl` only if Notion MCP is unavailable.
 ```
 
 ______________________________________________________________________
@@ -208,7 +210,7 @@ ______________________________________________________________________
 - Invisible articles: N
 ## Per-Surface Breakdown (table)
 
-4. Append aggregate run to .kb-cache/usage-log.jsonl
+4. Follow [post-run-notion.md](post-run-notion.md) to create the Usage Tracker database row, or write `.kb-cache/usage-log.jsonl` only if Notion MCP is unavailable.
 ```
 
 ______________________________________________________________________
@@ -239,7 +241,7 @@ BODY=$(curl -s "https://knowledge.apollo.io/api/v2/help_center/en-us/articles/[A
 echo "$BODY" | sed 's/<[^>]*>//g' | tr -s ' \n'
 ```
 
-**Usage logging** — append a JSONL line to `.kb-cache/usage-log.jsonl` after every run:
+**Usage tracking** — after every run, follow [post-run-notion.md](post-run-notion.md) to create the Usage Tracker database row with the full report as page content. Append a JSONL line to `.kb-cache/usage-log.jsonl` only when Notion MCP is unavailable:
 
 ```json
 {"date":"2026-04-07T10:00:00Z","mode":"branch-diff","scope":"feature/my-branch","articles_checked":5,"gaps_found":{"high":1,"medium":2,"low":1},"stale_refs":0,"cache_hit":true,"est_token_cost":"$0.35","output":"notion"}

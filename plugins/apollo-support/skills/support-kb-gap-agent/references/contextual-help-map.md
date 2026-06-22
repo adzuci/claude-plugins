@@ -1,5 +1,7 @@
 # Contextual Help Map
 
+Bundled reference shipped under `./references` for `/apollo-support:support-kb-gap-agent`.
+
 How `*ContextualHelp.tsx` files map product surfaces to KB articles — the primary signal for KB gap detection.
 
 ______________________________________________________________________

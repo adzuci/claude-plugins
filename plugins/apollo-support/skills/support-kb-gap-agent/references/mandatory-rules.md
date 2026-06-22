@@ -1,4 +1,6 @@
-# Mandatory Rules — kb-gap-agent
+# Mandatory Rules — support-kb-gap-agent
+
+Bundled reference shipped under `./references` for `/apollo-support:support-kb-gap-agent`.
 
 All 8 rules are NON-NEGOTIABLE. Follow on EVERY invocation.
 
@@ -87,7 +89,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## Rule 6: ENGINEERING OWNER — HIGH CONFIDENCE FINDINGS ONLY
+## Rule 6: CODE OWNER LOOKUP — HIGH CONFIDENCE FINDINGS ONLY
 
 Every **HIGH confidence** finding MUST include the owning team and the most likely individual engineer.
 Skip for MEDIUM and LOW confidence gaps to save tokens.

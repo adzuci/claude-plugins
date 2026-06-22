@@ -48,6 +48,13 @@
       "tags": ["cowork", "it"]
     },
     {
+      "name": "apollo-support",
+      "source": "./plugins/apollo-support",
+      "description": "Support and Customer Care skills for KB maintenance, customer escalations, and support operations",
+      "category": "support",
+      "tags": ["cowork", "support", "customer-care"]
+    },
+    {
       "name": "apollo-product",
       "source": "./plugins/apollo-product",
       "description": "Product management, roadmap, and lifecycle processes",

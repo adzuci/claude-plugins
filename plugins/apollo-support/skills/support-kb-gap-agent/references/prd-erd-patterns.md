@@ -1,5 +1,7 @@
 # PRD & ERD Patterns
 
+Bundled reference shipped under `./references` for `/apollo-support:support-kb-gap-agent`.
+
 How to fetch and parse inputs for doc-driven mode (PRD + ERD + Jira epic → KB gap + drift report).
 
 ______________________________________________________________________

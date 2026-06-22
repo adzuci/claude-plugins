@@ -1,5 +1,7 @@
 # KB Registry Guide
 
+Bundled reference shipped under `./references` for `/apollo-support:support-kb-gap-agent`.
+
 Reference for working with the Apollo KB data sources: Zendesk API and `KnowledgeBaseArticles.ts`.
 
 ______________________________________________________________________
@@ -207,9 +209,9 @@ cache_is_fresh = cache_age < 86400  # 24 hours in seconds
 
 ______________________________________________________________________
 
-## Usage Log Format
+## Fallback Usage Log Format
 
-Append a JSONL line to `.kb-cache/usage-log.jsonl` after every run:
+Append a JSONL line to `.kb-cache/usage-log.jsonl` only when Notion MCP is unavailable. When Notion is available, create the Usage Tracker database row described in [post-run-notion.md](post-run-notion.md) instead.
 
 ```json
 {

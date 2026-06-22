@@ -1,5 +1,7 @@
 # Post-Run: Update Notion Metrics & Tracking
 
+Bundled reference shipped under `./references` for `/apollo-support:support-kb-gap-agent`.
+
 **Usage Tracker database:** `33aab2b3b49680bfa5cce2a75dfe7c4d`
 **Data source ID:** `351ab2b3-b496-804e-a8b1-000bca13a9c1`
 **Metrics & Tracking page:** `33aab2b3b496801abf3bc8fdebee2fac`
@@ -35,18 +37,18 @@ Create a single row in the **Kb Gap Agent Usage Tracker** database. The page con
    git config user.name
    git config user.email
    ```
-2. Search Notion users by name first:
+1. Search Notion users by name first:
    ```
    Use: mcp__claude_ai_Notion__notion-get-users
    Input: { "query": "<git config user.name>" }
    ```
-3. If no match, search by email:
+1. If no match, search by email:
    ```
    Use: mcp__claude_ai_Notion__notion-get-users
    Input: { "query": "<git config user.email>" }
    ```
-4. Use the returned `id` (UUID) as the `Engineer` property value.
-5. If both lookups return no match (e.g. running from cloud with no git identity), **omit `Engineer`
+1. Use the returned `id` (UUID) as the `Engineer` property value.
+1. If both lookups return no match (e.g. running from cloud with no git identity), **omit `Engineer`
    from the properties entirely** — do not pass a name string or empty string.
 
 Call `mcp__claude_ai_Notion__notion-create-pages` with this exact JSON shape — `pages` **must**
@@ -85,6 +87,7 @@ be an array, and `parent` is a top-level sibling of `pages`:
 ```
 
 **Notes:**
+
 - `Total Gaps` is auto-calculated by Notion formula (H + M + L) — do NOT include it in properties.
 - Property values must be JSON primitives: strings for text/select, numbers for numeric fields.
 - For quick-audit: still create the row with all metrics; include the structured audit findings

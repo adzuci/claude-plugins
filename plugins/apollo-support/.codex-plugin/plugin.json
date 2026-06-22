@@ -1,0 +1,15 @@
+{
+  "name": "apollo-support",
+  "version": "1.0.0",
+  "description": "Support and Customer Care skills for KB maintenance, customer escalations, and support operations",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Support",
+    "shortDescription": "Support and Customer Care skills for KB maintenance, customer escalations, and support operations",
+    "developerName": "Apollo",
+    "category": "Support",
+    "brandColor": "#2563EB"
+  }
+}

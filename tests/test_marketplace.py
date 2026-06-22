@@ -27,6 +27,7 @@ EXPECTED_DISPLAY_NAMES = {
     "apollo-gtm-systems": "Apollo Go-to-Market Systems",
     "apollo-it": "Apollo Information Technology",
     "apollo-product": "Apollo Product",
+    "apollo-support": "Apollo Support",
     "apollo-rnd": "Apollo Research and Development",
     "apollo-legal": "Apollo Legal",
     "apollo-people": "Apollo People",
