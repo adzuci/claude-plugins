@@ -13,7 +13,7 @@ Use this skill to help engineering managers and Product Advocate rotation partic
 ## Usage
 
 ```text
-/apollo-eng-leadership:intercom-assistant [setup|sim|live|intro|deescalate|macro-suggest|monitor|recap|wrapup|calibration|report] [source/link/context] [--date YYYY-MM-DD] [--html]
+/apollo-eng-leadership:intercom-assistant [setup|sim|live|poll|intro|deescalate|macro-suggest|monitor|triage|recap|wrapup|calibration|report|help] [source/link/context] [--date YYYY-MM-DD] [--html]
 ```
 
 ## Routing
@@ -24,24 +24,27 @@ Run `python3 scripts/check_dependencies.py` when a mode depends on live tools or
 | --- | --- | --- |
 | `setup` | Prepare Intercom, Granola, Glean, and macros before a shift | `references/setup-mode.md` and `references/granola-recipes.md` |
 | `sim` | Practice or simulator prompts | `references/simulator-mode.md` |
-| `live` | Real Intercom/customer context without a more specific mode | `references/live-intercom-mode.md`, `references/routing-and-macros.md`, and `references/call-nudges.md` |
+| `live` | Real Intercom/customer context without a more specific mode; routes to `poll` when no conversation or customer is provided | `references/live-intercom-mode.md`, `references/routing-and-macros.md`, `references/call-nudges.md`, and `references/poll-mode.md` when polling |
+| `poll` | Fetch open Intercom conversations assigned to the current agent and offer to triage | `references/poll-mode.md` |
 | `intro` | First Intercom reply or call opener | `references/wave2-patterns.md`, `references/glean-support-rep-assistant.md`, and `references/call-nudges.md` |
 | `deescalate` | Upset, blocked, or impatient customer | `references/wave2-patterns.md` |
 | `macro-suggest` | Macro/workflow selection and adapted copy | `references/wave2-patterns.md` and `references/routing-and-macros.md` |
 | `monitor` | During-call/chat robust assist | `references/monitor-mode.md`, `references/glean-support-rep-assistant.md`, `references/routing-and-macros.md`, and `references/call-nudges.md` |
+| `triage` | Summarize an Intercom thread from a link and draft next steps + reply | `references/triage-mode.md` |
 | `recap` | After-call/chat wrap-up | `references/recap-recipe.md` |
 | `wrapup` | Alias for `recap`; after-call/chat wrap-up | `references/recap-recipe.md` |
 | `calibration` | Evidence-bound feedback from transcript/recording notes | `references/calibration-rubric.md` |
 | `report` | HTML daily support-call report | `references/daily-report.md` |
+| `help` | Check connector status and offer setup guidance | `references/help-mode.md` |
 
 ## Live Context Rules
 
-1. If the input includes an Intercom URL, conversation ID, email, customer, company, or domain, use Intercom tools before making customer-specific factual claims.
+1. Always check the Intercom MCP connector (`mcp__Intercom__*`) for conversation, customer, and company context before making any customer-specific factual claims, unless the user has already provided the full conversation content. Never use a browser tool to fetch Intercom data.
 1. If the customer asks a product, process, how-to, troubleshooting, or internal Support policy question in `intro`, `live`, `deescalate`, `macro-suggest`, or `monitor`, call the Glean Support Rep Assistant through `python3 scripts/ask_glean_support_rep_assistant.py --mode <mode> --question "<question>"` before drafting factual guidance.
 1. Add `--glean-assistant zendesk-kb` when the answer should be grounded in Zendesk KB/IKB pages.
 1. If Glean CLI is unavailable, label the gap and use Glean MCP/search only as a regular Glean fallback, not as Support Rep Assistant output.
 1. Use GodMode/account tools when available for plan, seats, ARR, flags, usage, permissions, and activity. If unavailable, say GodMode/account verification is still needed.
-1. Granola is optional in every mode. Use pasted notes/transcripts when Granola is unavailable.
+1. In `recap` and `wrapup` mode, check for a Granola call recording transcript using `mcp__Granola__get_meeting_transcript` or `mcp__Granola__query_granola_meetings` before generating output. If found, use it as the primary source and include a brief feedback note in the recap. Use pasted notes/transcripts when Granola is unavailable.
 
 ## Core Behavior
 
@@ -83,7 +86,7 @@ Next action:
 <owner/tool/escalation>
 ```
 
-For `intro`, `deescalate`, `macro-suggest`, `monitor`, `recap`, `wrapup`, `calibration`, and `report`, use the exact output shapes in the mode reference.
+For `intro`, `deescalate`, `macro-suggest`, `monitor`, `triage`, `poll`, `recap`, `wrapup`, `calibration`, and `report`, use the exact output shapes in the mode reference.
 
 ## Apollo Support Toolkit
 

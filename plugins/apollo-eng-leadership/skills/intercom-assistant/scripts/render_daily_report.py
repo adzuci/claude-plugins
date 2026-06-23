@@ -7,8 +7,17 @@ import argparse
 import datetime as dt
 import html
 import json
+import re
 from pathlib import Path
 from typing import Any, Sequence
+
+
+# Matches transcript lines like: [00:00:02] Speaker 1: "text".
+# Speaker is kept broad ([^:]{1,60}) to handle names with punctuation; lines that
+# don't match (e.g. long URL prefixes) fall through to the verbatim path below.
+TRANSCRIPT_LINE = re.compile(
+    r"^\s*(?:\[(?P<time>[^\]]+)\]\s*)?(?P<speaker>[^:]{1,60}?):\s*(?P<text>.*)$"
+)
 
 
 def esc(value: Any) -> str:
@@ -36,9 +45,74 @@ def render_list(items: list[Any]) -> str:
     return "<ul>" + "".join(f"<li>{esc(item)}</li>" for item in useful) + "</ul>"
 
 
+def parse_transcript(raw: str) -> list[dict[str, str]]:
+    """Parse a raw call/chat transcript into structured timeline entries."""
+    entries: list[dict[str, str]] = []
+    for line in raw.splitlines():
+        if not line.strip():
+            continue
+        match = TRANSCRIPT_LINE.match(line)
+        if match:
+            entries.append(
+                {
+                    "time": (match.group("time") or "").strip(),
+                    "speaker": match.group("speaker").strip(),
+                    "text": match.group("text").strip().strip('"'),
+                }
+            )
+        else:
+            # Keep unparseable lines as continuation text so nothing is dropped.
+            entries.append({"time": "", "speaker": "", "text": line.strip()})
+    return entries
+
+
+def normalize_timeline(record: dict[str, Any]) -> list[dict[str, str]]:
+    """Build timeline entries from a structured `timeline` list or raw `transcript`."""
+    timeline = record.get("timeline")
+    if isinstance(timeline, list) and timeline:
+        normalized: list[dict[str, str]] = []
+        for entry in timeline:
+            if isinstance(entry, dict):
+                normalized.append(
+                    {
+                        "time": str(entry.get("time") or "").strip(),
+                        "speaker": str(entry.get("speaker") or "").strip(),
+                        "text": str(entry.get("text") or "").strip(),
+                    }
+                )
+            elif str(entry).strip():
+                normalized.append({"time": "", "speaker": "", "text": str(entry).strip()})
+        return normalized
+    transcript = record.get("transcript")
+    if isinstance(transcript, str) and transcript.strip():
+        return parse_transcript(transcript)
+    return []
+
+
+def render_timeline(record: dict[str, Any]) -> str:
+    entries = normalize_timeline(record)
+    if not entries:
+        return ""
+    rows = []
+    for entry in entries:
+        time = esc(entry.get("time"))
+        speaker = esc(entry.get("speaker"))
+        text = esc(entry.get("text"))
+        meta = " · ".join(part for part in (time, speaker) if part)
+        meta_html = f'<span class="tl-meta">{meta}</span>' if meta else ""
+        rows.append(f'<li>{meta_html}<span class="tl-text">{text}</span></li>')
+    label = record.get("timeline_label") or "Full chat & call timeline"
+    return f"""
+      <details class="timeline">
+        <summary>{esc(label)} ({len(entries)})</summary>
+        <ol class="tl">{"".join(rows)}</ol>
+      </details>"""
+
+
 def render_call(record: dict[str, Any]) -> str:
     product_signals = render_list(as_list(record.get("product_signals")))
     followups = render_list(as_list(record.get("followups")))
+    timeline = render_timeline(record)
     return f"""
     <section class="call-card">
       <div class="call-header">
@@ -55,6 +129,7 @@ def render_call(record: dict[str, Any]) -> str:
       {product_signals}
       <h4>Follow-ups</h4>
       {followups}
+      {timeline}
     </section>
     """
 
@@ -111,6 +186,13 @@ def render_html(report: dict[str, Any], report_date: str) -> str:
     dt {{ color: var(--muted); }}
     dd {{ margin: 0; }}
     li {{ margin: 6px 0; }}
+    .timeline {{ margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px; }}
+    .timeline summary {{ cursor: pointer; color: var(--accent); font-weight: 600; }}
+    .timeline summary:hover {{ color: var(--teal); }}
+    ol.tl {{ margin: 12px 0 0; padding-left: 18px; }}
+    ol.tl li {{ margin: 8px 0; }}
+    .tl-meta {{ display: block; color: var(--muted); font-size: .78rem; }}
+    .tl-text {{ display: block; }}
     footer {{ color: var(--muted); margin-top: 24px; font-size: .9rem; }}
   </style>
 </head>

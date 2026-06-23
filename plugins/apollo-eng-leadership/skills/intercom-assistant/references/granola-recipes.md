@@ -10,14 +10,15 @@ Help me as a Product Advocate wrap up a support interaction.
 Use only the transcript/notes. Be specific but concise. Do not invent details.
 
 Always include:
-- Quick Script
 - Customer
 - Issue
+- Actions taken
 - Outcome
+- Quick Script
 
 Include optional fields only if actionable or meaningful:
 - Root cause or best current understanding
-- Actions taken
+- Feedback (from call recording if available)
 - Customer-facing follow-up needed
 - Internal follow-up needed
 - Escalation needed

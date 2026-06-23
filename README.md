@@ -61,7 +61,7 @@ See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill comman
 | `apollo-support` | Support and Customer Care skills for KB maintenance, customer escalations, and support operations | 1 |
 | `apollo-product` | Product management, roadmap, and lifecycle processes | 1 |
 | `apollo-eng-fabric-surfaces` | Skills specific to the Fabric Surfaces team | 4 |
-| `apollo-rnd` | Research and development skills for Apollo R&D | 2 |
+| `apollo-rnd` | Research and development skills for Apollo R&D | 3 |
 | `apollo-gtm-systems` | Apollo's GTM Systems concierge. | 4 |
 | `apollo-legal` | End-to-end contract review for Apollo's Commercial Legal team. | 3 |
 | `apollo-people` | People Enablement skills for Apollo employees — performance reviews, career development, and growth tools | 5 |
