@@ -1,0 +1,19 @@
+{
+  "name": "apollo-cs",
+  "version": "1.0.0",
+  "description": "Customer support skills for Apollo's Product Advocates and Tech Support reps — real-time peer assist for billing decisions, refund eligibility, escalation routing, and product issue guidance.",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "author": {
+    "name": "Apollo",
+    "email": "fernando.banta@apollo.io"
+  },
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Customer Support",
+    "shortDescription": "Real-time peer assist for Apollo Product Advocates and Tech Support reps — billing decisions, refund eligibility, escalation routing, and product issue guidance.",
+    "developerName": "Apollo",
+    "category": "Support",
+    "brandColor": "#1F2937"
+  }
+}

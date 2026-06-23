@@ -38,6 +38,7 @@ EXPECTED_DISPLAY_NAMES = {
     "apollo-talent": "Apollo Talent",
     "apollo-procurement": "Apollo Procurement",
     "apollo-accounting": "Apollo Accounting",
+    "apollo-cs": "Apollo Customer Support",
 }
 
 

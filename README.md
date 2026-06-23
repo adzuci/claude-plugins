@@ -68,6 +68,7 @@ See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill comman
 | `apollo-marketing` | Apollo's internal brand copilot. | 1 |
 | `apollo-gtm-enablement` | Creates facilitator-ready enablement decks for Apollo's GTM teams (Sales, CS, Product). | 2 |
 | `apollo-risk` | Privacy and compliance skills for Apollo's Legal Risk team — DSR response drafting, privacy queue triage, and regulatory compliance workflows. | 1 |
+| `apollo-cs` | Customer support skills for Apollo's Product Advocates and Tech Support reps — real-time peer assist for billing decisions, refund eligibility, escalation routing, and product issue guidance. | 1 |
 | `apollo-corpsec` | Apollo IT CorpSec skills: device & managed-endpoint policy, external storage rules, a device-rules FAQ, and policy exception requests. | 4 |
 | `apollo-talent` | Talent Acquisition skills for Apollo's TA team — company knowledge for candidate briefings and project planning tools for TA initiatives. | 2 |
 | `apollo-procurement` | Procurement & Finance Operations assistant — answers questions about travel & expense (Navan), procurement intake (Zip), accounts payable, corporate cards (Ramp/Brex), and contracts (IronClad) by grounding every answer in the canonical FAQ. | 1 |

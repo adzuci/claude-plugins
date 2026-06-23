@@ -118,6 +118,13 @@
       "tags": ["cowork", "legal", "privacy", "compliance"]
     },
     {
+      "name": "apollo-cs",
+      "source": "./plugins/apollo-cs",
+      "description": "Customer support skills for Apollo's Product Advocates and Tech Support reps — real-time peer assist for billing decisions, refund eligibility, escalation routing, and product issue guidance.",
+      "category": "support",
+      "tags": ["cowork", "support", "cx"]
+    },
+    {
       "name": "apollo-corpsec",
       "source": "./plugins/apollo-corpsec",
       "description": "Apollo IT CorpSec skills: device & managed-endpoint policy, external storage rules, a device-rules FAQ, and policy exception requests.",

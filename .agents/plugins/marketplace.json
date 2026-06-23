@@ -197,6 +197,18 @@
       "category": "Legal"
     },
     {
+      "name": "apollo-cs",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-cs"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Support"
+    },
+    {
       "name": "apollo-corpsec",
       "source": {
         "source": "local",
