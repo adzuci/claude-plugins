@@ -143,3 +143,70 @@ def test_find_row_index_found() -> None:
 def test_find_row_index_not_found() -> None:
     rows = _make_rows()
     assert sm.find_row_index(rows, "Ana Mejia", "2026-06-20", "10:00 AM PDT", "anshul@apollo.io") is None
+
+
+# ---------------------------------------------------------------------------
+# append_booking — verify column alignment and atomic row insertion
+# ---------------------------------------------------------------------------
+
+class _FakeSheets:
+    """Minimal fake Sheets API that records calls and returns canned data."""
+
+    def __init__(self, rows):
+        self._rows = rows
+        self.update_calls = []
+        self.append_calls = []
+
+    def spreadsheets(self):
+        return self
+
+    def values(self):
+        return self
+
+    def get(self, **_kwargs):
+        return self
+
+    def update(self, *, spreadsheetId, range, valueInputOption, body):
+        self.update_calls.append({"range": range, "values": body["values"]})
+        return self
+
+    def append(self, *, spreadsheetId, range, valueInputOption, insertDataOption, body):
+        self.append_calls.append({"range": range, "values": body["values"]})
+        return self
+
+    def execute(self):
+        # Return rows for read_all_rows, or empty for writes
+        return {"values": self._rows}
+
+
+def _fake_slot(date_iso="2026-07-02T15:00:00Z", member="Ana Ballesteros", meet_link=""):
+    return {"start": date_iso, "end": date_iso, "member_name": member, "meet_link": meet_link}
+
+
+def test_append_booking_uses_append_not_update_for_initial_row():
+    """append_booking must use values().append() for atomic row insertion, not update()."""
+    rows = _make_rows()  # just header, 1 row total
+    fake = _FakeSheets(rows)
+    sm.append_booking(fake, _fake_slot(), "anshul@apollo.io")
+    assert fake.append_calls, "append() was never called — concurrent bookings may target the same row"
+
+
+def test_append_booking_anchors_to_a1():
+    """append() range must be anchored to A1 to avoid column-shift on sparse rows."""
+    rows = _make_rows()
+    fake = _FakeSheets(rows)
+    sm.append_booking(fake, _fake_slot(), "anshul@apollo.io")
+    append_range = fake.append_calls[0]["range"]
+    assert append_range.endswith("!A1"), f"Expected range ending in !A1, got: {append_range}"
+
+
+def test_append_booking_data_in_correct_columns():
+    """Booker email must land in column A (index 0), not column I (index 8)."""
+    rows = _make_rows()
+    fake = _FakeSheets(rows)
+    sm.append_booking(fake, _fake_slot(), "anshul@apollo.io")
+    written_row = fake.append_calls[0]["values"][0]
+    assert written_row[sm.COL_RND_MEMBER] == "anshul@apollo.io", \
+        f"Email should be in col A (index {sm.COL_RND_MEMBER}), got: {written_row}"
+    assert written_row[sm.COL_HOST] == "Ana Ballesteros", \
+        f"Host should be in col B (index {sm.COL_HOST}), got: {written_row}"

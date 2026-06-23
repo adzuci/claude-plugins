@@ -140,7 +140,7 @@ def cmd_book(args: argparse.Namespace) -> None:
     sheets_service = googleapiclient.build("sheets", "v4", credentials=creds)
     cal_service = googleapiclient.build("calendar", "v3", credentials=creds)
 
-    from sheet_manager import append_booking
+    from sheet_manager import append_booking, store_cal_event_id
     result = append_booking(sheets_service, slot, booked_by)
 
     if not result["success"]:
@@ -149,17 +149,76 @@ def cmd_book(args: argparse.Namespace) -> None:
 
     print(f"\n{result['message']}")
 
-    # Create a shadow event on the booker's own calendar
-    _create_shadow_event(cal_service, slot, booked_by)
+    event_id = _create_shadow_event(cal_service, slot, booked_by)
+    if event_id and result.get("row_index"):
+        store_cal_event_id(sheets_service, result["row_index"], event_id)
 
     if result.get("meet_link"):
         print(f"Meet link: {result['meet_link']}")
 
 
-def _create_shadow_event(cal_service, slot: dict, booked_by: str) -> None:
-    """Drop a shadow calendar event on the booker's primary calendar."""
-    from members import display_name_for
+def cmd_cancel(args: argparse.Namespace) -> None:
+    from auth import get_credentials, get_user_email
+    from sheet_manager import find_my_bookings, cancel_booking, read_all_rows
 
+    creds = get_credentials()
+    booked_by = get_user_email(creds)
+
+    googleapiclient = __import__("googleapiclient.discovery", fromlist=["build"])
+    sheets_service = googleapiclient.build("sheets", "v4", credentials=creds)
+
+    rows = read_all_rows(sheets_service)
+    bookings = find_my_bookings(rows, booked_by)
+
+    if not bookings:
+        print(f"No confirmed bookings found for {booked_by}.")
+        return
+
+    print(f"Your confirmed bookings ({booked_by}):\n")
+    for i, b in enumerate(bookings, start=1):
+        print(f"  {i}. {b['host']} on {b['date']} at {b['time']}")
+
+    print()
+    if getattr(args, "index", None):
+        idx = args.index - 1
+        if idx < 0 or idx >= len(bookings):
+            print(f"Invalid index {args.index}. Valid range: 1–{len(bookings)}.")
+            sys.exit(1)
+    else:
+        while True:
+            raw = input("Enter booking number to cancel (or 'q' to quit): ").strip()
+            if raw.lower() in ("q", "quit"):
+                print("Cancelled.")
+                return
+            if raw.isdigit() and 1 <= int(raw) <= len(bookings):
+                idx = int(raw) - 1
+                break
+            print(f"  Please enter a number between 1 and {len(bookings)}.")
+
+    b = bookings[idx]
+    print(f"\nCancelling: {b['host']} on {b['date']} at {b['time']}")
+    if not getattr(args, "yes", False):
+        confirm = input("Confirm cancellation? [y/N] ").strip().lower()
+        if confirm not in ("y", "yes"):
+            print("Cancelled.")
+            return
+
+    # Delete the [Shadow] calendar event if one was stored
+    event_id = b.get("event_id", "")
+    if event_id:
+        try:
+            cal_service = googleapiclient.build("calendar", "v3", credentials=creds)
+            cal_service.events().delete(calendarId="primary", eventId=event_id).execute()
+            print("Calendar event deleted.")
+        except Exception as e:
+            print(f"Warning: could not delete calendar event ({e}). Remove it manually.")
+
+    cancel_booking(sheets_service, b["row_index"])
+    print("Booking cancelled and slot freed.")
+
+
+def _create_shadow_event(cal_service, slot: dict, booked_by: str) -> str:
+    """Drop a shadow calendar event on the booker's primary calendar. Returns the event ID."""
     meet_line = f"\nMeet link: {slot['meet_link']}" if slot.get("meet_link") else ""
     body = {
         "summary": f"[Shadow] HVO Session with {slot['member_name']}",
@@ -174,6 +233,7 @@ def _create_shadow_event(cal_service, slot: dict, booked_by: str) -> None:
 
     event = cal_service.events().insert(calendarId="primary", body=body).execute()
     print(f"Calendar event created: {event.get('htmlLink', '(no link)')}")
+    return event.get("id", "")
 
 
 def cmd_run(args: argparse.Namespace) -> None:
@@ -247,7 +307,7 @@ def cmd_run(args: argparse.Namespace) -> None:
     sheets_service = googleapiclient.build("sheets", "v4", credentials=creds)
     cal_service = googleapiclient.build("calendar", "v3", credentials=creds)
 
-    from sheet_manager import append_booking
+    from sheet_manager import append_booking, store_cal_event_id
     result = append_booking(sheets_service, slot, booked_by)
 
     if not result["success"]:
@@ -255,7 +315,10 @@ def cmd_run(args: argparse.Namespace) -> None:
         sys.exit(1)
 
     print(f"\n{result['message']}")
-    _create_shadow_event(cal_service, slot, booked_by)
+
+    event_id = _create_shadow_event(cal_service, slot, booked_by)
+    if event_id and result.get("row_index"):
+        store_cal_event_id(sheets_service, result["row_index"], event_id)
 
     if result.get("meet_link"):
         print(f"Meet link: {result['meet_link']}")
@@ -290,12 +353,16 @@ def main() -> None:
     book_p.add_argument("--index", type=int, required=True, metavar="N", help="Slot number from `list`.")
     book_p.add_argument("--yes", "-y", action="store_true", help="Skip confirmation prompt.")
 
+    cancel_p = sub.add_parser("cancel", help="Cancel one of your confirmed bookings.")
+    cancel_p.add_argument("--index", type=int, metavar="N", help="Booking number to cancel (from the displayed list).")
+    cancel_p.add_argument("--yes", "-y", action="store_true", help="Skip confirmation prompt.")
+
     args = parser.parse_args()
     # Default to `run` when no subcommand given
     command = args.command or "run"
     if command == "run" and not hasattr(args, "member"):
         args.member = None
-    {"run": cmd_run, "auth": cmd_auth, "list": cmd_list, "book": cmd_book}[command](args)
+    {"run": cmd_run, "auth": cmd_auth, "list": cmd_list, "book": cmd_book, "cancel": cmd_cancel}[command](args)
 
 
 if __name__ == "__main__":
