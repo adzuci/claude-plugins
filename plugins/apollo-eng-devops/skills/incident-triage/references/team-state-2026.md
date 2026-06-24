@@ -82,8 +82,30 @@ When `<scope> = team` resolves to `devops` or `be-platform`, apply these adjustm
 1. **Cross-team membership disambiguation**: when Ray Li or Ken appear as candidates, name which team you're proposing them under (devops vs be-platform) and which kind of work they're currently doing.
 1. **Adam (the user)**: if `assignee = currentUser()`, don't double-route an incident to Adam if he's already running the triage session — propose another assignee.
 
+## Search Platform team (`search-platform`)
+
+EM: **Utsav Kesharwani** (utsav@apollo.io). Senior Manager: Timmy Ho. Slack: `#xfn-team-search-platform`.
+
+Pack ownership: `packs/search_es_indexers`, `packs/search_platform`, `packs/search_*`.
+
+Routing notes:
+
+- QE-filed CI failures in `packs/search_es_indexers` route to Utsav for delegation to the right IC.
+- **ES schema drift** (`es_index_checker_spec` failures): these are not flaky tests — they are hard failures caused by production ES schema diverging from the branch snapshot. Pantheon will not open a PR on these because it cannot determine which side is the source of truth. Route to Search Platform; the fix requires a human decision (regenerate snapshot to match prod, or land the branch change first).
+
+## Known Sprint Backlog Tiers
+
+Named sprints used as team backlogs (discovered 2026-06-22):
+
+| Sprint name | Sprint ID | Board ID | Used by |
+| -------------------- | --------- | -------- | --------------------------------- |
+| BE Platform Ready | 5373 | 49 | BE Platform — future work holding queue |
+
+To move a ticket into a sprint backlog tier, set `customfield_10020: <sprint_id>` via `editJiraIssue`. **Always clear assignee immediately after** — Jira auto-assigns to the API executor on sprint field writes (see SKILL.md Known Limitations).
+
 ## Open questions to resolve in the next update
 
 1. What teams is Neil supporting? (Surfaced in 2026-05-23 session; not captured here yet.)
 1. Is Ken's BE Platform / DevOps dual membership a permanent state, or is one of them slated to be removed?
 1. Are there other teams in similar reorg states (data-platform, ai-apps, conversation-intelligence)? Add entries as they're discovered.
+1. Are there sprint backlog tiers for other teams (DATA, Search Platform, IAM)? Capture as they're encountered.

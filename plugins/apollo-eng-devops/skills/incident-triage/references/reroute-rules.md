@@ -103,6 +103,43 @@ Rare, but legitimate:
 
 For `?` rows, propose a reporter comment from `comment-templates.md` (`ask-reporter` block) — don't guess.
 
+## QE Test Tickets (`reporter: svc-apollo-qe`)
+
+These are auto-filed by the QE automation on CI failures. They are not production incidents. Reporter displays as `Quality Engineering`. Labels: `flaky_test`, `failed_production_pipeline`, `slow_tests`.
+
+### Classification
+
+| Label | Meaning | Urgency |
+| -------------------------- | --------------------------------------------------- | ------------------------------------------ |
+| `failed_production_pipeline` | Hard failure on every run | Higher — blocks CI |
+| `flaky_test` | Intermittent — passes on retry | Medium — investigate when capacity allows |
+| `slow_tests` | Spec exceeds runtime threshold | Low — investigate when capacity allows |
+
+Labels are applied indiscriminately — see `internal-tooling.md` for the label-vs-description rule. Always read the failure quote before trusting the label.
+
+### Routing by pack path
+
+Extract the spec file path from the ticket title (`[BE] Flaky Test - packs/<x>/spec/...`). Check CODEOWNERS first for the exact path — the table below is a best-effort heuristic based on observed pack ownership; CODEOWNERS wins on conflict.
+
+| Pack prefix | Owning team | Notes |
+| -------------------------- | --------------- | ------------------------------------------------- |
+| `packs/search_es_indexers` | Search Platform | Route to Utsav Kesharwani (EM) for delegation |
+| `packs/search_*` | Search Platform | Route to Utsav Kesharwani (EM) for delegation |
+| `packs/sidekiq` | BE Platform | Verify via CODEOWNERS — sidekiq is cross-team infra |
+| `packs/iam` | BE Platform / IAM | Verify via CODEOWNERS — IAM is a product team |
+| `packs/email_analytics` | BE Platform | `CloudDnsProvider` lives here — CI credential gap pattern |
+| `packs/observability` | DevOps / Platform | Keep (DevOps) |
+
+If the pack is not listed, check CODEOWNERS for the spec file path, then use Glean to identify the owning team.
+
+### Pantheon PR status
+
+Before routing, check if a Pantheon run link is present in the description or comments.
+
+- Run exists, PR exists → vet the PR diff against the description body before trusting it (bot PRs can misdiagnose).
+- Run exists, no PR → see `internal-tooling.md` Pantheon no-PR patterns. Do not wait; route to the owning team.
+- No run at all → Pantheon was not triggered. `slow_tests` tickets never trigger Pantheon. File a routing comment to the owning team with the fix direction if known.
+
 ## When to mark as FP / close
 
 - Kodem flagged an unscoped `Model.find` that the surrounding action correctly gates downstream (INCIDENT-28885-class false positive — though always audit the *whole* set of consuming actions before declaring FP).

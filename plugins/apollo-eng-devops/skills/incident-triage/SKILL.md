@@ -410,6 +410,7 @@ The skill is invocation-agnostic; it just calls MCPs. From Slack via the Apollo 
   - At wrap-up, suggest the user add a permission rule for `mcp__atlassian__transitionJiraIssue` to their settings if these denials become common.
 - The link + comment from a `Mark duplicate` action are durable even without the transition — the canonical-ticket signal isn't lost when a transition is denied, just the status change.
 - **Pantheon bot races**: when staging a comment/assignee change on a ticket the Pantheon bot is also working, the bot may close/transition the ticket mid-write (see INCIDENT-29450 in session history). Detect a write that lands on a now-closed ticket and skip remaining staged writes for that ticket; surface to the user.
+- **Jira auto-assign on unassigned edits**: Jira silently assigns any unassigned ticket to the API executor when a write operation touches it (`editJiraIssue`, `transitionJiraIssue`, sprint field update). After any write to a ticket that should remain unassigned, immediately call `editJiraIssue` with `{"assignee": null}` to clear it. Do not rely on the write-call echo to detect this — check the `assignee` field in the response and clear if non-null.
 
 ## Examples
 

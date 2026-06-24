@@ -22,6 +22,16 @@ These are Apollo-built systems that file, classify, or auto-fix tickets — dist
   - INCIDENT-29505 (real flaky from logger-mock setup-phase pollution — PR #91775 looks correct).
   - INCIDENT-29502 (real flaky from cross-spec `places` collection pollution — PR #91765 looks correct).
 
+### When Pantheon runs but does not open a PR
+
+A Pantheon run link in the description does not guarantee a PR. Known cases where no PR appears:
+
+- **ES schema drift** (`es_index_checker_spec` failures): the spec asserts field-level parity between production ES schemas and a stored snapshot. When production has diverged, Pantheon cannot determine whether the branch or the prod snapshot is the source of truth, so it takes no action. Route to the owning team (Search Platform for `packs/search_es_indexers`). The fix requires a human: either regenerate the snapshot to match prod, or merge the branch change to prod first.
+- **CI credential / environment gap** (e.g. `CloudDnsProvider`, Google Cloud auth errors in specs): the fix requires stubbing or mocking a credential provider in the spec setup, or changing CI environment config. This is not a code change Pantheon can author. Route to the pack owner to add the credentials mock.
+- **`human_intervention` label set**: the Pantheon run started but an engineer opened a manual PR instead of waiting. Check for a recent PR from the engineer (search GitHub for the INCIDENT key) before waiting for a bot PR. The manual PR may be diagnostic only (e.g. adds response body to failure output) and not the root fix — read its diff.
+
+If a Pantheon run link exists but no PR has appeared after ~24h, assume one of the above patterns and route to the owning team rather than waiting for a bot PR that won't come.
+
 ## Apollo Agent (auto-classifier)
 
 - **What**: an auto-classifier (`apollo-agent@apollo.io`) that reads inbound Slack `#product-feedback` and similar channels, files INCIDENT tickets, and writes a "Prioritization / routing rationale" comment.

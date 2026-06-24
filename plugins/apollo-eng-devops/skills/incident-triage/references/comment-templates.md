@@ -24,6 +24,20 @@ Placeholders in `{CURLY_CASE}` are populated at runtime from `apollo-dev-teams.y
 
 > Possible reroute to {TEAM_DISPLAY_NAME} — CODEOWNERS in `{REPO}` references `@apolloio/{SLUG_FROM_CODEOWNERS}`, which is {NOT_IN_REGISTRY_OR_FUZZY_MATCH}. Did you mean {BEST_GUESS_TEAM}? Leaving the assignee unchanged pending confirmation. Hygiene note: CODEOWNERS in `{REPO}` may need updating.
 
+## ask-em-to-route
+
+Use when assigning to an EM because the owning IC is unknown — you need the EM to delegate rather than investigate themselves.
+
+> @{EM_NAME} — routing this to you for direction. This looks like it falls under {TEAM_NAME} territory ({BRIEF_REASON}: e.g. `packs/{x}` CODEOWNERS, Search Platform pack). Could you point it to the right engineer? Happy to reroute or close if there's a better home.
+>
+> @{CC_NAME} — tagging you as well. {ONE_SENTENCE_SPECIFIC_QUESTION}
+
+## soft-cross-team-routing
+
+Use when routing outside your team and pack ownership is uncertain — hedges the assignment and explicitly invites correction.
+
+> @{NAME} — routing this your way as it looks like it may fall under {PACK_OR_TEAM} territory. {ONE_LINE_DIAGNOSIS}. A likely fix would be {FIX_HYPOTHESIS} — though I may be misreading the pack ownership. Happy to reroute if this belongs elsewhere. Advice on whether to fix, reroute, or close appreciated.
+
 ## dup-merge (posted on the non-canonical ticket)
 
 > Closing as a duplicate of {CANONICAL_KEY}, which has more context (linked PR, reproduction steps). Please follow that ticket for updates. If you believe this is a separate issue, reopen with the difference and I'll re-triage.
