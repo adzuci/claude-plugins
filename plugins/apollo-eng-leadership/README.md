@@ -1,11 +1,12 @@
 # apollo-eng-leadership
 
-Cowork skills for engineering managers — OKR reporting, eng metrics, sprint planning, and marketplace onboarding.
+Cowork skills for engineering managers — support-rotation idea capture, OKR reporting, eng metrics, sprint planning, and marketplace onboarding.
 
 ## Skills
 
 | Invoke command | Purpose |
 | --- | --- |
+| `/apollo-eng-leadership:add-support-rotation-idea` | Turn support-rotation observations into actionable ideation-log entries |
 | `/apollo-eng-leadership:okr-report` | Generate an OKR status report for an engineering team from the company tracker |
 | `/apollo-eng-leadership:eng-metrics` | Summarize engineering metrics (delivery, quality, capacity) for a team |
 | `/apollo-eng-leadership:sprint-planning` | Prepare a sprint planning brief with carry-overs, capacity, and priorities |
@@ -16,6 +17,7 @@ Cowork skills for engineering managers — OKR reporting, eng metrics, sprint pl
 ## What belongs in apollo-eng-leadership
 
 - Skills that help engineering managers plan, report, and track team health
+- Support-rotation observation capture and action-routing workflows
 - OKR and metrics reporting workflows
 - Cowork-oriented onboarding flows for the skills marketplace
 - Anything a manager would use in Cowork that doesn't require a local codebase
