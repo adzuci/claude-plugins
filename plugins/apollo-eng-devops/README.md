@@ -13,6 +13,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 | Invoke command | Purpose |
 |---|---|
 | `/apollo-eng-devops:check-apdex` | Snowflake-first Apdex dip investigation with Grafana deep triage |
+| `/apollo-eng-devops:check-cloudflare` | Cloudflare edge, bot/challenge, throughput/error, and tunnel health checks |
 | `/apollo-eng-devops:devops` | SRE devops — applies reliability engineering to any production task |
 | `/apollo-eng-devops:gameday` | MongoDB incident gameday drills for on-call practice |
 | `/apollo-eng-devops:grafana-observability` | Grafana dashboard design and alert quality specialist |
@@ -49,8 +50,9 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 
 | Prompt | Skills activated |
 |---|---|
-| "We're seeing 500s spike after today's deploy" | devops (incident path) + `/apollo-eng-devops:kubernetes-specialist` + incident-response |
-| "Pod keeps restarting with OOMKilled" | `/apollo-eng-devops:kubernetes-specialist` OOMKilled triage |
+| "We're seeing 500s spike after today's deploy" | devops (incident path) + kubernetes-specialist + incident-response |
+| "Check Cloudflare for 5xx spikes and challenge activity" | check-cloudflare + grafana-observability |
+| "Pod keeps restarting with OOMKilled" | kubernetes-specialist OOMKilled triage |
 | "Alert noise is too high in the payments service" | grafana-observability alert audit |
 | "Investigate the logs ingestion rate alert" | logs-ingestion-rate |
 | "Make a weekly on-call handoff artifact" | oncall-handoff |
@@ -74,6 +76,8 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 **`grafana-observability`** — Enable when creating or reviewing dashboards, tuning alerts, or auditing alert fatigue. Ensures every alert is actionable and every dashboard follows USE/RED method.
 
 **`check-apdex`** — Invoke directly when checking whether Apollo Admin Apdex dipped. Starts with Snowflake and escalates to Grafana only for deep triage.
+
+**`check-cloudflare`** — Invoke directly as `/apollo-eng-devops:check-cloudflare` when checking Cloudflare edge health, bot/challenge behavior, throughput/errors, Workers, or cloudflared tunnel health during incidents or routine reviews. Pair with `grafana-observability` when the finding should feed dashboard, alert, SLO, or runbook improvements.
 
 **`logs-ingestion-rate`** — Enable for Grafana Cloud logs ingestion spikes or alert `eetj859g01kw0f`. Confirms applicability first, then attributes log volume and recommends whether the alert should be tuned.
 
