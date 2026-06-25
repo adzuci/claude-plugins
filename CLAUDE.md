@@ -103,6 +103,41 @@ installing skills). Keep that audience in mind when editing docs.
 
 When corrected, suggest an update to this file to prevent the same mistake again.
 
+## Tool Loop Guardrails
+
+- If the same tool call, command, search, or file read fails twice with the same
+  inputs or returns no new information twice, stop repeating it.
+- Before a third attempt, state what has already been tried, what changed since
+  the last attempt, and why the retry should produce different evidence.
+- If there is no concrete change in inputs, permissions, working directory,
+  query, or target file, switch tactics: inspect adjacent files, use a different
+  source, narrow the query, or ask the user for the missing input.
+- Treat repeated empty results as evidence. Report the absence clearly instead
+  of continuing broad searches.
+- For long-running or flaky commands, capture the failure mode once, then retry
+  only with a specific adjustment such as a timeout, narrower scope, or required
+  sandbox escalation.
+
+## Token Guardrails
+
+- Start with targeted discovery: use `rg`, `rg --files`, `git diff`, and narrow
+  `sed`/`nl` ranges before opening whole files.
+- Do not read generated, vendored, build, lockfile, or large log files unless
+  the task specifically depends on them. Prefer searching for exact symbols or
+  errors first.
+- Keep command output bounded. Use focused paths, line ranges, `--max-count`,
+  `tail`, or test filters when full output is not needed.
+- After two broad searches without useful signal, stop and narrow the question:
+  identify the likely file, symbol, owner, route, or data source before more
+  tool calls.
+- Run the smallest meaningful validation first. Use full test suites only when
+  the change touches shared behavior, release gates, or the user asks for it.
+- Summarize large evidence instead of copying it. Include file paths, line
+  numbers, and the key finding rather than dumping whole outputs.
+- Before using expensive connectors, web searches, or multi-source lookups,
+  check local repo context and existing docs first unless current external state
+  is required.
+
 ## Skill Routing
 
 When the user's request matches an available skill, ALWAYS invoke it using the Skill

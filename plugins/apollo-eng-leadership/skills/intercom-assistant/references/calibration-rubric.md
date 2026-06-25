@@ -13,6 +13,7 @@ Default rubric source:
 - If evidence is unavailable, say `Not enough information`.
 - Quote short evidence snippets or provide accurate transcript-grounded summaries.
 - This is reference feedback only. Final scoring and performance decisions belong to human reviewers.
+- Score a step or dimension only if the call context required it. A step that did not apply (for example, no call offer on a true one-line answer, or no Discovery on a 30-second fact lookup) is `N/A`, not a deduction. The `pre-call-check.md` 7-step framework (Welcome, Verify, Set Expectations, Clarify and Align, Discovery, Troubleshoot and Guide, Confirm and Close) gives "Call Framing and Expectation Setting" and "Outcome Standard Met" a shared vocabulary; treat it as a checklist of applicable steps, not a mandatory all-seven sequence.
 
 ## Live Call Dimensions
 

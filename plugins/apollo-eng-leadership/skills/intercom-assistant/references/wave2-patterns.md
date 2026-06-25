@@ -84,7 +84,7 @@ Next question:
 <one concrete clarifying question>
 ```
 
-Keep the first message short enough for live chat. Include at most two questions. Do not offer a call by default; include it when a live walkthrough would materially help. After the first answer, use `call-nudges.md` when the customer is stuck, the UI state is unclear, or a screen share would be faster. If the customer asks a product/process/how-to/troubleshooting question, call the Glean Support Rep Assistant before writing factual guidance.
+Keep the first message short enough for live chat. Include at most two questions. Apply the call-offer rule in `call-nudges.md` (that file is the single source of truth): offer a call by default for genuine troubleshooting, onboarding, a frustrated customer, or a 3-plus-turn thread, and skip it only when the answer is a single fact with no failed steps, no urgency, and a short thread. If the customer asks a product/process/how-to/troubleshooting question, call the Glean Support Rep Assistant before writing factual guidance.
 
 ## `deescalate`
 
@@ -113,6 +113,32 @@ Internal note:
 ```
 
 Avoid promises like "fully resolved today" unless that is verified and appropriate. Do not apologize for Apollo or product behavior unless Apollo has clearly made an error and the user asks for that stance.
+
+### Script Bank
+
+Adapt these, do not paste them verbatim, so two customers never get the same sentence. Keep the loop order: a fix delivered without Align and Acknowledge reads as dismissive even when it works.
+
+Align (default, fact-based):
+
+```text
+You've spent days on something that should just work, let's get it sorted.
+That's blocking your team's workflow, so let's prioritize it.
+```
+
+Align (emotion-naming): use only when the customer used that word about themselves. Apollo's rule is do not put emotions in the customer's mouth.
+
+```text
+A week of troubleshooting something that isn't working is genuinely frustrating, I want to get this fixed for you.
+```
+
+Acknowledge (calm ownership, no blame):
+
+```text
+You shouldn't have to chase this, let me take it from here.
+Let me dig into this right now and figure out what's going on.
+```
+
+Hard stop: if the customer becomes abusive, threatens legal action, or threatens to post publicly, stop de-escalating solo. Suggest the `Escalate to Manager` macro and note in `routing-and-macros.md` and loop in a manager.
 
 ## `macro-suggest`
 

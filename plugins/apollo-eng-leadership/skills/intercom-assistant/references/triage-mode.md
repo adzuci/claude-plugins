@@ -28,6 +28,8 @@ If the customer's issue is a product, process, how-to, troubleshooting, or Suppo
 
 If the Glean CLI is unavailable or the call errors out, do not block: per the skill's Live Context Rules, label the gap, fall back to Glean MCP/search as a regular Glean source (not Support Rep Assistant output), and keep any unverified product claim out of the draft reply — phrase those next steps as questions to confirm rather than assertions.
 
+If the customer's issue involves eligibility, age, legal, compliance, ToS, privacy, or account policy, check `apollo-policies.md` before asserting any policy fact. Link to https://www.apollo.io/terms or https://www.apollo.io/privacy-policy in the draft reply as appropriate.
+
 ## Step 4: Build The Output
 
 - **Summary**: 2-3 factual sentences — who the customer is (name/company if known), the problem, and the outcome they want. No filler.

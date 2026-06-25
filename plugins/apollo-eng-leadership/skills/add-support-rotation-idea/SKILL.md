@@ -64,7 +64,7 @@ Every strong entry should include enough structured detail that a reviewer can u
 
 | Field | Guidance |
 | --- | --- |
-| Idea Name | 3-8 words describing what the idea is |
+| Idea Name | `Ideation Log (Your Name) - <3-8 word observation>` — always use this prefix |
 | Entry Type | Pick the primary action type, or multiple types only when the database schema confirms multi-select |
 | Category Tags | Pick tags such as product friction, customer pain, UX issue, onboarding, or process gap |
 | Product Area | Which part of Apollo is affected |
@@ -103,7 +103,7 @@ Run `scripts/check_idea_entry.py` before creating the final entry:
 
 ```bash
 python3 scripts/check_idea_entry.py \
-  --title "<3-8 word idea name>" \
+  --title "Ideation Log (Your Name) - <3-8 word idea name>" \
   --description "<entry description>" \
   --product-area "<product area>" \
   --entry-type "<entry type>" \

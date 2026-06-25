@@ -20,6 +20,8 @@ Set these defaults unless the user says otherwise:
 - `Escalated to Product?`: unchecked
 - `Date`: today's date
 
+Use `Ideation Log (Your Name) - <3-8 word observation>` as the `Observation Title`. The word-count check in `check_idea_entry.py` strips this prefix automatically.
+
 Use a compact page body:
 
 ```markdown
@@ -31,6 +33,9 @@ Use a compact page body:
 
 ## Suggested next step
 <owner/team/action>
+
+## Related context
+Source conversation: <Intercom conversation URL if available>
 ```
 
 ## Clarification Rule

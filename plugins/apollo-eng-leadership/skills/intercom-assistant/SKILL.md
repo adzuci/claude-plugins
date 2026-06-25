@@ -1,20 +1,22 @@
 ---
 name: intercom-assistant
 disable-model-invocation: true
-description: Coach EMs and Product Advocates through Intercom support rotation replies, live call assist, Glean-backed answers, recaps, calibration, and daily reports.
+description: Coach any support rep through Intercom support replies, live call assist, Glean-backed answers, recaps, calibration, and daily reports.
 ---
 
 # Intercom Assistant
 
-Use this skill to help engineering managers and Product Advocate rotation participants handle support questions without over-answering, guessing, or skipping the customer-experience basics. It is read-only: do not send Intercom replies, add notes, tag, close, snooze, route, or mutate accounts.
+Use this skill to help any support rep (Product Advocates, Customer Advocates, engineering managers, and anyone on the support rotation) handle support questions without over-answering, guessing, or skipping the customer-experience basics. Fin, Apollo's AI bot, handles the self-serve layer first, so a human is usually on the conversation only after Fin could not resolve it or the customer asked for a person. It is read-only: do not send Intercom replies, add notes, tag, close, snooze, route, or mutate accounts.
 
 `wrapup` is a pure alias for `recap`; both use the same after-interaction recipe.
 
 ## Usage
 
 ```text
-/apollo-eng-leadership:intercom-assistant [setup|sim|live|poll|intro|deescalate|macro-suggest|monitor|triage|recap|wrapup|calibration|report|help] [source/link/context] [--date YYYY-MM-DD] [--html]
+/apollo-eng-leadership:intercom-assistant [setup|sim|live|poll|intro|deescalate|macro-suggest|monitor|pre-call-check|triage|recap|wrapup|calibration|report|help] [source/link/context] [--date YYYY-MM-DD] [--html] [--mongo]
 ```
+
+`--mongo` is a `live`-only flag. It adds a read-only Mongo-backed investigation pass for sequence and mailbox issues after the normal Intercom-first and Glean-backed workflow. Without `--mongo`, `live` behaves exactly as it does today.
 
 ## Routing
 
@@ -24,13 +26,14 @@ Run `python3 scripts/check_dependencies.py` when a mode depends on live tools or
 | --- | --- | --- |
 | `setup` | Prepare Intercom, Granola, Glean, and macros before a shift | `references/setup-mode.md` and `references/granola-recipes.md` |
 | `sim` | Practice or simulator prompts | `references/simulator-mode.md` |
-| `live` | Real Intercom/customer context without a more specific mode; routes to `poll` when no conversation or customer is provided | `references/live-intercom-mode.md`, `references/routing-and-macros.md`, `references/call-nudges.md`, and `references/poll-mode.md` when polling |
+| `live` | Real Intercom/customer context without a more specific mode; routes to `poll` when no conversation or customer is provided | `references/live-intercom-mode.md`, `references/routing-and-macros.md`, `references/call-nudges.md`, `references/poll-mode.md` when polling, and `references/apollo-policies.md` when handling policy/eligibility/legal questions. Add `--mongo` to enable Mongo-backed diagnostics for sequence and mailbox issues (see `live-intercom-mode.md` Mongo section). |
 | `poll` | Fetch open Intercom conversations assigned to the current agent and offer to triage | `references/poll-mode.md` |
 | `intro` | First Intercom reply or call opener | `references/wave2-patterns.md`, `references/glean-support-rep-assistant.md`, and `references/call-nudges.md` |
 | `deescalate` | Upset, blocked, or impatient customer | `references/wave2-patterns.md` |
 | `macro-suggest` | Macro/workflow selection and adapted copy | `references/wave2-patterns.md` and `references/routing-and-macros.md` |
 | `monitor` | During-call/chat robust assist | `references/monitor-mode.md`, `references/glean-support-rep-assistant.md`, `references/routing-and-macros.md`, and `references/call-nudges.md` |
-| `triage` | Summarize an Intercom thread from a link and draft next steps + reply | `references/triage-mode.md` |
+| `pre-call-check` | Pre-call readiness: 7-step call framework and checklist before joining a live call | `references/pre-call-check.md` |
+| `triage` | Summarize an Intercom thread from a link and draft next steps + reply | `references/triage-mode.md` and `references/apollo-policies.md` when handling policy/eligibility/legal questions. `--mongo` is not supported in `triage` mode; use `live --mongo` for Mongo-backed sequence or mailbox investigation. |
 | `recap` | After-call/chat wrap-up | `references/recap-recipe.md` |
 | `wrapup` | Alias for `recap`; after-call/chat wrap-up | `references/recap-recipe.md` |
 | `calibration` | Evidence-bound feedback from transcript/recording notes | `references/calibration-rubric.md` |
@@ -54,6 +57,8 @@ Run `python3 scripts/check_dependencies.py` when a mode depends on live tools or
 - Do not invent account state, plan limits, permissions, outages, or product behavior. Verify live details or say what still needs checking.
 - Do not apologize for Apollo, the product, or product behavior unless Apollo has clearly made an error and the user asks for that stance.
 - Do not put emotions in the customer's mouth. Avoid phrases like "I can see how frustrating..." unless the customer explicitly said they are frustrated. Prefer fact-based acknowledgement: "I know you need this list today" or "Let's get this narrowed down."
+- Never use em dashes (—) in sample responses or any customer-facing copy. Use a comma, period, colon, or parentheses instead. This applies to every draft reply, closeout script, and Slack escalation post the skill produces.
+- When a reply or recap states a specific time or date, convert it to the customer's timezone and label the zone (for example, "today at 3:00 PM PT"). Take the customer's timezone from their Intercom contact or company profile. If the timezone is unknown, ask for it or state which timezone you used so it can be corrected.
 - Offer a call when the customer seems stuck, confused, blocked, or when screen sharing would resolve ambiguity faster.
 - Keep output concise, paste-ready, and operational.
 - Separate known facts, tool-backed findings, inferences, and unknowns.
@@ -84,9 +89,12 @@ Private notes:
 
 Next action:
 <owner/tool/escalation>
+
+Product ideas: (optional — only when ideas were found)
+- /apollo-eng-leadership:add-support-rotation-idea "<title>" --context "<context>"
 ```
 
-For `intro`, `deescalate`, `macro-suggest`, `monitor`, `triage`, `poll`, `recap`, `wrapup`, `calibration`, and `report`, use the exact output shapes in the mode reference.
+For `intro`, `deescalate`, `macro-suggest`, `monitor`, `pre-call-check`, `triage`, `poll`, `recap`, `wrapup`, `calibration`, and `report`, use the exact output shapes in the mode reference.
 
 ## Apollo Support Toolkit
 

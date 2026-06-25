@@ -54,9 +54,11 @@ def main() -> int:
     errors: list[str] = []
     warnings: list[str] = []
 
-    title_words = word_count(args.title)
+    # Strip the standard "Ideation Log (Name) - " prefix before word-count check.
+    title_for_count = re.sub(r"^Ideation Log\s*\([^)]+\)\s*-\s*", "", args.title, flags=re.IGNORECASE)
+    title_words = word_count(title_for_count)
     if title_words < 3 or title_words > 8:
-        errors.append(f"Idea name must be 3-8 words; got {title_words}: {args.title!r}")
+        errors.append(f"Idea name must be 3-8 words; got {title_words}: {title_for_count!r}")
 
     description_words = word_count(args.description)
     if description_words > 800:
