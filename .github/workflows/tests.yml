@@ -39,3 +39,22 @@ jobs:
           done
       - name: Run pytest
         run: python -m pytest -q
+
+  node-test:
+    runs-on:
+      group: arc-scale-sets
+      labels: general-low
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run node --test
+        run: |
+          shopt -s nullglob globstar
+          files=(plugins/**/*.test.js plugins/**/*.test.mjs)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No node test files found; skipping."
+            exit 0
+          fi
+          node --test "${files[@]}"

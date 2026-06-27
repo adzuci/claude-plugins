@@ -8,7 +8,10 @@ on:
       - ".claude-plugin/**"
       - ".agents/plugins/**"
       - ".github/workflows/validate.yml"
+      - ".github/scripts/update-skill-inventory.py"
       - "template/**"
+      - "README.md"
+      - "SKILL_INVENTORY.md"
 
 jobs:
   validate:
@@ -21,3 +24,21 @@ jobs:
         run: npm install -g @anthropic-ai/claude-code
       - name: Validate plugin
         run: claude plugin validate .
+
+  inventory:
+    runs-on:
+      group: arc-scale-sets
+      labels: general-low
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Regenerate skill inventory
+        run: python3 .github/scripts/update-skill-inventory.py
+      - name: Fail if inventory is stale
+        run: |
+          if ! git diff --exit-code README.md SKILL_INVENTORY.md; then
+            echo "::error::README.md / SKILL_INVENTORY.md are out of date. Run 'python3 .github/scripts/update-skill-inventory.py' and commit the result."
+            exit 1
+          fi

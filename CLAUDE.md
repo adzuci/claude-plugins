@@ -20,6 +20,7 @@ This is Apollo's shared Claude Code and Codex skills marketplace. Skills live in
 - If a direct-invoked skill needs inputs, document them in the skill body as concise usage examples (e.g. `/plugin-name:skill-name <target> --flag value`). Do not add unsupported `arguments` frontmatter.
 - Keep both plugin manifests when adding or changing a plugin: `.claude-plugin/plugin.json` for Claude Code and `.codex-plugin/plugin.json` for Codex
 - Keep both marketplace files in sync: `.claude-plugin/marketplace.json` for Claude Code and `.agents/plugins/marketplace.json` for Codex
+- Bump the plugin version in both manifests when adding or meaningfully changing a skill (new skill → minor bump e.g. `1.0.0` → `1.1.0`; breaking change → major bump). No bump needed for docs-only or metadata-only fixes.
 - Repo-local `.claude/skills` must work for Claude Code users who do not have Codex installed. Do not make those skills depend on Codex-only commands.
 
 ## Validation
@@ -33,7 +34,13 @@ python -m pytest tests/test_marketplace.py -q
 
 Run these before committing. If the local Codex CLI does not expose `plugin validate`, note that Codex validation was unavailable.
 
-CI enforces Markdown formatting, Claude plugin validation, marketplace parity, plugin manifest schema, Codex display metadata and asset paths, skill frontmatter naming, and cross-plugin skill name uniqueness. Keep this section updated when CI checks change.
+CI regenerates the skill inventory on every PR and fails if `README.md` or `SKILL_INVENTORY.md` are stale, so you no longer have to remember to run it by hand. If that check (the `inventory` job in `validate.yml`) goes red, regenerate and commit:
+
+```bash
+python .github/scripts/update-skill-inventory.py && python -m pytest tests/test_marketplace.py -q
+```
+
+CI enforces Markdown formatting, Claude plugin validation, marketplace parity, skill-inventory freshness, plugin manifest schema, Codex display metadata and asset paths, skill frontmatter naming, and cross-plugin skill name uniqueness. Keep this section updated when CI checks change.
 
 For pre-push review, use `/review`. It loads `skill-review-rubric.md` and scales review depth to the change size; use it especially for large or complex skills with long instructions, scripts, references, broad routing, external data access, or cross-team impact. Reviewers should flag new skills that omit `disable-model-invocation: true` unless natural-language activation is justified.
 
