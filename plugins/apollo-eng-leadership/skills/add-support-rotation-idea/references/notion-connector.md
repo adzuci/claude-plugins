@@ -16,9 +16,21 @@ Use the Notion connector to create a page under the Ideation Log data source. If
 Set these defaults unless the user says otherwise:
 
 - `Status`: `New`
-- `Linked KR`: `KR 1.4 - Ideation Capture`
+- `Linked KR`: `KR 1.4 — Ideation Capture`
 - `Escalated to Product?`: unchecked
 - `Date`: today's date
+
+## Wave Lookup
+
+Check memory first for the user's wave assignment before asking or fetching.
+
+If the wave is still unknown after checking memory, fetch the EM Customer Care Rotation page **once**, read the user's wave, save it to memory, and do not fetch again this session:
+
+- URL: <https://app.notion.com/p/apolloio/EM-Customer-Care-Rotation-353ab2b3b49681bfa742e8b8de7a37b2>
+
+Known assignments (from memory — verify against the page if stale):
+
+- Adam Blackwell → Wave 2
 
 Use `Ideation Log (Your Name) - <3-8 word observation>` as the `Observation Title`. The word-count check in `check_idea_entry.py` strips this prefix automatically.
 

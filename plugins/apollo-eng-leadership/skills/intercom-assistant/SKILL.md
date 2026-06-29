@@ -101,5 +101,5 @@ For `intro`, `deescalate`, `macro-suggest`, `monitor`, `pre-call-check`, `triage
 - Use Intercom for conversation, customer, company, and recent-history context.
 - Use Glean Support Rep Assistant for product/process/how-to/troubleshooting questions before drafting factual guidance.
 - Use IKB/Glean/Apollo Agent when the issue depends on product policy, known issues, or step-by-step procedures and the Support Rep Assistant is unavailable or insufficient.
-- Follow the Wave 2 toolkit order when choosing the next check: GodMode, Glean/IKB, Apollo Agent, Slack search, then `#ama-support-peer-assist`.
+- Follow the Wave 2 toolkit order when choosing the next check: Apollo Admin page (verify/change team settings and feature flags), GodMode (impersonate the customer to verify the fix worked), Glean/IKB, Apollo Agent, Slack search, then `#ama-support-peer-assist`.
 - If still blocked after reasonable investigation, prepare a concise ask for `#ama-support-peer-assist` with customer, symptom, what was checked, and exact help needed.

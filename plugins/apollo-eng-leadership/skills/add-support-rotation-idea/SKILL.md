@@ -10,7 +10,9 @@ Capture actionable product insight during an EM support rotation. The Ideation L
 
 Ideation Log database target: read `references/notion-connector.md`.
 
-Before creating an entry, run `scripts/check_idea_entry.py` against the drafted fields. When the product area, ownership, existing context, impact, or duplicate status is uncertain, read `references/research-and-erd.md` and call out to the Glean CLI before asking the user to fill gaps.
+Before any workflow that uses external context or writes/fetches Notion data, read `references/connectivity-test.md` and run the smallest connector check needed for the mode. If setup help is needed, lazily read and share `references/connector-setup.md`; do not load or paste setup instructions when the connectors already work.
+
+Before creating an entry, run `scripts/check_idea_entry.py` against the drafted fields. When the product area, ownership, existing context, impact, duplicate status, or related PRD/ERD status is uncertain, read `references/research-and-erd.md`. Use the local PRD cache there before live Glean PRD searches, and call out to the Glean CLI before asking the user to fill gaps.
 
 ## Golden Rule
 
@@ -37,7 +39,9 @@ Use this skill only when the work is support rotation idea capture, ideation, or
 - Add idea mode: default when the caller gives a support-rotation observation or asks to create an Ideation Log entry.
 - Report mode: use when the caller asks for an idea report, summary, dashboard, HTML report, all ideas, recent ideas, or a timeframe such as `2d`, `1w`, `30d`, or `2026-06-01`.
 
-For report mode, read `references/report-mode.md` and use `scripts/render_ideas_report.py` after fetching or receiving Ideation Log entries.
+For add idea mode, check the Notion connector before creating the entry. If classification or related-context research is needed, also check Glean before searching; if the user mentions meeting notes, support rotation debriefs, Granola notes, or recorded discussions, check Granola before relying on it.
+
+For report mode, check the Notion connector, then read `references/report-mode.md` and use `scripts/render_ideas_report.py` after fetching or receiving Ideation Log entries.
 
 ## Decide Whether to Log
 
@@ -99,6 +103,8 @@ Use one or more when the database allows multi-select:
 
 If the observation lacks enough detail to classify, route, or make actionable, ask a focused clarification question before drafting or creating the entry. Prefer one question that unlocks the missing field, such as "Which product area was affected?" or "What customer/support behavior did you observe?"
 
+**Impact Level** is the user's gut feel — do not be prescriptive. Present your read lightly ("feels Medium to me") rather than asserting it. If the signal could reasonably be Medium or High, ask before assigning: "This feels like it could be Medium or High impact — what's your gut?" Do not ask if the level is clearly Low or clearly High.
+
 Run `scripts/check_idea_entry.py` before creating the final entry:
 
 ```bash
@@ -153,14 +159,16 @@ Fast-track criteria:
 
 ## Create in Notion
 
-Before using the Notion connector, read `references/notion-connector.md` for the database target, creation defaults, clarification rule, and optional Granola MCP guidance. Read `references/research-and-erd.md` when any classification is uncertain or when you need to check for an existing related ERD.
+Read `references/notion-connector.md` for the database target, creation defaults, clarification rule, and optional Granola MCP guidance. Read `references/research-and-erd.md` when any classification is uncertain or when you need to check for an existing related ERD.
 
 If Notion tools are available, create the entry after classification using the Ideation Log target in `references/notion-connector.md`. Do not require the user to provide the database again.
+
+If Notion is unavailable, do not dead-end the user. Draft the Notion-ready entry, include the Ideation Log database link, and say that you can create it after the connector is enabled or the user can paste it manually. Read `references/connector-setup.md` only when the user wants setup help or the connector failure blocks their requested mode.
 
 Use these defaults unless the user says otherwise:
 
 - `Status`: `New`
-- `Linked KR`: `KR 1.4 - Ideation Capture`
+- `Linked KR`: `KR 1.4 — Ideation Capture`
 - `Escalated to Product?`: unchecked
 - `Date`: today's date
 
@@ -173,4 +181,11 @@ After drafting or creating the entry, return a short recap with:
 - The created entry URL, if created in Notion.
 - Key classification fields: entry type, category, product area, impact, effort, status.
 - Any related ERD offered to or approved by the caller.
+- Any related PRD offered to or approved by the caller.
 - Any clarification still needed before the entry can be acted on.
+
+## Roadmap
+
+Pause on implementing Notion API uploads for now. If IT approves Notion personal access tokens for this workflow, image support can be added later with a small helper that uses the Notion file upload API to upload local screenshots, then appends them to the Ideation Log page as image blocks or files properties. Track the approval/context thread here: <https://apolloio.slack.com/archives/C03RULANP33/p1782493670266309>.
+
+Until then, support only URL-based images through Notion MCP. For pasted or local screenshots, create the idea with a `Screenshot pending` note and tell the user to paste the screenshot into the Notion UI manually.

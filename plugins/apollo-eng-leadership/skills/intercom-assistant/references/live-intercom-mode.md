@@ -2,6 +2,15 @@
 
 Use this reference when the user asks about a real support question or provides an Intercom conversation, customer, company, email, or vague live-support ask without `sim`.
 
+## Tool Definitions
+
+These two tools are distinct — do not conflate them:
+
+- **Apollo Admin page** (`/teams/{id}/features`, `/teams/{id}/billing`, etc.): Internal settings panel where PAs manage feature flags, plan overrides, disabled features, and team permissions. Use it to **make changes** to team configuration.
+- **GodMode**: Apollo's user impersonation tool. Log in as a customer to see Apollo exactly as they see it. Use it to **verify** account state and confirm that a fix worked.
+
+Typical order: check the Apollo Admin page to diagnose and fix → use GodMode to impersonate the customer and confirm the fix resolved the issue.
+
 ## Pre-Reply Recap (start here)
 
 Before drafting any reply, lead with a short recap so the EM or Product Advocate sees the customer and account at a glance. Pull facts from Intercom (and GodMode or account tools when available). Leave a field blank or mark it "not verified" rather than guessing. Show any dates or times in the customer's timezone and state the zone (see the skill's Core Behavior). Do not use em dashes.

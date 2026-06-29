@@ -10,6 +10,8 @@ If the connector supports server-side filters, apply the timeframe to the `Date`
 
 If connector filtering is unavailable, fetch all accessible rows and let `scripts/render_ideas_report.py` filter locally.
 
+If Notion is unavailable, ask the caller for exported or pasted Ideation Log JSON and continue from "Normalize Input for the Script." Do not claim the report covers live Notion data unless the connector fetch succeeded.
+
 ## Normalize Input for the Script
 
 Save fetched pages as JSON. The script accepts:

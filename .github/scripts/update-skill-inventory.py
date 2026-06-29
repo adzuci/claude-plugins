@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -81,11 +82,26 @@ def plugin_manifest(entry: dict) -> dict:
     return json.loads((Path(entry["source"]) / ".claude-plugin" / "plugin.json").read_text())
 
 
+def _tracked_skill_mds(plugin_source: str) -> list[str]:
+    """Return git-tracked SKILL.md paths under plugin_source/skills/."""
+    prefix = str(Path(plugin_source) / "skills") + "/"
+    try:
+        out = subprocess.check_output(
+            ["git", "ls-files", prefix],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        # Fall back to filesystem glob when git is unavailable.
+        return [str(p) for p in (Path(plugin_source) / "skills").glob("*/SKILL.md") if p.is_file()]
+    return [line for line in out.splitlines() if line.endswith("/SKILL.md")]
+
+
 def skill_count(plugin_source: str) -> int:
     skills_dir = Path(plugin_source) / "skills"
     if not skills_dir.is_dir():
         return 0
-    return sum(1 for skill_md in skills_dir.glob("*/SKILL.md") if skill_md.is_file())
+    return len(_tracked_skill_mds(plugin_source))
 
 
 def build_plugin_table() -> str:
@@ -108,11 +124,9 @@ def build_skill_table() -> str:
     rows = []
     plugins_dir = Path("plugins")
     for plugin_name in sorted(os.listdir(plugins_dir)):
-        skills_dir = plugins_dir / plugin_name / "skills"
-        if not skills_dir.is_dir():
-            continue
-        for skill_dir in sorted(os.listdir(skills_dir)):
-            skill_md = skills_dir / skill_dir / "SKILL.md"
+        plugin_source = str(plugins_dir / plugin_name)
+        for skill_md_path in sorted(_tracked_skill_mds(plugin_source)):
+            skill_md = Path(skill_md_path)
             if not skill_md.is_file():
                 continue
             frontmatter = parse_frontmatter(skill_md)
