@@ -35,7 +35,11 @@ Text Blaze install offer:
 <if not installed: step-by-step walkthrough from text-blaze-snippets.md>
 
 CLI/MCP nudges:
-<Intercom, Granola, Glean, Google Sheets, Slack status and install/auth guidance>
+<Intercom, Granola, Glean, Google Sheets, Slack status and install/auth guidance.
+For any MCP that is missing, show both paths side by side:
+  CLI: claude mcp add --transport http <name> <url>
+  Desktop app / Codex web UI: Settings → MCP Servers → Add server (Transport: HTTP, URL: <url>)
+Do not show the CLI path only.>
 
 How to use during a ticket:
 <short sequence from intro to monitor to recap>

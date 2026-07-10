@@ -208,7 +208,7 @@ def cmd_refresh(args: argparse.Namespace) -> int:
     with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as tmp:
         tmp_path = Path(tmp.name)
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
         if result.returncode != 0:
             print(f"glean search failed: {result.stderr.strip()}", file=sys.stderr)
             return 1
@@ -218,6 +218,9 @@ def cmd_refresh(args: argparse.Namespace) -> int:
         write_cache(args.cache, items, source_query=query)
         print(f"refreshed: {len(items)} PRD summaries written to {args.cache}")
         return 0
+    except subprocess.TimeoutExpired:
+        print("glean search timed out after 60s", file=sys.stderr)
+        return 1
     finally:
         tmp_path.unlink(missing_ok=True)
 

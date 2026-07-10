@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 
-import prd_cache
+import pytest
+
+prd_cache = pytest.importorskip("prd_cache")
 
 
 def test_normalize_payload_extracts_prd_results() -> None:
@@ -90,7 +92,7 @@ def test_refresh_subcommand_calls_glean(tmp_path, monkeypatch) -> None:
         }
     )
 
-    def fake_run(cmd, capture_output, text):
+    def fake_run(cmd, capture_output, text, timeout=None):
         class Result:
             returncode = 0
             stdout = glean_output

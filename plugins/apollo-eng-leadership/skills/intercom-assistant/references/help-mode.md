@@ -37,10 +37,17 @@ Use this reference when the user runs `help` to check connector status and get s
 **When Intercom is not connected:**
 
 ```text
-Intercom MCP is required for most modes. To connect it:
-- Open MCP settings in Claude Code and enable the Intercom integration.
-- Confirm with a conversation ID or URL.
-- Or run `/apollo-eng-leadership:intercom-assistant setup` for the full pre-shift checklist.
+Intercom MCP is required for most modes. To connect it, use whichever path matches your environment:
+
+CLI (terminal):
+  claude mcp add --transport http intercom https://mcp.intercom.com/mcp
+
+Desktop app (Claude Code app or Codex web UI):
+  Settings → MCP Servers → Add server
+  Transport: HTTP  |  URL: https://mcp.intercom.com/mcp  |  Name: intercom
+
+After adding, confirm with a conversation ID or URL.
+Or run `/apollo-eng-leadership:intercom-assistant setup` for the full pre-shift checklist.
 
 Would you like help walking through the Intercom setup now?
 ```
@@ -50,7 +57,13 @@ Would you like help walking through the Intercom setup now?
 ```text
 Granola MCP is optional. All modes work without it, but the Feedback field in recap
 is omitted and Granola meetings cannot be fetched automatically.
-To enable it, connect Granola MCP in Claude Code settings.
+
+CLI (terminal):
+  Follow Granola's published MCP install docs, then run: claude mcp add granola
+
+Desktop app (Claude Code app or Codex web UI):
+  Settings → MCP Servers → Add server and follow the Granola MCP install instructions.
+
 Alternatively, paste call notes or a transcript directly into any mode.
 
 Would you like help setting up Granola?
