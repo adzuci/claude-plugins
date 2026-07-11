@@ -61,6 +61,51 @@ Ask for the missing field that most affects routing:
 - Impact, if prioritization is impossible.
 - Likely owner or next step, if the entry cannot be routed.
 
+## Image Upload via PAK
+
+Notion personal API keys are approved for this workflow. Use `scripts/upload_notion_image.py` to upload local screenshots and append them as image blocks on the Ideation Log page.
+
+### One-Time Setup
+
+1. Create an integration at <https://www.notion.so/profile/integrations> → **New integration** → workspace: Apollo, type: Internal. Copy the `ntn_...` secret.
+1. Grant it access to the Ideation Log: open the database in Notion → **⋯** → **Connections** → add your integration. Uploads fail with 404 without this step.
+1. `pip install requests` if not already installed.
+1. Export the key as `NOTION_PAK`. Two options:
+
+Plain (simplest — key sits in your dotfile):
+
+```bash
+echo 'export NOTION_PAK=ntn_paste_here' >> ~/.zshrc
+```
+
+1Password (key never touches disk; requires the `op` CLI signed in):
+
+```bash
+# Store the key as a Secure Note (e.g. "my-notion-pak") in 1Password first, then:
+notion_pak() {
+  export NOTION_PAK=$(op read "op://<vault>/<item>/notesPlain" 2>/dev/null)
+  [ -n "$NOTION_PAK" ] && echo "NOTION_PAK set" || { echo "op read failed"; return 1; }
+}
+```
+
+Add the function to `~/.zshrc` and run `notion_pak` once per terminal session. A lazy function is deliberate: `op` auth is interactive, so an eager `export` at the top of your dotfile would prompt on every new shell.
+
+**Claude Code caveat:** `op` cannot run from Claude's sandboxed shell (the biometric/desktop-app auth prompt never fires, so it silently returns empty). Run `notion_pak` yourself in your terminal before starting a Claude session that needs uploads. Verify without exposing the key: `[ -n "$NOTION_PAK" ] && echo set`.
+
+**Typical flow:**
+
+```bash
+# After creating the Notion page — page ID is the 32-hex segment ending the URL path
+# (strip any ?v=... query string first; those are view/database IDs, not the page ID)
+python3 scripts/upload_notion_image.py screenshot.png --page-id <notion_page_id>
+```
+
+Without `--page-id`, the script prints the `image_block` JSON so you can append it separately.
+
+**URL-based images:** Pass directly to the Notion MCP — no PAK or script needed.
+
+**Fallback when PAK is not configured:** Create the entry with a `Screenshot pending` note and advise the user to paste the screenshot into the Notion page manually.
+
 ## Granola MCP
 
 Use Granola MCP only as an optional context source when available. Do not make it a dependency for the skill.

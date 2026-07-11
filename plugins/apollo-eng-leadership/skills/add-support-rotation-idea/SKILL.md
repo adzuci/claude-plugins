@@ -184,8 +184,23 @@ After drafting or creating the entry, return a short recap with:
 - Any related PRD offered to or approved by the caller.
 - Any clarification still needed before the entry can be acted on.
 
-## Roadmap
+## Image Upload
 
-Pause on implementing Notion API uploads for now. If IT approves Notion personal access tokens for this workflow, image support can be added later with a small helper that uses the Notion file upload API to upload local screenshots, then appends them to the Ideation Log page as image blocks or files properties. Track the approval/context thread here: <https://apolloio.slack.com/archives/C03RULANP33/p1782493670266309>.
+Notion personal API keys (PAK) are approved for this workflow. When the caller provides a local screenshot or image path, upload it and append it to the Ideation Log entry.
 
-Until then, support only URL-based images through Notion MCP. For pasted or local screenshots, create the idea with a `Screenshot pending` note and tell the user to paste the screenshot into the Notion UI manually.
+**Prerequisite:** `NOTION_PAK` env var must be set (Notion Personal API Key, starts with `ntn_`). Read `references/notion-connector.md` for setup details.
+
+**Flow when the caller provides an image:**
+
+1. Create the Notion page first (via MCP or the connector). Note the returned page URL — the page ID is the 32-hex-character segment at the end of the URL *path*, before any `?` query string (query params like `?v=...` carry view/database IDs, not the page ID).
+1. Run the upload script, passing the page ID so the image is appended automatically:
+
+```bash
+python3 scripts/upload_notion_image.py <image_path> --page-id <notion_page_id>
+```
+
+3. If the page ID is unavailable at step 2 (e.g., the Notion MCP did not return it), run without `--page-id` to get the `image_block` JSON, then append it manually or note it in the recap.
+
+**URL-based images:** Pass the URL directly to the Notion MCP when creating the page — no script needed.
+
+**Fallback (PAK not set):** Create the entry with a `Screenshot pending` note and tell the user to paste the screenshot into the Notion UI. Do not block entry creation.
