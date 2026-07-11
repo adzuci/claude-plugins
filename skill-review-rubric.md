@@ -16,7 +16,7 @@ Frontmatter
 - Check that `description` concisely explains what the skill does. Do not reward long trigger lists by default.
 - For skills with `disable-model-invocation: true`, prefer short command/catalog descriptions.
 - Only ask for activation examples when natural-language activation is intentionally enabled.
-- Do not ask authors to add unsupported `arguments` frontmatter. If a direct-invoked skill has required or useful optional inputs, expect a concise `Usage` or `Inputs` section in the body instead.
+- Do not ask authors to add unsupported `arguments` frontmatter. For documenting inputs on a direct-invoked skill, `argument-hint` in frontmatter is the preferred approach (e.g. `argument-hint: "[surface] [--flag]"`); a body `Usage` or `Inputs` section is also acceptable. Do not flag `argument-hint` as unsupported — it is a valid display hint.
 
 Descriptions — skill vs plugin
 
