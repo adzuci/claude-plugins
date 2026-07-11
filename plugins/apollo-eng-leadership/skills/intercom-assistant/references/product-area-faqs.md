@@ -1,6 +1,6 @@
 # Product Area FAQs
 
-Use this reference in `live`, `monitor`, and `triage` for questions about the Apollo API or the Chrome extension. It is read-only: verify and route; do not mutate any account settings.
+Use this reference in `live` for questions about the Apollo API or the Chrome extension. It is read-only: verify and route; do not mutate any account settings.
 
 Post-Fin context: Fin handles the standard how-to questions, so a human on these threads usually has an issue Fin could not resolve (broken integration, rate limit hit, extension stopped working). Lead with what to verify, not with a help-center link.
 

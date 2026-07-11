@@ -29,7 +29,7 @@
     {
       "name": "apollo-eng-leadership",
       "source": "./plugins/apollo-eng-leadership",
-      "description": "Cowork skills for engineering managers — OKR reporting, eng metrics, and planning",
+      "description": "Cowork skills for engineering leadership and customer-care rotation support",
       "category": "engineering",
       "tags": ["cowork", "leadership"]
     },

@@ -21,7 +21,7 @@ When recommending the next check, use this order unless the user has already che
 
 1. GodMode: account plan, flags, usage, permissions, and activity.
 1. Glean/IKB: support process, known issues, standard procedures, and internal docs.
-1. Apollo Agent: feature behavior and product Q&A.
+1. Apollo Operator: feature behavior and product Q&A.
 1. Slack search: prior support threads or team-specific context.
 1. `#ama-support-peer-assist`: only after the useful checks above are exhausted or blocked.
 

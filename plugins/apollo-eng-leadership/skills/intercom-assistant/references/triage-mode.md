@@ -1,6 +1,6 @@
-# Triage Mode
+# Live Conversation Assessment Playbook
 
-Use this reference for `triage` when the user shares an Intercom conversation link (or ID) and wants a fast read: a short summary, diagnostic next steps, and a ready-to-send draft reply. This mode is read-only — draft the reply, do not send it, note it, tag, close, or route.
+Use this reference through `live` when the user shares an Intercom conversation link (or ID) and wants a fast read: a short summary, diagnostic next steps, and a ready-to-send draft reply. This workflow is read-only: draft the reply, do not send it, note it, tag, close, or route.
 
 ## Step 1: Resolve The Conversation
 
@@ -24,7 +24,7 @@ If Intercom returns no data, tell the user the conversation could not be fetched
 
 ## Step 3: Ground Product Claims
 
-If the customer's issue is a product, process, how-to, troubleshooting, or Support-policy question, call the Glean Support Rep Assistant (`python3 scripts/ask_glean_support_rep_assistant.py --mode monitor --question "<question>"`) before asserting product behavior in the next steps or draft. Do not invent account state, limits, permissions, or product behavior — say what still needs checking.
+If the customer's issue is a product, process, how-to, troubleshooting, or Support-policy question, call the Glean Support Rep Assistant (`python3 scripts/ask_glean_support_rep_assistant.py --mode live --question "<question>"`) before asserting product behavior in the next steps or draft. Do not invent account state, limits, permissions, or product behavior: say what still needs checking.
 
 If the Glean CLI is unavailable or the call errors out, do not block: per the skill's Live Context Rules, label the gap, fall back to Glean MCP/search as a regular Glean source (not Support Rep Assistant output), and keep any unverified product claim out of the draft reply — phrase those next steps as questions to confirm rather than assertions.
 

@@ -13,6 +13,10 @@ Help an EM confirm their support workspace is ready:
 - Text Blaze snippets are configured with the EM's name substituted in.
 - The EM knows what to paste when tools are unavailable.
 
+## First-Run Defaults
+
+For a first-time Claude Code user, recommend `~/code` as the workspace, then select **Trust**. When the app offers a working mode, recommend **Auto** for the support shift. Mention Co-work only when the user asks about it; it can pause for repeated approvals.
+
 ## Output Shape
 
 ```text
@@ -37,12 +41,13 @@ Text Blaze install offer:
 CLI/MCP nudges:
 <Intercom, Granola, Glean, Google Sheets, Slack status and install/auth guidance.
 For any MCP that is missing, show both paths side by side:
-  CLI: claude mcp add --transport http <name> <url>
-  Desktop app / Codex web UI: Settings → MCP Servers → Add server (Transport: HTTP, URL: <url>)
-Do not show the CLI path only.>
+  Claude CLI: claude mcp add --transport http <name> <url>
+  ChatGPT Codex CLI: codex mcp add <name> --url <url>; codex mcp login <name>
+  Desktop app: Settings → MCP Servers → Add server (Transport: HTTP, URL: <url>)
+Do not show the Claude CLI path for a Codex user.>
 
 How to use during a ticket:
-<short sequence from intro to monitor to recap>
+<short sequence from intro to live to recap>
 ```
 
 ## Intercom Details To Pin Or Keep Visible
@@ -133,7 +138,7 @@ Note: `/bye` has no first-name substitution, so it works identically in both Tex
 
 1. Run `setup` before the shift.
 1. Use `intro` for the first response.
-1. Use `monitor` when a chat turns into a call or gets complex.
+1. Keep using `live` when a chat turns into a call or gets complex.
 1. Use the Granola `/Stall` or `/Deescalate` recipe when notes show the interaction is stuck, unclear, blocked, or emotionally heated.
 1. Use `macro-suggest` only when the route is clear.
 1. Use `recap` or `wrapup` immediately after the interaction.

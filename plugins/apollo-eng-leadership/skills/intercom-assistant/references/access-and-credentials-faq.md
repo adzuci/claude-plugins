@@ -1,6 +1,6 @@
 # Access And Credentials FAQ
 
-Use this reference in `live`, `monitor`, and `triage` for login failures, SSO configuration, locked accounts, and seat management. It is read-only: verify and route; do not reset, unlock, or change access.
+Use this reference in `live` for login failures, SSO configuration, locked accounts, and seat management. It is read-only: verify and route; do not reset, unlock, or change access.
 
 Post-Fin context: Fin handles the simple "how do I log in" cases, so a human on an access thread usually needs the account state checked or a routing decision. Lead with what to verify, not with a help-center link.
 

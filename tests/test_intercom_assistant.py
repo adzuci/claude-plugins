@@ -33,27 +33,30 @@ def json_from_cli_args(args: list[str]) -> dict:
 def test_skill_router_covers_support_rotation_copilot_modes():
     skill = read_skill_file("SKILL.md")
 
-    for mode in ("setup", "monitor", "poll", "pre-call-check", "triage", "recap", "wrapup", "calibration", "report"):
+    for mode in ("setup", "poll", "pre-call-check", "recap", "wrapup", "calibration", "report"):
         assert f"`{mode}`" in skill
 
     assert "ask_glean_support_rep_assistant.py" in skill
     assert "routing-and-macros.md" in skill
     assert "mcp__Intercom__*" in skill
     assert "mcp__Granola__get_meeting_transcript" in skill
-    assert "references/triage-mode.md" in skill
     assert "references/help-mode.md" in skill
     assert "references/poll-mode.md" in skill
+    assert "| `monitor` |" not in skill
+    assert "| `triage` |" not in skill
+    assert "Former `monitor` and `triage` workflows run through this mode" in skill
 
 
-def test_triage_mode_reference_is_read_only_and_has_output_shape():
+def test_live_conversation_assessment_playbook_is_read_only_and_has_output_shape():
     triage = read_skill_file("references/triage-mode.md")
 
+    assert "Live Conversation Assessment Playbook" in triage
     assert "Conversation Summary" in triage
     assert "Suggested Next Steps" in triage
     assert "Draft Reply" in triage
     assert "get_conversation" in triage
     assert "do not send it" in triage.lower()
-    assert "ask_glean_support_rep_assistant.py" in triage
+    assert "--mode live" in triage
 
 
 def test_setup_mode_teaches_intercom_granola_and_closeout_macro():
@@ -68,6 +71,8 @@ def test_setup_mode_teaches_intercom_granola_and_closeout_macro():
     assert "Close Out" in setup
     assert "personal" in setup.lower()
     assert "https://docs.granola.ai/help-center/getting-more-from-your-notes/recipes" in setup
+    assert "recommend **Auto**" in setup
+    assert "ChatGPT Codex CLI" in setup
 
 
 def test_recap_recipe_is_read_only_and_has_required_fields():
@@ -86,12 +91,14 @@ def test_recap_recipe_is_read_only_and_has_required_fields():
     assert "call_summary" in recap
 
 
-def test_poll_mode_has_queue_summary_and_triage_trigger():
+def test_poll_mode_has_queue_summary_and_live_trigger():
     poll = read_skill_file("references/poll-mode.md")
 
     assert "search_conversations" in poll
     assert "Open Queue" in poll
-    assert "triage" in poll.lower()
+    assert "assess it in `live`" in poll
+    assert "references/live-intercom-mode.md" in poll
+    assert "run triage" not in poll
     assert "read-only" in poll
 
 
@@ -106,18 +113,74 @@ def test_help_mode_has_connector_status_table_and_setup_guidance():
     assert "get_account_info" in help_md
     assert "Would you like help" in help_md
     assert "setup" in help_md
+    assert "ChatGPT Codex CLI" in help_md
 
 
 def test_routing_reference_has_key_macros_and_clear_route_guardrail():
     routing = read_skill_file("references/routing-and-macros.md")
 
     assert "`Escalate to Billing`" in routing
+
+
+def test_technical_escalation_requires_authenticated_role_routing_and_confirmation():
+    routing = read_skill_file("references/routing-and-macros.md")
+    live = read_skill_file("references/live-intercom-mode.md")
+    roster = read_skill_file("references/em-rotation-roster.md")
+
+    # EM: an exact roster match without authenticated identity evidence is insufficient.
+    assert (
+        "Treat a caller as a verified EM only when an exact roster-name match is corroborated "
+        "by trusted, authenticated identity metadata"
+    ) in roster
+    assert "A name match alone is not sufficient." in roster
+    assert "Slack MCP user-profile lookup" in roster
+    assert "Apply `em-rotation-roster.md` **Use In Escalations**" in routing
+
+    # PA/CA: Apollo Operator is research support, while customer handoff remains Intercom.
+    assert "Product Advocate or Customer Advocate may take a reviewed Apollo Operator research question" in roster
+    assert "If stuck, escalate to: <role-specific path; see routing-and-macros.md>" in live
+    assert "After explicit confirmation, a human may post it through Slack MCP" in live
+
+    # Unknown or ambiguous identity: no Slack path, with the technical queue as the handoff.
+    assert "do not offer any Slack route" in roster
+    assert "If authenticated identity metadata is unavailable, incomplete, or ambiguous" in roster
+    assert "or when identity metadata is unavailable or ambiguous" in live
+    assert "Send only after explicit caller confirmation." in routing
+    assert "Sequencing with a confirm-gate" in routing
+    assert "confirm the route is correct" in routing
+    assert "Propose the confirmed workflow for a human to carry out" in routing
     assert "`Escalate to Billing Renewals`" in routing
     assert "`Escalate to CA - Transfer Chat`" in routing
     assert "`Escalate to Blockages`" in routing
     assert "`Escalate to External Fraud (Chats)`" in routing
     assert "only when the route is clear" in routing
     assert "confirm exact names in IKB" in routing
+
+
+def test_apollo_operator_reference_requires_review_before_slack_send():
+    skill = read_skill_file("SKILL.md")
+    operator = read_skill_file("references/apollo-operator.md")
+
+    assert "Determine the caller role before involving Apollo Operator" in skill
+    assert "C01JF1PP74N" in operator
+    assert "C0ALMDYQ5PT" in operator
+    assert "<@U0ABEQ94H7Z>" in operator
+    assert "explicit confirmation" in operator
+    assert "Slack MCP send-message tool" in operator
+    assert "https://apolloio.slack.com/archives/C01JF1PP74N" in operator
+    assert "Redact customer names" in operator
+    assert "one Apollo Operator thread per Intercom conversation" in operator
+    assert "During Live Calls" in operator
+    assert "#ama-pa-apollo-operator" in operator
+    assert "Team and conversation IDs are expected investigation identifiers" in operator
+
+
+def test_help_mode_has_slack_fallback_for_operator_questions():
+    help_md = read_skill_file("references/help-mode.md")
+
+    assert "Slack MCP" in help_md
+    assert "C01JF1PP74N" in help_md
+    assert "C0ALMDYQ5PT" in help_md
 
 
 def test_skill_forbids_emdashes_and_requires_customer_timezone():
@@ -137,6 +200,14 @@ def test_live_mode_leads_with_pre_reply_recap_and_account_tenure():
     assert "company `created_at`" in live
     assert "contact `created_at`" in live
     assert "Do not use em dashes" in live
+
+
+def test_live_mode_nudges_report_at_end_of_shift_without_running_it():
+    live = read_skill_file("references/live-intercom-mode.md")
+
+    assert "When the caller says they are done for the day" in live
+    assert "/apollo-eng-leadership:intercom-assistant report --date YYYY-MM-DD" in live
+    assert "must not be generated without the caller asking" in live
 
 
 def test_call_nudges_include_direct_answer_call_language():
@@ -687,8 +758,9 @@ def test_routing_has_escalation_routes_and_sequencing():
     assert "Template: Billing Escalation" in routing
     # Tech handoff sample
     assert "Tech Team" in routing
-    # Read-only hardening
-    assert "run workflow" in routing
+    # Read-only hardening: workflow execution is proposed for a human, never applied.
+    assert "Propose the confirmed workflow for a human to carry out" in routing
+    assert "apply the workflow" not in routing.lower()
 
 
 # ---------------------------------------------------------------------------

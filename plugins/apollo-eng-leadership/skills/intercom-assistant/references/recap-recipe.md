@@ -24,7 +24,7 @@ Before generating a recap, check whether the interaction is actually over:
 
 - If the conversation is **open and waiting** (no resolution, no `call_summary`, no closeout message) — do not generate a recap. Instead, identify the current state and suggest the right mode:
   - No first reply sent yet → suggest `intro`
-  - Active chat in progress → suggest `live` or `monitor`
+  - Active chat in progress → suggest `live`
   - Customer waiting on a reply → suggest `live` with a draft reply
 - If the conversation is **closed or has a `call_summary` part** → proceed with the recap.
 

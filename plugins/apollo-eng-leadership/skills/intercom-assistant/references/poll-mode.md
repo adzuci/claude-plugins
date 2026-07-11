@@ -2,7 +2,7 @@
 
 Use this reference when the user types `poll` or runs `live` without a conversation
 link, customer email, or company context. This mode fetches open Intercom conversations
-assigned to the current agent and offers to run triage on any that need a reply.
+assigned to the current agent and offers a live assessment for any that need a reply.
 
 ## Steps
 
@@ -19,7 +19,7 @@ assigned to the current agent and offers to run triage on any that need a reply.
 1. Render the queue summary table below.
 1. For conversations where the last message is from the customer, note them as needing a
    reply.
-1. Ask the user which conversation to triage, or offer to run triage on the first
+1. Ask the user which conversation to assess in `live`, or offer to run `live` on the first
    unanswered one automatically.
 
 ## Output Shape
@@ -34,22 +34,22 @@ assigned to the current agent and offers to run triage on any that need a reply.
 
 <M> conversation(s) need a reply (last message from customer).
 
-Type a row number or paste a conversation ID/URL to run triage on it.
+Type a row number or paste a conversation ID/URL to assess it in `live`.
 ```
 
-## Triage Trigger
+## Live Trigger
 
 When the user selects a conversation (by row number, ID, or URL), switch to
-`references/triage-mode.md` and run triage on that conversation ID.
+`references/live-intercom-mode.md` and run `live` on that conversation ID.
 
-When the user types "triage all" or "triage next", run triage on the first
+When the user asks for the next or first unanswered conversation, run `live` on the first
 unanswered conversation in the queue (row 1 or the first row flagged as needing a reply).
 
 ## Empty Queue
 
 ```text
 No open conversations found in your inbox right now.
-Paste a conversation URL or ID to triage a specific one, or try again in a few minutes.
+Paste a conversation URL or ID to assess it in `live`, or try again in a few minutes.
 ```
 
 ## Notes

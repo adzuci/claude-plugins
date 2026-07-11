@@ -1,6 +1,6 @@
 # Glean Support Rep Assistant
 
-Use this reference in `intro`, `live`, and `monitor` when the customer asks a product, process, how-to, troubleshooting, or internal Support policy question.
+Use this reference in `intro` and `live` when the customer asks a product, process, how-to, troubleshooting, or internal Support policy question.
 
 ## Source
 

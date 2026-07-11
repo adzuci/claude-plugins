@@ -13,7 +13,7 @@ from typing import Any, Callable, Sequence
 
 
 DEFAULT_AGENT_ID = "90b93c53b44840d5b25a7836d4042304"
-MODES = ("intro", "live", "deescalate", "macro-suggest", "monitor", "ask")
+MODES = ("intro", "live", "deescalate", "macro-suggest", "ask")
 
 
 class GleanSupportRepAssistantError(RuntimeError):

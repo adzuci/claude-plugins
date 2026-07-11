@@ -30,7 +30,7 @@ Account context that matters (from Intercom/GodMode):
 Recent related tickets or repeated friction:
 Recommended first reply:
 Offer a call in the first response? <yes/no + one-line why>
-If stuck, escalate to: <#ama-technical-support or #ama-support-peer-assist + why>
+If stuck, escalate to: <role-specific path; see routing-and-macros.md>
 ```
 
 Source the two account-tenure fields from Intercom: "Account age" from the company `created_at`, and "This user signed up" from the contact `created_at` (or `signed_up_at` when present). Compute and label the age (for example, "2y 4mo") and convert the raw signup timestamp to the customer's timezone. If either timestamp is unavailable, mark the field "not verified" instead of inventing it.
@@ -50,6 +50,20 @@ Status: investigating account context and history, full recap to follow.
 ```
 
 Source this entirely from the one `get_conversation`/`fetch` payload (latest customer part plus `custom_attributes` and `source.url`). Do not block it on GodMode, Glean, or Mongo. Then continue the full workflow below and replace it with the complete Pre-Reply Recap. If a step is slow, keep the rep informed rather than waiting in silence.
+
+## End Of Shift
+
+When the caller says they are done for the day, their shift is over, or they are handing off while in `live` mode:
+
+1. Stop suggesting another queue poll or a new live investigation.
+1. Finish the current conversation only if the caller asks to do so.
+1. Nudge them to run the daily report without running it automatically:
+
+```text
+Your shift is wrapped. Run `/apollo-eng-leadership:intercom-assistant report --date YYYY-MM-DD` to capture today's work.
+```
+
+Use today's local date when it is known. If the date is unclear, ask one concise question. The report is optional and must not be generated without the caller asking for it.
 
 ## Investigation Workflow
 
@@ -73,13 +87,15 @@ Source this entirely from the one `get_conversation`/`fetch` payload (latest cus
    - what is unverified
    - likely next best action
 1. If the issue involves sequences, check sequence and mailbox context (see **Sequences and Mailboxes** below) before drafting advice.
-1. If the route is clear, use `routing-and-macros.md` to propose the appropriate Intercom macro/workflow. Do not apply it.
+1. If the route is clear, use `routing-and-macros.md` to propose the appropriate Intercom macro/workflow for a human to carry out. Do not execute it.
 1. If the customer asks a product/process/how-to/troubleshooting question, use `glean-support-rep-assistant.md` before drafting factual guidance.
 1. For the highest-volume escalated topics, use the focused triage references: billing or charges -> `billing-triage.md`; login, SSO, locked accounts, or seats -> `access-and-credentials-faq.md`; API or the Chrome extension -> `product-area-faqs.md`. These are post-Fin triage aids: lead with what to verify and where to route, not with an article to paste.
 1. If the customer asks about eligibility, age, legal, compliance, ToS, privacy, or account policy, check `apollo-policies.md` before drafting any answer. Link to the authoritative document (https://www.apollo.io/terms or https://www.apollo.io/privacy-policy) in the customer-facing reply.
 1. For monetization or credit questions, identify the credit model (unified vs export) from GodMode Basics before quoting specific credit amounts — Glean returns both models and quoting the wrong one will confuse the customer. The GodMode Basics tab shows "Credits (in your plan)" with the monthly amount; unified credits are labeled as a single number (e.g. 4,000 credits/mo).
 1. Decide whether a Slack escalation draft is useful:
-   - Use `#ama-technical-support` when the issue needs technical/product debugging, account-specific investigation, Apollo Agent help, logs, feature behavior confirmation, or "why did Apollo do X?" context that Support cannot verify from Intercom, GodMode, Glean, or IKB alone.
+   - Apply `em-rotation-roster.md` **Use In Escalations** before choosing a role-specific Apollo Operator channel. If the issue needs technical/product debugging, account-specific investigation, Apollo Operator help, logs, feature behavior confirmation, or "why did Apollo do X?" context that Support cannot verify from Intercom, GodMode, Glean, or IKB alone, follow that role contract.
+   - During a PA or CA live call, propose a concise Apollo Operator draft for `#ama-pa-apollo-operator` when that research is needed. After explicit confirmation, a human may post it through Slack MCP and review the answer in the same Slack thread before using it in the live guidance. Keep one root thread per Intercom conversation; send follow-ups as replies only.
+   - For an unknown caller, or when identity metadata is unavailable or ambiguous, ask one concise role question and do not offer any Slack route. Default an actual customer handoff to the Intercom technical queue.
    - Use `#ama-support-peer-assist` when the issue is a Support process, macro, routing, policy, or peer-calibration question after the normal checks are exhausted.
    - Do not escalate just because the customer is impatient. First identify the exact unanswered question and what source is blocked or insufficient.
    - If a Slack post makes sense, include a paste-ready Slack escalation draft in the output. Do not post automatically unless the user explicitly asks to send it and a Slack send tool is available.
@@ -123,11 +139,11 @@ Snooze is a routing action, so this skill only suggests it. Do not snooze automa
 
 ## Conflict And Output Guardrails
 
-The tool search order (GodMode, then Glean/IKB, then Apollo Agent, then Slack search, then `#ama-support-peer-assist`) is defined in `SKILL.md` and `wave2-patterns.md` `## Toolkit Order`. Use that order. This section adds only the conflict and output rules:
+The tool search order (GodMode, then Glean/IKB, then Apollo Operator, then Slack search, then `#ama-support-peer-assist`) is defined in `SKILL.md` and `wave2-patterns.md` `## Toolkit Order`. Use that order. This section adds only the conflict and output rules:
 
 - When sources disagree, IKB wins. Flag the discrepancy in `#ama-support-peer-assist` so the other source can be corrected.
 - Never send IKB article links to customers. Translate the steps into plain customer-facing language.
-- Never paste Apollo Agent or other tool output verbatim to a customer. Rewrite it in your own words and verify it first.
+- Never paste Apollo Operator or other tool output verbatim to a customer. Rewrite it in your own words and verify it first.
 
 ## Mongo-Backed Investigation (--mongo flag)
 
@@ -336,7 +352,7 @@ When Slack escalation is warranted, include this block after the customer-facing
 
 ```text
 Slack escalation:
-Channel: #ama-technical-support or #ama-support-peer-assist
+Channel: #ama-technical-support, #ama-pa-apollo-operator, or #ama-support-peer-assist
 Post:
 <paste-ready Slack message>
 
@@ -347,10 +363,10 @@ Customer-safe follow-up:
 <short Intercom reply that sets expectations while waiting>
 ```
 
-For `#ama-technical-support`, prefer the channel's concise Apollo Agent style:
+For Apollo Operator channels, prefer this concise question format:
 
 ```text
-Apollo Agent this team: <team_id or "not verified yet">. <symptom and customer goal>. Checked: <Intercom/GodMode/Glean/IKB/Apollo Agent checks or "not yet checked">. Need help with: <specific technical question>. Evidence: <conversation ID, account ID, timestamps, error text, or unknown>. Urgency: <business impact or "normal">.
+<@U0ABEQ94H7Z> Investigate this team: <team_id or "not verified yet">. <symptom and customer goal>. Checked: <Intercom/GodMode/Glean/IKB/Apollo Operator checks or "not yet checked">. Need help with: <specific technical question>. Evidence: <conversation ID, account ID, timestamps, error text, or unknown>. Urgency: <business impact or "normal">.
 ```
 
 Good escalation drafts are specific enough for someone else to answer without re-reading the entire Intercom thread. Include team/account identifiers only when verified. If the team ID, error, timestamp, or prior checks are missing, keep the missing fields explicit instead of inventing them.

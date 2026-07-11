@@ -13,7 +13,7 @@ Use this skill to help any support rep (Product Advocates, Customer Advocates, e
 ## Usage
 
 ```text
-/apollo-eng-leadership:intercom-assistant [setup|sim|live|poll|intro|deescalate|macro-suggest|monitor|pre-call-check|triage|recap|wrapup|calibration|report|help] [source/link/context] [--date YYYY-MM-DD] [--html] [--mongo]
+/apollo-eng-leadership:intercom-assistant [setup|sim|live|poll|intro|deescalate|macro-suggest|pre-call-check|recap|wrapup|calibration|report|help] [source/link/context] [--date YYYY-MM-DD] [--html] [--mongo]
 ```
 
 `--mongo` is a `live`-only flag. It adds a read-only Mongo-backed investigation pass for sequence and mailbox issues after the normal Intercom-first and Glean-backed workflow. Without `--mongo`, `live` behaves exactly as it does today.
@@ -26,14 +26,12 @@ Run `python3 scripts/check_dependencies.py` when a mode depends on live tools or
 | --- | --- | --- |
 | `setup` | Prepare Intercom, Granola, Glean, and macros before a shift | `references/setup-mode.md` and `references/granola-recipes.md` |
 | `sim` | Practice or simulator prompts | `references/simulator-mode.md` |
-| `live` | Real Intercom/customer context without a more specific mode; routes to `poll` when no conversation or customer is provided | `references/live-intercom-mode.md`, `references/routing-and-macros.md`, `references/call-nudges.md`, `references/poll-mode.md` when polling, and `references/apollo-policies.md` when handling policy/eligibility/legal questions. Add `--mongo` to enable Mongo-backed diagnostics for sequence and mailbox issues (see `live-intercom-mode.md` Mongo section). |
-| `poll` | Fetch open Intercom conversations assigned to the current agent and offer to triage | `references/poll-mode.md` |
+| `live` | Real Intercom/customer context, active call/chat help, or a conversation link. Former `monitor` and `triage` workflows run through this mode. Routes to `poll` when no conversation or customer is provided | Start with `references/live-intercom-mode.md`, then use its linked references for call/chat, conversation-link, routing, roster, Apollo Operator, and policy context. Add `--mongo` to enable Mongo-backed diagnostics for sequence and mailbox issues. |
+| `poll` | Fetch open Intercom conversations assigned to the current agent and offer a live assessment | `references/poll-mode.md` |
 | `intro` | First Intercom reply or call opener | `references/wave2-patterns.md`, `references/glean-support-rep-assistant.md`, and `references/call-nudges.md` |
 | `deescalate` | Upset, blocked, or impatient customer | `references/wave2-patterns.md` |
 | `macro-suggest` | Macro/workflow selection and adapted copy | `references/wave2-patterns.md` and `references/routing-and-macros.md` |
-| `monitor` | During-call/chat robust assist | `references/monitor-mode.md`, `references/glean-support-rep-assistant.md`, `references/routing-and-macros.md`, and `references/call-nudges.md` |
 | `pre-call-check` | Pre-call readiness: 7-step call framework and checklist before joining a live call | `references/pre-call-check.md` |
-| `triage` | Summarize an Intercom thread from a link and draft next steps + reply | `references/triage-mode.md` and `references/apollo-policies.md` when handling policy/eligibility/legal questions. `--mongo` is not supported in `triage` mode; use `live --mongo` for Mongo-backed sequence or mailbox investigation. |
 | `recap` | After-call/chat wrap-up | `references/recap-recipe.md` |
 | `wrapup` | Alias for `recap`; after-call/chat wrap-up | `references/recap-recipe.md` |
 | `calibration` | Evidence-bound feedback from transcript/recording notes | `references/calibration-rubric.md` |
@@ -43,7 +41,7 @@ Run `python3 scripts/check_dependencies.py` when a mode depends on live tools or
 ## Live Context Rules
 
 1. Always check the Intercom MCP connector (`mcp__Intercom__*`) for conversation, customer, and company context before making any customer-specific factual claims, unless the user has already provided the full conversation content. Never use a browser tool to fetch Intercom data.
-1. If the customer asks a product, process, how-to, troubleshooting, or internal Support policy question in `intro`, `live`, `deescalate`, `macro-suggest`, or `monitor`, call the Glean Support Rep Assistant through `python3 scripts/ask_glean_support_rep_assistant.py --mode <mode> --question "<question>"` before drafting factual guidance.
+1. If the customer asks a product, process, how-to, troubleshooting, or internal Support policy question in `intro`, `live`, `deescalate`, or `macro-suggest`, call the Glean Support Rep Assistant through `python3 scripts/ask_glean_support_rep_assistant.py --mode <mode> --question "<question>"` before drafting factual guidance.
 1. Add `--glean-assistant zendesk-kb` when the answer should be grounded in Zendesk KB/IKB pages.
 1. If Glean CLI is unavailable, label the gap and use Glean MCP/search only as a regular Glean fallback, not as Support Rep Assistant output.
 1. Use GodMode/account tools when available for plan, seats, ARR, flags, usage, permissions, and activity. If unavailable, say GodMode/account verification is still needed.
@@ -51,6 +49,8 @@ Run `python3 scripts/check_dependencies.py` when a mode depends on live tools or
 
 ## Core Behavior
 
+- Determine the caller role before involving Apollo Operator. Apply the verification and routing rule in `references/em-rotation-roster.md` **Use In Escalations**. A customer handoff still uses the confirmed Intercom technical queue.
+- Never post to Slack, route a conversation, or mutate Intercom automatically. Draft the Apollo Operator question, internal note, and workflow recommendation for review. Send a Slack MCP message only after the caller explicitly confirms the reviewed draft.
 - Start by acknowledging the concrete situation and verifying the customer's goal before troubleshooting.
 - Ask at most two clarifying questions at a time.
 - Distinguish customer-facing copy from private investigation notes.
@@ -92,14 +92,15 @@ Next action:
 
 Product ideas: (optional — only when ideas were found)
 - /apollo-eng-leadership:add-support-rotation-idea "<title>" --context "<context>"
+- If you have a local screenshot to include, mention the file path when invoking the idea skill. When `NOTION_PAK` is set, it uploads and attaches the image to the Notion entry automatically; otherwise the entry is created with a `Screenshot pending` note.
 ```
 
-For `intro`, `deescalate`, `macro-suggest`, `monitor`, `pre-call-check`, `triage`, `poll`, `recap`, `wrapup`, `calibration`, and `report`, use the exact output shapes in the mode reference.
+For `intro`, `deescalate`, `macro-suggest`, `pre-call-check`, `poll`, `recap`, `wrapup`, `calibration`, and `report`, use the exact output shapes in the mode reference. During an active call/chat or when given a conversation link, keep the result in the `live` output shape.
 
 ## Apollo Support Toolkit
 
 - Use Intercom for conversation, customer, company, and recent-history context.
 - Use Glean Support Rep Assistant for product/process/how-to/troubleshooting questions before drafting factual guidance.
-- Use IKB/Glean/Apollo Agent when the issue depends on product policy, known issues, or step-by-step procedures and the Support Rep Assistant is unavailable or insufficient.
-- Follow the Wave 2 toolkit order when choosing the next check: Apollo Admin page (verify/change team settings and feature flags), GodMode (impersonate the customer to verify the fix worked), Glean/IKB, Apollo Agent, Slack search, then `#ama-support-peer-assist`.
+- Use IKB/Glean/Apollo Operator when the issue depends on product policy, known issues, or step-by-step procedures and the Support Rep Assistant is unavailable or insufficient.
+- Follow the Wave 2 toolkit order when choosing the next check: Apollo Admin page (verify/change team settings and feature flags), GodMode (impersonate the customer to verify the fix worked), Glean/IKB, Apollo Operator, Slack search, then `#ama-support-peer-assist`.
 - If still blocked after reasonable investigation, prepare a concise ask for `#ama-support-peer-assist` with customer, symptom, what was checked, and exact help needed.

@@ -1,6 +1,6 @@
 # Billing Triage
 
-Use this reference in `live`, `monitor`, and `triage` when a customer raises billing, charges, credits, refunds, cancellation, or invoices. Billing is the largest share of escalated volume. It is read-only: suggest a route and what to verify; do not decide outcomes or mutate anything.
+Use this reference in `live` when a customer raises billing, charges, credits, refunds, cancellation, or invoices. Billing is the largest share of escalated volume. It is read-only: suggest a route and what to verify; do not decide outcomes or mutate anything.
 
 Post-Fin context: Fin already handled the simple self-serve billing answers, so a human on a billing thread usually needs account state inspected or a decision made. Lead with what to verify and where to route, not with an article to paste.
 

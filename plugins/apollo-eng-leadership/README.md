@@ -12,7 +12,9 @@ Cowork skills for engineering managers — support-rotation idea capture, OKR re
 | `/apollo-eng-leadership:sprint-planning` | Prepare a sprint planning brief with carry-overs, capacity, and priorities |
 | `/apollo-eng-leadership:quarterly-retro-prep` | Prepare a data-driven quarterly retrospective brief from Jira, GitHub, Slack, and past retro notes |
 | `/apollo-eng-leadership:learn-about-skills` | Explain how Cowork skills and plugins work, then offer to help write one |
-| `/apollo-eng-leadership:intercom-assistant` | Coach Product Advocate rotation setup, replies, live assist, recaps, calibration, reports, and Intercom macro suggestions |
+| `/apollo-eng-leadership:intercom-assistant` | Coach support-rotation setup, replies, live assist, Apollo Operator research, recaps, calibration, reports, and Intercom macro suggestions |
+
+`intercom-assistant live` handles active calls, complex chats, and conversation-link assessments. Its former `monitor` and `triage` entry points are folded into `live`.
 
 ## What belongs in apollo-eng-leadership
 

@@ -1,13 +1,13 @@
-# Monitor Mode
+# Live Call And Chat Playbook
 
-Use this reference for `monitor` during an active support chat or call.
+Use this reference through `live` during an active support chat or call.
 
-Monitor mode is robust assist, not autonomous browser watching. It should refresh from Intercom and optional Granola context when tools are available, and it should work from pasted notes when they are not.
+Live call/chat assist is robust support, not autonomous browser watching. It should refresh from Intercom and optional Granola context when tools are available, and it should work from pasted notes when they are not.
 
 ## Inputs
 
 ```text
-/apollo-eng-leadership:intercom-assistant monitor --intercom <conversation-url-or-id> [--granola <meeting-or-link>]
+/apollo-eng-leadership:intercom-assistant live <conversation-url-or-id> [--granola <meeting-or-link>]
 ```
 
 Accept any of:
@@ -55,7 +55,7 @@ Quick Script:
 <1-2 natural sentences to say or send next>
 
 Tools to check next:
-<GodMode, IKB, Apollo Agent, Slack, peer assist, or none>
+<GodMode, IKB, Apollo Operator, Slack, peer assist, or none>
 
 Escalation trigger:
 <when to escalate and where>

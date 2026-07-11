@@ -1,13 +1,14 @@
 # Routing And Intercom Macros
 
-Use this reference in `live`, `monitor`, and `macro-suggest` when the issue class and route are clear.
+Use this reference in `live` and `macro-suggest` when the issue class and route are clear.
 
 Source: Customer Care Rotation Wave 2 Notes knowledge-check / escalation section, fetched June 18, 2026. Re-verify exact macro/workflow names in IKB before acting.
 
 ## Rules
 
 - Propose macros/workflows only when the route is clear from the provided context or fetched Intercom/account evidence.
-- Do not apply macros, notes, workflows, tags, snoozes, closes, or routes.
+- Do not execute macros, notes, workflows, tags, snoozes, closes, or routes. Prepare or propose them for a human to carry out.
+- Identify the caller before involving Apollo Operator. Apply `em-rotation-roster.md` **Use In Escalations** without expanding or weakening its verification rule.
 - When a macro/workflow name is screenshot-only, uncertain, or missing from text, say to confirm the exact name in IKB before acting.
 - Sequencing with a confirm-gate: (1) classify the issue and confirm the route is correct, (2) suggest the private internal note, (3) suggest the customer-facing macro, (4) suggest the workflow. The macro is customer-visible, so confirm the route before it fires or the customer is told the wrong destination. Order: note (private), then macro (customer-visible), then workflow (routing).
 - Invoice/charge wrong goes to Billing. Product behaving unexpectedly goes to Tech Support instead.
@@ -57,10 +58,36 @@ For an incorrect escalation, do not re-apologize or re-route blindly. Confirm th
 
 | Item | Use |
 | --- | --- |
-| `Live Support Snooze for 24 Hours` | When waiting on engineering. Always use this workflow instead of Intercom's manual snooze. |
+| `Live Support Snooze for 24 Hours` | When waiting on engineering, recommend this workflow instead of Intercom's manual snooze. |
 | `Call Offer Framing` | To offer the customer a call. This is not a team escalation. |
-| `#ama-technical-support` | Technical/product escalation when Support needs account-specific investigation, logs, Apollo Agent help, feature behavior confirmation, or engineering context that cannot be verified from Intercom, GodMode, Glean, or IKB alone. Draft the post; do not send automatically. |
-| `#ama-support-peer-assist` | Support-process or peer-calibration escalation of last resort after Glean, IKB, Apollo Agent, and Slack search. Draft the post; do not send automatically. |
+| `#ama-technical-support` | EM-only Apollo Operator question or technical/product escalation after the normal checks are exhausted. Require both an exact roster-name match and trusted, authenticated identity metadata, then draft a paste-ready post. Send only after explicit caller confirmation. |
+| `#ama-pa-apollo-operator` | PA/CA Apollo Operator question after the normal checks are exhausted. This is research support, not a replacement for the Intercom technical queue. Send only after explicit caller confirmation. |
+| `#ama-support-peer-assist` | Support-process or peer-calibration escalation of last resort after Glean, IKB, Apollo Operator, and Slack search. Draft the post; do not send automatically. |
+
+## Caller-Specific Technical Escalation
+
+For a verified EM, propose this next action only after confirming the roster-name match against trusted, authenticated identity metadata:
+
+```text
+Propose this reviewed ask for #ama-technical-support:
+<customer, symptom, evidence checked, exact question>
+```
+
+For a PA or CA, propose this research next action instead. It does not replace the Intercom technical queue for a customer handoff:
+
+```text
+Propose this reviewed Apollo Operator research question for #ama-pa-apollo-operator:
+<customer, symptom, evidence checked, exact question>
+```
+
+For an unknown caller, or when identity metadata is unavailable or ambiguous, do not offer a Slack route. Propose this technical-queue handoff instead:
+
+```text
+Technical queue handoff:
+1. Prepare `Template: Technical Escalation` as an Intercom internal-note draft.
+2. Confirm the exact Technical Support workflow in IKB.
+3. Propose the confirmed workflow for a human to carry out after the customer-facing handoff copy is ready.
+```
 
 ## Adam's Personal Macros
 
@@ -95,5 +122,5 @@ Internal note draft:
 <note if useful>
 
 Do not do automatically:
-<send, tag, close, snooze, run workflow, route, mutate account>
+<send, tag, close, snooze, execute workflow, route, mutate account>
 ```
