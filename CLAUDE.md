@@ -42,6 +42,12 @@ python .github/scripts/update-skill-inventory.py && python -m pytest tests/test_
 
 CI enforces Markdown formatting, Claude plugin validation, marketplace parity, skill-inventory freshness, plugin manifest schema, Codex display metadata and asset paths, skill frontmatter naming, and cross-plugin skill name uniqueness. Keep this section updated when CI checks change.
 
+## GitHub CLI Prerequisite
+
+This repo enables `apollo-eng` in `.claude/settings.json`, so `/apollo-eng:gh-setup` is available to Claude Code sessions here.
+
+Before running repo-local `.claude/skills` that create, update, or push PRs, check that `gh` is installed and authenticated. If `gh` is missing, unauthenticated, or the current repo uses HTTPS remotes, run `/apollo-eng:gh-setup` first. It installs/checks GitHub CLI, nudges SSH Git remotes, and uses `gh auth login --git-protocol ssh --web` for PR push workflows.
+
 For pre-push review, use `/review`. It loads `skill-review-rubric.md` and scales review depth to the change size; use it especially for large or complex skills with long instructions, scripts, references, broad routing, external data access, or cross-team impact. Reviewers should flag new skills that omit `disable-model-invocation: true` unless natural-language activation is justified.
 
 Use `/update-review-rubric` to inspect recent PR review-bot output, propose evidence-backed rubric improvements, and ask which ones to implement before editing review rules.
