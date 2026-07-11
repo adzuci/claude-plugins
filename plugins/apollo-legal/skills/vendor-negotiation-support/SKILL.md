@@ -75,8 +75,11 @@ Answer the obvious executive math:
 
 ## Mode: Negotiate
 
-Read `references/negotiation-playbook.md` and `references/apollo-data-negotiation.md` before
-writing negotiation options.
+Read `references/negotiation-playbook.md`, `references/apollo-data-negotiation.md`, and
+`references/multiyear-strategy.md` before writing negotiation options. When the user asks
+about how hard to push on discount, term length, ramp-up pricing, use-or-lose credits, or
+whether to renew or reopen a competitive process, read `references/multiyear-strategy.md`
+first.
 
 Always present options, not just one recommendation:
 
@@ -132,6 +135,8 @@ The goal is to reduce Procurement/Legal workload by doing manager prep:
 - Summarize value and usage.
 - Identify negotiation asks and source evidence.
 - Separate commercial asks from legal/security review items.
+- Prep the Zip submission packet and note the expected approval path (see
+  `references/procurement-handoff.md`).
 - Provide a short handoff note with links and open questions.
 
 Do not create, update, approve, or submit procurement records unless the user explicitly asks
