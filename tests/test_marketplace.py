@@ -20,6 +20,7 @@ SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+$")
 EXPECTED_DISPLAY_NAMES = {
     "apollo-analytics": "Apollo Analytics",
     "apollo-eng": "Apollo Engineering",
+    "apollo-eng-agentic-engineering": "Apollo Engineering Agentic Engineering",
     "apollo-eng-devops": "Apollo Engineering DevOps",
     "apollo-eng-fabric-surfaces": "Apollo Engineering Fabric Surfaces",
     "apollo-eng-leadership": "Apollo Engineering Leadership",

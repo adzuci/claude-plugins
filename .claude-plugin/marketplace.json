@@ -144,6 +144,13 @@
       "description": "Accounting and finance skills for Apollo's Finance team — contract clause analysis, ASC 606 revenue recognition assessment, and Ironclad contract review workflows.",
       "category": "finance",
       "tags": ["cowork", "finance", "accounting", "contracts"]
+    },
+    {
+      "name": "apollo-eng-agentic-engineering",
+      "source": "./plugins/apollo-eng-agentic-engineering",
+      "description": "Agentic Engineering team skills",
+      "category": "engineering",
+      "tags": ["claude-code", "engineering", "agentic-engineering"]
     }
   ]
 }

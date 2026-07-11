@@ -1,0 +1,15 @@
+{
+  "name": "apollo-eng-agentic-engineering",
+  "version": "1.0.0",
+  "description": "Agentic Engineering team skills",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Engineering Agentic Engineering",
+    "shortDescription": "Agentic Engineering team skills",
+    "developerName": "Apollo",
+    "category": "Engineering",
+    "brandColor": "#1F2937"
+  }
+}
