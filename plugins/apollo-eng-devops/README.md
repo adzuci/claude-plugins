@@ -14,6 +14,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 |---|---|
 | `/apollo-eng-devops:check-apdex` | Snowflake-first Apdex dip investigation with Grafana deep triage |
 | `/apollo-eng-devops:check-cloudflare` | Cloudflare edge, bot/challenge, throughput/error, and tunnel health checks |
+| `/apollo-eng-devops:create-mongo-index` | Safe read-only planning and DevOps handoff for Apollo MongoDB index creation |
 | `/apollo-eng-devops:devops` | SRE devops — applies reliability engineering to any production task |
 | `/apollo-eng-devops:gameday` | MongoDB incident gameday drills for on-call practice |
 | `/apollo-eng-devops:grafana-observability` | Grafana dashboard design and alert quality specialist |
@@ -21,6 +22,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 | `/apollo-eng-devops:incident-triage` | Triage Jira INCIDENT tickets and PD/Grafana alert follow-up |
 | `/apollo-eng-devops:kubernetes-specialist` | Kubernetes debugging and rollout specialist — **invoke explicitly** (not auto-routed) |
 | `/apollo-eng-devops:logs-ingestion-rate` | Investigate Apollo's Grafana Cloud logs ingestion rate alert and alert quality |
+| `/apollo-eng-devops:mongo-specialist` | Shared Apollo MongoDB operations context: clusters, channels, TapData, consult targets, and read-only commands |
 | `/apollo-eng-devops:news-feed` | Weekly vendor announcement triage for DevOps-relevant AI, security, observability, platform, and infrastructure changes |
 | `/apollo-eng-devops:oncall` | DevOps + Platform PagerDuty schedule, review, swap, and override companion |
 | `/apollo-eng-devops:oncall-handoff` | Daily or weekly DevOps PD handoff focused on the outgoing caller's on-call shift |
@@ -42,6 +44,9 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 - **Logs ingestion alert**: `logs-ingestion-rate` + `grafana-observability`
 - **Jira incident queue cleanup**: `incident-triage` + `oncall`
 - **Mongo incident practice**: `gameday` + `incident-response`
+- **Live Mongo incident**: `mongo-specialist` (live-incident-mode) + `incident-response` for SEV/comms
+- **Mongo index creation**: `create-mongo-index` + `mongo-specialist` for shared cluster/channel context
+- **Mongo operations lookup**: `mongo-specialist` + the narrower Mongo skill for the task
 - **Architecture design review**: `devops` (design review path)
 - **Postmortem writing**: `incident-response`
 - **Sidekiq worker specialist PR**: `sidekiq-worker-specialist` + `/apollo-eng-devops:kubernetes-specialist` (post-deploy verification)
@@ -59,6 +64,9 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 | "Review unassigned production incidents" | incident-triage |
 | "Who is on DevOps on-call next week?" | oncall schedule |
 | "Run a MongoDB failover tabletop" | gameday |
+| "I'm paged for Mongo::Error::NoServerAvailable right now" | mongo-specialist (live-incident-mode) + incident-response |
+| "Plan creating a Mongo index on LoginAttempt" | create-mongo-index + mongo-specialist |
+| "Who should I ask about a Mongo balancer issue?" | mongo-specialist |
 | "Postmortem for Feb 14 incident" | incident-response postmortem template |
 | "Design review: new async ingestion pipeline" | devops (design review path) |
 | "We need SLOs for the Elasticsearch cluster" | devops (SLOs module) + grafana-observability |
@@ -92,6 +100,10 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 **`gameday`** — Invoke directly for MongoDB incident drills, tabletop scenarios, and on-call practice.
 
 **`wtf-does-this-do`** — Invoke directly when you need to understand an unfamiliar skill, plugin, repo, script, or artifact before changing it.
+
+**`mongo-specialist`** - Invoke directly for shared Apollo MongoDB context: cluster/client lookup, escalation channels, TapData/Mason guidance, consult targets, and read-only inspection commands. Other Mongo skills should reference this instead of duplicating stale-prone Mongo facts. Also carries the live-incident-mode playbook (PagerDuty/Grafana/Tempo triage, watcher subagents, known traps) for an active Mongo page — pair with `incident-response` for SEV/comms.
+
+**`create-mongo-index`** - Invoke directly when planning a Mongo index creation. It performs read-only triage, applies size/timing gates, drafts `#xfn-h-devops` handoff text, and routes execution to approved human operators. It relies on `mongo-specialist` for shared Mongo context.
 
 ## How apollo-eng-devops Complements apollo-eng
 
