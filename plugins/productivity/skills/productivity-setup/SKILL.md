@@ -49,7 +49,7 @@ If this skill is running in a hosted client with no local CLI, skip local copyin
 
 ## 3. Schedule Friday AI Coach
 
-Use the scheduler native to the current caller, not every detected client. Check for an existing task named `Weekly AI Coach` and update it instead of creating a duplicate.
+Use the scheduler native to the current caller, not every detected client. Check existing schedules for the name `Weekly AI Coach` or a prompt/invocation containing `ai-coach`; update an equivalent Friday task instead of creating a duplicate.
 
 - **Codex:** use the Automation creation/update tool. Configure a local weekly automation for Friday at 16:30 local time, with the vault as its working directory.
 - **Claude Code:** use `/schedule` for a weekly Friday job and bind it to the vault repository/folder. Do not use `/loop`; loops expire after at most three days.
