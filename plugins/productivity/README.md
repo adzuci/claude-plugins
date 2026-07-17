@@ -4,6 +4,14 @@ Local-first task capture, session hygiene, end-of-day, and agent-operations work
 
 ## Skills
 
+### `/productivity:productivity-setup`
+
+Installs managed local copies of the portable core skills for every detected Claude Code and Codex client. After confirmation, it creates a Friday AI Coach schedule using the caller's native scheduler.
+
+### `/productivity:ai-coach`
+
+Reviews recent curated AI-work session notes for repeated friction, missed reusable workflows, and approval-safe memory candidates. Weekly mode writes a concise report to the user's Obsidian vault without changing durable memory.
+
 ### `/productivity:todo`
 
 Captures one or more durable action items in an Obsidian Kanban backlog. It asks a concise question only when the task is materially ambiguous, preserves links and proper nouns, supports explicit urgent items, and writes idempotently to `backlog.md` under `## Inbox`.

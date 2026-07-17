@@ -40,7 +40,9 @@ jobs:
               plugins/productivity/skills/agent-ops-report/scripts \
               plugins/productivity/skills/agent-ops-report/tests \
               plugins/productivity/skills/todo/scripts \
-              plugins/productivity/skills/todo/tests
+              plugins/productivity/skills/todo/tests \
+              plugins/productivity/skills/productivity-setup/scripts \
+              plugins/productivity/skills/productivity-setup/tests
 
       - name: Run memory setup tests
         run: |
@@ -53,6 +55,8 @@ jobs:
               -q -p no:cacheprovider
           PYTHONDONTWRITEBYTECODE=1 \
             python -m pytest plugins/productivity/skills/todo/tests -q -p no:cacheprovider
+          PYTHONDONTWRITEBYTECODE=1 \
+            python -m pytest plugins/productivity/skills/productivity-setup/tests -q -p no:cacheprovider
 
       - name: Validate JSON manifests
         run: |

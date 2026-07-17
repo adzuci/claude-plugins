@@ -1,0 +1,4 @@
+interface:
+  display_name: "Productivity Setup"
+  short_description: "Install portable productivity skills and coaching"
+  default_prompt: "Use $productivity-setup to install the productivity skills for my available AI clients and schedule the Friday AI coach."

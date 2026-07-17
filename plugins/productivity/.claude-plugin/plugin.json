@@ -1,7 +1,7 @@
 {
   "name": "productivity",
-  "version": "0.2.0",
-  "description": "Local-first task capture, session hygiene, daily wrapup, spend monitoring, agent scaffolding, and privacy-safe agent operations.",
+  "version": "0.3.0",
+  "description": "Portable task capture, session hygiene, daily planning, AI coaching, setup, spend monitoring, and privacy-safe agent operations.",
   "author": {
     "name": "adzuci"
   }

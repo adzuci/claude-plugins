@@ -1,11 +1,12 @@
 ---
 name: todo
 description: Add one or more persistent todos, reminders, follow-ups, or action items to an Obsidian Kanban backlog. Use when the user invokes /productivity:todo or asks to capture work in their backlog.
+disable-model-invocation: true
 ---
 
 # Todo
 
-Capture durable tasks in `$VAULT/backlog.md` under `## Inbox`. Keep daily goals separate.
+Capture durable tasks in the configured vault's `backlog.md` under `## Inbox`. Keep daily goals separate.
 
 ## Clarification Gate
 
@@ -28,6 +29,8 @@ Do not ask for optional metadata merely because it is absent. If the task is und
 
 ## Write
 
+Resolve the vault in this order: an explicit path, `$VAULT`, `~/.config/adzuci-productivity/config.json`, then `~/obsidian-vault`. Ask for the path if the resolved vault does not exist.
+
 Resolve the bundled `scripts/append_todo.py`, then run:
 
 ```bash
@@ -37,7 +40,7 @@ python3 <skill-dir>/scripts/append_todo.py \
   [--urgent]
 ```
 
-If the default vault does not exist, ask for the Obsidian vault path instead of guessing. Use `--dry-run` first only when an existing item may need promotion or the user's selection is ambiguous.
+Use `--dry-run` first only when an existing item may need promotion or the user's selection is ambiguous.
 
 The script creates missing Kanban headings, adds new items idempotently, and promotes an existing matching item to urgent instead of duplicating it.
 

@@ -50,7 +50,7 @@ Set:
 - `YESTERDAY=YYYY-MM-DD`
 - `TOMORROW=YYYY-MM-DD`
 - `GOAL_DAY=YYYY-MM-DD`
-- `VAULT="${VAULT:-$HOME/obsidian-vault}"`
+- `VAULT` from an explicit path, `$VAULT`, `~/.config/adzuci-productivity/config.json`, then `~/obsidian-vault`
 - `SESSION_NOTE=$VAULT/sessions/$TODAY.md`
 
 Goal-day rule:
