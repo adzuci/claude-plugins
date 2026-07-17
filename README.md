@@ -209,8 +209,8 @@ Claude Enterprise owners manage organization plugins in Claude admin settings. S
   plugins/
     marketplace.json
 .github/
-  workflows/  # CI: lint, validate, tests, bump-version, skill-pr-review, update-skill-inventory
-  scripts/    # Helper scripts used by workflows (update-skill-inventory, bump_plugin_versions)
+  workflows/  # CI: lint, validate, tests, release-please, skill-pr-review, update-skill-inventory
+  scripts/    # Helper scripts used by workflows, such as update-skill-inventory
 skill-review-rubric.md
 template/
   .claude-plugin/
@@ -237,16 +237,14 @@ plugins/
 
 ## Versioning and Releases
 
-This repo uses [Conventional Commits](https://www.conventionalcommits.org/) to drive automatic semver tagging via `.github/workflows/bump-version.yml`. On every push to `main`:
+This repo uses [Release Please](https://github.com/googleapis/release-please-action) and [Conventional Commits](https://www.conventionalcommits.org/) to bump plugin versions via `.github/workflows/release-please.yml`. On every push to `main`:
 
-1. Finds the latest `vMAJOR.MINOR.PATCH` tag
-1. Scans commit subjects and bodies since that tag
-1. Picks the highest-impact bump: **major** (`feat!:` / `BREAKING CHANGE`), **minor** (`feat:`), **patch** (`fix:` and other releasable types)
-1. Skips tagging entirely for non-releasing types: `chore`, `docs`, `ci`, `style`, `test`
-1. Pushes an annotated tag and creates a GitHub Release with auto-generated notes
-1. Bumps the `version` in each changed plugin's Claude and Codex `plugin.json` using the same semver rules, based on the commits that touched that plugin (via `.github/scripts/bump_plugin_versions.py`)
+1. Release Please scans commits for each package listed in `release-please-config.json`
+1. Creates or updates release PRs with changelogs and version bumps
+1. Bumps both Claude and Codex plugin manifests through `extra-files`
+1. Creates tags and GitHub Releases when release PRs are merged
 
-Both the repo-wide tag and the per-plugin manifest versions are bumped automatically — you do not need to edit `plugin.json` versions by hand. The per-plugin bump is derived from scoped Conventional Commits, so commit with a plugin scope (e.g. `feat(apollo-people): ...`) and touch that plugin's files.
+Do not edit `plugin.json` versions by hand. Commit with a plugin scope (for example, `feat(apollo-people): ...`) and touch that plugin's files so Release Please can attribute the change.
 
 The README plugin inventory and `SKILL_INVENTORY.md` are auto-updated by CI on merge — do not edit them manually.
 

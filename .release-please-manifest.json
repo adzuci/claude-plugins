@@ -1,0 +1,22 @@
+{
+  "plugins/apollo-accounting": "1.0.0",
+  "plugins/apollo-analytics": "2.0.0",
+  "plugins/apollo-corpsec": "1.0.0",
+  "plugins/apollo-eng": "1.1.0",
+  "plugins/apollo-eng-devops": "1.0.0",
+  "plugins/apollo-eng-fabric-surfaces": "1.0.0",
+  "plugins/apollo-eng-leadership": "1.2.0",
+  "plugins/apollo-gtm": "0.1.0",
+  "plugins/apollo-gtm-enablement": "1.0.0",
+  "plugins/apollo-gtm-systems": "0.1.0",
+  "plugins/apollo-it": "0.1.0",
+  "plugins/apollo-legal": "1.1.0",
+  "plugins/apollo-marketing": "1.0.0",
+  "plugins/apollo-people": "0.2.0",
+  "plugins/apollo-procurement": "1.0.0",
+  "plugins/apollo-product": "0.1.0",
+  "plugins/apollo-risk": "1.0.0",
+  "plugins/apollo-rnd": "0.2.0",
+  "plugins/apollo-support": "1.0.0",
+  "plugins/apollo-talent": "1.0.0"
+}

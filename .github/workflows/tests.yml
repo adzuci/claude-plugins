@@ -12,8 +12,9 @@ on:
       - ".agents/plugins/**"
       - ".claude/skills/**"
       - ".claude-plugin/**"
-      - ".github/scripts/bump_plugin_versions.py"
-      - ".github/workflows/bump-version.yml"
+      - ".github/workflows/release-please.yml"
+      - ".release-please-manifest.json"
+      - "release-please-config.json"
       - ".github/workflows/tests.yml"
 
 jobs:
