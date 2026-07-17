@@ -1,8 +1,12 @@
 # productivity plugin
 
-Local productivity and agent-operations workflow skills for Claude Code and Codex.
+Local-first task capture, session hygiene, end-of-day, and agent-operations workflows for Claude Code and Codex.
 
 ## Skills
+
+### `/productivity:todo`
+
+Captures one or more durable action items in an Obsidian Kanban backlog. It asks a concise question only when the task is materially ambiguous, preserves links and proper nouns, supports explicit urgent items, and writes idempotently to `backlog.md` under `## Inbox`.
 
 ### `/productivity:wrapup`
 
@@ -11,6 +15,8 @@ Checks for loose ends before clearing context — uncommitted changes, unpushed 
 ### `/productivity:daily-wrapup`
 
 End-of-day operating loop. Reviews yesterday's goals, summarizes what you accomplished today, previews tomorrow's calendar, optionally checks your on-call schedule, surfaces outstanding requests, and helps you commit goals for tomorrow. Writes goal commits to your Obsidian vault session note (works with the `memory` plugin).
+
+Use `/productivity:todo` for immediate capture, `/productivity:daily-wrapup` for daily reflection and next-day planning, and `/productivity:wrapup` to check whether an individual AI/repo session is safe to clear.
 
 ### `/productivity:budgetclaw-setup`
 

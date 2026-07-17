@@ -1,0 +1,4 @@
+interface:
+  display_name: "Todo"
+  short_description: "Capture clear tasks in an Obsidian backlog"
+  default_prompt: "Use $todo to add a task to my Obsidian backlog."

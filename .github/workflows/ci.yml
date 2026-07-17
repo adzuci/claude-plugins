@@ -38,7 +38,9 @@ jobs:
               plugins/productivity/skills/agent-ops-setup/scripts \
               plugins/productivity/skills/agent-ops-setup/tests \
               plugins/productivity/skills/agent-ops-report/scripts \
-              plugins/productivity/skills/agent-ops-report/tests
+              plugins/productivity/skills/agent-ops-report/tests \
+              plugins/productivity/skills/todo/scripts \
+              plugins/productivity/skills/todo/tests
 
       - name: Run memory setup tests
         run: |
@@ -49,6 +51,8 @@ jobs:
               plugins/productivity/skills/agent-ops-setup/tests \
               plugins/productivity/skills/agent-ops-report/tests \
               -q -p no:cacheprovider
+          PYTHONDONTWRITEBYTECODE=1 \
+            python -m pytest plugins/productivity/skills/todo/tests -q -p no:cacheprovider
 
       - name: Validate JSON manifests
         run: |
@@ -56,6 +60,7 @@ jobs:
           python -m json.tool .claude-plugin/marketplace.json >/dev/null
           python -m json.tool plugins/memory/.claude-plugin/plugin.json >/dev/null
           python -m json.tool plugins/memory/.codex-plugin/plugin.json >/dev/null
+          python -m json.tool plugins/productivity/.claude-plugin/plugin.json >/dev/null
 
       - name: Validate static site asset references
         run: |
