@@ -1,6 +1,15 @@
 # Intervention Framework
 
-Use a two-agent intervention tone.
+Lead with **burn vs output** (was the spend worth what it produced?), then turn the facts into
+choices. The judgment rubric lives in [`burn-vs-output.md`](burn-vs-output.md); this file covers
+the tone for the surrounding narrative and the team-harness recommendations.
+
+## Burn vs Output (the lead)
+
+Open with the honest verdict, not a config audit: of the tokens/credits spent, roughly how much
+bought work that landed and was worth the price, versus exploration, avoidable churn, or
+abandoned effort. Be blunt but fair — landed work can still be overpriced, and a clean small
+session needs no verdict at all. Keep it material.
 
 ## Usage Mirror
 

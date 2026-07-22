@@ -14,15 +14,99 @@ const flag = name => {
 }
 const out = flag('--out') || path.join(os.homedir(), '.codex', 'codex-insights', 'reports', `report-${new Date().toISOString().slice(0, 10)}.html`)
 const footer = flag('--footer') || ''
+const judgmentsPath = flag('--judgments')
 
 const data = JSON.parse(fs.readFileSync(input, 'utf8'))
 fs.mkdirSync(path.dirname(out), { recursive: true })
+
+// Merge the skill's judgment pass (ROI / outcome / verdict per session, plus an overall
+// verdict and per-week headlines) onto the deterministic burn ledger from the enumerator.
+// efficiency is already computed and is never overwritten by judgment. Robust to a missing
+// file: the ledger still renders with the computed efficiency and an "unjudged" note.
+let judgments = null
+if (judgmentsPath && fs.existsSync(judgmentsPath)) {
+  try { judgments = JSON.parse(fs.readFileSync(judgmentsPath, 'utf8')) } catch { judgments = null }
+}
+const burn = data.burn_analysis || { overall_verdict: null, weekly: [], sessions: [] }
+if (judgments) {
+  const byId = new Map()
+  for (const j of judgments.sessions || []) if (j && j.id) byId.set(j.id, j)
+  burn.sessions = (burn.sessions || []).map(s => {
+    const j = byId.get(s.id) || {}
+    return { ...s, roi: j.roi || s.roi, outcome: j.outcome || s.outcome, verdict: j.verdict || s.verdict }
+  })
+  if (judgments.overall_verdict) burn.overall_verdict = judgments.overall_verdict
+  if (Array.isArray(judgments.weekly) && judgments.weekly.length) burn.weekly = judgments.weekly
+}
 
 const scrub = s => String(s ?? '').replaceAll(os.homedir(), '~')
 const pct = (n, d) => d ? `${Math.round((n / d) * 100)}%` : 'n/a'
 
 const stat = (label, value) => `<div class="stat"><div class="stat-v">${esc(value)}</div><div class="stat-k">${esc(label)}</div></div>`
 const badge = (text, tone = 'mut') => `<span class="badge ${tone}">${esc(text)}</span>`
+
+// Dimension badge (ROI / outcome / efficiency) with a tone per value, mirroring
+// deep-insights so the two reports read the same.
+const DIM_TONE = {
+  'worth-it': 'good', landed: 'good', lean: 'good',
+  overpriced: 'warn', partial: 'warn', loose: 'warn',
+  wasted: 'bad', dropped: 'bad', thrashy: 'bad',
+}
+const dimBadge = (dim, val) => {
+  const v = String(val || 'unjudged').toLowerCase()
+  const tone = DIM_TONE[v] || 'mut'
+  return `<span class="badge ${tone}"><span class="dim">${esc(dim)}</span>${esc(v.replace(/-/g, ' '))}</span>`
+}
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const weekLabel = wk => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(wk || '')
+  return m ? `${MONTHS[+m[2] - 1]} ${m[3]}` : (wk || '—')
+}
+
+const weeks = Array.isArray(data.by_week) ? data.by_week.filter(w => w.week && w.week !== 'undated') : []
+const maxWeekTokens = weeks.reduce((m, w) => Math.max(m, w.total_tokens || 0), 0) || 1
+const headlineByWeek = {}
+for (const w of burn.weekly || []) if (w && w.week) headlineByWeek[w.week] = w.headline
+const weekSeg = (tokens, cls) => {
+  const w = ((tokens || 0) / maxWeekTokens) * 100
+  return w > 0 ? `<span class="seg ${cls}" style="width:${w.toFixed(2)}%" title="${cls} ${fmt(tokens)} tok"></span>` : ''
+}
+const weekChart = weeks.map(w => {
+  const et = w.efficiency_tokens || {}
+  const bar = weekSeg(et.lean, 'good') + weekSeg(et.loose, 'warn') + weekSeg(et.thrashy, 'bad')
+  const head = headlineByWeek[w.week]
+  return `
+    <div class="wk">
+      <div class="wk-top">
+        <span class="wk-label">${esc(weekLabel(w.week))}</span>
+        <span class="wk-track">${bar}</span>
+        <span class="wk-cost">${esc(fmt(w.total_tokens))}</span>
+      </div>
+      ${head ? `<p class="wk-head">${esc(scrub(head))}</p>` : ''}
+    </div>`
+}).join('\n')
+
+const burnRows = (burn.sessions || []).map(s => {
+  const signals = []
+  if (s.edit_events) signals.push(`${s.edit_events} edits`)
+  if (s.test_events) signals.push(`${s.test_events} test runs`)
+  if (s.commit_events) signals.push(`${s.commit_events} commits`)
+  if (s.user_prompt_count) signals.push(`${s.user_prompt_count} prompts`)
+  signals.push(s.completed ? 'completed' : 'no completion event')
+  const verdict = s.verdict
+    ? esc(scrub(s.verdict))
+    : `<span class="mut">Not judged this run — efficiency is computed; run the judgment step for ROI/outcome. Signals: ${esc(signals.join(' · '))}.</span>`
+  return `
+    <div class="card">
+      <div class="card-head">
+        <span class="cost">${esc(fmt(s.total_tokens))} tok<span class="mut"> · ≈${esc(fmt(s.credits))} cr</span></span>
+        <span class="sid">${esc(scrub(s.label || s.id))}</span>
+        <span class="badges">${dimBadge('ROI', s.roi)}${dimBadge('outcome', s.outcome)}${dimBadge('efficiency', s.efficiency)}</span>
+      </div>
+      <p class="verdict">${verdict}</p>
+    </div>`
+}).join('\n')
 
 const topSessions = (data.sessions || []).map(s => `
   <div class="row">
@@ -350,7 +434,15 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut)
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:20px 0}.stat,.rec,.panel,.row{background:var(--panel);border:1px solid var(--line);border-radius:10px}
 .stat{padding:12px 14px}.stat-v{font-size:20px;font-weight:700}.stat-k{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
 .panel{padding:15px 17px;margin:10px 0}.row{display:grid;grid-template-columns:1fr auto;gap:18px;padding:13px 15px;margin:9px 0}.num{font-weight:700;color:var(--blue);font-variant-numeric:tabular-nums}
-.badge{display:inline-block;margin:4px 5px 0 0;padding:2px 8px;border-radius:999px;background:#303743;color:var(--mut);font-size:11px;font-weight:700}.badge.warn{background:rgba(210,153,34,.16);color:var(--warn)}.badge.bad{background:rgba(248,81,73,.16);color:var(--bad)}.badge.blue{background:rgba(108,182,255,.14);color:var(--blue)}
+.badge{display:inline-block;margin:4px 5px 0 0;padding:2px 8px;border-radius:999px;background:#303743;color:var(--mut);font-size:11px;font-weight:700}.badge.warn{background:rgba(210,153,34,.16);color:var(--warn)}.badge.bad{background:rgba(248,81,73,.16);color:var(--bad)}.badge.blue{background:rgba(108,182,255,.14);color:var(--blue)}.badge.good{background:rgba(63,185,80,.16);color:var(--green)}
+.badge .dim{font-weight:600;opacity:.62;font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;margin-right:5px}
+.legend{color:var(--mut);font-size:12px;margin:-4px 0 14px}.legend b{color:var(--ink);font-weight:600}
+.chip{display:inline-block;padding:0 7px;border-radius:10px;font-size:11px;font-weight:600;color:#06121f}.chip.good{background:var(--green)}.chip.warn{background:var(--warn)}.chip.bad{background:var(--bad)}
+.weeks{margin:8px 0 4px}.wk{margin-bottom:13px}.wk-top{display:flex;align-items:center;gap:11px}.wk-label{width:52px;font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums;flex:none}
+.wk-track{flex:1;height:18px;background:var(--panel);border:1px solid var(--line);border-radius:5px;overflow:hidden;display:flex}.seg{height:100%;display:inline-block}.seg.good{background:var(--green)}.seg.warn{background:var(--warn)}.seg.bad{background:var(--bad)}
+.wk-cost{width:72px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums;color:var(--blue);font-size:13px;flex:none}.wk-head{margin:5px 0 0 63px;color:var(--mut);font-size:13px}
+.lead{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:10px;padding:16px 18px;margin:0 0 14px;font-size:15px}.lead.mut{color:var(--mut)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 16px;margin-bottom:10px}.card-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.cost{font-weight:700;font-variant-numeric:tabular-nums;color:var(--blue);font-size:15px}.sid{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--mut)}.badges{margin-left:auto;display:flex;gap:5px;flex-wrap:wrap}.verdict{margin:9px 0 0;color:var(--ink)}
 .rec{padding:14px 16px;margin:10px 0}.rec-head{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.pill{display:inline-flex;align-items:center;justify-content:center;width:21px;height:21px;border-radius:6px;background:var(--blue);color:#06121f;font-weight:800;font-size:12px}
 pre{background:#0b0f14;border:1px solid var(--line);border-radius:8px;overflow:auto;padding:12px 13px} code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}.foot{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);color:var(--mut);font-family:ui-monospace,Menlo,monospace;font-size:12px}
@@ -364,12 +456,28 @@ a{color:var(--blue)}
 
 <div class="stats">
 ${stat('Exact tokens', fmt(data.totals.total_tokens))}
+${stat('Est. credits', fmt(data.totals.credits ?? Math.round((data.totals.total_tokens || 0) / 1000)))}
 ${stat('Sessions analyzed', data.snapshot.sessions_found)}
 ${stat('Top sessions shown', data.snapshot.sessions_reported)}
 ${stat('Reasoning tokens', fmt(data.totals.reasoning_output_tokens))}
-${stat('Tool calls', fmt(data.totals.tool_calls))}
 ${stat('Cache share', pct(data.totals.cached_input_tokens, data.totals.input_tokens + data.totals.cached_input_tokens))}
 </div>
+
+<h2>Week by Week — burn &amp; churn over time</h2>
+<p class="legend">Bar length ∝ that week's exact tokens; color is the deterministic efficiency split —
+  <span class="chip good">lean</span> <span class="chip warn">loose</span> <span class="chip bad">thrashy</span>.
+  Credits use Apollo's convention (1 credit ≈ 1K tokens); Codex does not expose exact per-session dollars.</p>
+<div class="weeks">${weekChart || '<p class="mut">No weekly data in this window.</p>'}</div>
+
+<h2>Burn vs Output — was the spend worth it?</h2>
+${burn.overall_verdict ? `<div class="lead">${esc(scrub(burn.overall_verdict))}</div>` : `<div class="lead mut">ROI and outcome were not judged in this run. Efficiency below is computed deterministically; run the judgment step (see SKILL.md) to add per-session ROI/outcome and an overall verdict.</div>`}
+<p class="legend">Each session carries three orthogonal dimensions:
+  <b>ROI</b> (was the price fair for what resulted — worth&nbsp;it / overpriced / wasted) and
+  <b>outcome</b> (did durable work result — landed / partial / dropped) are <i>judged</i> against
+  evidence; <b>efficiency</b> (how much spend was avoidable churn — lean / loose / thrashy) is
+  <i>computed</i> from cold-reingest / large-output / tool-loop / reasoning-spin signals, not judged.
+  They can disagree (e.g. landed but overpriced).</p>
+${burnRows || '<p class="mut">No high-token sessions in this window.</p>'}
 
 <h2>Where Tokens Went</h2>
 <div class="panel">The largest sessions are listed below. Findings are based on exact Codex <code>token_count</code> events; optional <code>ccusage</code> data is treated as a cross-check.</div>

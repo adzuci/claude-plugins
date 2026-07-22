@@ -79,6 +79,31 @@ function addTool(tools, name) {
   tools[name] = (tools[name] || 0) + 1
 }
 
+// Best-effort shell command text from a function_call payload, lowercased. Codex
+// runs edits/tests/commits through shell-style tools whose arguments carry a
+// `command` array or string. Used only for deterministic work-output signals
+// (edits / tests / commits) — never stored or emitted verbatim.
+function commandTextFromCall(payload) {
+  const name = String(payload?.name || '').toLowerCase()
+  if (!/shell|exec|bash|terminal|command/.test(name)) return ''
+  let args = payload?.arguments
+  if (typeof args === 'string') {
+    try {
+      args = JSON.parse(args)
+    } catch {
+      return args.toLowerCase()
+    }
+  }
+  const cmd = args?.command ?? args?.cmd ?? args?.script ?? ''
+  if (Array.isArray(cmd)) return cmd.join(' ').toLowerCase()
+  return String(cmd || '').toLowerCase()
+}
+
+const EDIT_CALL = /apply_patch|apply-patch|^patch$|edit_file|write_file|create_file|str_replace|update_file/
+const TEST_CMD = /\b(pytest|jest|vitest|mocha|go test|cargo test|rspec|rake test|npm (run )?test|pnpm (run )?test|yarn test|tox|mvn test|gradle test|phpunit|ctest)\b/
+const EDIT_CMD = /\bapply_patch\b|\bgit apply\b|\bsed -i\b|\btee \b/
+const COMMIT_CMD = /\bgit commit\b/
+
 function collectInvocationMentions(text, rec) {
   for (const match of String(text || '').matchAll(/\$([A-Za-z0-9_-]+(?::[A-Za-z0-9_-]+)?)/g)) {
     addTool(rec.skill_invocations, `$${match[1]}`)
@@ -123,8 +148,16 @@ function parseRollout(file, index) {
     tools: {},
     skill_invocations: {},
     slash_commands: {},
+    user_prompt_count: 0,
+    edit_events: 0,
+    test_events: 0,
+    commit_events: 0,
     errors: 0,
     token_history: [],
+    // Timestamped churn/work-output events so a --since window can recompute the
+    // per-session signal counts instead of mixing window-scoped tokens with
+    // lifetime counts. Dropped before serialization (see prepareSessionForOutput).
+    signal_events: [],
     total_token_usage: null,
     last_token_usage: null,
     model_context_window: null,
@@ -132,6 +165,8 @@ function parseRollout(file, index) {
   }
 
   const lines = fs.readFileSync(file, 'utf8').split(/\n/)
+  let eventPromptCount = 0
+  let fallbackPromptCount = 0
   for (const line of lines) {
     if (!line.trim()) continue
     let obj
@@ -154,11 +189,22 @@ function parseRollout(file, index) {
       if (p.id && p.id !== id) rec.id = p.id
     }
 
+    // Timestamp used to place a signal event in the --since window. Records without
+    // their own line timestamp inherit the last-seen session time so they are not
+    // silently dropped from windowed counts.
+    const eventTs = ts || rec.last_ts
+
     const payload = obj.payload || {}
     if (obj.type === 'event_msg' && payload.type === 'user_message') {
+      eventPromptCount += 1
+      rec.signal_events.push({ ts: eventTs, kind: 'prompt' })
       collectInvocationMentions(payload.text || payload.message || payload.content || '', rec)
     }
     if (obj.type === 'response_item' && payload.type === 'message' && payload.role === 'user') {
+      // Current logs duplicate the human turn as event_msg/user_message and also
+      // use response_item/user for injected context. Keep this as an old-format fallback.
+      fallbackPromptCount += 1
+      rec.signal_events.push({ ts: eventTs, kind: 'prompt_fallback' })
       collectInvocationMentions(textFromMessageContent(payload.content), rec)
     }
     if (payload.cwd || payload.workdir) rec.cwd = rec.cwd || payload.cwd || payload.workdir
@@ -166,6 +212,7 @@ function parseRollout(file, index) {
 
     if (obj.type === 'event_msg' && payload.type === 'token_count') {
       rec.token_events += 1
+      rec.signal_events.push({ ts: eventTs, kind: 'token' })
       const info = payload.info || {}
       rec.total_token_usage = info.total_token_usage || rec.total_token_usage
       rec.last_token_usage = info.last_token_usage || rec.last_token_usage
@@ -189,16 +236,33 @@ function parseRollout(file, index) {
     if (obj.type === 'response_item' && payload.type === 'function_call') {
       rec.tool_calls += 1
       addTool(rec.tools, payload.name)
+      let edit = 0
+      let test = 0
+      let commit = 0
+      if (EDIT_CALL.test(String(payload.name || '').toLowerCase())) edit += 1
+      const cmd = commandTextFromCall(payload)
+      if (cmd) {
+        if (EDIT_CMD.test(cmd)) edit += 1
+        if (TEST_CMD.test(cmd)) test += 1
+        if (COMMIT_CMD.test(cmd)) commit += 1
+      }
+      rec.edit_events += edit
+      rec.test_events += test
+      rec.commit_events += commit
+      rec.signal_events.push({ ts: eventTs, kind: 'tool_call', name: payload.name || '', edit, test, commit })
     }
 
     if (obj.type === 'response_item' && payload.type === 'function_call_output') {
       rec.tool_outputs += 1
       const count = parseOriginalTokenCount(payload.output)
       rec.tool_output_tokens += count
-      if (count >= 5000) rec.high_output_events += 1
+      const high = count >= 5000 ? 1 : 0
+      if (high) rec.high_output_events += 1
+      rec.signal_events.push({ ts: eventTs, kind: 'tool_output', output_tokens: count, high })
     }
   }
 
+  rec.user_prompt_count = eventPromptCount || fallbackPromptCount
   const total = rec.total_token_usage || {}
   const last = rec.last_token_usage || {}
   rec.lifetime_total_tokens = Number(total.total_tokens || 0)
@@ -216,7 +280,123 @@ function parseRollout(file, index) {
   rec.span_hours = spanHours(rec.first_ts, rec.last_ts)
   rec.context_ratio = rec.model_context_window ? rec.last_input_tokens / rec.model_context_window : null
   rec.flags = flagsFor(rec)
+  applyDerivedJudgmentSignals(rec)
   return rec
+}
+
+// Apollo credit convention used across this repo (codexbar cost script): 1 credit
+// = 1K tokens. Kept as an integer credit count so the report can talk about spend
+// without pretending Codex exposes exact per-session dollars.
+function creditsFor(tokens) {
+  return Math.round((Number(tokens) || 0) / 1000)
+}
+
+// Deterministic efficiency label (lean / loose / thrashy): "how much of the spend
+// was avoidable churn?" Mirrors deep-insights, where efficiency is COMPUTED from
+// signals — never judged by a model — so it is free and perfectly reproducible.
+// Codex logs don't expose Claude-style episodes/reverts, so this scores the churn
+// signals Codex does emit: cold context re-ingest (large uncached replay), large
+// tool outputs pulled back into context, repeated tool loops, and reasoning burn
+// that produced no durable edit. Weights rank signals by how strongly they
+// evidence wasted work; normalized per prompt with a floor so one blip in a short
+// session never reads as thrashy.
+// Cold-reingest thresholds, in replayed (input + cached) tokens. Codex re-sends the
+// running context on each turn; when that replay is large AND poorly cached it means
+// the session kept paying to re-ingest cold context. The bands are ~1x and ~2x a
+// typical large model context window (~100k / ~200k tokens) — i.e. "re-read roughly a
+// full window" vs. "re-read multiple windows" of uncached context.
+const COLD_REINGEST_HIGH_TOKENS = 200000
+const COLD_REINGEST_LOW_TOKENS = 100000
+const COLD_REINGEST_CACHE_FLOOR = 0.5
+
+function efficiencyFor(rec) {
+  const replay = (rec.input_tokens || 0) + (rec.cached_input_tokens || 0)
+  const cacheRatio = replay ? (rec.cached_input_tokens || 0) / replay : 1
+  const maxToolReuse = Math.max(0, ...Object.values(rec.tools || {}))
+  let coldReingest = 0
+  if (replay >= COLD_REINGEST_HIGH_TOKENS && cacheRatio < COLD_REINGEST_CACHE_FLOOR) coldReingest = 3
+  else if (replay >= COLD_REINGEST_LOW_TOKENS && cacheRatio < COLD_REINGEST_CACHE_FLOOR) coldReingest = 1.5
+  const largeOutputs = rec.high_output_events || 0
+  const toolLoops = maxToolReuse > 8 ? (maxToolReuse - 8) * 0.5 : 0
+  const reasoningSpin = (rec.reasoning_output_tokens || 0) >= 40000 && (rec.edit_events || 0) === 0 ? 2 : 0
+  const waste = coldReingest * 2 + largeOutputs * 1 + toolLoops + reasoningSpin
+  const prompts = Math.max(5, rec.user_prompt_count || rec.token_events || 1)
+  const perPrompt = waste / prompts
+  const efficiency = perPrompt < 0.5 ? 'lean' : perPrompt < 1.5 ? 'loose' : 'thrashy'
+  return {
+    efficiency,
+    efficiency_signals: {
+      cold_reingest: coldReingest,
+      cache_ratio: +cacheRatio.toFixed(2),
+      large_tool_outputs: largeOutputs,
+      max_tool_reuse: maxToolReuse,
+      reasoning_spin: reasoningSpin > 0,
+      score: +perPrompt.toFixed(3),
+    },
+  }
+}
+
+// Merge computed judgment signals onto a record: efficiency (deterministic),
+// credits, and its ISO-week bucket. Recomputed after a window delta because token
+// totals change. ROI and outcome are deliberately NOT set here — those are judged
+// against evidence, not derived.
+function applyDerivedJudgmentSignals(rec) {
+  const { efficiency, efficiency_signals } = efficiencyFor(rec)
+  rec.efficiency = efficiency
+  rec.efficiency_signals = efficiency_signals
+  rec.credits = creditsFor(rec.total_tokens)
+  rec.week = mondayOf(rec.window_start_event || rec.first_ts || rec.last_ts || rec.mtime)
+  return rec
+}
+
+// ISO week Monday (YYYY-MM-DD) for a timestamp. Buckets sessions into weeks for the
+// week-by-week burn chart. Returns null for unparseable input.
+function mondayOf(ts) {
+  if (!ts) return null
+  const d = new Date(ts)
+  if (Number.isNaN(d.getTime())) return null
+  const day = (d.getUTCDay() + 6) % 7 // 0 = Monday
+  const monday = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - day))
+  return monday.toISOString().slice(0, 10)
+}
+
+// Re-scope the per-session churn / work-output counts to the window. Without this,
+// efficiencyFor and the burn ledger would divide/label window-scoped token totals by
+// LIFETIME event counts (prompts, edits, tool reuse, large outputs), mislabeling
+// long-lived sessions on the default 7d run. We recompute every count that feeds
+// efficiency or the ledger from the timestamped signal_events inside the window. flagsFor,
+// applyDerivedJudgmentSignals, efficiencyFor, and burn-ledger construction all consume these
+// rehydrated fields after applyWindowDelta returns; keep this recomputation before those calls.
+function recomputeWindowedSignals(rec, since) {
+  const inWindow = (rec.signal_events || []).filter(e => e.ts && !Number.isNaN(new Date(e.ts).getTime()) && new Date(e.ts) >= since)
+  let eventPromptCount = 0
+  let fallbackPromptCount = 0
+  rec.token_events = 0
+  rec.tool_calls = 0
+  rec.tools = {}
+  rec.edit_events = 0
+  rec.test_events = 0
+  rec.commit_events = 0
+  rec.tool_outputs = 0
+  rec.tool_output_tokens = 0
+  rec.high_output_events = 0
+  for (const e of inWindow) {
+    if (e.kind === 'prompt') eventPromptCount += 1
+    else if (e.kind === 'prompt_fallback') fallbackPromptCount += 1
+    else if (e.kind === 'token') rec.token_events += 1
+    else if (e.kind === 'tool_call') {
+      rec.tool_calls += 1
+      if (e.name) addTool(rec.tools, e.name)
+      rec.edit_events += e.edit || 0
+      rec.test_events += e.test || 0
+      rec.commit_events += e.commit || 0
+    } else if (e.kind === 'tool_output') {
+      rec.tool_outputs += 1
+      rec.tool_output_tokens += e.output_tokens || 0
+      rec.high_output_events += e.high || 0
+    }
+  }
+  rec.user_prompt_count = eventPromptCount || fallbackPromptCount
 }
 
 function applyWindowDelta(rec, since) {
@@ -235,10 +415,12 @@ function applyWindowDelta(rec, since) {
   for (const key of ['total_tokens', 'input_tokens', 'cached_input_tokens', 'output_tokens', 'reasoning_output_tokens']) {
     rec[key] = Math.max(0, Number(last[key] || 0) - Number(base[key] || 0))
   }
+  recomputeWindowedSignals(rec, since)
   rec.window_basis = before ? 'delta_from_prior_token_count' : 'session_started_in_window'
   rec.window_start_event = after[0].ts
   rec.window_end_event = last.ts
   rec.flags = flagsFor(rec)
+  applyDerivedJudgmentSignals(rec)
   return rec
 }
 
@@ -830,6 +1012,67 @@ function summarizeCcusage() {
   }
 }
 
+// Week-by-week burn (deterministic) — the report is week-oriented like deep-insights.
+// Bar length is that week's tokens; the color split is the deterministic efficiency
+// mix (lean/loose/thrashy), so the chart shows not just how much each week burned but
+// how much of it was avoidable churn.
+function buildByWeek(rows) {
+  const weekMap = {}
+  for (const s of rows) {
+    const wk = s.week || 'undated'
+    if (!weekMap[wk]) {
+      weekMap[wk] = {
+        week: wk,
+        total_tokens: 0,
+        credits: 0,
+        sessions: 0,
+        prompts: 0,
+        efficiency_tokens: { lean: 0, loose: 0, thrashy: 0 },
+        efficiency_count: { lean: 0, loose: 0, thrashy: 0 },
+      }
+    }
+    const w = weekMap[wk]
+    const tokens = s.total_tokens || 0
+    const eff = s.efficiency || 'loose'
+    w.total_tokens += tokens
+    w.sessions += 1
+    w.prompts += s.user_prompt_count || 0
+    w.efficiency_tokens[eff] = (w.efficiency_tokens[eff] || 0) + tokens
+    w.efficiency_count[eff] = (w.efficiency_count[eff] || 0) + 1
+  }
+  return Object.values(weekMap)
+    .map(w => ({ ...w, credits: creditsFor(w.total_tokens) }))
+    .sort((a, b) => (a.week < b.week ? -1 : a.week > b.week ? 1 : 0))
+}
+
+// Burn-vs-output ledger seed: the top-token sessions with the deterministic fields a
+// reviewer needs to judge ROI (was the spend fair) and outcome (did durable work
+// result). efficiency is already computed; roi/outcome/verdict are left null for the
+// skill's judgment pass to fill against evidence (see SKILL.md).
+function buildBurnLedger(rows) {
+  return rows.slice(0, 10).map(s => ({
+    id: s.id,
+    label: s.thread_name || s.id,
+    file: s.file ? s.file.replace(HOME, '~') : s.file,
+    week: s.week || null,
+    total_tokens: s.total_tokens || 0,
+    credits: creditsFor(s.total_tokens),
+    reasoning_output_tokens: s.reasoning_output_tokens || 0,
+    tool_calls: s.tool_calls || 0,
+    user_prompt_count: s.user_prompt_count || 0,
+    edit_events: s.edit_events || 0,
+    test_events: s.test_events || 0,
+    commit_events: s.commit_events || 0,
+    completed: Boolean(s.completed),
+    efficiency: s.efficiency || null,
+    efficiency_signals: s.efficiency_signals || null,
+    flags: (s.flags || []).map(f => f.label),
+    roi: null,
+    outcome: null,
+    verdict: null,
+  }))
+}
+
 const index = readSessionIndex()
 const sourceDirs = [path.join(CODEX_HOME, 'sessions'), path.join(CODEX_HOME, 'archived_sessions')]
 const files = sourceDirs.flatMap(walk)
@@ -859,11 +1102,21 @@ const allTotals = parsed.reduce((acc, s) => {
   acc.tool_output_tokens += s.tool_output_tokens || 0
   return acc
 }, { total_tokens: 0, input_tokens: 0, cached_input_tokens: 0, output_tokens: 0, reasoning_output_tokens: 0, tool_calls: 0, tool_output_tokens: 0 })
+allTotals.credits = creditsFor(allTotals.total_tokens)
 
 const allDates = parsed.flatMap(s => [s.window_start_event || s.first_ts, s.window_end_event || s.last_ts]).filter(Boolean).sort()
 const config = summarizeConfig()
 const skillUsage = summarizeSkillUsage(parsed)
 const mcpAttribution = summarizeMcpAttribution(parsed)
+const byWeek = buildByWeek(parsed)
+const burnLedger = buildBurnLedger(sessions)
+
+function summarizeEfficiencyMix(rows) {
+  const mix = { lean: 0, loose: 0, thrashy: 0 }
+  for (const s of rows) mix[s.efficiency || 'loose'] = (mix[s.efficiency || 'loose'] || 0) + 1
+  return mix
+}
+
 const data = {
   generated_at: new Date().toISOString(),
   since: SINCE_RAW,
@@ -886,8 +1139,16 @@ const data = {
     trusted_project_count: config.project_entries.filter(project => project.trusted).length,
     stale_project_count: config.stale_project_entries.length,
     lean_profile_exists: config.lean_profile_exists,
+    credits: allTotals.credits,
+    efficiency_mix: summarizeEfficiencyMix(parsed),
   },
   totals: allTotals,
+  by_week: byWeek,
+  burn_analysis: {
+    overall_verdict: null,
+    weekly: [],
+    sessions: burnLedger,
+  },
   config,
   skill_usage: skillUsage,
   mcp_attribution: mcpAttribution,
@@ -902,6 +1163,7 @@ const data = {
 function prepareSessionForOutput(session) {
   const copy = { ...session }
   delete copy.token_history
+  delete copy.signal_events
   delete copy.total_token_usage
   delete copy.last_token_usage
   delete copy.final_message

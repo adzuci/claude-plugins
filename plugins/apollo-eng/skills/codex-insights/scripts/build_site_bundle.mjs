@@ -101,6 +101,10 @@ function publicSession(session, index, options) {
 function buildPublicData(source, options) {
   const safe = scrubValue(source, options)
   safe.sessions = (source.sessions || []).map((session, index) => publicSession(session, index, options))
+  // burn_analysis carries per-session labels (thread names) and reviewer verdicts that
+  // can name private work; keep it out of the public bundle entirely. by_week is numeric
+  // and stays. Efficiency mix is preserved on the snapshot for a safe public summary.
+  delete safe.burn_analysis
   if (safe.config) {
     delete safe.config.config_path
     delete safe.config.lean_profile_path

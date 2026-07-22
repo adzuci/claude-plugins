@@ -61,7 +61,7 @@ def token_count(ts: str, total: int, input_tokens: int | None = None) -> dict:
 
 def isolated_env(tmp_path: Path, codex_home: Path) -> dict[str, str]:
     empty_bin = tmp_path / "bin"
-    empty_bin.mkdir()
+    empty_bin.mkdir(exist_ok=True)
     return {
         "HOME": str(tmp_path / "home"),
         "CODEX_HOME": str(codex_home),
@@ -357,6 +357,299 @@ def test_enumerator_summarizes_skill_usage_and_mcp_attribution(tmp_path: Path) -
     assert attribution["servers"][0]["estimated_tool_output_tokens"] == 1200
 
 
+def function_call(name: str, arguments: str = "{}", ts: str | None = None) -> dict:
+    row = {"type": "response_item", "payload": {"type": "function_call", "name": name, "arguments": arguments}}
+    if ts:
+        row["timestamp"] = ts
+    return row
+
+
+def function_call_output(original_token_count: int, ts: str | None = None) -> dict:
+    row = {
+        "type": "response_item",
+        "payload": {"type": "function_call_output", "output": f"Original token count: {original_token_count}"},
+    }
+    if ts:
+        row["timestamp"] = ts
+    return row
+
+
+def user_message(text: str, ts: str | None = None) -> dict:
+    row = {"type": "event_msg", "payload": {"type": "user_message", "text": text}}
+    if ts:
+        row["timestamp"] = ts
+    return row
+
+
+def response_user_message(text: str, ts: str | None = None) -> dict:
+    row = {
+        "type": "response_item",
+        "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": text}]},
+    }
+    if ts:
+        row["timestamp"] = ts
+    return row
+
+
+def test_enumerator_emits_efficiency_week_credits_and_burn_ledger(tmp_path: Path) -> None:
+    codex_home = tmp_path / "codex"
+    outdir = tmp_path / "scratch"
+    lean_id = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+    churn_id = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"
+
+    # Small, clean session: reads lean and carries work-output signals.
+    write_jsonl(
+        codex_home / "sessions" / f"{lean_id}.jsonl",
+        [
+            {"timestamp": "2026-07-06T00:00:00Z", "type": "session_meta", "payload": {"cwd": str(tmp_path / "repo")}},
+            response_user_message("injected environment context"),
+            response_user_message("fix the api bug"),
+            user_message("fix the api bug"),
+            function_call("apply_patch"),
+            function_call("shell", '{"command": ["bash", "-lc", "pytest -q"]}'),
+            function_call("shell", '{"command": ["bash", "-lc", "git commit -m fix"]}'),
+            token_count("2026-07-06T00:05:00Z", 8000, input_tokens=6000),
+            {"timestamp": "2026-07-06T00:06:00Z", "type": "event_msg", "payload": {"type": "task_complete", "last_agent_message": "done"}},
+        ],
+    )
+    # Large cold re-ingest: 300k uncached input replay → not lean.
+    write_jsonl(
+        codex_home / "sessions" / f"{churn_id}.jsonl",
+        [
+            {"timestamp": "2026-07-07T00:00:00Z", "type": "session_meta", "payload": {"cwd": str(tmp_path / "repo")}},
+            user_message("keep going"),
+            token_count("2026-07-07T00:05:00Z", 320000, input_tokens=300000),
+        ],
+    )
+
+    run_node(
+        "enumerate_codex_sessions.mjs",
+        "--since",
+        "all",
+        "--outdir",
+        str(outdir),
+        env=isolated_env(tmp_path, codex_home),
+    )
+
+    data = json.loads((outdir / "compact.json").read_text())
+    lean = next(s for s in data["sessions"] if s["id"] == lean_id)
+    churn = next(s for s in data["sessions"] if s["id"] == churn_id)
+
+    assert lean["efficiency"] == "lean"
+    assert lean["edit_events"] >= 1
+    assert lean["test_events"] == 1
+    assert lean["commit_events"] == 1
+    # Current logs emit response_item/user rows (including injected context) plus
+    # one event_msg/user_message for the human prompt. Count only the latter.
+    assert lean["user_prompt_count"] == 1
+    assert lean["completed"] is True
+    assert lean["credits"] == 8
+    assert lean["week"] == "2026-07-06"  # 2026-07-06 is itself a Monday
+
+    assert churn["efficiency"] in {"loose", "thrashy"}
+    assert churn["efficiency_signals"]["cold_reingest"] == 3
+
+    # Snapshot + aggregate additions.
+    assert data["snapshot"]["credits"] == data["totals"]["credits"]
+    assert set(data["snapshot"]["efficiency_mix"]) == {"lean", "loose", "thrashy"}
+
+    weeks = {w["week"]: w for w in data["by_week"]}
+    assert set(weeks) == {"2026-07-06"}  # both sessions fall in the same ISO week
+    week = weeks["2026-07-06"]
+    assert week["total_tokens"] == 328000
+    assert week["efficiency_tokens"]["lean"] == 8000
+
+    ledger = {row["id"]: row for row in data["burn_analysis"]["sessions"]}
+    assert ledger[lean_id]["roi"] is None
+    assert ledger[lean_id]["outcome"] is None
+    assert ledger[lean_id]["efficiency"] == "lean"
+    assert data["burn_analysis"]["overall_verdict"] is None
+
+
+def test_enumerator_windows_churn_signals_not_just_tokens(tmp_path: Path) -> None:
+    # Regression for PR #175 review: a --since window must recompute the per-session
+    # churn / work-output counts (prompts, edits, tool reuse, large outputs), not mix
+    # window-scoped token totals with LIFETIME counts. Otherwise a long-lived session
+    # is mislabeled on the default 7d run.
+    codex_home = tmp_path / "codex"
+    session_id = "cccccccc-cccc-cccc-cccc-cccccccccccc"
+
+    write_jsonl(
+        codex_home / "sessions" / f"{session_id}.jsonl",
+        [
+            {"timestamp": "2026-01-01T00:00:00Z", "type": "session_meta", "payload": {"cwd": str(tmp_path / "repo")}},
+            # --- heavy activity BEFORE the window (January) ---
+            user_message("p1", ts="2026-01-01T00:01:00Z"),
+            user_message("p2", ts="2026-01-01T00:02:00Z"),
+            user_message("p3", ts="2026-01-01T00:03:00Z"),
+            function_call("apply_patch", ts="2026-01-01T00:04:00Z"),
+            function_call("apply_patch", ts="2026-01-01T00:05:00Z"),
+            function_call_output(9000, ts="2026-01-01T00:06:00Z"),
+            function_call_output(9000, ts="2026-01-01T00:07:00Z"),
+            token_count("2026-01-01T01:00:00Z", 100000, input_tokens=100000),
+            token_count("2026-01-02T01:00:00Z", 300000, input_tokens=300000),
+            # --- light activity INSIDE the window (July) ---
+            user_message("recent question", ts="2026-07-02T00:00:00Z"),
+            function_call("shell", '{"command": ["bash", "-lc", "ls"]}', ts="2026-07-02T00:01:00Z"),
+            token_count("2026-07-02T00:05:00Z", 305000, input_tokens=302000),
+        ],
+    )
+
+    windowed_dir = tmp_path / "windowed"
+    run_node(
+        "enumerate_codex_sessions.mjs",
+        "--since",
+        "2026-07-01",
+        "--outdir",
+        str(windowed_dir),
+        env=isolated_env(tmp_path, codex_home),
+    )
+    windowed = json.loads((windowed_dir / "compact.json").read_text())
+    w = next(s for s in windowed["sessions"] if s["id"] == session_id)
+    assert w["window_basis"] == "delta_from_prior_token_count"
+    assert w["total_tokens"] == 5000  # 305k - 300k prior count
+    # Counts are scoped to the window, not lifetime.
+    assert w["user_prompt_count"] == 1
+    assert w["edit_events"] == 0
+    assert w["high_output_events"] == 0
+    assert w["token_events"] == 1
+    assert w["tool_calls"] == 1
+    assert w["tools"] == {"shell": 1}
+    assert "signal_events" not in w  # internal buffer never serialized
+
+    lifetime_dir = tmp_path / "lifetime"
+    run_node(
+        "enumerate_codex_sessions.mjs",
+        "--since",
+        "all",
+        "--outdir",
+        str(lifetime_dir),
+        env=isolated_env(tmp_path, codex_home),
+    )
+    lifetime = json.loads((lifetime_dir / "compact.json").read_text())
+    a = next(s for s in lifetime["sessions"] if s["id"] == session_id)
+    assert a["total_tokens"] == 305000
+    assert a["user_prompt_count"] == 4
+    assert a["edit_events"] == 2
+    assert a["high_output_events"] == 2
+    assert a["tool_calls"] == 3
+    # The whole point: windowed counts are strictly smaller than lifetime counts.
+    assert w["user_prompt_count"] < a["user_prompt_count"]
+
+
+def test_render_report_shows_burn_vs_output_lead(tmp_path: Path) -> None:
+    compact = tmp_path / "compact.json"
+    report = tmp_path / "report.html"
+    data = minimal_compact(tmp_path)
+    data["totals"]["credits"] = 328
+    data["by_week"] = [
+        {
+            "week": "2026-06-29",
+            "total_tokens": 328000,
+            "credits": 328,
+            "sessions": 2,
+            "prompts": 2,
+            "efficiency_tokens": {"lean": 8000, "loose": 320000, "thrashy": 0},
+            "efficiency_count": {"lean": 1, "loose": 1, "thrashy": 0},
+        }
+    ]
+    data["burn_analysis"] = {
+        "overall_verdict": None,
+        "weekly": [],
+        "sessions": [
+            {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "label": "fix the api bug",
+                "total_tokens": 8000,
+                "credits": 8,
+                "efficiency": "lean",
+                "edit_events": 1,
+                "test_events": 1,
+                "commit_events": 1,
+                "user_prompt_count": 1,
+                "completed": True,
+                "roi": None,
+                "outcome": None,
+                "verdict": None,
+            }
+        ],
+    }
+    compact.write_text(json.dumps(data))
+
+    run_node(
+        "render_report.mjs",
+        str(compact),
+        "--out",
+        str(report),
+        env=isolated_env(tmp_path, tmp_path / "codex"),
+    )
+    html = report.read_text()
+    assert "Week by Week" in html
+    assert "Burn vs Output" in html
+    assert "were not judged in this run" in html
+    assert "efficiency" in html
+    # Deterministic config sections still render.
+    assert "Measured Action Plan" in html
+    assert "Where Tokens Went" in html
+
+
+def test_render_report_merges_judgments(tmp_path: Path) -> None:
+    compact = tmp_path / "compact.json"
+    judgments = tmp_path / "judgments.json"
+    report = tmp_path / "report.html"
+    data = minimal_compact(tmp_path)
+    data["burn_analysis"] = {
+        "overall_verdict": None,
+        "weekly": [],
+        "sessions": [
+            {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "label": "fix the api bug",
+                "total_tokens": 320000,
+                "credits": 320,
+                "efficiency": "loose",
+                "completed": True,
+                "roi": None,
+                "outcome": None,
+                "verdict": None,
+            }
+        ],
+    }
+    compact.write_text(json.dumps(data))
+    judgments.write_text(
+        json.dumps(
+            {
+                "overall_verdict": "Of ~320 credits, one session landed a real fix but was overpriced by a cold re-ingest.",
+                "weekly": [{"week": "2026-06-29", "headline": "One replay-heavy debugging session."}],
+                "sessions": [
+                    {
+                        "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                        "roi": "overpriced",
+                        "outcome": "landed",
+                        "verdict": "Fix applied, but a 300k cold re-ingest inflated the bill.",
+                    }
+                ],
+            }
+        )
+    )
+
+    run_node(
+        "render_report.mjs",
+        str(compact),
+        "--out",
+        str(report),
+        "--judgments",
+        str(judgments),
+        env=isolated_env(tmp_path, tmp_path / "codex"),
+    )
+    html = report.read_text()
+    assert "overpriced" in html
+    assert "landed" in html
+    assert "cold re-ingest inflated the bill" in html
+    assert "one session landed a real fix" in html
+    assert "were not judged in this run" not in html
+
+
 def test_shipped_codex_insights_files_are_portable() -> None:
     for path in SKILL_DIR.rglob("*"):
         if path.is_file():
@@ -552,6 +845,60 @@ def test_public_site_bundle_scrubs_sensitive_data_and_builds(tmp_path: Path) -> 
 
     assert (site_dir / "dist" / "client").is_dir()
     assert (site_dir / "dist" / "server" / "index.js").is_file()
+
+
+def test_site_bundle_omits_burn_analysis_labels_and_verdicts(tmp_path: Path) -> None:
+    compact = tmp_path / "compact.json"
+    report = tmp_path / "private-report.html"
+    site_dir = tmp_path / "site"
+    data = minimal_compact(tmp_path)
+    data["by_week"] = [
+        {
+            "week": "2026-06-29",
+            "total_tokens": 8000,
+            "credits": 8,
+            "sessions": 1,
+            "prompts": 1,
+            "efficiency_tokens": {"lean": 8000, "loose": 0, "thrashy": 0},
+            "efficiency_count": {"lean": 1, "loose": 0, "thrashy": 0},
+        }
+    ]
+    data["burn_analysis"] = {
+        "overall_verdict": "Private overall verdict naming a secret customer thread",
+        "weekly": [{"week": "2026-06-29", "headline": "Private weekly headline"}],
+        "sessions": [
+            {
+                "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+                "label": "Private customer incident thread",
+                "verdict": "Private per-session verdict",
+                "efficiency": "lean",
+            }
+        ],
+    }
+    compact.write_text(json.dumps(data))
+    report.write_text("<h1>private</h1>")
+
+    run_node(
+        "build_site_bundle.mjs",
+        str(compact),
+        "--report",
+        str(report),
+        "--site-dir",
+        str(site_dir),
+        env=isolated_env(tmp_path, tmp_path / "codex"),
+    )
+
+    public_json = json.loads((site_dir / "public" / "data" / "compact.json").read_text())
+    public_text = json.dumps(public_json)
+    assert "burn_analysis" not in public_json
+    assert public_json["by_week"][0]["total_tokens"] == 8000
+    for forbidden in [
+        "Private customer incident thread",
+        "Private overall verdict",
+        "Private weekly headline",
+        "Private per-session verdict",
+    ]:
+        assert forbidden not in public_text
 
 
 def minimal_compact(tmp_path: Path) -> dict:
