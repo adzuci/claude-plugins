@@ -39,7 +39,7 @@ Map every deal to Apollo's tooling so the process is repeatable and auditable:
 | Strategy & term sheet | Define target price, walk-away, and must-have terms | Notion / term sheet |
 | Counter & redline | Exchange proposals and legal redlines | IronClad |
 | Approval | Route to approvers by cost center and threshold | Zip |
-| Signature | The correct entity's authorized signatory executes | IronClad |
+| Signature | Apollo routes for signature from IronClad after approvals clear; the correct entity's authorized signer executes | IronClad |
 | Record | Log baseline vs. final, key terms, and renewal date | Notion |
 
 Open renewals early — the most common way to lose a negotiation is to start it a week before
@@ -171,6 +171,9 @@ the deal stalls at signature:
 - Uncapped liability, or a vendor refusing to indemnify for IP or data claims.
 - Pricing that undercuts a term in a comparable Apollo agreement (MFN risk).
 - A signature request routed to the wrong entity or an unauthorized signer.
+- A vendor routes a DocuSign or other external envelope for Apollo to sign — Apollo signs
+  from IronClad after Zip approval, never an externally routed envelope. Collect the vendor's
+  signatory name and email for the Zip workflow instead.
 - Any material-breach, disputed-invoice, or unpaid-invoice situation — route it, do not
   freelance.
 

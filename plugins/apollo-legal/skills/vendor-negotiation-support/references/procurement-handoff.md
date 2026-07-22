@@ -47,6 +47,8 @@ unless the user explicitly asks and a Zip connector is available.
 - Renewal or signature date, and any cancellation-notice deadline.
 - Negotiation summary: recommended ask, acceptable fallback, do-not-concede line.
 - Security/privacy flags (personal data, subprocessors, AI data use) and any legal items.
+- Vendor signatory details — full name and email — for the Zip workflow (syncs to IronClad
+  for signature routing).
 
 **Approval routing by annual value** (verify against the live Procurement FAQ or
 `/apollo-procurement:procurement-faq` — figures change):
@@ -74,6 +76,27 @@ cannot verify the current process, say so rather than guessing:
 
 ```text
 I could not verify the current Zip intake steps from available sources. Confirm the request type and required approvals in Zip or #zip-help-desk before submitting.
+```
+
+## Signature Routing
+
+Apollo's signature process is **internally managed**. Apollo **does not sign externally
+routed DocuSign envelopes** or any other vendor-initiated signature request. The agreement
+is routed for signature from IronClad only after Apollo's internal review and approval —
+managed in Zip — is complete.
+
+- **Collect the vendor's signatory details early: full name and email.** Add them to the Zip
+  workflow; Zip syncs the signatory to IronClad, which routes the agreement for signature at
+  the right step in the process, once the required approvals have cleared.
+- **Do not sign, or ask an Apollo signer to sign, a DocuSign the vendor sends.** If a vendor
+  routes one, redirect them to Apollo's process instead of executing it.
+- If a vendor pushes to send paper for signature before approvals are done, hold — signature
+  routes only after the Zip approval lanes clear.
+
+When explaining the process to a vendor, make the routing clear:
+
+```text
+Apollo manages signature internally — once our internal review and approval are complete, we'll route the agreement for signature from our system, so there's no need to send a DocuSign on your side. Could you share your signatory's full name and email so we can add them to the workflow?
 ```
 
 ## Handoff Note
