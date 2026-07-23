@@ -1,38 +1,48 @@
 # Promo Packet — Tools & Connectors
 
-This lists which tools the skill searches for evidence about the nominee, what
-each is for, and who it's relevant to. **Update this file — not SKILL.md —
-when a tool is added, removed, or its access method changes.**
+This file defines how to search connected tools for evidence about the nominee.
+The skill reads it during Step 3 (connector pre-flight) to determine which
+sources to check. **Update this file — not SKILL.md — when a tool is added or
+its access method changes.**
 
-The skill reads this file to drive the connector pre-flight check and choose
-which sources to search. Relevance is based on the **nominee's** department,
-confirmed in Step 1 intake. Only search tools listed here.
+## Classification Framework
 
-## How to read this table
+Every connected tool falls into one of three classes. Apply these rules to
+listed tools and to any connector you encounter that isn't listed.
 
-- **Access** tells the skill how to reach the tool:
-  - `connector` — a Claude connector the manager enables at
-    [claude.ai/customize/connectors](https://claude.ai/customize/connectors).
-  - `connector + Glean` — reachable via a direct connector or through Glean;
-    prefer the direct connector (richer results) and use Glean as a fallback.
-  - `paste` — not searchable; the manager must paste content into the chat.
-  - `excluded` — do not read data from this tool, even if a connector exists.
-- **Relevance** is `core` (search for every nominee), a named department or
-  function (search only when the nominee's role matches; skip silently — never
-  surface it as a gap to the manager), or `excluded` (never search).
+| Class | Who it applies to | What to do |
+| --- | --- | --- |
+| **Core** | Every nominee | Include in the pre-flight report. Search it. If unavailable, say so and invite the manager to paste anything relevant. |
+| **Function-specific** | Nominees in a matching role only | Search only when the nominee's role matches. Skip silently — never surface as a gap. |
+| **Excluded** | No one | Never read data from this tool, even if a connector exists. Do not mention it to the manager. |
 
-## Tools
+### Classifying an unlisted connector
 
-| Tool | What it is | What to use it for | Relevance | Access |
-|---|---|---|---|---|
-| **Glean** | Apollo's enterprise search across Slack, Notion, Google Docs, and more | Preferred starting point — search broadly, then fetch the underlying source. Requires a separate license; may not be enabled for every manager. | core | connector |
-| **Slack** | Messaging | Kudos and recognition in #kudos and #eoq-celebration; project/team channels; cross-functional threads that show the nominee's influence | core | connector + Glean |
-| **Notion** | Docs & project wiki | Project pages, OKR/KR ownership, 1:1 notes, DRI assignments, decisions the nominee drove | core | connector + Glean |
-| **Google Drive** | Docs & sheets | 1:1 notes, metrics trackers, project write-ups, past performance review docs | core | connector + Glean |
-| **Jira** | Issue tracking | Tickets, epics, and stories the nominee owned, created, or contributed to | Engineering | connector |
-| **GitHub** | Source control | PRs authored and reviewed, issues, commits — evidence of technical craft and cross-team influence | Engineering | connector |
-| **Salesforce / Apollo CRM** | CRM | Deal ownership, pipeline data, and activity history for quota-carrying roles | GTM (Sales, SDR) | connector + Glean |
-| **Darwinbox** | HRIS | Do not read HR data from this tool. | excluded | excluded |
+If a connector is available that isn't in the table below, classify it on the
+spot using these rules:
+
+- **HRIS, HR records, payroll, or benefits system** → Excluded
+- **Collaboration, messaging, docs, wikis, or knowledge base** → Core
+- **Meeting notes or call recording** → Core (meetings capture decisions,
+  feedback, and ownership moments not recorded elsewhere)
+- **Engineering tools** (issue tracking, source control, CI/CD) → Function-specific (Engineering)
+- **Sales, CRM, or revenue tools** → Function-specific (GTM: Sales, SDR)
+- **Support or customer-success tools** → Function-specific (Customer Support / CS)
+- **Unclear** → Treat as Core; surface whatever you find and let the manager
+  decide if it's useful
+
+## Known Tools
+
+| Tool | What to search for | Class | Access |
+| --- | --- | --- | --- |
+| **Glean** | Preferred starting point — search broadly across Slack, Notion, Google Docs, and more, then fetch the underlying source. Requires a separate license; may not be enabled for every manager. | Core | connector |
+| **Slack** | Kudos in #kudos and #eoq-celebration; project and team channels; cross-functional threads showing the nominee's influence | Core | connector + Glean |
+| **Notion** | Project pages, OKR/KR ownership, 1:1 notes, DRI assignments, decisions the nominee drove | Core | connector + Glean |
+| **Google Drive** | 1:1 notes, metrics trackers, project write-ups, past performance review docs | Core | connector + Glean |
+| **Granola** | Meeting notes — especially 1:1s, team syncs, and cross-functional sessions where the nominee spoke, decided, or was recognised | Core | connector |
+| **Jira** | Tickets, epics, and stories the nominee owned, created, or contributed to | Function-specific (Engineering) | connector |
+| **GitHub** | PRs authored and reviewed, issues, commits — evidence of technical craft and cross-team influence | Function-specific (Engineering) | connector |
+| **Salesforce / Apollo CRM** | Deal ownership, pipeline data, and activity history for quota-carrying roles | Function-specific (GTM: Sales, SDR) | connector + Glean |
 
 ## Notes
 
@@ -43,9 +53,8 @@ confirmed in Step 1 intake. Only search tools listed here.
 - **Glean may not be enabled.** It requires a separate license. If unavailable,
   fall back to direct connectors and invite the manager to paste anything those
   can't reach. Report Glean as ❌ without implying the pack can't proceed.
-- **Department-specific tools are skipped silently.** If the nominee isn't in
-  Engineering, don't mention Jira or GitHub at all — not even as a gap.
-- **Darwinbox is off-limits.** Do not read HR data, even if a connector exists.
-- **Add new department tools here, not in SKILL.md.** If a new function-specific
-  connector becomes relevant (e.g. a support ticketing system for Customer
-  Support), add a row to this table with the correct relevance label.
+- **Function-specific tools are skipped silently.** Don't mention Jira, GitHub,
+  or Salesforce unless the nominee's role matches — not even as a gap.
+- **HRIS and HR data are always excluded.** This covers any HR, payroll, or
+  benefits system regardless of name. Do not read HR records, even if a
+  connector is active.

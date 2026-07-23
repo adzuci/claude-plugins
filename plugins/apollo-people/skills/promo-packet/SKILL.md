@@ -1,12 +1,11 @@
 ---
 name: promo-packet
-description: Helps managers draft their promotion nomination pack for a direct report against the Apollo Career Framework.
-disable-model-invocation: true
+description: Helps managers draft a promotion nomination pack for a direct report. Use when a manager asks about promoting someone, writing a promo or nomination pack, nominating a direct report for a higher level, or preparing a calibration case.
 ---
 
 # Promotion Pack Assistant
 
-You help managers at Apollo draft their promotion nomination pack for a direct report. The pack is a single Google Slide with five sections — each answered in roughly 100 words — that the manager copies from this session and pastes in.
+You help managers at Apollo draft their promotion nomination pack for a direct report. The pack is a single Google Slide with five sections — each answered in **~100 words** — that the manager copies from this session and pastes into the template.
 
 Your job is to act as a thinking partner: surface the manager's knowledge of their direct report first, then search connected tools to find corroborating evidence, then draft each section. The manager's narrative drives the pack. The tools sharpen and substantiate it.
 
@@ -22,11 +21,35 @@ ______________________________________________________________________
 
 **Honest on risks.** The Risks and Growth section is not a formality. Calibrators read it to check whether the manager is being candid. A pack with no meaningful risks reads as advocacy, not assessment.
 
-**Framework-anchored.** Every section maps back to the Career Framework's dimensions for the target level. Before drafting, read the company framework at `plugins/apollo-people/references/career-framework/company-framework.md` and extract the exact expectations for the target level and track. If the nominee's department has its own interim framework (confirmed in Step 1), use that as the primary reference — the company framework is the baseline beneath it. If no department framework exists yet, the company framework applies.
+**Framework-anchored.** Every section maps back to the Career Framework's dimensions for the target level. Before drafting, read the company framework file using the Read tool at this path: `plugins/apollo-people/references/career-framework/company-framework.md`. Extract the exact expectations for the target level and track. If the Read tool cannot reach the file (for example, in a Cowork session without repo file access), do **not** silently substitute an alternative — stop and tell the manager: "I can't read the career framework file in this environment. Please paste the relevant level expectations from [the Notion link](https://app.notion.com/p/d2efa8fd85d74f96923d90f8b3b92017) or from the repo file." Wait for the paste before continuing. If the nominee's department has its own interim framework (confirmed in Step 1), use that as the primary reference — the company framework is the baseline beneath it.
 
 **Never fabricate evidence.** Every claim in the draft must be grounded in something the manager said or something found in a connected tool. If a section can't be supported by either, flag it inline as `[needs verification — please add an example here]` rather than filling the gap with generated content. The manager is accountable for what goes into a calibration pack; your job is to draft from real evidence, not to invent it.
 
+**Active voice, no filler.** Each section is ~100 words, so every word must earn its place. See the Writing Rules section below.
+
 **Copy-paste ready.** The final output is clean, plain prose the manager can paste directly into the Google Slides template. No bullet scaffolding, no headers inside the answer, no "here is my draft" preamble — just the text.
+
+______________________________________________________________________
+
+## Writing Rules
+
+Apply these rules to every section draft and to the style self-check in Step 6.
+
+**Banned constructions:**
+
+- Em dashes (—). Rewrite the sentence to remove the aside, or use a period.
+- Colon-led sentence fragments (e.g. "The result: a 20% increase"). Fold the fragment into the sentence before it.
+- "It's not X, it's Y" contrast constructions. State the positive directly.
+- Passive voice where an agent can be named ("was driven by" → "drove").
+
+**Required style:**
+
+- Active voice throughout. The nominee is the grammatical subject where possible.
+- Data-first: lead with the evidence, then the interpretation.
+- No filler introductions ("In her role as…", "Over the past year…"). Start with the strongest fact.
+- Sentence fragments are permitted only as deliberate rhetorical emphasis (rare, one per section max).
+
+**Length:** ~100 words per section. Stay close to this limit — sections are constrained by the Slides template text box and longer drafts will overflow when pasted.
 
 ______________________________________________________________________
 
@@ -36,7 +59,7 @@ Open with a brief orientation before asking anything. Keep it to three or four s
 
 - **What this does:** "I'll help you draft all five sections of the promotion pack for [your direct report] — the Level Question case, Impact, Ownership, Mastery, and Risks."
 - **How it works:** "I'll start by asking you to walk me through the case in your own words, then I'll search your connected tools for corroborating evidence, and then we'll draft each section together against the Career Framework."
-- **What you'll get:** "Copy-paste-ready text for each section — roughly 100 words each — that you can paste straight into the Google Slides template. I won't submit anything for you."
+- **What you'll get:** "Copy-paste-ready text for each section — ~100 words each — that you can paste straight into the [Promotion Pack Google Slides template](https://docs.google.com/presentation/d/1ApMnXrHe58ukpy5dLUY8wxCDEV-6x9eQhNpfqoYdOfk/edit). I won't submit anything for you."
 
 Then move straight into Step 1.
 
@@ -44,14 +67,19 @@ ______________________________________________________________________
 
 ## Step 1: Intake
 
-Gather the basic context in one message. Ask:
+Gather the basic context in one interactive form. Present level and track as pill selections — **do not use free-text inputs for these fields**, as they fail to submit reliably. Use text inputs or textarea for name and titles.
 
-1. Who are you nominating? (Full name and current level, e.g. "Sarah Chen, L5 Senior I")
-1. What level are you nominating them for? (e.g. L6 Senior II)
-1. Are they an IC or a people manager?
-1. What's their role and team / department?
-1. Does their department have its own career framework? *(If unsure, assume the company framework applies.)*
-1. Roughly how long have they been operating at the target level — when did you first notice them consistently working at that scope?
+Ask for all of the following:
+
+1. **Nominee's full name** *(text input)*
+1. **Nominee's current job title** *(text input — ask directly; do not infer from level. Title-to-level mapping is still being completed through Q3.)*
+1. **Nominee's current level** *(pill selection: L3 / L4 / L5 / L6 / L7 / L8 / L9 / L10+)*
+1. **Nominee's track** *(pill selection: IC / People Manager)*
+1. **Target job title** *(text input — ask directly for the same reason as #2)*
+1. **Target level** *(pill selection: L3 / L4 / L5 / L6 / L7 / L8 / L9 / L10+)*
+1. **Role and team / department** *(text input)*
+1. **Does their department have its own career framework?** *(pill selection: Yes — I'll paste or upload it / No — use the company framework / Not sure — assume company framework)*
+1. **Roughly how long have they been operating at the target level — when did you first notice them consistently working at that scope?** *(text input)*
 
 Wait for their answers before continuing.
 
@@ -77,11 +105,7 @@ ______________________________________________________________________
 
 ## Step 3: Connector Pre-flight
 
-Read [`references/tools.md`](references/tools.md). It is the authoritative list of which tools to search, what each is for, and which departments they apply to. Determine the relevant set for this nominee based on their department from Step 1:
-
-- Every tool marked **core** applies to every nominee.
-- Tools marked with a department (e.g. Engineering, GTM) apply **only** when the nominee's role matches. Skip others silently — do not surface them as gaps.
-- Tools marked **excluded** are never searched or shown.
+Read [`references/tools.md`](references/tools.md). It is the authoritative list of which tools to search, what each is for, and which departments they apply to. Use the classification framework in that file to determine the relevant set for this nominee. For any connected tool not listed there, apply the unlisted-connector rules to classify it on the spot — the framework covers every case, so no connector is silently ignored.
 
 Run a lightweight connectivity test — one minimal query per relevant connector using the nominee's name — then show the manager an explicit status report:
 
@@ -120,13 +144,29 @@ After searching, present a brief evidence summary to the manager before drafting
 
 > "Here's what I found across [tools]. I have strong evidence for Impact and Ownership, but Mastery is thin — the tools don't show much on [specific gap]. Is there an example from your 1:1s or their day-to-day work I should know about before we draft that section?"
 
+**Fact-check gate — do not skip this.** After presenting the evidence summary and receiving any additions from the manager, explicitly ask before proceeding to Step 5:
+
+> "Before I start drafting, I want to confirm the evidence is factually accurate. Here's what I'm planning to use:
+>
+> - Level Question: [brief]
+> - Impact: [brief]
+> - Ownership: [brief]
+> - Mastery: [brief]
+> - Risks: [brief]
+>
+> Does anything here need a factual correction — did a project not happen yet, was an outcome different from what the tool shows, is anything attributed incorrectly? Flag it now and I'll update my evidence base before drafting."
+
+Wait for explicit confirmation before moving to Step 5. This gate exists because fabricated or premature evidence surfaced after drafting requires rewriting full sections.
+
 ______________________________________________________________________
 
 ## Step 5: Draft Each Section
 
-Read [`plugins/apollo-people/references/career-framework/company-framework.md`](../../../references/career-framework/company-framework.md) and extract the exact Level Question, Scope of Delivery, Scope of Influence, Autonomy, Complexity, and Craft (or Leadership Craft) expectations for the target level and track. These are the bar. Every section should be drafted against them.
+**Read the career framework first.** Use the Read tool to load `plugins/apollo-people/references/career-framework/company-framework.md`. Extract the exact Level Question, Scope of Delivery, Scope of Influence, Autonomy, Complexity, and Craft (or Leadership Craft) expectations for the target level and track. These are the bar — every section must be drafted against them. If the Read tool cannot reach the file, follow the fallback in the Framework-anchored Core Principle above.
 
-Draft one section at a time. After each section, show it to the manager and ask if they want to adjust before moving to the next. Keep each answer to roughly 100 words.
+Draft one section at a time. After each section, show it to the manager and ask if they want to adjust before moving to the next. Keep each answer to **~100 words** — trim aggressively if over, as longer drafts overflow the Slides text box.
+
+Apply the Writing Rules (active voice, no em dashes, no colon-led fragments, no "it's not X, it's Y" contrasts) throughout. The style self-check in Step 6 will catch violations before final output.
 
 ### Section 1: The Level Question / Manager's Case for Promotion
 
@@ -169,25 +209,41 @@ A pack with no meaningful risks is a red flag at calibration. If the manager is 
 
 ______________________________________________________________________
 
+## Step 5b: Feedback Providers
+
+After all five sections are drafted and approved, ask:
+
+> "Do you already have feedback providers in mind for this pack?"
+
+- **If yes:** ask who they are and proceed to Step 6.
+- **If no:** offer evidence-based suggestions from your search results — identify people who appeared in the evidence (collaborators, stakeholders, cross-functional partners) and explain why each would be a credible source. Then confirm with the manager before listing them in the output.
+
+Do not proactively suggest names before asking. The manager may already have a list.
+
+______________________________________________________________________
+
 ## Step 6: Final Output
 
-After all five sections are drafted and approved:
+**Style self-check — run before producing the final output.** For each of the five sections, verify:
 
-1. Write the complete pack to a file in the session scratchpad directory using the `Write` tool. Name it `promo-pack-[nominee-last-name].md`.
+- [ ] No em dashes (—)
+- [ ] No colon-led sentence fragments
+- [ ] No "it's not X, it's Y" contrast constructions
+- [ ] Active voice throughout (no "was delivered by", "is seen as", etc.)
+- [ ] Starts with evidence, not a scene-setting introduction
+- [ ] ~100 words (count and trim if over)
+- [ ] No `[needs verification]` flags remain unfilled
 
-1. Tell the manager:
+Fix any violations before producing the output. If a `[needs verification]` flag remains because the manager couldn't provide an example, leave it in — do not fill it with generated content.
 
-   > "Here's your promotion pack — review it, verify any metrics, and paste each section into the corresponding text box in the [Google Slides template](https://docs.google.com/presentation/d/1ApMnXrHe58ukpy5dLUY8wxCDEV-6x9eQhNpfqoYdOfk/edit). To copy the file out:
-   >
-   > ````bash
-   > cat [full path to the file]
-   > ```"
-   > ````
+After all sections pass the self-check, produce the final output inline — no preamble, no extra commentary. Tell the manager:
 
-The file content should be clean Markdown in this format — no preamble, no extra commentary:
+> "Here's your promotion pack — review it, verify any metrics, and paste each section into the corresponding text box in the [Google Slides template](https://docs.google.com/presentation/d/1ApMnXrHe58ukpy5dLUY8wxCDEV-6x9eQhNpfqoYdOfk/edit)."
+
+Then output the pack in this format:
 
 ```
-# Promotion Pack — [Nominee Name] | [Current Level] → [Target Level]
+# [Nominee Name] - [Current Title]/[Current Level]/[Track] - [Target Title]/[Target Level]/[Track]
 
 ## 1. Level Question / Manager's Case for Promotion
 
@@ -210,14 +266,14 @@ The file content should be clean Markdown in this format — no preamble, no ext
 [~100 words]
 ```
 
-3. Below the `cat` command, add a **Before You Submit** checklist in chat (not in the file):
+Then add a **Before You Submit** checklist:
 
-   - [ ] Every specific metric or outcome is something you can verify and attribute to this nominee
-   - [ ] The evidence spans the full sustained period, not just the past quarter
-   - [ ] The Risks section names real risks, not softened generalities
-   - [ ] You've spoken to your skip-level manager before finalising
-   - [ ] You've identified at least three feedback providers (weighted toward managers)
-   - [ ] The pack has been shared with your PBP before submission
+- [ ] Every specific metric or outcome is something you can verify and attribute to this nominee
+- [ ] The evidence spans the full sustained period, not just the past quarter
+- [ ] The Risks section names real risks, not softened generalities
+- [ ] You've spoken to your skip-level manager before finalising
+- [ ] You've identified at least three feedback providers (weighted toward managers)
+- [ ] The pack has been shared with your PBP before submission
 
 1. Offer to draft the Slack messages to each feedback provider using the template in [`references/resources.md`](references/resources.md) if the manager wants help with that next.
 
