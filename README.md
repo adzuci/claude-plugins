@@ -7,7 +7,7 @@ Public Claude Code and Codex plugins for local-first AI workflows.
 
 The flagship plugin is **`memory`**: a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions. The **`productivity`** plugin builds on that vault with task capture, session hygiene, daily planning, and a weekly AI coach; **`career`** adds a job-market intelligence sweep.
 
-The [companion site](https://adzuci.github.io/claude-plugins/) has one post per plugin: [Memory as reliability practice](https://adzuci.github.io/claude-plugins/memory.html) · [An operating loop for AI-assisted work](https://adzuci.github.io/claude-plugins/productivity.html) · [Job search as market intelligence](https://adzuci.github.io/claude-plugins/career.html)
+The [companion site](https://adzuci.github.io/claude-plugins/) has a post per plugin: [Memory as reliability practice](https://adzuci.github.io/claude-plugins/memory.html) · [An operating loop for AI-assisted work](https://adzuci.github.io/claude-plugins/productivity.html)
 
 ![Memory setup architecture](docs/assets/memory-system-diagram.svg)
 
