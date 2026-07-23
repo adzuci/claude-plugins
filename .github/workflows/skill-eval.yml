@@ -11,6 +11,7 @@ on:
   pull_request:
     paths:
       - "plugins/productivity/skills/standup/**"
+      - ".github/workflows/skill-eval.yml"
   workflow_dispatch: {}
 
 permissions:
@@ -26,8 +27,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run standup evals
-        # Pinned to the v1.3.0 commit (not a moving tag) for supply-chain safety.
-        uses: skill-bench/skill-eval-action@32cb44e77cf3147ebbe140a953065e0ac89eddb6 # v1.3.0
+        # Temporarily pinned to adzuci's fork: v1.3.0 + a grader fix (parse raw
+        # JSON before stripping code fences — upstream's order mangles valid JSON
+        # whose evidence quotes a fenced block, failing whole cases with
+        # "Expecting value: line 1 column 1"). Repoint to upstream once merged.
+        uses: adzuci/skill-eval-action@4305e530c42aae933dcc4917ce18d7e652489328 # v1.3.0 + grader fix
         with:
           skill-name: standup
           skill-path: ./plugins/productivity/skills/standup
