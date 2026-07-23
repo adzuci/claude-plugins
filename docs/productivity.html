@@ -15,6 +15,10 @@
     .spec-table tbody tr:nth-child(odd) { background: var(--soft); }
     .spec-table code { white-space: nowrap; }
     .spec-scroll { overflow-x: auto; }
+    .stats { display: flex; flex-wrap: wrap; gap: 14px; margin: 26px 0 8px; }
+    .stat { flex: 1 1 150px; border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; background: var(--soft); }
+    .stat .num { font-size: 1.95rem; font-weight: 820; color: var(--ink); line-height: 1.05; }
+    .stat .lbl { color: var(--muted); font-size: 0.9rem; margin-top: 5px; }
   </style>
 </head>
 <body>
@@ -47,7 +51,7 @@
       <article>
         <p class="lead">A memory layer on its own is a filing cabinet. It becomes an operating system when small, boring loops move work through it — and when each loop is cheap enough to run without thinking and safe enough to trust without checking.</p>
 
-        <p>After I set up the <a href="memory.html">memory vault</a>, the failure mode changed. I stopped losing decisions and started losing <em>follow-ups</em>: a task mentioned mid-session that never landed anywhere, a session cleared with uncommitted work still in the tree, a Friday where I could not say what a week of AI-assisted work had actually taught me. None of these are memory problems. They are workflow problems — the gaps between sessions, not inside them.</p>
+        <p>The <a href="memory.html">memory vault</a> fixed decision loss and surfaced a different problem: the gaps between sessions. A task comes up mid-session and never reaches the backlog. A session gets cleared with uncommitted work still in the tree. Friday arrives and I can't say what the week's AI work actually produced. The vault remembers fine — these are missing loops, not missing memory.</p>
 
         <p>The engineering instinct here is the same one I bring to reliability work: when a manual step keeps failing, you do not try harder, you build a small system with a clear contract. The <code>productivity</code> plugin is that system — a handful of skills that share one vault and one convention, each small enough to read in a few minutes and reason about completely.</p>
 
@@ -140,7 +144,15 @@ flowchart TB
         <p>Everything is plain files. Tasks are Markdown checkboxes in a Kanban board Obsidian renders natively; coach reports are dated Markdown in <code>coaching/</code>. Installs are dry-run first and confirmation-gated — they never overwrite an unmanaged skill of the same name, and every managed copy carries a marker file so updates are safe and removal is obvious. Scheduling uses the client's own scheduler; where there is no good native option, the setup skill hands you the exact manual command instead of quietly writing a cron job. And writes that could compound — task capture, goal commits — are idempotent, so a double-run or a retry never corrupts the board.</p>
 
         <h2>What changed in practice</h2>
-        <p>The honest version, after running this daily for months: tasks stopped living in chat scrollback, because capturing one is now cheaper than scrolling back to find it. Sessions end clean, because <code>/wrapup</code> makes "is it safe to clear?" a one-line answer instead of a nagging doubt. And the Friday coach occasionally tells me something about my own habits I had not noticed — which is exactly the kind of signal that never survives an unstructured week. The loops are small; the compounding is the point.</p>
+        <p>Four months of running this, measured off the vault it writes to:</p>
+
+        <div class="stats" aria-label="Usage metrics">
+          <div class="stat"><div class="num">610</div><div class="lbl">session summaries archived since Mar 16</div></div>
+          <div class="stat"><div class="num">84</div><div class="lbl">daily notes the loop reads and writes</div></div>
+          <div class="stat"><div class="num">19</div><div class="lbl">days I closed out with <code>/daily-wrapup</code></div></div>
+        </div>
+
+        <p>The SessionEnd hook does the archiving, so those 610 summaries cost me nothing to keep — I stopped deciding what was worth writing down. On the 19 days with something to reconcile I ran <code>/daily-wrapup</code>, and each one means the next morning starts from a written plan instead of a cold read. Tasks moved out of chat scrollback and into the backlog, because capturing one is now cheaper than scrolling to find it. And the Friday coach reads that same pile and, often enough to matter, names a habit I had not clocked. The loops are small; the state compounds.</p>
 
         <div class="note">
           <p><strong>The practical test:</strong> if this is working, tasks stop living in chat scrollback, sessions end clean, and Friday's coach report occasionally surfaces a pattern you would otherwise have missed.</p>
