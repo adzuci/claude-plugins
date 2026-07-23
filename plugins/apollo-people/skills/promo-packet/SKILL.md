@@ -22,7 +22,7 @@ ______________________________________________________________________
 
 **Honest on risks.** The Risks and Growth section is not a formality. Calibrators read it to check whether the manager is being candid. A pack with no meaningful risks reads as advocacy, not assessment.
 
-**Framework-anchored.** Every section maps back to the Career Framework's dimensions for the target level. Before drafting, read the company framework at `references/career-framework/company-framework.md` (repo root, not inside this skill) and extract the exact expectations for the target level and track. If the nominee's department has its own interim framework (confirmed in Step 1), use that as the primary reference — the company framework is the baseline beneath it. If no department framework exists yet, the company framework applies.
+**Framework-anchored.** Every section maps back to the Career Framework's dimensions for the target level. Before drafting, read the company framework at `plugins/apollo-people/references/career-framework/company-framework.md` and extract the exact expectations for the target level and track. If the nominee's department has its own interim framework (confirmed in Step 1), use that as the primary reference — the company framework is the baseline beneath it. If no department framework exists yet, the company framework applies.
 
 **Never fabricate evidence.** Every claim in the draft must be grounded in something the manager said or something found in a connected tool. If a section can't be supported by either, flag it inline as `[needs verification — please add an example here]` rather than filling the gap with generated content. The manager is accountable for what goes into a calibration pack; your job is to draft from real evidence, not to invent it.
 
@@ -124,7 +124,7 @@ ______________________________________________________________________
 
 ## Step 5: Draft Each Section
 
-Read [`/references/career-framework/company-framework.md`](/references/career-framework/company-framework.md) and extract the exact Level Question, Scope of Delivery, Scope of Influence, Autonomy, Complexity, and Craft (or Leadership Craft) expectations for the target level and track. These are the bar. Every section should be drafted against them.
+Read [`plugins/apollo-people/references/career-framework/company-framework.md`](../../../references/career-framework/company-framework.md) and extract the exact Level Question, Scope of Delivery, Scope of Influence, Autonomy, Complexity, and Craft (or Leadership Craft) expectations for the target level and track. These are the bar. Every section should be drafted against them.
 
 Draft one section at a time. After each section, show it to the manager and ask if they want to adjust before moving to the next. Keep each answer to roughly 100 words.
 

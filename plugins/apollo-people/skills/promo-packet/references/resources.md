@@ -20,7 +20,7 @@ Step-by-step guide for the nominating manager — timelines, sign-off paths, and
 Level expectations across Impact, Ownership, and Mastery for all levels and tracks.
 [Apollo Career Framework (Notion)](https://app.notion.com/p/d2efa8fd85d74f96923d90f8b3b92017)
 
-The structured Markdown version used for drafting is at `/references/career-framework/company-framework.md` from the repo root — not inside this skill's directory.
+The structured Markdown version used for drafting is at `plugins/apollo-people/references/career-framework/company-framework.md`
 
 ______________________________________________________________________
 
