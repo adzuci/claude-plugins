@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Run standup evals
         id: eval
@@ -76,10 +76,10 @@ jobs:
     # (GitHub jobs are independent unless linked by `needs`.)
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 24
 
@@ -116,7 +116,7 @@ jobs:
 
       - name: Upload promptfoo results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: standup-promptfoo-results
           path: plugins/productivity/skills/standup/evals/promptfoo/results.json

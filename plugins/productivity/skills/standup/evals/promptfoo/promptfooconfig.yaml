@@ -48,7 +48,10 @@ prompts:
 defaultTest:
   # PASS/FAIL is driven by the weighted score: content assertions carry all the
   # weight, so the case verdict is directly comparable to the action's.
-  threshold: 1
+  # 0.85, not 1.0: llm-rubric can PASS a criterion with a fractional score
+  # (observed 0.85), so a 1.0 threshold fails cases where every criterion
+  # passed. One hard content failure scores <=0.8, so 0.85 separates cleanly.
+  threshold: 0.85
   options:
     # Grade llm-rubric with a DIFFERENT (more capable) model than the agent
     # under test, so the grader is not marking its own homework.
