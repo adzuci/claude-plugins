@@ -1,0 +1,45 @@
+name: weekly-basic
+# Weekly mode: previous calendar Monday-Sunday. Anchored to a fixed "today" so
+# the target range (2026-07-14 to 2026-07-20) is deterministic.
+prompt: >-
+  /standup weekly
+
+  Assume today is Thursday 2026-07-23 in my local timezone, so the previous
+  calendar week is Monday 2026-07-14 through Sunday 2026-07-20. Use the Obsidian
+  vault at ./vault. Jira is unavailable in this environment.
+expect_skill: true
+files:
+  - path: vault/backlog.md
+    content: |
+      # Backlog
+
+      ## Done This Week
+      - Cut over search indexing to the new pipeline
+      - Closed out the flaky-test quarantine sweep
+
+      ## In Progress
+      - Migrating the metrics exporter to the shared library
+
+      ## Waiting
+      - Security review on the exporter change
+  - path: vault/sessions/2026-07-15.md
+    content: |
+      # 2026-07-15
+
+      ## Accomplishments
+      - Cut search indexing over to the new pipeline; backfill completed clean.
+
+      ## Open loops
+      - Metrics exporter migration underway.
+  - path: vault/sessions/2026-07-17.md
+    content: |
+      # 2026-07-17
+
+      ## Accomplishments
+      - Cleared the flaky-test quarantine list and re-enabled the suite.
+criteria:
+  - "The response contains one paste-ready copy block that uses the section headings 'Last week' and 'In flight'."
+  - "The copy block is brief: no more than eight bullets total and clearly well under ~90 words."
+  - "After the copy block there is a 'Quick closes (<5m)' section containing zero to three concrete, evidence-backed actions."
+  - "There is a one-line source-coverage note that flags Jira as unavailable or the run as incomplete."
+  - "The response does NOT claim to have posted the update anywhere or to have changed any ticket status."

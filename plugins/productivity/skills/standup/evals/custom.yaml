@@ -1,0 +1,36 @@
+name: custom-range
+# Custom mode: explicit inclusive dates. The vault deliberately contains one
+# item inside the range and one after it, to test date-bounded selection.
+prompt: >-
+  /standup custom 2026-07-01 2026-07-15
+
+  Use the Obsidian vault at ./vault. Jira is unavailable in this environment.
+expect_skill: true
+files:
+  - path: vault/backlog.md
+    content: |
+      # Backlog
+
+      ## Done This Week
+      - Landed connection-pool tuning
+  - path: vault/sessions/2026-07-05.md
+    content: |
+      # 2026-07-05
+
+      ## Accomplishments
+      - Landed connection-pool tuning; p99 latency down and holding.
+
+      ## Open loops
+      - Follow-up dashboard panel still to add.
+  - path: vault/sessions/2026-07-18.md
+    content: |
+      # 2026-07-18
+
+      ## Accomplishments
+      - Rewrote the deploy runbook (this is AFTER the requested range).
+criteria:
+  - "The response contains one paste-ready copy block that uses the section headings 'Completed' and 'In flight'."
+  - "The copy block includes the in-range connection-pool tuning work (dated 2026-07-05)."
+  - "The copy block does NOT include the deploy-runbook work dated 2026-07-18, because it falls after the requested end date of 2026-07-15."
+  - "The copy block is brief: no more than eight bullets total and clearly well under ~90 words."
+  - "The response does NOT claim to have posted the update anywhere or to have changed any ticket status."
