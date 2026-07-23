@@ -1,8 +1,26 @@
 # productivity plugin
 
-Local productivity and agent-operations workflow skills for Claude Code and Codex.
+Local-first task capture, session hygiene, end-of-day, and agent-operations workflows for Claude Code and Codex.
+
+**Companion post:** [An operating loop for AI-assisted work](https://adzuci.github.io/claude-plugins/productivity.html)
 
 ## Skills
+
+### `/productivity:productivity-setup`
+
+Installs managed local copies of the portable core skills for every detected Claude Code and Codex client. After confirmation, it creates a Friday AI Coach schedule using the caller's native scheduler.
+
+### `/productivity:ai-coach`
+
+Reviews recent curated AI-work session notes for repeated friction, missed reusable workflows, and approval-safe memory candidates. Weekly mode writes a concise report to the user's Obsidian vault without changing durable memory.
+
+### `/productivity:standup`
+
+Drafts daily, weekly, or custom-range personal standups from Jira, an Obsidian backlog, and daily wrapup/session reports. The paste-ready block stays under 90 words and eight bullets; private notes identify evidence-backed tasks that should take under five minutes to close.
+
+### `/productivity:todo`
+
+Captures one or more durable action items in an Obsidian Kanban backlog. It asks a concise question only when the task is materially ambiguous, preserves links and proper nouns, supports explicit urgent items, and writes idempotently to `backlog.md` under `## Inbox`.
 
 ### `/productivity:wrapup`
 
@@ -11,6 +29,8 @@ Checks for loose ends before clearing context — uncommitted changes, unpushed 
 ### `/productivity:daily-wrapup`
 
 End-of-day operating loop. Reviews yesterday's goals, summarizes what you accomplished today, previews tomorrow's calendar, optionally checks your on-call schedule, surfaces outstanding requests, and helps you commit goals for tomorrow. Writes goal commits to your Obsidian vault session note (works with the `memory` plugin).
+
+Use `/productivity:todo` for immediate capture, `/productivity:daily-wrapup` for daily reflection and next-day planning, and `/productivity:wrapup` to check whether an individual AI/repo session is safe to clear.
 
 ### `/productivity:budgetclaw-setup`
 

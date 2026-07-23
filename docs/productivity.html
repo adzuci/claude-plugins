@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>An Operating Loop for AI-Assisted Work</title>
+  <meta name="description" content="A note on the productivity plugin: task capture, session hygiene, daily planning, and a weekly AI coach around a local Obsidian vault.">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">Adam Blackwell</div>
+      <nav aria-label="Article links">
+        <a href="index.html">All posts</a>
+        <a href="https://github.com/adzuci/claude-plugins">GitHub repo</a>
+        <a href="memory.html">Memory post</a>
+        <a href="#install">Install</a>
+      </nav>
+    </div>
+
+    <header class="hero">
+      <section class="hero-copy">
+        <p class="eyebrow">Operating loops · task capture · local-first AI tooling</p>
+        <h1>An operating loop for AI-assisted work</h1>
+        <p class="dek">The memory vault answers "what did we decide?" This plugin answers the next question: "what should I do with that, today and this week?"</p>
+        <p class="install-footnote">Part two of a series — start with <a href="memory.html">Memory as reliability practice</a>.</p>
+        <div class="meta-grid" aria-label="Article metadata">
+          <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
+          <div class="meta-card"><strong>Artifact</strong><code>productivity</code> plugin</div>
+          <div class="meta-card"><strong>Scope</strong>Claude Code and Codex, one vault</div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <article>
+        <p class="lead">A memory layer on its own is a filing cabinet. It becomes an operating system when there are small, boring loops that move work through it.</p>
+
+        <p>After I set up the <a href="memory.html">memory vault</a>, the failure mode changed. I stopped losing decisions, and started losing follow-ups: a task mentioned mid-session that never landed anywhere, a session cleared with uncommitted work still sitting in the tree, a Friday where I could not say what the week's AI-assisted work actually taught me.</p>
+
+        <p>The <code>productivity</code> plugin is my answer: a handful of skills that share one vault and one convention, each small enough to read in a few minutes.</p>
+
+        <div class="pullquote">Capture is cheap. What is expensive is re-finding the task, the loose end, or the pattern three weeks later.</div>
+
+        <h2>The loop</h2>
+        <p>The skills form a daily-to-weekly cadence. Each one works standalone, but they compound:</p>
+
+        <div class="two-lane" aria-label="The productivity loop">
+          <section class="lane">
+            <h3>In the moment</h3>
+            <ul>
+              <li><code>/productivity:todo</code> — capture a durable task in the vault's Kanban <code>backlog.md</code>. Idempotent: re-adding an item deduplicates, and an explicit "urgent" promotes it instead of duplicating it.</li>
+              <li><code>/productivity:wrapup</code> — before <code>/clear</code>, check for uncommitted changes, unpushed commits, running jobs, and open obligations. It tells you whether it is actually safe to clear.</li>
+            </ul>
+          </section>
+          <section class="lane">
+            <h3>Daily and weekly</h3>
+            <ul>
+              <li><code>/productivity:standup</code> — a scheduled or on-demand daily/weekly update built from Jira, the backlog, and daily reports. The paste-ready block stays under 90 words and seven bullets; private notes surface credible five-minute closes.</li>
+              <li><code>/productivity:daily-wrapup</code> — end-of-day review: yesterday's goals, today's outcomes, tomorrow's preview, and a goal commit into the vault session note.</li>
+              <li><code>/productivity:ai-coach</code> — a Friday, report-only review of the week's curated session notes: repeated friction, capabilities I keep bypassing, and memory candidates. It writes a report; it changes nothing.</li>
+            </ul>
+          </section>
+        </div>
+
+        <p><code>/productivity:productivity-setup</code> ties it together: it installs managed local copies of these skills for every Claude Code and Codex client it detects, records your vault path in <code>~/.config/adzuci-productivity/config.json</code>, and offers to schedule the Friday coach with whatever scheduler is native to the client you are in. The plugin also ships <code>/productivity:budgetclaw-setup</code> for local spend monitoring and an agent-ops pair for privacy-safe scheduled agents.</p>
+
+        <h2>Design guardrails</h2>
+        <p>The same rules as the memory plugin, because they are the reason I trust it:</p>
+
+        <p>Everything is plain files. Tasks are Markdown checkboxes in a Kanban board Obsidian can render; coach reports are dated Markdown in <code>coaching/</code>. Installs are dry-run first and confirmation-gated, they never overwrite an unmanaged skill with the same name, and every managed copy carries a marker file so updates are safe and removal is obvious. The AI coach is deliberately report-only: it requires evidence from multiple sessions before recommending anything, verifies invocations against skills you actually have installed, and never writes to durable memory without approval.</p>
+
+        <h2>Honest limitations</h2>
+        <p>It assumes the vault convention from the memory plugin — a <code>sessions/</code> directory of curated notes is what makes the coach useful; without it, weekly mode has little to read. The Kanban layout is an opinion (six fixed sections) rather than a framework. Scheduling is best-supported on the clients I use daily; elsewhere the setup skill hands you the exact manual command instead of installing cron jobs behind your back. And like everything in this repo, it is tested primarily on macOS.</p>
+
+        <div class="note">
+          <p><strong>The practical test:</strong> if this is working, tasks stop living in chat scrollback, sessions end clean, and Friday's coach report occasionally tells you something about your own habits you did not notice.</p>
+        </div>
+
+        <section class="install-block" id="install">
+          <h2>Install the plugin</h2>
+          <p>Add the public marketplace once, install, then run setup.</p>
+          <div class="install-grid">
+            <section class="install-card">
+              <h3>Claude Code</h3>
+              <pre><code>claude plugin marketplace add adzuci/claude-plugins
+claude plugin install productivity@adzuci-plugins
+/productivity:productivity-setup</code></pre>
+            </section>
+            <section class="install-card">
+              <h3>Codex</h3>
+              <pre><code>codex plugin marketplace add adzuci/claude-plugins
+codex plugin add productivity@adzuci-plugins
+/productivity-setup</code></pre>
+            </section>
+          </div>
+          <p class="install-footnote">Setup asks before it writes anything outside the current project. Pairs best with the <a href="memory.html">memory plugin's vault</a>, but any Obsidian vault works.</p>
+        </section>
+      </article>
+
+      <aside>
+        <section class="side-panel">
+          <h3>Project</h3>
+          <p><strong>Repo:</strong> <a href="https://github.com/adzuci/claude-plugins">adzuci/claude-plugins</a></p>
+          <p><strong>Plugin:</strong> <code>productivity</code></p>
+          <p><strong>Entry skill:</strong> <code>/productivity:productivity-setup</code></p>
+          <p><strong>Principle:</strong> small loops, plain files, confirmation-gated writes.</p>
+        </section>
+
+        <section class="side-panel">
+          <h3>Credits</h3>
+          <p><a href="https://www.linkedin.com/in/alexander-rykhlitski/">Alexander</a> for the scheduled <code>/standup</code>-to-Slack idea. This version keeps the automation, then adds Jira/backlog reconciliation, strict brevity, source coverage, and five-minute closeouts.</p>
+        </section>
+
+        <section class="side-panel">
+          <h3>The series</h3>
+          <div class="link-list">
+            <a href="memory.html">Memory as reliability practice</a>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      Drafted as a personal blog article and public note for the <code>productivity</code> plugin.
+    </footer>
+  </div>
+</body>
+</html>

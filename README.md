@@ -5,9 +5,9 @@
 
 Public Claude Code and Codex plugins for local-first AI workflows.
 
-The first plugin in this repo is **`memory`**: a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions.
+The flagship plugin is **`memory`**: a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions. The **`productivity`** plugin builds on that vault with task capture, session hygiene, daily planning, and a weekly AI coach; **`career`** adds a job-market intelligence sweep.
 
-**Read the companion post:** [Memory as reliability practice](https://adzuci.github.io/claude-plugins/)
+The [companion site](https://adzuci.github.io/claude-plugins/) has a post per plugin: [Memory as reliability practice](https://adzuci.github.io/claude-plugins/memory.html) · [An operating loop for AI-assisted work](https://adzuci.github.io/claude-plugins/productivity.html)
 
 ![Memory setup architecture](docs/assets/memory-system-diagram.svg)
 
@@ -30,6 +30,9 @@ The goal is not a grand second-brain system. The goal is lower re-orientation co
 | Skill | Purpose |
 | --- | --- |
 | `/memory:memory-setup` | Set up an Obsidian-backed memory vault with Claude Code session capture and optional Codex/Antigravity importers. |
+| `/memory:memory-setup crypt` | Encrypt sensitive vault dirs with git-crypt; the key is handed to your password manager, never committed. See `plugins/memory/skills/memory-setup/references/encryption.md` for what it does and does not protect. |
+
+Setup also offers scheduled git sync (obsidian-git settings plus a launchd agent on macOS; a ready-made cron line elsewhere) so the vault converges across machines without manual pushes.
 
 The default Claude Code path sets up:
 
@@ -39,6 +42,19 @@ The default Claude Code path sets up:
 - a managed memory block in `~/.claude/CLAUDE.md`
 
 Current support note: the setup flow has been tested on macOS. Linux and Windows compatibility reports and PRs are very welcome.
+
+## What the `productivity` Plugin Does
+
+| Skill | Purpose |
+| --- | --- |
+| `/productivity:productivity-setup` | Install managed local copies of the core skills for each detected Claude Code and Codex client, record the vault in `~/.config/adzuci-productivity/config.json`, and schedule the Friday AI Coach. |
+| `/productivity:todo` | Capture durable tasks in the vault's Kanban `backlog.md` — idempotent, with explicit urgent promotion. |
+| `/productivity:ai-coach` | Weekly report-only review of curated session notes for repeated friction and reusable workflows. |
+| `/productivity:wrapup` | Pre-`/clear` hygiene check: uncommitted work, unpushed commits, open loose ends. |
+| `/productivity:daily-wrapup` | End-of-day review, tomorrow preview, and goal capture into the vault session note. |
+| `/productivity:budgetclaw-setup` | Claude Code spend monitoring with local macOS notifications. |
+
+It also ships `create-agent` and the `agent-ops-setup`/`agent-ops-report` pair for privacy-safe scheduled-agent operations. See `plugins/productivity/README.md` for details.
 
 ## Install
 
@@ -65,6 +81,8 @@ Then invoke the setup skill:
 ```text
 /memory:memory-setup
 ```
+
+The other plugins install the same way (`claude plugin install productivity@adzuci-plugins`, `claude plugin install career@adzuci-plugins`).
 
 ## Safety Model
 
@@ -96,7 +114,8 @@ The repo includes CI for the bundled Python scripts and plugin metadata:
   workflows/
     ci.yml
 docs/
-  index.html
+  index.html          # blog landing page
+  memory.html  productivity.html  career.html
   assets/
 plugins/
   memory/
@@ -109,16 +128,26 @@ plugins/
       templates/
       references/
       tests/
+  productivity/
+    .claude-plugin/plugin.json
+    README.md
+    skills/
+      productivity-setup/  todo/  ai-coach/
+      wrapup/  daily-wrapup/  budgetclaw-setup/
+      create-agent/  agent-ops-setup/  agent-ops-report/
+  career/
+    skills/market-sweep/
 ```
 
 ## Development
 
 This repo is intentionally small, but the bar for changes is still: can someone else install it, understand what it writes, and recover cleanly if something goes wrong?
 
-Run the memory skill tests:
+Run the skill tests:
 
 ```bash
 python3 -m pytest plugins/memory/skills/memory-setup/tests -q
+python3 -m pytest plugins/productivity/skills/todo/tests plugins/productivity/skills/productivity-setup/tests -q
 ```
 
 Validate the plugin metadata with the CLI available in your environment:

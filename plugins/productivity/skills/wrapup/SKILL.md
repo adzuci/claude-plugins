@@ -57,9 +57,11 @@ Artifacts the user already knows about and accepts (e.g. a throwaway scratch fil
 If the user asks to save a wrap-up note, write a concise Markdown session note before
 recommending clear.
 
-Default location (uses `VAULT` env var, falls back to `~/obsidian-vault`):
+Resolve the vault from an explicit path, `$VAULT`, `~/.config/adzuci-productivity/config.json`, then `~/obsidian-vault`:
 
 ```bash
+CFG="$HOME/.config/adzuci-productivity/config.json"
+VAULT="${VAULT:-$([ -f "$CFG" ] && python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("vault",""))' "$CFG")}"
 VAULT="${VAULT:-$HOME/obsidian-vault}"
 # path: $VAULT/sessions/YYYY-MM-DD - <short-title>.md
 ```
@@ -96,12 +98,12 @@ Use archive mode only when the user explicitly asks to archive, e.g. `/productiv
 Archive mode rules:
 
 1. Run the same checks above.
-2. If there are big loose ends, do not archive.
-3. If there are only minor known/accepted leftovers, mention them without blocking.
-4. Save the Obsidian session note first.
-5. Confirm the note path.
-6. In Codex Desktop, archive the thread only after the note is saved.
-7. In CLI or any client where archive is unavailable, say it is safe to type `/clear` instead.
+1. If there are big loose ends, do not archive.
+1. If there are only minor known/accepted leftovers, mention them without blocking.
+1. Save the Obsidian session note first.
+1. Confirm the note path.
+1. In Codex Desktop, archive the thread only after the note is saved.
+1. In CLI or any client where archive is unavailable, say it is safe to type `/clear` instead.
 
 Big loose ends: uncommitted work, unpushed commits, unexpected stashes, running background
 jobs, open obligations the user expected completed, failed required validation, or any

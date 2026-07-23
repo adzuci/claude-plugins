@@ -3,599 +3,78 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Memory as Reliability Practice</title>
-  <meta name="description" content="An infrastructure engineering manager's note on building a local memory layer for AI-assisted work.">
-  <style>
-    :root {
-      color-scheme: light;
-      --ink: #172033;
-      --muted: #596476;
-      --soft: #f6f8fb;
-      --paper: #fffdf8;
-      --panel: #ffffff;
-      --line: #d9e0eb;
-      --blue: #2359d1;
-      --teal: #0f766e;
-      --amber: #b7791f;
-      --rose: #b8345a;
-      --night: #141c2d;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--paper);
-      color: var(--ink);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.62;
-    }
-
-    a {
-      color: var(--blue);
-      text-decoration-color: rgba(35, 89, 209, 0.3);
-      text-underline-offset: 3px;
-    }
-
-    a:hover { text-decoration-color: currentColor; }
-
-    img { max-width: 100%; display: block; }
-
-    .shell {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 34px 22px 76px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      padding: 0 0 28px;
-      color: var(--muted);
-      font-size: 0.94rem;
-    }
-
-    .brand {
-      color: var(--ink);
-      font-weight: 850;
-      letter-spacing: 0;
-    }
-
-    .topbar nav {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.03fr) minmax(320px, 0.97fr);
-      gap: 42px;
-      align-items: stretch;
-      min-height: 78vh;
-      border-top: 1px solid var(--line);
-      padding-top: 42px;
-    }
-
-    .hero-copy {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 16px 0 44px;
-    }
-
-    .eyebrow {
-      margin: 0 0 18px;
-      color: var(--teal);
-      font-size: 0.78rem;
-      font-weight: 850;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      max-width: 780px;
-      font-size: clamp(3rem, 8vw, 6.6rem);
-      line-height: 0.9;
-      letter-spacing: 0;
-    }
-
-    .dek {
-      margin: 28px 0 0;
-      max-width: 700px;
-      color: #38445a;
-      font-size: clamp(1.12rem, 2vw, 1.34rem);
-    }
-
-    .meta-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 34px;
-      max-width: 780px;
-    }
-
-    .meta-card {
-      border-left: 4px solid var(--line);
-      padding: 10px 12px;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.55);
-    }
-
-    .meta-card strong {
-      display: block;
-      color: var(--ink);
-      margin-bottom: 2px;
-      font-size: 0.92rem;
-    }
-
-    .hero-visual {
-      align-self: center;
-      overflow: hidden;
-      border-radius: 8px;
-      border: 1px solid var(--line);
-      background: #f5f8fc;
-      box-shadow: 0 28px 70px rgba(20, 28, 45, 0.16);
-    }
-
-    .hero-visual img {
-      width: 100%;
-      height: min(62vh, 680px);
-      object-fit: cover;
-    }
-
-    .caption {
-      margin: 0;
-      padding: 14px 16px;
-      color: var(--muted);
-      font-size: 0.88rem;
-      background: rgba(255, 255, 255, 0.88);
-      border-top: 1px solid var(--line);
-    }
-
-    main {
-      display: grid;
-      grid-template-columns: minmax(0, 750px) minmax(250px, 1fr);
-      gap: 58px;
-      padding-top: 62px;
-      border-top: 1px solid var(--line);
-    }
-
-    article {
-      font-size: 1.06rem;
-    }
-
-    .lead {
-      margin-top: 0;
-      color: #2f3b50;
-      font-size: 1.25rem;
-      line-height: 1.55;
-    }
-
-    h2 {
-      margin: 54px 0 16px;
-      font-size: 1.72rem;
-      line-height: 1.18;
-      letter-spacing: 0;
-    }
-
-    p { margin: 0 0 20px; }
-
-    .pullquote {
-      margin: 36px 0;
-      padding: 26px 28px;
-      border-left: 5px solid var(--blue);
-      background: #edf4ff;
-      border-radius: 0 8px 8px 0;
-      color: #18376c;
-      font-size: 1.22rem;
-      font-weight: 780;
-      line-height: 1.45;
-    }
-
-    .figure {
-      margin: 42px 0;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 16px 46px rgba(20, 28, 45, 0.08);
-    }
-
-    .figure img { width: 100%; }
-
-    .two-lane {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin: 30px 0;
-    }
-
-    .lane {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-      padding: 20px;
-    }
-
-    .lane h3 {
-      margin: 0 0 12px;
-      font-size: 1.03rem;
-    }
-
-    .lane ul {
-      padding-left: 20px;
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .lane li { margin: 8px 0; }
-
-    .install-block {
-      margin: 34px 0;
-      padding: 24px;
-      border: 1px solid #cad7e9;
-      border-radius: 8px;
-      background: #f6f9fd;
-    }
-
-    .install-block h2 {
-      margin-top: 0;
-    }
-
-    .install-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      margin: 20px 0;
-    }
-
-    .install-card {
-      min-width: 0;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-      padding: 18px;
-    }
-
-    .install-card h3 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-
-    pre {
-      max-width: 100%;
-      overflow-x: visible;
-      margin: 0;
-      padding: 14px;
-      border-radius: 8px;
-      background: #111827;
-      color: #e5edf8;
-      font-size: 0.84rem;
-      line-height: 1.55;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-    }
-
-    pre code {
-      padding: 0;
-      background: transparent;
-      color: inherit;
-      font-size: inherit;
-      white-space: inherit;
-      overflow-wrap: inherit;
-      word-break: inherit;
-    }
-
-    .install-footnote {
-      margin-bottom: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .note {
-      margin: 34px 0;
-      padding: 22px;
-      background: #f8f4ea;
-      border: 1px solid #ead9b7;
-      border-radius: 8px;
-    }
-
-    .note p:last-child { margin-bottom: 0; }
-
-    code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 0.92em;
-      background: #eef1f5;
-      border-radius: 5px;
-      padding: 0.12em 0.35em;
-    }
-
-    aside {
-      position: sticky;
-      top: 22px;
-      align-self: start;
-      color: var(--muted);
-      font-size: 0.94rem;
-    }
-
-    .side-panel {
-      border-left: 1px solid var(--line);
-      padding-left: 24px;
-      margin-bottom: 30px;
-    }
-
-    aside h3 {
-      margin: 0 0 12px;
-      color: var(--ink);
-      font-size: 1rem;
-      letter-spacing: 0;
-    }
-
-    aside p { margin-bottom: 14px; }
-
-    .link-list {
-      display: grid;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
-    .link-list a {
-      display: block;
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-      text-decoration: none;
-    }
-
-    footer {
-      margin-top: 70px;
-      padding-top: 24px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    @media (max-width: 900px) {
-      .shell { padding: 24px 16px 52px; }
-      .topbar { align-items: flex-start; flex-direction: column; }
-      .topbar nav { justify-content: flex-start; }
-      .hero, main { grid-template-columns: 1fr; }
-      .hero { min-height: auto; }
-      .hero-visual img { height: auto; }
-      .meta-grid, .two-lane, .install-grid { grid-template-columns: 1fr; }
-      aside { position: static; }
-      .side-panel { border-left: 0; border-top: 1px solid var(--line); padding: 24px 0 0; }
-    }
-  </style>
+  <title>Adam Blackwell — Local-First AI Tooling</title>
+  <meta name="description" content="Notes on local-first AI tooling: memory, operating loops, and structured research for AI-assisted work. Companion posts for the adzuci/claude-plugins marketplace.">
+  <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
   <div class="shell">
     <div class="topbar">
       <div class="brand">Adam Blackwell</div>
-      <nav aria-label="Article links">
+      <nav aria-label="Site links">
         <a href="https://github.com/adzuci/claude-plugins">GitHub repo</a>
-        <a href="#phase-two">Phase 2</a>
-        <a href="#prereqs">Prerequisites</a>
-        <a href="#install">Install</a>
-        <a href="#system">Architecture sketch</a>
-        <a href="#references">Influences</a>
+        <a href="#posts">Posts</a>
+        <a href="#install">Install the plugins</a>
       </nav>
     </div>
 
     <header class="hero">
       <section class="hero-copy">
-        <p class="eyebrow">Engineering leadership · operational memory · local-first AI tooling</p>
-        <h1>Memory as reliability practice</h1>
-        <p class="dek">I built this after noticing the same context tax over and over: a good AI session solved the immediate problem, but the useful residue did not make it into my operating system.</p>
-        <div class="meta-grid" aria-label="Article metadata">
-          <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
-          <div class="meta-card"><strong>Artifact</strong><code>memory</code> plugin</div>
-          <div class="meta-card"><strong>Scope</strong>Work and personal systems</div>
-        </div>
+        <p class="eyebrow">Engineering leadership · local-first AI tooling</p>
+        <h1>Local-first AI tooling</h1>
+        <p class="dek">Notes from an engineering manager (SRE background) on making AI-assisted work durable: plain files, explicit writes, small loops you can inspect. Each post ships with a working plugin.</p>
       </section>
-
-      <figure class="hero-visual">
-        <img src="assets/memory-lattice.png" alt="Abstract lattice of notes, terminal lines, and connected memory nodes">
-        <figcaption class="caption">The texture of what gets lost: command traces, decisions, names, half-finished threads, and the one sentence that would save twenty minutes next time.</figcaption>
-      </figure>
     </header>
 
     <main>
       <article>
-        <p class="lead">When a hard problem finally gets solved, the fix is rarely enough. Someone has to preserve the lesson in a way the next person can actually use.</p>
-
-        <p>That same pattern shows up in AI-assisted work. A session can be productive and still leave almost no durable residue. The assistant helped debug a strange failure, compare trade-offs, draft a review, or clarify a decision. Then the session ends. A week later, I remember that we figured it out, but not the exact shape of the answer.</p>
-
-        <p>That is fine for a throwaway task. It is expensive for real work. It is especially expensive for managers, because a lot of the job is continuity: what changed, why it changed, who needs context, what risk is still open, and which lesson should survive the week.</p>
-
-        <div class="pullquote">This is not a note-taking project. It is a small project for keeping my own context reliable.</div>
-
-        <h2>Why I built it</h2>
-        <p>I wanted a memory system that behaves like infrastructure I would trust: local-first, inspectable, reversible, and explicit about writes. I did not want an opaque memory feature that quietly shaped future sessions. I wanted plain Markdown, git history, and a setup flow that asks before touching dotfiles.</p>
-
-        <p>The result is a public plugin called <code>memory</code>. Its main skill, <code>/memory:memory-setup</code>, scaffolds a git-backed Obsidian vault, installs the useful Obsidian pieces, and wires session capture into Claude Code. The repo also includes compatibility notes and importers for Codex and Antigravity, because the useful context should belong to the person doing the work, not to one assistant vendor.</p>
-
-        <p>Two optional layers round it out. Scheduled sync keeps the vault converged across machines — obsidian-git handles it while Obsidian is open, and a launchd agent pulls, commits, and pushes headlessly the rest of the time. And invoking the skill with the <code>crypt</code> argument encrypts the sensitive directories (coaching notes, session logs, meeting notes) with git-crypt, so the remote only ever sees ciphertext while everything stays plain Markdown on disk; the key lives in your password manager, and a second machine unlocks with one command.</p>
-
-        <p>I have used this pattern in both work environments and personal environments. At work, it helps with project follow-ups, architecture reviews, team handoffs, vendor decisions, team preferences, and the small operational facts that otherwise get rediscovered every month. Personally, it helps with coaching notes, side projects, routines, reading trails, and decisions I keep revisiting.</p>
-
-        <div class="two-lane" aria-label="Work and personal memory examples">
-          <section class="lane">
-            <h3>Work memory</h3>
-            <ul>
-              <li>Debugging context and follow-ups after hard problems</li>
-              <li>Handoffs and open-risk notes</li>
-              <li>Architecture decisions and review patterns</li>
-              <li>Team conventions that should not live only in chat</li>
-            </ul>
-          </section>
-          <section class="lane">
-            <h3>Personal memory</h3>
-            <ul>
-              <li>Coaching reflections and recurring themes</li>
-              <li>Personal projects and unfinished threads</li>
-              <li>Learning notes from AI, systems, and leadership</li>
-              <li>Habits, routines, and decisions worth revisiting</li>
-            </ul>
-          </section>
-        </div>
-
-        <h2>The part worth copying</h2>
-        <p>The exact folder names matter less than the operating pattern. Start each assistant from a small index. Keep raw session exhaust out of the default context path. Promote only the facts, decisions, references, and preferences that are likely to help later.</p>
-
-        <p>That gives the system a useful bias: capture can be broad, but memory should be curated. The skill exists to make that setup easy to inspect, easy to repeat, and hard to confuse with a magic black box.</p>
-
-        <h2 id="phase-two">Phase 2: turn durable memory into useful writing</h2>
-        <p>The next phase is a small publishing funnel. Promising, non-proprietary lessons can move from session notes and project retrospectives into a candidate queue, then through an outline, a privacy check, peer review, and finally a post or cross-post. Each candidate has to earn its way forward with a concrete problem, visible architecture or operating mechanism, honest trade-offs and failures, evidence with limitations, and a reproducible takeaway. Most captured context should never leave the vault; the funnel exists to make the few broadly useful ideas easier to recognize and develop.</p>
-
-        <p>The operating rule is to under-commit and over-deliver when posting prose for other people to review. Share a concrete draft when it is ready enough to be useful, instead of promising a publishing cadence before the evidence, examples, and trade-offs are clear.</p>
-
-        <figure class="figure" id="system">
-          <img src="assets/memory-system-diagram.svg" alt="System diagram showing AI work sessions moving through a gated setup skill into a Markdown vault and back into future context">
-          <figcaption class="caption">The architecture is intentionally plain. Capture the residue, keep it inspectable, and bring it back only when it helps.</figcaption>
-        </figure>
-
-        <h2>Why continuity is worth engineering</h2>
-        <p>Continuity is not just about uptime. It is the discipline of making work understandable when the easy context is gone. Good notes, docs, decision records, and handoffs all do the same thing: they reduce the time it takes the next person to get oriented and act.</p>
-
-        <p>AI work needs some of that discipline. Agents are fast, but speed can hide context loss. If the assistant helps me reason through a tricky production question and the output never becomes durable, the organization learned less than it could have. If a coaching session surfaces a repeated pattern and I never capture it, I am asking future-me to do the same discovery again.</p>
-
-        <p>So I built the skill with the same guardrails I would want on any system I trust. It explains the trade-off first. It runs read-only preflight checks. It asks for the vault name, location, and remote. It backs up settings before editing. It makes the managed block visible. It keeps the recovery path boring.</p>
-
-        <h2>Influences: visible machinery</h2>
-        <p>I have been drawn to Andrej Karpathy's teaching style because it favors small systems you can inspect. <a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a> teaches neural networks from scratch in code. <a href="https://github.com/karpathy/micrograd">micrograd</a> makes backpropagation small enough to hold in your head. <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a> makes the training loop legible without burying the reader in platform machinery. I like that posture: build enough of the thing end to end that you can reason about it without mythology.</p>
-
-        <p>This memory skill is not trying to build an LLM. It borrows that operating principle: make the important machinery visible enough that you can debug it, trust it, and change it.</p>
-
-        <div class="note">
-          <p><strong>The practical test:</strong> if this is working, a future session should need less preamble, fewer repeated explanations, and fewer “wait, where did we decide that?” moments.</p>
-        </div>
-
-        <h2>Try it, inspect it, adapt it</h2>
-        <p>I published the <code>memory</code> plugin as a small, readable starting point for anyone who wants local AI-session memory without adopting a whole knowledge-management framework.</p>
-
-        <p>The important pieces are plain files: Markdown templates, Python scripts, and explicit setup steps. Read the README, inspect the writes, and change the workflow until it fits your own environment.</p>
-
-        <section class="install-block" id="prereqs">
-          <h2>Prerequisites</h2>
-          <p>Before running the setup skill, confirm these tools are available on your machine. The skill can install some of them automatically, but having them ready avoids interruptions.</p>
+        <section id="posts" aria-label="All posts">
+          <h2>Posts</h2>
           <div class="install-grid">
             <section class="install-card">
-              <h3>Claude Code CLI</h3>
-              <p>Requires Node.js ≥ 18.</p>
-              <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
-              <p class="install-footnote">Or download from <a href="https://claude.ai/code">claude.ai/code</a>.</p>
+              <h3><a href="memory.html">Memory as reliability practice</a></h3>
+              <p>Why a good AI session should leave durable residue, and a setup skill that scaffolds a git-backed Obsidian vault to hold it. Start here — the other posts build on this vault.</p>
+              <p class="install-footnote"><code>memory</code> plugin</p>
             </section>
             <section class="install-card">
-              <h3>Homebrew (macOS)</h3>
-              <p>Needed if any tool installs fall back to Homebrew.</p>
-              <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
-              <p class="install-footnote">Already installed but hitting "shallow clone" errors? Run: <code>git -C $(brew --repository)/Library/Taps/homebrew/homebrew-core fetch --unshallow</code> and <code>git -C $(brew --repository)/Library/Taps/homebrew/homebrew-cask fetch --unshallow</code></p>
-            </section>
-            <section class="install-card">
-              <h3>GitHub CLI (<code>gh</code>)</h3>
-              <p>Needed to create the private vault repo. The skill installs it automatically if missing, but to install manually:</p>
-              <pre><code>brew install gh
-gh auth login</code></pre>
-              <p class="install-footnote">Or download a release directly from <a href="https://github.com/cli/cli/releases">github.com/cli/cli/releases</a> (macOS: .zip for amd64 or arm64).</p>
-            </section>
-            <section class="install-card">
-              <h3>Auto mode</h3>
-              <p>Enable Auto mode in Claude Code before running setup to avoid approval prompts during installation. Type in Claude Code:</p>
-              <pre><code>/auto</code></pre>
-              <p class="install-footnote">Disable it after setup completes by typing <code>/auto</code> again.</p>
+              <h3><a href="productivity.html">An operating loop for AI-assisted work</a></h3>
+              <p>Jira-backed standups, task capture, session hygiene, daily planning, and a Friday report-only AI coach — small loops that turn the vault from a filing cabinet into an operating system.</p>
+              <p class="install-footnote"><code>productivity</code> plugin</p>
             </section>
           </div>
         </section>
 
         <section class="install-block" id="install">
-          <h2>Install the plugin</h2>
-          <p>Add the public marketplace, install the <code>memory</code> plugin, then run the setup skill.</p>
+          <h2>Install the plugins</h2>
+          <p>Everything described in these posts is a public plugin. Add the marketplace once, then install what you want.</p>
           <div class="install-grid">
+            <section class="install-card">
+              <h3>Claude Code</h3>
+              <pre><code>claude plugin marketplace add adzuci/claude-plugins
+claude plugin install memory@adzuci-plugins</code></pre>
+            </section>
             <section class="install-card">
               <h3>Codex</h3>
               <pre><code>codex plugin marketplace add adzuci/claude-plugins
-codex plugin add memory@adzuci-plugins
-/memory:memory-setup</code></pre>
-            </section>
-            <section class="install-card">
-              <h3>Claude Code</h3>
-              <pre><code># 1. Install Claude Code (requires node ≥ 18)
-npm install -g @anthropic-ai/claude-code
-
-# 2. Add the plugin marketplace
-claude plugin marketplace add adzuci/claude-plugins
-
-# 3. Install the memory plugin
-claude plugin install memory@adzuci-plugins
-
-# 4. Enable Auto mode (recommended — avoids approval prompts)
-# Type in Claude Code: /auto
-
-# 5. Run setup
-# Type in Claude Code: /memory:memory-setup</code></pre>
+codex plugin add memory@adzuci-plugins</code></pre>
             </section>
           </div>
-          <div class="note">
-            <p><strong>During setup:</strong> When the skill asks you to run <code>gh auth login</code>, type <code>! gh auth login</code> directly into the Claude Code prompt — the <code>!</code> prefix runs it in your terminal so the browser flow works correctly.</p>
-          </div>
-          <p class="install-footnote">Tested on macOS. The skill installs Obsidian, the GitHub CLI, and <code>jq</code> automatically if missing. Linux and Windows compatibility PRs are welcome.</p>
+          <p class="install-footnote">Each post ends with the install steps and prerequisites for its plugin. Tested primarily on macOS; Linux and Windows compatibility PRs are welcome.</p>
         </section>
-
-        <section class="install-block" id="more-plugins">
-          <h2>More plugins</h2>
-          <p>The marketplace includes two additional plugins beyond <code>memory</code>.</p>
-          <div class="install-grid">
-            <section class="install-card">
-              <h3><code>productivity</code></h3>
-              <p>End-of-session hygiene check (<code>/productivity:wrapup</code>), daily end-of-day wrapup with Obsidian goal capture (<code>/productivity:daily-wrapup</code>), and Claude Code spend monitoring with local macOS notifications (<code>/productivity:budgetclaw-setup</code>).</p>
-              <pre><code>claude plugin install productivity@adzuci-plugins</code></pre>
-            </section>
-            <section class="install-card">
-              <h3><code>career</code></h3>
-              <p>Job market intelligence sweep for senior technical candidates. Produces a tier-ranked report in your vault, runs an automated recruiter review, and offers weekly scheduling.</p>
-              <pre><code>claude plugin install career@adzuci-plugins</code></pre>
-            </section>
-          </div>
-        </section>
-
-        <h2>What I want from it</h2>
-        <p>I want future sessions to start with better orientation. I want decisions to have a place to land. I want patterns from work and life to become easier to see across time. And I want the memory layer to remain mine: plain files, local defaults, clear writes, and enough structure to be useful without becoming ceremony.</p>
-
-        <p>That is the practical reason. The leadership reason is simpler: if AI is becoming part of how I think, build, and manage, I do not want the context layer to be accidental.</p>
       </article>
 
       <aside>
         <section class="side-panel">
-          <h3>Project</h3>
+          <h3>About</h3>
+          <p>I manage infrastructure teams and use these plugins daily. The through-line: if AI is becoming part of how I think, build, and manage, the context layer should not be accidental — and it should stay mine.</p>
           <p><strong>Repo:</strong> <a href="https://github.com/adzuci/claude-plugins">adzuci/claude-plugins</a></p>
-          <p><strong>Plugin:</strong> <code>memory</code></p>
-          <p><strong>Skill:</strong> <code>/memory:memory-setup</code></p>
           <p><strong>Principle:</strong> local, inspectable continuity across assistants.</p>
-        </section>
-
-        <section class="side-panel" id="references">
-          <h3>References</h3>
-          <p>Official and primary references that shaped the “visible machinery” framing.</p>
-          <div class="link-list">
-            <a href="https://karpathy.ai/">Karpathy official site</a>
-            <a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a>
-            <a href="https://github.com/karpathy/micrograd">micrograd</a>
-            <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a>
-          </div>
         </section>
       </aside>
     </main>
 
     <footer>
-      Drafted as a personal blog article and public note for the <code>memory</code> plugin.
+      Companion site for the <code>adzuci/claude-plugins</code> marketplace.
     </footer>
   </div>
 </body>

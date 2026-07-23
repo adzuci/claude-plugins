@@ -38,7 +38,13 @@ jobs:
               plugins/productivity/skills/agent-ops-setup/scripts \
               plugins/productivity/skills/agent-ops-setup/tests \
               plugins/productivity/skills/agent-ops-report/scripts \
-              plugins/productivity/skills/agent-ops-report/tests
+              plugins/productivity/skills/agent-ops-report/tests \
+              plugins/productivity/skills/todo/scripts \
+              plugins/productivity/skills/todo/tests \
+              plugins/productivity/skills/productivity-setup/scripts \
+              plugins/productivity/skills/productivity-setup/tests \
+              plugins/productivity/skills/standup/scripts \
+              plugins/productivity/skills/standup/tests
 
       - name: Run memory setup tests
         run: |
@@ -49,6 +55,12 @@ jobs:
               plugins/productivity/skills/agent-ops-setup/tests \
               plugins/productivity/skills/agent-ops-report/tests \
               -q -p no:cacheprovider
+          PYTHONDONTWRITEBYTECODE=1 \
+            python -m pytest plugins/productivity/skills/todo/tests -q -p no:cacheprovider
+          PYTHONDONTWRITEBYTECODE=1 \
+            python -m pytest plugins/productivity/skills/productivity-setup/tests -q -p no:cacheprovider
+          PYTHONDONTWRITEBYTECODE=1 \
+            python -m pytest plugins/productivity/skills/standup/tests -q -p no:cacheprovider
 
       - name: Validate JSON manifests
         run: |
@@ -56,6 +68,7 @@ jobs:
           python -m json.tool .claude-plugin/marketplace.json >/dev/null
           python -m json.tool plugins/memory/.claude-plugin/plugin.json >/dev/null
           python -m json.tool plugins/memory/.codex-plugin/plugin.json >/dev/null
+          python -m json.tool plugins/productivity/.claude-plugin/plugin.json >/dev/null
 
       - name: Validate static site asset references
         run: |
@@ -88,17 +101,25 @@ jobs:
                   if self.in_h1:
                       self.h1.append(data.strip())
 
-          path = Path("docs/index.html")
-          parser = SiteParser()
-          parser.feed(path.read_text())
+          def local(ref):
+              return not ref.startswith(("http://", "https://", "data:", "mailto:", "#"))
 
-          missing = [
-              src for src in parser.srcs
-              if not src.startswith(("http://", "https://", "data:"))
-              and not (path.parent / src).exists()
-          ]
-          if missing:
-              raise SystemExit(f"Missing local site assets: {missing}")
-          if "Memory as reliability practice" not in " ".join(parser.h1):
-              raise SystemExit("Expected site H1 was not found")
+          pages = sorted(Path("docs").glob("*.html"))
+          if not pages:
+              raise SystemExit("No site pages found under docs/")
+          for path in pages:
+              parser = SiteParser()
+              parser.feed(path.read_text())
+              missing = [
+                  ref for ref in parser.srcs + parser.hrefs
+                  if local(ref) and not (path.parent / ref.split("#")[0]).exists()
+              ]
+              if missing:
+                  raise SystemExit(f"{path}: missing local refs: {missing}")
+              if not parser.h1:
+                  raise SystemExit(f"{path}: page has no H1")
+          memory = SiteParser()
+          memory.feed(Path("docs/memory.html").read_text())
+          if "Memory as reliability practice" not in " ".join(memory.h1):
+              raise SystemExit("Expected memory post H1 was not found")
           PY

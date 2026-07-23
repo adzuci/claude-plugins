@@ -24,9 +24,9 @@
     {
       "name": "productivity",
       "source": "./plugins/productivity",
-      "description": "End-of-session hygiene check, daily wrapup with Obsidian goal capture, Claude Code spend monitoring, and guided agent scaffolding.",
+      "description": "Portable standups, productivity setup, Obsidian todo capture, session hygiene, daily planning, AI coaching, and agent operations.",
       "category": "productivity",
-      "tags": ["claude-code", "daily-wrapup", "goals", "budgetclaw", "spend-monitoring", "agent-builder"]
+      "tags": ["claude-code", "codex", "obsidian", "standup", "jira", "setup", "todo", "daily-wrapup", "ai-coach", "agent-operations"]
     }
   ]
 }

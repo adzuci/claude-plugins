@@ -1,7 +1,7 @@
 {
   "name": "productivity",
-  "version": "0.2.0",
-  "description": "Local productivity workflows for session hygiene, daily wrapup, spend monitoring, agent scaffolding, and privacy-safe scheduled-agent operations.",
+  "version": "0.4.0",
+  "description": "Portable standups, task capture, session hygiene, daily planning, AI coaching, setup, spend monitoring, and privacy-safe agent operations.",
   "author": {
     "name": "adzuci"
   }

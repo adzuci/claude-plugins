@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Job Search as Market Intelligence</title>
+  <meta name="description" content="A note on the career plugin: a criteria-driven job market sweep that writes a tier-ranked, recruiter-reviewed report into your vault.">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">Adam Blackwell</div>
+      <nav aria-label="Article links">
+        <a href="index.html">All posts</a>
+        <a href="https://github.com/adzuci/claude-plugins">GitHub repo</a>
+        <a href="memory.html">Memory post</a>
+        <a href="productivity.html">Productivity post</a>
+        <a href="#install">Install</a>
+      </nav>
+    </div>
+
+    <header class="hero">
+      <section class="hero-copy">
+        <p class="eyebrow">Career strategy · structured research · local-first AI tooling</p>
+        <h1>Job search as market intelligence</h1>
+        <p class="dek">Scrolling job boards is sampling without a model. A senior search goes better when it is run like research: explicit criteria, a repeatable sweep, and a report you can compare week over week.</p>
+        <div class="meta-grid" aria-label="Article metadata">
+          <div class="meta-card"><strong>Audience</strong>Staff / Director / Principal candidates</div>
+          <div class="meta-card"><strong>Artifact</strong><code>career</code> plugin</div>
+          <div class="meta-card"><strong>Output</strong>A tier-ranked report in your vault</div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <article>
+        <p class="lead">The senior job market is opaque in a specific way: the roles exist, but the signal about level, compensation, and real remote eligibility is scattered and stale. That is a research problem, and research problems respond to structure.</p>
+
+        <p>The <code>career</code> plugin has one skill, <code>/career:market-sweep</code>. It runs a job market intelligence sweep for a senior technical candidate and writes the result into your vault as a dated Markdown report — market intelligence, not a job board dump.</p>
+
+        <h2>How a sweep works</h2>
+        <p>It starts from a criteria file (<code>career/search-criteria.md</code> in your vault): target titles, location and compensation floor, stack keywords, seniority signals, any priority filter, domain bonuses, and hard exclusions. The first run collects these; later runs confirm and reuse them, which is what makes the reports comparable over time.</p>
+
+        <p>The sweep itself covers market conditions for your level, priority companies with confirmed active roles, additional strong matches, stack trends in senior job descriptions, and compensation benchmarks. Claims get verified rather than repeated — a "women-led" filter, for example, means checking who the CEO actually is, and a "Remote US" label means checking the careers page, not the aggregator.</p>
+
+        <div class="pullquote">The report is the product. The rank ordering forces the question a spreadsheet of links never asks: which five of these are worth an hour this week?</div>
+
+        <p>After the report is written, the skill runs an automated recruiter-review pass over its own output and improves the report in place — the same trick as code review, applied to a research artifact. It then offers to schedule a weekly repeat so the market view stays current instead of being a one-time snapshot.</p>
+
+        <h2>Honest limitations</h2>
+        <p>It is built on web research, so it inherits the web's noise: compensation data is directional (Levels.fyi, Built In, Glassdoor), listings go stale, and a sweep is a starting point for judgment, not a substitute for it. The defaults are opinionated — remote US, $150k+ base, senior engineering/data titles — though the criteria step generalizes to other disciplines. And the reports land in a local vault on purpose: a job search is exactly the kind of context that should stay in plain files you own.</p>
+
+        <div class="note">
+          <p><strong>The practical test:</strong> if this is working, week three's report should read differently from week one's — tighter criteria, fewer but better-ranked companies, and a visible trend line instead of a fresh anxiety spiral.</p>
+        </div>
+
+        <section class="install-block" id="install">
+          <h2>Install the plugin</h2>
+          <p>Add the public marketplace once, install, then run the sweep.</p>
+          <div class="install-grid">
+            <section class="install-card">
+              <h3>Claude Code</h3>
+              <pre><code>claude plugin marketplace add adzuci/claude-plugins
+claude plugin install career@adzuci-plugins
+/career:market-sweep</code></pre>
+            </section>
+            <section class="install-card">
+              <h3>Codex</h3>
+              <pre><code>codex plugin marketplace add adzuci/claude-plugins
+codex plugin add career@adzuci-plugins
+/market-sweep</code></pre>
+            </section>
+          </div>
+          <p class="install-footnote">Reports write to your Obsidian vault — the one from the <a href="memory.html">memory plugin</a> works out of the box.</p>
+        </section>
+      </article>
+
+      <aside>
+        <section class="side-panel">
+          <h3>Project</h3>
+          <p><strong>Repo:</strong> <a href="https://github.com/adzuci/claude-plugins">adzuci/claude-plugins</a></p>
+          <p><strong>Plugin:</strong> <code>career</code></p>
+          <p><strong>Skill:</strong> <code>/career:market-sweep</code></p>
+          <p><strong>Principle:</strong> explicit criteria, verified claims, comparable reports.</p>
+        </section>
+
+        <section class="side-panel">
+          <h3>The series</h3>
+          <div class="link-list">
+            <a href="memory.html">Memory as reliability practice</a>
+            <a href="productivity.html">An operating loop for AI-assisted work</a>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      Drafted as a personal blog article and public note for the <code>career</code> plugin.
+    </footer>
+  </div>
+</body>
+</html>

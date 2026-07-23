@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Coach"
+  short_description: "Review weekly AI workflows and memory candidates"
+  default_prompt: "Use $ai-coach to review my recent AI work and propose workflow and memory improvements."
