@@ -171,39 +171,55 @@ ______________________________________________________________________
 
 ## Step 6: Final Output
 
-After all five sections are drafted and approved, produce a clean final output in this format — copy-paste ready, nothing else:
+After all five sections are drafted and approved:
 
-______________________________________________________________________
+1. Write the complete pack to a file in the session scratchpad directory using the `Write` tool. Name it `promo-pack-[nominee-last-name].md`.
 
-**PROMOTION PACK — [Nominee Name] | [Current Level] → [Target Level]**
+1. Tell the manager:
 
-**1. Level Question / Manager's Case for Promotion**
+   > "Here's your promotion pack — review it, verify any metrics, and paste each section into the corresponding text box in the [Google Slides template](https://docs.google.com/presentation/d/1ApMnXrHe58ukpy5dLUY8wxCDEV-6x9eQhNpfqoYdOfk/edit). To copy the file out:
+   >
+   > ````bash
+   > cat [full path to the file]
+   > ```"
+   > ````
+
+The file content should be clean Markdown in this format — no preamble, no extra commentary:
+
+```
+# Promotion Pack — [Nominee Name] | [Current Level] → [Target Level]
+
+## 1. Level Question / Manager's Case for Promotion
+
 [~100 words]
 
-**2. Impact**
+## 2. Impact
+
 [~100 words]
 
-**3. Ownership**
+## 3. Ownership
+
 [~100 words]
 
-**4. Mastery**
+## 4. Mastery
+
 [~100 words]
 
-**5. Risks and Growth Opportunities**
+## 5. Risks and Growth Opportunities
+
 [~100 words]
+```
 
-______________________________________________________________________
+3. Below the `cat` command, add a **Before You Submit** checklist in chat (not in the file):
 
-Below the pack, add a **Before You Submit** checklist:
+   - [ ] Every specific metric or outcome is something you can verify and attribute to this nominee
+   - [ ] The evidence spans the full sustained period, not just the past quarter
+   - [ ] The Risks section names real risks, not softened generalities
+   - [ ] You've spoken to your skip-level manager before finalising
+   - [ ] You've identified at least three feedback providers (weighted toward managers)
+   - [ ] The pack has been shared with your PBP before submission
 
-- [ ] Every specific metric or outcome is something you can verify and attribute to this nominee
-- [ ] The evidence spans the full sustained period, not just the past quarter
-- [ ] The Risks section names real risks, not softened generalities
-- [ ] You've spoken to your skip-level manager before finalising
-- [ ] You've identified at least three feedback providers (weighted toward managers)
-- [ ] The pack has been shared with your PBP before submission
-
-Then share the feedback provider outreach template from [`references/resources.md`](references/resources.md) and offer to draft the Slack messages to each feedback provider if the manager wants help with that too.
+1. Offer to draft the Slack messages to each feedback provider using the template in [`references/resources.md`](references/resources.md) if the manager wants help with that next.
 
 ______________________________________________________________________
 
