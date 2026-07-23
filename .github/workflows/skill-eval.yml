@@ -1,0 +1,36 @@
+name: Skill eval
+
+# Behavioral eval for the standup skill. Kept separate from ci.yml so the
+# hermetic, no-secret test job stays untouched and this paid, LLM-backed job is
+# gated independently. Only runs when the standup skill (or its evals) change.
+#
+# Prerequisite: add an ANTHROPIC_API_KEY repository secret
+# (Settings -> Secrets and variables -> Actions). Until then this job errors on auth.
+
+on:
+  pull_request:
+    paths:
+      - "plugins/productivity/skills/standup/**"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write # post the eval scorecard as a PR comment
+
+jobs:
+  standup:
+    name: Eval standup skill
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Run standup evals
+        # Pinned to the v1.3.0 commit (not a moving tag) for supply-chain safety.
+        uses: skill-bench/skill-eval-action@32cb44e77cf3147ebbe140a953065e0ac89eddb6 # v1.3.0
+        with:
+          skill-name: standup
+          skill-path: ./plugins/productivity/skills/standup
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          pass-threshold: "80" # LLM grading is non-deterministic; 80% absorbs occasional flake
+          allowed-tools: "Read,Glob,Grep,Bash" # read the fixture vault; run check_standup.py

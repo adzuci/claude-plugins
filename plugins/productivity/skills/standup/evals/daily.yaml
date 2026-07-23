@@ -1,0 +1,43 @@
+name: daily-basic
+# Daily mode: previous working day. "Today" is anchored so the case is
+# deterministic regardless of when CI runs. Jira is unavailable in CI, so the
+# skill must degrade to the local vault and say so.
+prompt: >-
+  /standup daily
+
+  Assume today is Thursday 2026-07-23 in my local timezone, so the previous
+  working day is Wednesday 2026-07-22. Use the Obsidian vault at ./vault. Jira
+  is unavailable in this environment.
+expect_skill: true
+files:
+  - path: vault/backlog.md
+    content: |
+      # Backlog
+
+      ## Done This Week
+      - Shipped rate-limiter rollout to staging <https://apollo.example/browse/PLAT-482|PLAT-482>
+
+      ## In Progress
+      - Draft RFC for cache eviction policy <https://apollo.example/browse/PLAT-491|PLAT-491>
+
+      ## Waiting
+      - PR review from platform team on PLAT-482
+
+      ## Inbox
+      - Reply to on-call handoff thread
+  - path: vault/sessions/2026-07-22.md
+    content: |
+      # 2026-07-22
+
+      ## Accomplishments
+      - Rolled out the rate limiter to staging and verified error budget held.
+      - Paired with Sam on the cache eviction RFC outline.
+
+      ## Open loops
+      - Cache eviction RFC still in draft; next step is the eviction-policy section.
+criteria:
+  - "The response contains one paste-ready copy block that uses the section headings 'Yesterday' and 'Today' (not 'Last week'/'In flight')."
+  - "The copy block is brief: no more than eight bullets total and clearly well under ~90 words."
+  - "After the copy block there is a one-line source-coverage note that flags Jira as unavailable or the run as incomplete."
+  - "Any Jira reference in the copy block uses the Slack-style link format <url|KEY> rather than a bare key or a markdown link."
+  - "The response does NOT claim to have posted the update anywhere or to have changed any ticket status."
