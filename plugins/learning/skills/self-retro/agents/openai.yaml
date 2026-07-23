@@ -1,0 +1,4 @@
+interface:
+  display_name: "Self-Retro"
+  short_description: "Weekly engineering self-retro and ranked learning plan"
+  default_prompt: "Use $self-retro to reflect my recent engineering work back to me as a prioritized learning plan."

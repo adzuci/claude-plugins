@@ -4,8 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>An Operating Loop for AI-Assisted Work</title>
-  <meta name="description" content="A note on the productivity plugin: task capture, session hygiene, daily planning, and a weekly AI coach around a local Obsidian vault.">
+  <meta name="description" content="An engineering note on turning a memory vault into an operating system: small, inspectable, mostly-idempotent loops for task capture, session hygiene, standups, and a weekly report-only AI coach.">
   <link rel="stylesheet" href="assets/site.css">
+  <style>
+    .diagram { padding: 30px 24px 8px; overflow-x: auto; }
+    .diagram .mermaid { display: flex; justify-content: center; min-width: 520px; }
+    .spec-table { width: 100%; border-collapse: collapse; margin: 22px 0; font-size: 0.98rem; }
+    .spec-table th, .spec-table td { text-align: left; vertical-align: top; padding: 11px 14px; border-bottom: 1px solid var(--line); }
+    .spec-table thead th { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--line); }
+    .spec-table tbody tr:nth-child(odd) { background: var(--soft); }
+    .spec-table code { white-space: nowrap; }
+    .spec-scroll { overflow-x: auto; }
+    .stats { display: flex; flex-wrap: wrap; gap: 14px; margin: 26px 0 8px; }
+    .stat { flex: 1 1 150px; border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; background: var(--soft); }
+    .stat .num { font-size: 1.95rem; font-weight: 820; color: var(--ink); line-height: 1.05; }
+    .stat .lbl { color: var(--muted); font-size: 0.9rem; margin-top: 5px; }
+  </style>
 </head>
 <body>
   <div class="shell">
@@ -23,8 +37,8 @@
       <section class="hero-copy">
         <p class="eyebrow">Operating loops · task capture · local-first AI tooling</p>
         <h1>An operating loop for AI-assisted work</h1>
-        <p class="dek">The memory vault answers "what did we decide?" This plugin answers the next question: "what should I do with that, today and this week?"</p>
-        <p class="install-footnote">Part two of a series — start with <a href="memory.html">Memory as reliability practice</a>.</p>
+        <p class="dek">A memory layer tells you what you decided. It does not, on its own, move work forward. This is the set of small, inspectable loops I run on top of one Obsidian vault to close that gap — and the design rules that make them safe to trust.</p>
+        <p class="install-footnote">Part two of a series — start with <a href="memory.html">Memory as reliability practice</a>, then <a href="learning.html">Reflecting your own work back as a learning plan</a>.</p>
         <div class="meta-grid" aria-label="Article metadata">
           <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
           <div class="meta-card"><strong>Artifact</strong><code>productivity</code> plugin</div>
@@ -35,48 +49,117 @@
 
     <main>
       <article>
-        <p class="lead">A memory layer on its own is a filing cabinet. It becomes an operating system when there are small, boring loops that move work through it.</p>
+        <p class="lead">A memory layer on its own is a filing cabinet. It becomes an operating system when small, boring loops move work through it — and when each loop is cheap enough to run without thinking and safe enough to trust without checking.</p>
 
-        <p>After I set up the <a href="memory.html">memory vault</a>, the failure mode changed. I stopped losing decisions, and started losing follow-ups: a task mentioned mid-session that never landed anywhere, a session cleared with uncommitted work still sitting in the tree, a Friday where I could not say what the week's AI-assisted work actually taught me.</p>
+        <p>The <a href="memory.html">memory vault</a> fixed decision loss and surfaced a different problem: the gaps between sessions. A task comes up mid-session and never reaches the backlog. A session gets cleared with uncommitted work still in the tree. Friday arrives and I can't say what the week's AI work actually produced. The vault remembers fine — these are missing loops, not missing memory.</p>
 
-        <p>The <code>productivity</code> plugin is my answer: a handful of skills that share one vault and one convention, each small enough to read in a few minutes.</p>
+        <p>The engineering instinct here is the same one I bring to reliability work: when a manual step keeps failing, you do not try harder, you build a small system with a clear contract. The <code>productivity</code> plugin is that system — a handful of skills that share one vault and one convention, each small enough to read in a few minutes and reason about completely.</p>
 
         <div class="pullquote">Capture is cheap. What is expensive is re-finding the task, the loose end, or the pattern three weeks later.</div>
 
         <h2>The loop</h2>
-        <p>The skills form a daily-to-weekly cadence. Each one works standalone, but they compound:</p>
+        <p>The skills form a daily-to-weekly cadence around a single git-backed vault. The vault is the only shared state; every skill reads from it and writes plain Markdown back to it, so any one of them works standalone and none of them depends on another's runtime.</p>
+
+        <figure class="figure">
+          <div class="diagram">
+            <pre class="mermaid">
+flowchart TB
+  subgraph capture["In the moment"]
+    direction LR
+    T["/todo &#183; capture a durable task"]
+    W["/wrapup &#183; is it safe to /clear?"]
+  end
+  subgraph review["Daily &#8594; weekly"]
+    direction LR
+    S["/standup &#183; Jira + backlog &#8594; status"]
+    D["/daily-wrapup &#183; goals + tomorrow"]
+    C["/ai-coach &#183; Friday, report-only"]
+  end
+  V[("Obsidian vault &#183; Markdown, git-backed")]
+  T -->|"append (idempotent)"| V
+  W -->|"read state"| V
+  V --> S
+  V --> D
+  D -->|"commit goals"| V
+  V --> C
+  C -.->|"writes a report, changes nothing"| V
+            </pre>
+          </div>
+          <figcaption class="caption">The vault is the substrate. Capture skills write to it in the moment; review skills read from it on a daily-to-weekly rhythm. The Friday coach is deliberately one-directional — it reads the week and writes a report, but changes nothing on its own.</figcaption>
+        </figure>
+
+        <p>Two skills run in the moment, three on a daily-to-weekly rhythm:</p>
 
         <div class="two-lane" aria-label="The productivity loop">
           <section class="lane">
             <h3>In the moment</h3>
             <ul>
-              <li><code>/productivity:todo</code> — capture a durable task in the vault's Kanban <code>backlog.md</code>. Idempotent: re-adding an item deduplicates, and an explicit "urgent" promotes it instead of duplicating it.</li>
-              <li><code>/productivity:wrapup</code> — before <code>/clear</code>, check for uncommitted changes, unpushed commits, running jobs, and open obligations. It tells you whether it is actually safe to clear.</li>
+              <li><code>/todo</code> — capture a durable task in the vault's Kanban <code>backlog.md</code>. Idempotent by design: re-adding an item deduplicates instead of stacking, and an explicit "urgent" promotes the existing item rather than creating a second copy.</li>
+              <li><code>/wrapup</code> — the pre-<code>/clear</code> preflight. Before you throw away a session, it checks for uncommitted changes, unpushed commits, running jobs, and open obligations, and tells you whether it is actually safe to clear.</li>
             </ul>
           </section>
           <section class="lane">
             <h3>Daily and weekly</h3>
             <ul>
-              <li><code>/productivity:standup</code> — a scheduled or on-demand daily/weekly update built from Jira, the backlog, and daily reports. The paste-ready block stays under 90 words and seven bullets; private notes surface credible five-minute closes.</li>
-              <li><code>/productivity:daily-wrapup</code> — end-of-day review: yesterday's goals, today's outcomes, tomorrow's preview, and a goal commit into the vault session note.</li>
-              <li><code>/productivity:ai-coach</code> — a Friday, report-only review of the week's curated session notes: repeated friction, capabilities I keep bypassing, and memory candidates. It writes a report; it changes nothing.</li>
+              <li><code>/standup</code> — a daily or weekly status built from Jira, the backlog, and daily reports. The paste-ready block is capped at 90 words and eight bullets; private notes surface the credible five-minute closes.</li>
+              <li><code>/daily-wrapup</code> — end-of-day review: yesterday's goals, today's outcomes, tomorrow's preview, and a goal commit written back into the vault's session note.</li>
+              <li><code>/ai-coach</code> — a Friday, report-only review of the week's session notes: repeated friction, capabilities I keep bypassing, and memory candidates. It writes a report and changes nothing.</li>
             </ul>
           </section>
         </div>
 
-        <p><code>/productivity:productivity-setup</code> ties it together: it installs managed local copies of these skills for every Claude Code and Codex client it detects, records your vault path in <code>~/.config/adzuci-productivity/config.json</code>, and offers to schedule the Friday coach with whatever scheduler is native to the client you are in. The plugin also ships <code>/productivity:budgetclaw-setup</code> for local spend monitoring and an agent-ops pair for privacy-safe scheduled agents.</p>
+        <p><code>/productivity-setup</code> ties it together. It installs managed local copies of these skills for every Claude Code and Codex client it detects, records your vault path in <code>~/.config/adzuci-productivity/config.json</code>, and offers to schedule the Friday coach with whatever scheduler is native to the client you are in. The plugin also ships <code>/budgetclaw-setup</code> for local spend monitoring and an agent-ops pair for privacy-safe scheduled agents.</p>
+
+        <h2>Contracts, not vibes</h2>
+        <p>The reason I trust these loops enough to run them on autopilot is that each one has an explicit, testable contract. Three examples worth calling out for an engineering audience:</p>
+
+        <div class="spec-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Skill</th><th>The contract</th><th>Why it holds</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/todo</code></td>
+              <td>Adding the same task twice is a no-op; "urgent" promotes rather than duplicates.</td>
+              <td>A Python helper normalizes bullets, deduplicates case-insensitively, and writes atomically — behavior pinned by unit tests, not by prompt wording.</td>
+            </tr>
+            <tr>
+              <td><code>/standup</code></td>
+              <td>The paste-ready block is always under 90 words and eight bullets.</td>
+              <td>A checker script runs against the draft before it is returned; boundary cases (exactly 90 words, exactly eight bullets) are covered in the test suite.</td>
+            </tr>
+            <tr>
+              <td><code>/ai-coach</code></td>
+              <td>Report-only: it never writes durable memory or mutates a ticket on its own.</td>
+              <td>It requires evidence from multiple sessions before recommending anything, verifies invocations against skills you actually have installed, and stops at proposing.</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
 
         <h2>Design guardrails</h2>
-        <p>The same rules as the memory plugin, because they are the reason I trust it:</p>
+        <p>The same rules as the memory plugin, because they are the reason the whole thing is safe to leave running:</p>
 
-        <p>Everything is plain files. Tasks are Markdown checkboxes in a Kanban board Obsidian can render; coach reports are dated Markdown in <code>coaching/</code>. Installs are dry-run first and confirmation-gated, they never overwrite an unmanaged skill with the same name, and every managed copy carries a marker file so updates are safe and removal is obvious. The AI coach is deliberately report-only: it requires evidence from multiple sessions before recommending anything, verifies invocations against skills you actually have installed, and never writes to durable memory without approval.</p>
+        <p>Everything is plain files. Tasks are Markdown checkboxes in a Kanban board Obsidian renders natively; coach reports are dated Markdown in <code>coaching/</code>. Installs are dry-run first and confirmation-gated — they never overwrite an unmanaged skill of the same name, and every managed copy carries a marker file so updates are safe and removal is obvious. Scheduling uses the client's own scheduler; where there is no good native option, the setup skill hands you the exact manual command instead of quietly writing a cron job. And writes that could compound — task capture, goal commits — are idempotent, so a double-run or a retry never corrupts the board.</p>
 
-        <h2>Honest limitations</h2>
-        <p>It assumes the vault convention from the memory plugin — a <code>sessions/</code> directory of curated notes is what makes the coach useful; without it, weekly mode has little to read. The Kanban layout is an opinion (six fixed sections) rather than a framework. Scheduling is best-supported on the clients I use daily; elsewhere the setup skill hands you the exact manual command instead of installing cron jobs behind your back. And like everything in this repo, it is tested primarily on macOS.</p>
+        <h2>What changed in practice</h2>
+        <p>Four months of running this, measured off the vault it writes to:</p>
+
+        <div class="stats" aria-label="Usage metrics">
+          <div class="stat"><div class="num">610</div><div class="lbl">session summaries archived since Mar 16</div></div>
+          <div class="stat"><div class="num">84</div><div class="lbl">daily notes the loop reads and writes</div></div>
+          <div class="stat"><div class="num">19</div><div class="lbl">days I closed out with <code>/daily-wrapup</code></div></div>
+        </div>
+
+        <p>The SessionEnd hook does the archiving, so those 610 summaries cost me nothing to keep — I stopped deciding what was worth writing down. On the 19 days with something to reconcile I ran <code>/daily-wrapup</code>, and each one means the next morning starts from a written plan instead of a cold read. Tasks moved out of chat scrollback and into the backlog, because capturing one is now cheaper than scrolling to find it. And the Friday coach reads that same pile and, often enough to matter, names a habit I had not clocked. The loops are small; the state compounds.</p>
 
         <div class="note">
-          <p><strong>The practical test:</strong> if this is working, tasks stop living in chat scrollback, sessions end clean, and Friday's coach report occasionally tells you something about your own habits you did not notice.</p>
+          <p><strong>The practical test:</strong> if this is working, tasks stop living in chat scrollback, sessions end clean, and Friday's coach report occasionally surfaces a pattern you would otherwise have missed.</p>
         </div>
+
+        <h2>Honest limitations</h2>
+        <p>It assumes the vault convention from the memory plugin — a <code>sessions/</code> directory of curated notes is what makes the coach useful; without it, weekly mode has little to read. The Kanban layout is an opinion (six fixed sections), not a framework. Scheduling is best-supported on the clients I use daily; elsewhere you get the manual command rather than a background job installed on your behalf. And like everything in this repo, it is tested primarily on macOS — Linux and Windows reports are welcome.</p>
 
         <section class="install-block" id="install">
           <h2>Install the plugin</h2>
@@ -117,6 +200,7 @@ codex plugin add productivity@adzuci-plugins
           <h3>The series</h3>
           <div class="link-list">
             <a href="memory.html">Memory as reliability practice</a>
+            <a href="learning.html">Reflecting your own work back as a learning plan</a>
           </div>
         </section>
       </aside>
@@ -126,5 +210,22 @@ codex plugin add productivity@adzuci-plugins
       Drafted as a personal blog article and public note for the <code>productivity</code> plugin.
     </footer>
   </div>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({
+      startOnLoad: true,
+      securityLevel: 'strict',
+      theme: 'base',
+      themeVariables: {
+        fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif',
+        primaryColor: '#eef3fc',
+        primaryBorderColor: '#2359d1',
+        primaryTextColor: '#172033',
+        lineColor: '#596476',
+        secondaryColor: '#f6f8fb',
+        tertiaryColor: '#ffffff'
+      }
+    });
+  </script>
 </body>
 </html>
