@@ -31,7 +31,7 @@ jobs:
         # JSON before stripping code fences — upstream's order mangles valid JSON
         # whose evidence quotes a fenced block, failing whole cases with
         # "Expecting value: line 1 column 1"). Repoint to upstream once merged.
-        uses: adzuci/skill-eval-action@4305e530c42aae933dcc4917ce18d7e652489328 # v1.3.0 + grader fix
+        uses: adzuci/skill-eval-action@bd6215df6c9dc3f1b91270a42a9e9662e81a49d5 # v1.3.0 + grader fix + stderr surfacing
         with:
           skill-name: standup
           skill-path: ./plugins/productivity/skills/standup
