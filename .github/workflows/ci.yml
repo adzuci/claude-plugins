@@ -44,7 +44,9 @@ jobs:
               plugins/productivity/skills/productivity-setup/scripts \
               plugins/productivity/skills/productivity-setup/tests \
               plugins/productivity/skills/standup/scripts \
-              plugins/productivity/skills/standup/tests
+              plugins/productivity/skills/standup/tests \
+              plugins/learning/skills/self-retro \
+              plugins/learning/skills/self-retro/tests
 
       - name: Run memory setup tests
         run: |
@@ -61,6 +63,8 @@ jobs:
             python -m pytest plugins/productivity/skills/productivity-setup/tests -q -p no:cacheprovider
           PYTHONDONTWRITEBYTECODE=1 \
             python -m pytest plugins/productivity/skills/standup/tests -q -p no:cacheprovider
+          PYTHONDONTWRITEBYTECODE=1 \
+            python -m pytest plugins/learning/skills/self-retro/tests -q -p no:cacheprovider
 
       - name: Validate JSON manifests
         run: |
@@ -69,6 +73,7 @@ jobs:
           python -m json.tool plugins/memory/.claude-plugin/plugin.json >/dev/null
           python -m json.tool plugins/memory/.codex-plugin/plugin.json >/dev/null
           python -m json.tool plugins/productivity/.claude-plugin/plugin.json >/dev/null
+          python -m json.tool plugins/learning/.claude-plugin/plugin.json >/dev/null
 
       - name: Validate static site asset references
         run: |

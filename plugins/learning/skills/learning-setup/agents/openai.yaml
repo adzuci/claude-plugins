@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learning Setup"
+  short_description: "Schedule the weekly self-retro and vault delivery"
+  default_prompt: "Use $learning-setup to schedule my weekly self-retro and configure where reports are stored."

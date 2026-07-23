@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reflecting your own work back as a learning plan</title>
+  <meta name="description" content="A note on the learning plugin: a weekly engineering self-retro that reads your own sessions or your shipped work and returns a small, ranked learning plan. Local or cloud/web routine.">
+  <link rel="stylesheet" href="assets/site.css">
+  <style>
+    .retro-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.96rem; }
+    .retro-table th, .retro-table td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+    .retro-table thead th { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--line); }
+    .retro-table tbody tr:nth-child(odd) { background: var(--soft); }
+    .retro-table code { white-space: nowrap; }
+    .retro-scroll { overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">Adam Blackwell</div>
+      <nav aria-label="Article links">
+        <a href="index.html">All posts</a>
+        <a href="https://github.com/adzuci/claude-plugins">GitHub repo</a>
+        <a href="memory.html">Memory post</a>
+        <a href="#install">Install</a>
+      </nav>
+    </div>
+
+    <header class="hero">
+      <section class="hero-copy">
+        <p class="eyebrow">Reflection loops · learning plans · local-first AI tooling</p>
+        <h1>Reflecting your own work back as a learning plan</h1>
+        <p class="dek">The memory vault remembers what you decided. This plugin does something harder: it reads a week of your own engineering and tells you, with evidence, what to get better at next.</p>
+        <p class="install-footnote">Part three of a series — start with <a href="memory.html">Memory as reliability practice</a>, then <a href="productivity.html">An operating loop for AI-assisted work</a>.</p>
+        <div class="meta-grid" aria-label="Article metadata">
+          <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
+          <div class="meta-card"><strong>Artifact</strong><code>learning</code> plugin</div>
+          <div class="meta-card"><strong>Scope</strong>Local sessions or a cloud/web routine</div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <article>
+        <p class="lead">Most retros are about the team. This one is about you, and it does not rely on your memory of the week — it reads the actual record and hands back three things worth practicing.</p>
+
+        <p>The idea is not mine. <a href="https://www.linkedin.com/in/harshit-pandey-84779114a/">Harshit Pandey</a> built the first version and made the case that matters: a self-retro should stay focused on the work you <em>actually did</em>, weighted to where your time went, and end in concrete next steps rather than generic advice. I have been running my own version weekly since May, and it has become the most useful recurring prompt I have.</p>
+
+        <div class="pullquote">A good retro does not tell you that you are doing fine. It points at one specific thing, cites the evidence, and gives you an exercise.</div>
+
+        <h2>Two ways to run it</h2>
+        <p>The hard part of a personal retro is data. There are two places that data lives, so the skill auto-detects which one it can reach and runs the right way:</p>
+
+        <div class="two-lane" aria-label="The two modes">
+          <section class="lane">
+            <h3>Local — pull session data directly</h3>
+            <ul>
+              <li>When your Claude Code session files are present, the retro is built from your own transcripts: how you framed problems, where you pushed back, where you accepted too fast.</li>
+              <li>This is the richest signal, and it runs offline. A bundled parser flattens the week's real sessions into the analysis; nothing leaves the machine.</li>
+            </ul>
+          </section>
+          <section class="lane">
+            <h3>Cloud — a web routine over your shipped work</h3>
+            <ul>
+              <li>A scheduled Claude web routine cannot see your local sessions, so it reads what it <em>can</em>: GitHub PRs authored and reviewed, Jira touches, and optionally Glean docs you wrote.</li>
+              <li>This was one of the first web routines I ran. It pairs with an LLM wiki — a git-backed Obsidian vault — so each run commits a durable, reviewable report and DMs it to me on Slack.</li>
+            </ul>
+          </section>
+        </div>
+
+        <p>If neither is reachable — a cloud run with no vault and no connected accounts — the skill says it needs data rather than inventing a report. Same idea, two environments; <code>--local</code> or <code>--signals</code> forces a mode.</p>
+
+        <h2>What running it weekly actually changed</h2>
+        <p>The point of a learning plan is that you do the items. Across the weekly runs since May, each retro's ranked plan turned into a specific piece of follow-up work — this is the honest record, pulled from my own session notes:</p>
+
+        <div class="retro-scroll">
+        <table class="retro-table">
+          <thead>
+            <tr><th>Week</th><th>Top learning-plan item</th><th>What it turned into</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Jun 15</td>
+              <td>Document which invocation surfaces carry ZDR eligibility</td>
+              <td>A ZDR-eligible-surfaces note in the vault's <code>references.md</code>, written before the next infra decision that depended on it</td>
+            </tr>
+            <tr>
+              <td>Jun 29</td>
+              <td>Add failure-mode and rollback notes to skills that write</td>
+              <td>A "Risks &amp; rollback" block added to write-path skills, plus a vault runbook for the native-vs-waterfall enrichment flow</td>
+            </tr>
+            <tr>
+              <td>Jul 13</td>
+              <td>Reconcile MTTR from PagerDuty + BetterStack + the Slack sev channel</td>
+              <td>An MTTR reconciliation step scoped to wire into the <code>create-rca</code> skill, plus a Redis/Sidekiq capacity model</td>
+            </tr>
+            <tr>
+              <td>Jul 16</td>
+              <td>Write up the polling-vs-event-driven trade-off from a live incident</td>
+              <td>The item I flagged as the most valuable of the run: a one-page design note comparing cost, failure modes, and migration risk — analysis that otherwise would have died in the incident channel</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>The Jul 16 run is the one I shared with Harshit: its third learning-plan item took something I had spitballed mid-incident and turned it into a design note I could actually circulate. That is the test — not that the report is flattering, but that at least one item a week is worth doing.</p>
+
+        <h2>Design guardrails</h2>
+        <p>The same posture as the rest of this repo, because it is why I trust the output:</p>
+
+        <p>The retro is reflective, never punitive: the reports are banned from the words "gap", "missed", "failed", and "lacking", and every claim has to cite specific session or PR evidence — no vibes. It is report-only: it generates the plan and, on approval, saves it; it does not touch tickets, memory, or code on its own. It is honest about an empty week or an unreachable signal, saying so in one line instead of padding. And it keeps the analysis weighted to where you spent your time — Harshit's original point — so a week that was 90% backend does not get a report obsessing over the 10% that was frontend.</p>
+
+        <h2>Honest limitations</h2>
+        <p>The cloud routine is only as good as the signals it can reach: no GitHub or Jira access, and it falls back to a thin report or asks for data. It infers your primary work area from directory and repository paths, which is a heuristic, not ground truth. Local mode depends on Claude Code's session files being where it expects them. Scheduling is best-supported on the clients I use daily; elsewhere the setup skill hands you the exact manual command rather than installing a cron job behind your back. And like everything here, it is tested primarily on macOS.</p>
+
+        <div class="note">
+          <p><strong>The practical test:</strong> if this is working, once a week you get a report that names one real thing worth practicing, cites where the evidence came from, and gives you an exercise concrete enough to start that afternoon.</p>
+        </div>
+
+        <section class="install-block" id="install">
+          <h2>Install the plugin</h2>
+          <p>Add the public marketplace once, install, then run setup to schedule the weekly run.</p>
+          <div class="install-grid">
+            <section class="install-card">
+              <h3>Claude Code</h3>
+              <pre><code>claude plugin marketplace add adzuci/claude-plugins
+claude plugin install learning@adzuci-plugins
+/learning:learning-setup</code></pre>
+            </section>
+            <section class="install-card">
+              <h3>Codex</h3>
+              <pre><code>codex plugin marketplace add adzuci/claude-plugins
+codex plugin add learning@adzuci-plugins
+/learning-setup</code></pre>
+            </section>
+          </div>
+          <p class="install-footnote">Run <code>/self-retro</code> any time for an on-demand retro. Setup asks before it schedules anything or writes outside the current project. Pairs best with the <a href="memory.html">memory plugin's vault</a> as the place reports land.</p>
+        </section>
+      </article>
+
+      <aside>
+        <section class="side-panel">
+          <h3>Project</h3>
+          <p><strong>Repo:</strong> <a href="https://github.com/adzuci/claude-plugins">adzuci/claude-plugins</a></p>
+          <p><strong>Plugin:</strong> <code>learning</code></p>
+          <p><strong>Entry skill:</strong> <code>/learning:self-retro</code></p>
+          <p><strong>Principle:</strong> reflect real evidence, rank it, make it doable.</p>
+        </section>
+
+        <section class="side-panel">
+          <h3>Credits</h3>
+          <p><a href="https://www.linkedin.com/in/harshit-pandey-84779114a/">Harshit Pandey</a> for the self-retro idea and the framing that a retro should focus on where you actually spend your time. This version adds an auto-detected local mode, a git-backed vault for durable history, and confirmation-gated scheduling.</p>
+        </section>
+
+        <section class="side-panel">
+          <h3>The series</h3>
+          <div class="link-list">
+            <a href="memory.html">Memory as reliability practice</a>
+            <a href="productivity.html">An operating loop for AI-assisted work</a>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      Drafted as a personal blog article and public note for the <code>learning</code> plugin.
+    </footer>
+  </div>
+</body>
+</html>
