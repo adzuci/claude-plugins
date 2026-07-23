@@ -80,7 +80,22 @@ tests:
 
   # ── no-false-trigger ── ports ../no-false-trigger.yaml (expect_skill: false) ─
   # Prompt is 100% byte-identical to the action YAML (no vault path to anchor).
+  # Runs in an isolated working_dir with the skill but NO vault fixtures — the
+  # action case ships no files, and the shared fixtures dir was bleeding real
+  # vault data into this case (the agent cited PLAT tickets the grader then
+  # judged "fabricated"). Environment parity, not just prompt parity.
   - description: no-false-trigger
+    provider:
+      id: anthropic:claude-agent-sdk
+      label: standup-agent-sdk-novault
+      config:
+        model: claude-sonnet-4-6
+        working_dir: fixtures-novault
+        setting_sources: ["project"]
+        skills: ["standup"]
+        append_allowed_tools: ["Read", "Glob", "Grep", "Bash"]
+        permission_mode: bypassPermissions
+        allow_dangerously_skip_permissions: true
     vars:
       prompt: >-
         How did my week go? Give me a quick sense of things.
