@@ -32,7 +32,7 @@
         <p class="eyebrow">Reflection loops · learning plans · local-first AI tooling</p>
         <h1>Reflecting your own work back as a learning plan</h1>
         <p class="dek">The memory vault remembers what you decided. This plugin does something harder: it reads a week of your own engineering and tells you, with evidence, what to get better at next.</p>
-        <p class="install-footnote">Part three of a series — start with <a href="memory.html">Memory as reliability practice</a>, then <a href="productivity.html">An operating loop for AI-assisted work</a>.</p>
+        <p class="install-footnote">Part three of a series: start with <a href="memory.html">Memory as reliability practice</a>, then <a href="productivity.html">An operating loop for AI-assisted work</a>.</p>
         <div class="meta-grid" aria-label="Article metadata">
           <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
           <div class="meta-card"><strong>Artifact</strong><code>learning</code> plugin</div>
@@ -43,7 +43,7 @@
 
     <main>
       <article>
-        <p class="lead">Most retros are about the team. This one is about you, and it does not rely on your memory of the week — it reads the actual record and hands back three things worth practicing.</p>
+        <p class="lead">Most retros are about the team. This one is about you, and it does not rely on your memory of the week; it reads the actual record and hands back three things worth practicing.</p>
 
         <p>The idea is not mine. <a href="https://www.linkedin.com/in/harshit-pandey-84779114a/">Harshit Pandey</a> built the first version and made the case that matters: a self-retro should stay focused on the work you <em>actually did</em>, weighted to where your time went, and end in concrete next steps rather than generic advice. I have been running my own version weekly since May, and it has become the most useful recurring prompt I have.</p>
 
@@ -54,25 +54,25 @@
 
         <div class="two-lane" aria-label="The two modes">
           <section class="lane">
-            <h3>Local — pull session data directly</h3>
+            <h3>Local: pull session data directly</h3>
             <ul>
               <li>When your Claude Code session files are present, the retro is built from your own transcripts: how you framed problems, where you pushed back, where you accepted too fast.</li>
               <li>This is the richest signal, and it runs offline. A bundled parser flattens the week's real sessions into the analysis; nothing leaves the machine.</li>
             </ul>
           </section>
           <section class="lane">
-            <h3>Cloud — a web routine over your shipped work</h3>
+            <h3>Cloud: a web routine over your shipped work</h3>
             <ul>
               <li>A scheduled Claude web routine cannot see your local sessions, so it reads what it <em>can</em>: GitHub PRs authored and reviewed, Jira touches, and optionally Glean docs you wrote.</li>
-              <li>This was one of the first web routines I ran. It pairs with an LLM wiki — a git-backed Obsidian vault — so each run commits a durable, reviewable report and DMs it to me on Slack.</li>
+              <li>This was one of the first web routines I ran. It pairs with an LLM wiki (a git-backed Obsidian vault), so each run commits a durable, reviewable report and DMs it to me on Slack.</li>
             </ul>
           </section>
         </div>
 
-        <p>If neither is reachable — a cloud run with no vault and no connected accounts — the skill says it needs data rather than inventing a report. Same idea, two environments; <code>--local</code> or <code>--signals</code> forces a mode.</p>
+        <p>If neither is reachable (a cloud run with no vault and no connected accounts), the skill says it needs data rather than inventing a report. Same idea, two environments; <code>--local</code> or <code>--signals</code> forces a mode.</p>
 
         <h2>What running it weekly actually changed</h2>
-        <p>The point of a learning plan is that you do the items. Across the weekly runs since May, each retro's ranked plan turned into a specific piece of follow-up work — this is the honest record, pulled from my own session notes:</p>
+        <p>The point of a learning plan is that you do the items. Across the weekly runs since May, each retro's ranked plan turned into a specific piece of follow-up work. This is the honest record, pulled from my own session notes:</p>
 
         <div class="retro-scroll">
         <table class="retro-table">
@@ -98,18 +98,18 @@
             <tr>
               <td>Jul 16</td>
               <td>Write up the polling-vs-event-driven trade-off from a live incident</td>
-              <td>The item I flagged as the most valuable of the run: a one-page design note comparing cost, failure modes, and migration risk — analysis that otherwise would have died in the incident channel</td>
+              <td>The item I flagged as the most valuable of the run: a one-page design note comparing cost, failure modes, and migration risk, analysis that otherwise would have died in the incident channel</td>
             </tr>
           </tbody>
         </table>
         </div>
 
-        <p>The Jul 16 run is the one I shared with Harshit: its third learning-plan item took something I had spitballed mid-incident and turned it into a design note I could actually circulate. That is the test — not that the report is flattering, but that at least one item a week is worth doing.</p>
+        <p>The Jul 16 run is the one I shared with Harshit: its third learning-plan item took something I had spitballed mid-incident and turned it into a design note I could actually circulate. That is the test: the report does not need to flatter me, it needs to give me one item a week worth doing.</p>
 
         <h2>Design guardrails</h2>
         <p>The same posture as the rest of this repo, because it is why I trust the output:</p>
 
-        <p>The retro is reflective, never punitive: the reports are banned from the words "gap", "missed", "failed", and "lacking", and every claim has to cite specific session or PR evidence — no vibes. It is report-only: it generates the plan and, on approval, saves it; it does not touch tickets, memory, or code on its own. It is honest about an empty week or an unreachable signal, saying so in one line instead of padding. And it keeps the analysis weighted to where you spent your time — Harshit's original point — so a week that was 90% backend does not get a report obsessing over the 10% that was frontend.</p>
+        <p>The retro is reflective, never punitive: the reports are banned from the words "gap", "missed", "failed", and "lacking", and every claim has to cite specific session or PR evidence, not vibes. It is report-only: it generates the plan and, on approval, saves it; it does not touch tickets, memory, or code on its own. It is honest about an empty week or an unreachable signal, saying so in one line instead of padding. And it keeps the analysis weighted to where you spent your time (Harshit's original point), so a week that was 90% backend does not get a report obsessing over the 10% that was frontend.</p>
 
         <h2>Honest limitations</h2>
         <p>The cloud routine is only as good as the signals it can reach: no GitHub or Jira access, and it falls back to a thin report or asks for data. It infers your primary work area from directory and repository paths, which is a heuristic, not ground truth. Local mode depends on Claude Code's session files being where it expects them. Scheduling is best-supported on the clients I use daily; elsewhere the setup skill hands you the exact manual command rather than installing a cron job behind your back. And like everything here, it is tested primarily on macOS.</p>
@@ -158,6 +158,7 @@ codex plugin add learning@adzuci-plugins
           <div class="link-list">
             <a href="memory.html">Memory as reliability practice</a>
             <a href="productivity.html">An operating loop for AI-assisted work</a>
+            <a href="skill-evals.html">Testing skills the way they actually run</a>
           </div>
         </section>
       </aside>

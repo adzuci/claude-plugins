@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testing Skills the Way They Actually Run</title>
+  <meta name="description" content="An engineering note on why AI skills need behavioral evals, not just unit tests: a GitHub Action that runs the standup skill against fixture cases and grades the transcript, kept separate from the hermetic test job.">
+  <link rel="stylesheet" href="assets/site.css">
+  <style>
+    .spec-table { width: 100%; border-collapse: collapse; margin: 22px 0; font-size: 0.98rem; }
+    .spec-table th, .spec-table td { text-align: left; vertical-align: top; padding: 11px 14px; border-bottom: 1px solid var(--line); }
+    .spec-table thead th { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid var(--line); }
+    .spec-table tbody tr:nth-child(odd) { background: var(--soft); }
+    .spec-table code { white-space: nowrap; }
+    .spec-scroll { overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">Adam Blackwell</div>
+      <nav aria-label="Article links">
+        <a href="index.html">All posts</a>
+        <a href="https://github.com/adzuci/claude-plugins">GitHub repo</a>
+        <a href="productivity.html">Productivity post</a>
+        <a href="#adopt">Adopt it</a>
+      </nav>
+    </div>
+
+    <header class="hero">
+      <section class="hero-copy">
+        <p class="eyebrow">Evals · CI for AI skills · local-first AI tooling</p>
+        <h1>Testing skills the way they actually run</h1>
+        <p class="dek">A unit test proves the checker function is correct. It says nothing about whether the skill behaves once a model is driving it. This is the eval I added to close that gap for one skill, and the reasons I kept it deliberately small.</p>
+        <p class="install-footnote">Part four of a series. Start with <a href="memory.html">Memory as reliability practice</a>, then the <a href="productivity.html">operating loop</a> and the <a href="learning.html">learning plan</a>.</p>
+        <div class="meta-grid" aria-label="Article metadata">
+          <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
+          <div class="meta-card"><strong>Artifact</strong><code>skill-eval.yml</code> + <code>evals/</code></div>
+          <div class="meta-card"><strong>Scope</strong>One skill, GitHub Actions</div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <article>
+        <p class="lead">The <a href="productivity.html">standup skill</a> already had tests. A Python checker enforces the brevity contract, and a pytest suite pins its boundary cases. That is real coverage, and it catches a real class of bug. It also quietly misses the class I care about more.</p>
+
+        <p>A skill is not a function. It is a prompt that a model reads and then acts on, with tools and a working directory and its own judgment about what to do. My checker can prove that a 91-word draft gets rejected. It cannot prove that the model produces the right headings for <code>weekly</code> versus <code>custom</code>, degrades gracefully when Jira is missing, or honors the one rule that actually matters: never post or transition a ticket on its own. Those are behaviors, and behaviors drift when you edit the instructions, not when you edit the code.</p>
+
+        <div class="pullquote">A unit test guards the checker. An eval guards the skill. Editing a Markdown instruction can break the second while every unit test stays green.</div>
+
+        <h2>Two kinds of wrong</h2>
+        <p>It helps to name the two failure modes separately, because they need different tools.</p>
+        <p>The first is a <strong>format bug</strong>: the output violates a rule you can express in code. Word count, bullet count, a required heading. Deterministic, cheap, and a unit test is exactly right for it. The standup checker lives here and should stay here.</p>
+        <p>The second is <strong>behavior drift</strong>: the skill still passes every deterministic check but does the wrong thing. It invents a Jira key it was never given. It quietly claims it posted the update. It picks up work from outside the requested date range. No assertion in my checker sees any of this, because the checker only reads the copy block, not the intent behind it. Catching drift means running the skill and reading what it did.</p>
+
+        <h2>What the eval runs</h2>
+        <p>The eval is a set of YAML cases that live next to the skill, under <code>evals/</code>. Each case is a prompt, an optional set of fixture files, and a list of plain-language criteria. A GitHub Action runs the skill against each prompt, then grades the resulting transcript against the criteria and posts the scorecard on the pull request.</p>
+        <p>The fixtures matter more than they look. The skill reads a live Obsidian vault and Jira, and a CI runner has neither. So each case ships a small fake vault as files (a <code>backlog.md</code>, a couple of dated session notes) and tells the skill that Jira is unavailable. That is not a workaround; it is the point. "Jira is down, fall back to the backlog and say so" is a documented behavior, and now it has a test.</p>
+
+        <div class="spec-scroll">
+        <table class="spec-table">
+          <thead>
+            <tr><th>Case</th><th>What it pins</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>daily</code> / <code>weekly</code> / <code>custom</code></td><td>Each mode emits its own headings, stays inside its date window, and keeps the copy block brief.</td></tr>
+            <tr><td><code>guardrail-no-post</code></td><td>An already-shipped ticket is flagged as a five-minute close with the exact action, and the skill proposes it rather than doing it.</td></tr>
+            <tr><td><code>brevity-overflow</code></td><td>A vault stuffed with completed work still yields a copy block within the hard limits.</td></tr>
+            <tr><td><code>no-false-trigger</code></td><td>A vague, standup-adjacent request does not by itself produce a fabricated status report.</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <h2>Design guardrails</h2>
+        <p>The same instinct as the rest of this repo: make the new thing safe to leave running, and easy to remove.</p>
+        <p>The eval is a <strong>separate workflow</strong> from the main CI. The existing job is hermetic: it runs pytest and a static-site validator, needs no secrets, and never calls a model. I did not want to compromise that. The eval job carries the one API key, makes paid calls, and tolerates a little non-determinism, so it gets its own file and its own trigger. It only runs on pull requests that touch the skill, so most changes never pay for it. The third-party action is <strong>pinned to a commit</strong> rather than a moving tag, and the whole thing is one file you can delete to roll back.</p>
+
+        <h2>Honest limitations</h2>
+        <p>The grader is a model, so the pass rate is not a straight line. I run against a threshold rather than demanding a perfect score, and I keep the criteria coarse enough that an honest response passes and a drifting one fails. Two, treating exact word counts as a grading criterion is a bad idea; the deterministic checker still owns that, and the eval stays on behavior.</p>
+        <p>The bigger caveat: this measures spec-compliance, not quality. It can tell me the standup has the right shape and broke none of its rules. It cannot tell me the standup is <em>good</em>, that it surfaced the work a manager would actually care about. That is a heavier kind of eval, one that compares a change against a baseline on real tasks, and it is not what belongs in a per-pull-request gate. This is the cheap, fast check that runs every time. It is not the whole story, and it is not trying to be.</p>
+
+        <div class="note">
+          <p><strong>The practical test:</strong> if this is working, a well-meaning edit to the skill's instructions that breaks a guardrail fails CI before it merges, and the failing criterion tells you which behavior you lost.</p>
+        </div>
+
+        <section class="install-block" id="adopt">
+          <h2>Adopt the pattern</h2>
+          <p>Two pieces: a workflow scoped to the skill, and a folder of cases beside it. Point the action at any skill directory that has a <code>SKILL.md</code> and an <code>evals/</code> folder.</p>
+          <div class="install-grid">
+            <section class="install-card">
+              <h3>The workflow</h3>
+              <pre><code>on:
+  pull_request:
+    paths: ["path/to/skill/**"]
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: skill-bench/skill-eval-action@&lt;pinned-sha&gt;
+        with:
+          skill-name: standup
+          skill-path: ./path/to/skill
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}</code></pre>
+            </section>
+            <section class="install-card">
+              <h3>An eval case</h3>
+              <pre><code>name: weekly-basic
+prompt: /standup weekly (use ./vault)
+expect_skill: true
+files:
+  - path: vault/backlog.md
+    content: |
+      ## Done This Week
+      - Shipped the thing
+criteria:
+  - "Uses 'Last week' and 'In flight' headings"
+  - "Does not claim to have posted anything"</code></pre>
+            </section>
+          </div>
+          <p class="install-footnote">Add an <code>ANTHROPIC_API_KEY</code> repository secret before the job can run. Tested against the standup skill in this repo; the pattern is the skill directory, not the specific skill.</p>
+        </section>
+      </article>
+
+      <aside>
+        <section class="side-panel">
+          <h3>Project</h3>
+          <p><strong>Repo:</strong> <a href="https://github.com/adzuci/claude-plugins">adzuci/claude-plugins</a></p>
+          <p><strong>Skill under test:</strong> <code>/productivity:standup</code></p>
+          <p><strong>Workflow:</strong> <code>.github/workflows/skill-eval.yml</code></p>
+          <p><strong>Principle:</strong> unit-test the checker, eval the behavior, keep them in separate jobs.</p>
+        </section>
+
+        <section class="side-panel">
+          <h3>Credits</h3>
+          <p>The runner is the open-source <a href="https://github.com/skill-bench/skill-eval-action">skill-bench/skill-eval-action</a>. For prompt-level spec suites outside a Claude Code skill, <a href="https://www.promptfoo.dev/">promptfoo</a> is the other tool worth knowing.</p>
+        </section>
+
+        <section class="side-panel">
+          <h3>The series</h3>
+          <div class="link-list">
+            <a href="memory.html">Memory as reliability practice</a>
+            <a href="productivity.html">An operating loop for AI-assisted work</a>
+            <a href="learning.html">Reflecting your own work back as a learning plan</a>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      Drafted as a personal blog article and public note on evaluating the <code>productivity</code> plugin's standup skill.
+    </footer>
+  </div>
+</body>
+</html>
