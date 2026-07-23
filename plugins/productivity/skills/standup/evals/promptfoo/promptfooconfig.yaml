@@ -34,6 +34,9 @@ providers:
       # Read the fixture vault and run scripts/check_standup.py non-interactively.
       append_allowed_tools: ["Read", "Glob", "Grep", "Bash"]
       permission_mode: bypassPermissions
+      # Required companion flag (enforced at callApi time, not by promptfoo validate).
+      # Acceptable here: ephemeral CI runner, fixture-only working_dir.
+      allow_dangerously_skip_permissions: true
 
 # One prompt template; each test supplies its own full prompt verbatim via the
 # `prompt` var, so every case can carry a distinct, byte-comparable prompt.
