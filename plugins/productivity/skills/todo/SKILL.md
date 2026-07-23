@@ -35,7 +35,7 @@ Resolve the bundled `scripts/append_todo.py`, then run:
 
 ```bash
 python3 <skill-dir>/scripts/append_todo.py \
-  --vault "${VAULT:-$HOME/obsidian-vault}" \
+  --vault "<resolved vault>" \
   --items "<one item per line>" \
   [--urgent]
 ```

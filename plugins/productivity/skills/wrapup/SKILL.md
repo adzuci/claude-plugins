@@ -60,6 +60,8 @@ recommending clear.
 Resolve the vault from an explicit path, `$VAULT`, `~/.config/adzuci-productivity/config.json`, then `~/obsidian-vault`:
 
 ```bash
+CFG="$HOME/.config/adzuci-productivity/config.json"
+VAULT="${VAULT:-$([ -f "$CFG" ] && python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("vault",""))' "$CFG")}"
 VAULT="${VAULT:-$HOME/obsidian-vault}"
 # path: $VAULT/sessions/YYYY-MM-DD - <short-title>.md
 ```
