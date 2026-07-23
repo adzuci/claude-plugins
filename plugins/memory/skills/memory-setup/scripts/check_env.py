@@ -100,6 +100,8 @@ def build_report(vault_candidate: str = "") -> dict:
         "claude": claude_on_path,
         "codex": codex_on_path,
         "jq": jq,
+        "git_crypt": detect_which("git-crypt"),
+        "op": detect_which("op"),
         "codex_sessions": detect_path("~/.codex/sessions", "dir"),
         "codex_session_index": detect_path("~/.codex/session_index.jsonl", "file"),
         "codex_config": detect_path("~/.codex/config.toml", "file"),

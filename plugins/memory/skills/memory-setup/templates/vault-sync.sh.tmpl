@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# vault-sync.sh — periodic pull/commit/push for the memory vault.
+# Installed by the memory-setup skill (install_sync.py). Safe to run any time:
+# it exits quietly when there is nothing to do or when syncing would be unsafe.
+set -uo pipefail
+
+# launchd/cron run with a minimal PATH; make sure Homebrew-installed tools
+# (git-crypt in particular — it runs as a git clean/smudge filter) resolve.
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+
+VAULT={{VAULT_SHELL}}
+
+cd "$VAULT" 2>/dev/null || exit 0
+
+# Not a git repo, or no remote — nothing to sync.
+git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
+git remote get-url origin >/dev/null 2>&1 || exit 0
+
+# git-crypt safety: if .gitattributes declares git-crypt but this checkout has
+# no local filter config (i.e. it is locked), committing would corrupt files.
+if [ -f .gitattributes ] && grep -q "filter=git-crypt" .gitattributes; then
+  git config --local --get filter.git-crypt.smudge >/dev/null 2>&1 || exit 0
+fi
+
+# Skip during an in-progress rebase/merge — a human is mid-operation.
+GIT_DIR=$(git rev-parse --git-dir)
+[ -d "$GIT_DIR/rebase-merge" ] || [ -d "$GIT_DIR/rebase-apply" ] && exit 0
+[ -f "$GIT_DIR/MERGE_HEAD" ] && exit 0
+
+git pull --rebase --autostash --quiet || exit 0
+
+if [ -n "$(git status --porcelain)" ]; then
+  git add -A
+  git commit --quiet -m "chore(sync): auto-sync $(hostname -s)" || true
+fi
+
+git push --quiet || true

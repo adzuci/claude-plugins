@@ -2,8 +2,10 @@
   "name": "career",
   "version": "0.1.0",
   "description": "Job search intelligence tools for senior technical candidates.",
-  "author": "lizblackwell",
+  "author": {
+    "name": "lizblackwell"
+  },
   "skills": [
-    "market-sweep"
+    "./skills/market-sweep"
   ]
 }

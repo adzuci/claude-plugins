@@ -6,6 +6,9 @@
 # System files
 .DS_Store
 
+# git-crypt exported keys must never be committed
+*.gitcrypt.key
+
 # Claude Code
 .claude/
 .claudian/

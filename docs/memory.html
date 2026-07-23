@@ -14,6 +14,7 @@
       <nav aria-label="Article links">
         <a href="index.html">All posts</a>
         <a href="https://github.com/adzuci/claude-plugins">GitHub repo</a>
+        <a href="#phase-two">Phase 2</a>
         <a href="#prereqs">Prerequisites</a>
         <a href="#install">Install</a>
         <a href="#system">Architecture sketch</a>
@@ -54,6 +55,8 @@
 
         <p>The result is a public plugin called <code>memory</code>. Its main skill, <code>/memory:memory-setup</code>, scaffolds a git-backed Obsidian vault, installs the useful Obsidian pieces, and wires session capture into Claude Code. The repo also includes compatibility notes and importers for Codex and Antigravity, because the useful context should belong to the person doing the work, not to one assistant vendor.</p>
 
+        <p>Two optional layers round it out. Scheduled sync keeps the vault converged across machines — obsidian-git handles it while Obsidian is open, and a launchd agent pulls, commits, and pushes headlessly the rest of the time. And invoking the skill with the <code>crypt</code> argument encrypts the sensitive directories (coaching notes, session logs, meeting notes) with git-crypt, so the remote only ever sees ciphertext while everything stays plain Markdown on disk; the key lives in your password manager, and a second machine unlocks with one command.</p>
+
         <p>I have used this pattern in both work environments and personal environments. At work, it helps with project follow-ups, architecture reviews, team handoffs, vendor decisions, team preferences, and the small operational facts that otherwise get rediscovered every month. Personally, it helps with coaching notes, side projects, routines, reading trails, and decisions I keep revisiting.</p>
 
         <div class="two-lane" aria-label="Work and personal memory examples">
@@ -81,6 +84,11 @@
         <p>The exact folder names matter less than the operating pattern. Start each assistant from a small index. Keep raw session exhaust out of the default context path. Promote only the facts, decisions, references, and preferences that are likely to help later.</p>
 
         <p>That gives the system a useful bias: capture can be broad, but memory should be curated. The skill exists to make that setup easy to inspect, easy to repeat, and hard to confuse with a magic black box.</p>
+
+        <h2 id="phase-two">Phase 2: turn durable memory into useful writing</h2>
+        <p>The next phase is a small publishing funnel. Promising, non-proprietary lessons can move from session notes and project retrospectives into a candidate queue, then through an outline, a privacy check, peer review, and finally a post or cross-post. Each candidate has to earn its way forward with a concrete problem, visible architecture or operating mechanism, honest trade-offs and failures, evidence with limitations, and a reproducible takeaway. Most captured context should never leave the vault; the funnel exists to make the few broadly useful ideas easier to recognize and develop.</p>
+
+        <p>The operating rule is to under-commit and over-deliver when posting prose for other people to review. Share a concrete draft when it is ready enough to be useful, instead of promising a publishing cadence before the evidence, examples, and trade-offs are clear.</p>
 
         <figure class="figure" id="system">
           <img src="assets/memory-system-diagram.svg" alt="System diagram showing AI work sessions moving through a gated setup skill into a Markdown vault and back into future context">

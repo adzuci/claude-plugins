@@ -6,7 +6,16 @@ disable-model-invocation: true
 
 # Memory Setup
 
-Onboards a developer or knowledge worker to a local knowledge-capture system: a git-backed Obsidian vault, the `claudian` and `obsidian-git` Obsidian plugins, and a Claude Code `SessionEnd` hook that writes concise session notes. Codex and Antigravity are supported as compatibility paths that append to the same vault when the skill is invoked from those clients.
+Onboards a developer or knowledge worker to a local knowledge-capture system: a git-backed Obsidian vault, the `claudian` and `obsidian-git` Obsidian plugins, a Claude Code `SessionEnd` hook that writes concise session notes, and scheduled git sync so multiple machines stay converged. Codex and Antigravity are supported as compatibility paths that append to the same vault when the skill is invoked from those clients.
+
+## Arguments
+
+- **`crypt`** — enable git-crypt encryption for sensitive vault directories. Works three ways, auto-detected by `scripts/setup_crypt.py`:
+  - during a fresh setup (runs as Step 4.5 after scaffolding),
+  - standalone against an existing vault (seamless migration — run Steps 1, 4.5, and 11 only),
+  - on a second machine with a locked clone (unlock flow in Step 4.5).
+
+  Read `references/encryption.md` before running the crypt flow. When invoked WITHOUT `crypt`, skip Step 4.5 entirely and never mention encryption.
 
 ## Client Mode
 
@@ -62,6 +71,8 @@ Render the results as a markdown table with columns: Item, Status. Rows:
 | claude (CLI) | found / missing |
 | codex (CLI) | found / missing |
 | jq | found / missing |
+| git-crypt | found / missing (only relevant with `crypt`) |
+| op (1Password CLI) | found / missing (only relevant with `crypt`) |
 | Codex sessions | found / missing |
 | Codex session index | found / missing |
 | Antigravity brain | found / missing |
@@ -262,6 +273,24 @@ This prevents "REMOTE HOST IDENTIFICATION HAS CHANGED" errors on machines set up
 
 Do not auto-push. If `initial_commit` is true, tell the user: "Initial commit created. Push when ready: `git -C <vault> push -u origin main`". If `initial_commit` is false, tell the user the vault was scaffolded but the initial commit failed, show `initial_commit_error`, and suggest configuring git identity with `git config --global user.name` and `git config --global user.email` before rerunning `git -C <vault> commit --allow-empty -m "chore: initial vault scaffold"`.
 
+## Step 4.5: Encryption (`crypt` Argument Only — Gate)
+
+Skip this step unless the skill was invoked with the `crypt` argument. Read `references/encryption.md` first. Keep every user-facing message here to a few short lines — this flow takes the user at most two interactions. If git-crypt is missing (Step 1), install it first: `brew install git-crypt` (macOS).
+
+1. **Detect and gate.** Run the dry-run and show a 3-line summary — detected mode (`fresh` / `migrate` / `unlock` / `noop`), the dirs to be encrypted, and (migrate only) the caveat that older commits keep plaintext:
+
+   ```bash
+   python3 scripts/setup_crypt.py --vault <vaultpath>
+   ```
+
+   Ask **Proceed** / **Cancel**. On `noop`, say encryption is already active and continue.
+
+2. **Apply** — `python3 scripts/setup_crypt.py --vault <vaultpath> --apply`, then hand off the key (`key_out` in the JSON; surface `key_location_warning` if present). If `op` (1Password CLI) was found in Step 1, offer `op document create <key_out> --title "<name>-vault git-crypt key"`; otherwise tell the user: "Save `<key_out>` in 1Password (or your password manager) as a document — it's the only way to read the encrypted files." Once the user confirms it's saved, `rm <key_out>`. Do not proceed until confirmed.
+
+   For **unlock** (second machine): ask the user to download the key from their password manager to a temporary path, then `python3 scripts/setup_crypt.py --vault <vaultpath> --unlock <keyfile> --apply && rm <keyfile>`.
+
+3. **Verify:** `git -C <vaultpath> crypt status | head` shows `encrypted:` for the sensitive dirs. Do not auto-push; the push guidance from Step 4 applies.
+
 ## Step 5: Install Plugins
 
 ```bash
@@ -276,6 +305,21 @@ This installs two community plugins:
 Optional flags: `--pin-claudian <TAG>` and `--pin-git <TAG>` to lock to specific release tags. `--dry-run` to preview without downloading.
 
 If the command exits nonzero, show the manual fallback steps from `references/plugin-gui-fallback.md` and continue (plugin install failure is not fatal for the hook and CLAUDE.md steps).
+
+## Step 5.5: Scheduled Sync (Gate)
+
+Ask one question: "Enable automatic vault sync (pull + commit + push) every 15 minutes? (yes / no / custom interval)". If no, skip. Otherwise:
+
+```bash
+python3 scripts/install_sync.py --vault <vaultpath> --interval <seconds>
+```
+
+This configures both sync layers:
+
+- **obsidian-git settings** (`<vault>/.obsidian/plugins/obsidian-git/data.json`, backed up first) — auto commit/pull every 10 minutes while Obsidian is open. Note: re-running re-enforces the sync keys listed in the JSON output (`enforced_settings`), overwriting manual changes to those specific keys; all other settings are preserved.
+- **launchd agent** (macOS) — `~/.claude/hooks/vault-sync.sh` on the chosen interval, covering headless writes like the SessionEnd hook. The script is safe by construction: it skips when there's no remote, when a rebase/merge is in progress, or when a git-crypt checkout is locked. On Linux/Windows the JSON output includes a `cron_line` to add with `crontab -e` instead.
+
+Requires a git remote to be useful — if the user chose local-only in Step 2, note that sync will silently no-op until they add a remote. Rollback: `python3 scripts/install_sync.py --uninstall`.
 
 ## Step 6: Install Hook and Register in Settings
 
@@ -397,6 +441,8 @@ Print the following verification checklist for the user to work through:
 - [ ] Open Obsidian → open the vault folder → trust and enable both plugins → confirm Claudian sidebar appears and Git commands are available in the command palette
 - [ ] Run a session/import for the selected client, then check `<vault>/sessions/<today>.md` — should contain a metadata stub and a client-tagged entry
 - [ ] `grep "memory-setup" ~/.claude/CLAUDE.md` returns the managed block (Claude mode only)
+- [ ] (`crypt` only) `git -C <vault> crypt status | head` shows `encrypted:` for the sensitive dirs, and the key file is in the password manager with the local copy deleted
+- [ ] (sync only) `launchctl list | grep vault-sync` shows the agent (macOS), and after the first interval `git -C <vault> log --oneline -1` shows a `chore(sync)` commit when there were pending changes
 
 **Setup log:**
 
@@ -418,6 +464,8 @@ Re-running this skill is safe:
 - `merge_claude_md.py` replaces the managed block in place; surrounding content is preserved; CLAUDE.md is backed up before every write
 - `scaffold_vault.py` exits nonzero on a non-empty existing directory — it never overwrites
 - `cleanup_claude_mem.py` is dry-run by default and requires `--apply` to make changes
+- `setup_crypt.py` is dry-run by default and requires `--apply`; it refuses to export the key inside the vault, is a no-op when encryption is already active, and never prints key material
+- `install_sync.py` re-renders the same files in place (reload is idempotent), backs up `data.json` before writing, and `--uninstall` removes everything it installed
 - Codex and Antigravity importers must use state files and dry-run previews before appending to the vault
 - No git force-push is ever issued
 
@@ -432,6 +480,26 @@ Claude Code mode may also write to:
 - `~/.claude/hooks/session-end.sh` — the hook script
 - `~/.claude/settings.json` — hook registration (backed up first)
 - `~/.claude/CLAUDE.md` — memory block upsert (backed up first)
+
+The `crypt` argument may also write to:
+
+- `<vault>/.gitattributes` — managed git-crypt block (upserted in place)
+- `<vault-parent>/<name>-vault.gitcrypt.key` — exported key (user deletes after saving to a password manager)
+
+The scheduled-sync step may also write to:
+
+- `<vault>/.obsidian/plugins/obsidian-git/data.json` — sync settings (backed up first; gitignored)
+- `~/.claude/hooks/vault-sync.sh` and `~/.claude/logs/vault-sync.log` — sync script and its log
+- `~/Library/LaunchAgents/com.<user>.vault-sync.plist` — launchd agent (macOS)
+
+## Multi-Machine Quickstart
+
+Setting up a second machine against an existing encrypted vault:
+
+1. Install the plugin, then run `/memory:memory-setup crypt`.
+2. In Step 2, choose **B** and give the existing remote URL. **Skip Step 4's scaffold entirely** — on a machine where the vault path doesn't exist yet, scaffolding would create a fresh empty vault instead of erroring. Clone instead: `git clone <remote> <vault>`.
+3. Step 4.5 detects `unlock` mode — download the key from your password manager, unlock, delete the key file.
+4. Continue with Steps 5–7 (plugins, hook) and 5.5 (sync) as normal. The scheduled sync keeps both machines converged via pull-rebase/commit/push.
 
 Codex mode may also write to:
 

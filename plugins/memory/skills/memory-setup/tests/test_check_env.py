@@ -25,3 +25,18 @@ def test_build_report_includes_multi_client_keys(monkeypatch: pytest.MonkeyPatch
     assert report["codex_sessions"] is True
     assert report["codex_session_index"] is False
     assert report["antigravity_brain"] is False
+    assert report["git_crypt"] is False
+    assert report["op"] is False
+
+
+def test_build_report_detects_git_crypt_and_op(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(check_env, "detect_macos", lambda: True)
+    monkeypatch.setattr(check_env, "detect_brew", lambda: False)
+    monkeypatch.setattr(check_env, "detect_obsidian", lambda is_mac: False)
+    monkeypatch.setattr(check_env, "detect_which", lambda name: name in {"git-crypt", "op"})
+    monkeypatch.setattr(check_env, "detect_path", lambda path, kind="any": False)
+
+    report = check_env.build_report()
+
+    assert report["git_crypt"] is True
+    assert report["op"] is True
