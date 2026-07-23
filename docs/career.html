@@ -37,22 +37,22 @@
       <article>
         <p class="lead">The senior job market is opaque in a specific way: the roles exist, but the signal about level, compensation, and real remote eligibility is scattered and stale. That is a research problem, and research problems respond to structure.</p>
 
-        <p>The <code>career</code> plugin has one skill, <code>/career:market-sweep</code>. It runs a job market intelligence sweep for a senior technical candidate and writes the result into your vault as a dated Markdown report — market intelligence, not a job board dump.</p>
+        <p>The <code>career</code> plugin has one skill, <code>/career:market-sweep</code>. It runs a job market intelligence sweep for a senior technical candidate and writes the result into your vault as a dated Markdown report. That is market intelligence, not a job board dump.</p>
 
         <h2>How a sweep works</h2>
         <p>It starts from a criteria file (<code>career/search-criteria.md</code> in your vault): target titles, location and compensation floor, stack keywords, seniority signals, any priority filter, domain bonuses, and hard exclusions. The first run collects these; later runs confirm and reuse them, which is what makes the reports comparable over time.</p>
 
-        <p>The sweep itself covers market conditions for your level, priority companies with confirmed active roles, additional strong matches, stack trends in senior job descriptions, and compensation benchmarks. Claims get verified rather than repeated — a "women-led" filter, for example, means checking who the CEO actually is, and a "Remote US" label means checking the careers page, not the aggregator.</p>
+        <p>The sweep itself covers market conditions for your level, priority companies with confirmed active roles, additional strong matches, stack trends in senior job descriptions, and compensation benchmarks. Claims get verified rather than repeated: a "women-led" filter, for example, means checking who the CEO actually is, and a "Remote US" label means checking the careers page, not the aggregator.</p>
 
         <div class="pullquote">The report is the product. The rank ordering forces the question a spreadsheet of links never asks: which five of these are worth an hour this week?</div>
 
-        <p>After the report is written, the skill runs an automated recruiter-review pass over its own output and improves the report in place — the same trick as code review, applied to a research artifact. It then offers to schedule a weekly repeat so the market view stays current instead of being a one-time snapshot.</p>
+        <p>After the report is written, the skill runs an automated recruiter-review pass over its own output and improves the report in place, the same trick as code review applied to a research artifact. It then offers to schedule a weekly repeat so the market view stays current instead of being a one-time snapshot.</p>
 
         <h2>Honest limitations</h2>
-        <p>It is built on web research, so it inherits the web's noise: compensation data is directional (Levels.fyi, Built In, Glassdoor), listings go stale, and a sweep is a starting point for judgment, not a substitute for it. The defaults are opinionated — remote US, $150k+ base, senior engineering/data titles — though the criteria step generalizes to other disciplines. And the reports land in a local vault on purpose: a job search is exactly the kind of context that should stay in plain files you own.</p>
+        <p>It is built on web research, so it inherits the web's noise: compensation data is directional (Levels.fyi, Built In, Glassdoor), listings go stale, and a sweep is a starting point for judgment, not a substitute for it. The defaults are opinionated (remote US, $150k+ base, senior engineering/data titles), though the criteria step generalizes to other disciplines. And the reports land in a local vault on purpose: a job search is exactly the kind of context that should stay in plain files you own.</p>
 
         <div class="note">
-          <p><strong>The practical test:</strong> if this is working, week three's report should read differently from week one's — tighter criteria, fewer but better-ranked companies, and a visible trend line instead of a fresh anxiety spiral.</p>
+          <p><strong>The practical test:</strong> if this is working, week three's report should read differently from week one's: tighter criteria, fewer but better-ranked companies, and a visible trend line instead of a fresh anxiety spiral.</p>
         </div>
 
         <section class="install-block" id="install">
@@ -72,7 +72,7 @@ codex plugin add career@adzuci-plugins
 /market-sweep</code></pre>
             </section>
           </div>
-          <p class="install-footnote">Reports write to your Obsidian vault — the one from the <a href="memory.html">memory plugin</a> works out of the box.</p>
+          <p class="install-footnote">Reports write to your Obsidian vault. The one from the <a href="memory.html">memory plugin</a> works out of the box.</p>
         </section>
       </article>
 

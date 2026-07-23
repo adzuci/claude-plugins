@@ -37,8 +37,8 @@
       <section class="hero-copy">
         <p class="eyebrow">Operating loops · task capture · local-first AI tooling</p>
         <h1>An operating loop for AI-assisted work</h1>
-        <p class="dek">A memory layer tells you what you decided. It does not, on its own, move work forward. This is the set of small, inspectable loops I run on top of one Obsidian vault to close that gap — and the design rules that make them safe to trust.</p>
-        <p class="install-footnote">Part two of a series — start with <a href="memory.html">Memory as reliability practice</a>, then <a href="learning.html">Reflecting your own work back as a learning plan</a>.</p>
+        <p class="dek">A memory layer tells you what you decided. It does not, on its own, move work forward. This is the set of small, inspectable loops I run on top of one Obsidian vault to close that gap, and the design rules that make them safe to trust.</p>
+        <p class="install-footnote">Part two of a series. Start with <a href="memory.html">Memory as reliability practice</a>, then <a href="learning.html">Reflecting your own work back as a learning plan</a>.</p>
         <div class="meta-grid" aria-label="Article metadata">
           <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
           <div class="meta-card"><strong>Artifact</strong><code>productivity</code> plugin</div>
@@ -49,11 +49,11 @@
 
     <main>
       <article>
-        <p class="lead">A memory layer on its own is a filing cabinet. It becomes an operating system when small, boring loops move work through it — and when each loop is cheap enough to run without thinking and safe enough to trust without checking.</p>
+        <p class="lead">A memory layer on its own is a filing cabinet. It becomes an operating system when small, boring loops move work through it, and when each loop is cheap enough to run without thinking and safe enough to trust without checking.</p>
 
-        <p>The <a href="memory.html">memory vault</a> fixed decision loss and surfaced a different problem: the gaps between sessions. A task comes up mid-session and never reaches the backlog. A session gets cleared with uncommitted work still in the tree. Friday arrives and I can't say what the week's AI work actually produced. The vault remembers fine — these are missing loops, not missing memory.</p>
+        <p>The <a href="memory.html">memory vault</a> fixed decision loss and surfaced a different problem: the gaps between sessions. A task comes up mid-session and never reaches the backlog. A session gets cleared with uncommitted work still in the tree. Friday arrives and I can't say what the week's AI work actually produced. The vault remembers fine; these are missing loops, not missing memory.</p>
 
-        <p>The engineering instinct here is the same one I bring to reliability work: when a manual step keeps failing, you do not try harder, you build a small system with a clear contract. The <code>productivity</code> plugin is that system — a handful of skills that share one vault and one convention, each small enough to read in a few minutes and reason about completely.</p>
+        <p>The engineering instinct here is the same one I bring to reliability work: when a manual step keeps failing, you do not try harder, you build a small system with a clear contract. The <code>productivity</code> plugin is that system: a handful of skills that share one vault and one convention, each small enough to read in a few minutes and reason about completely.</p>
 
         <div class="pullquote">Capture is cheap. What is expensive is re-finding the task, the loose end, or the pattern three weeks later.</div>
 
@@ -85,7 +85,7 @@ flowchart TB
   C -.->|"writes a report, changes nothing"| V
             </pre>
           </div>
-          <figcaption class="caption">The vault is the substrate. Capture skills write to it in the moment; review skills read from it on a daily-to-weekly rhythm. The Friday coach is deliberately one-directional — it reads the week and writes a report, but changes nothing on its own.</figcaption>
+          <figcaption class="caption">The vault is the substrate. Capture skills write to it in the moment; review skills read from it on a daily-to-weekly rhythm. The Friday coach is deliberately one-directional: it reads the week and writes a report, but changes nothing on its own.</figcaption>
         </figure>
 
         <p>Two skills run in the moment, three on a daily-to-weekly rhythm:</p>
@@ -94,16 +94,16 @@ flowchart TB
           <section class="lane">
             <h3>In the moment</h3>
             <ul>
-              <li><code>/todo</code> — capture a durable task in the vault's Kanban <code>backlog.md</code>. Idempotent by design: re-adding an item deduplicates instead of stacking, and an explicit "urgent" promotes the existing item rather than creating a second copy.</li>
-              <li><code>/wrapup</code> — the pre-<code>/clear</code> preflight. Before you throw away a session, it checks for uncommitted changes, unpushed commits, running jobs, and open obligations, and tells you whether it is actually safe to clear.</li>
+              <li><code>/todo</code>: capture a durable task in the vault's Kanban <code>backlog.md</code>. Idempotent by design: re-adding an item deduplicates instead of stacking, and an explicit "urgent" promotes the existing item rather than creating a second copy.</li>
+              <li><code>/wrapup</code>: the pre-<code>/clear</code> preflight. Before you throw away a session, it checks for uncommitted changes, unpushed commits, running jobs, and open obligations, and tells you whether it is actually safe to clear.</li>
             </ul>
           </section>
           <section class="lane">
             <h3>Daily and weekly</h3>
             <ul>
-              <li><code>/standup</code> — a daily or weekly status built from Jira, the backlog, and daily reports. The paste-ready block is capped at 90 words and eight bullets; private notes surface the credible five-minute closes.</li>
-              <li><code>/daily-wrapup</code> — end-of-day review: yesterday's goals, today's outcomes, tomorrow's preview, and a goal commit written back into the vault's session note.</li>
-              <li><code>/ai-coach</code> — a Friday, report-only review of the week's session notes: repeated friction, capabilities I keep bypassing, and memory candidates. It writes a report and changes nothing.</li>
+              <li><code>/standup</code>: a daily or weekly status built from Jira, the backlog, and daily reports. The paste-ready block is capped at 90 words and eight bullets; private notes surface the credible five-minute closes.</li>
+              <li><code>/daily-wrapup</code>, end-of-day review: yesterday's goals, today's outcomes, tomorrow's preview, and a goal commit written back into the vault's session note.</li>
+              <li><code>/ai-coach</code>: a Friday, report-only review of the week's session notes: repeated friction, capabilities I keep bypassing, and memory candidates. It writes a report and changes nothing.</li>
             </ul>
           </section>
         </div>
@@ -122,7 +122,7 @@ flowchart TB
             <tr>
               <td><code>/todo</code></td>
               <td>Adding the same task twice is a no-op; "urgent" promotes rather than duplicates.</td>
-              <td>A Python helper normalizes bullets, deduplicates case-insensitively, and writes atomically — behavior pinned by unit tests, not by prompt wording.</td>
+              <td>A Python helper normalizes bullets, deduplicates case-insensitively, and writes atomically; behavior is pinned by unit tests, not by prompt wording.</td>
             </tr>
             <tr>
               <td><code>/standup</code></td>
@@ -141,7 +141,7 @@ flowchart TB
         <h2>Design guardrails</h2>
         <p>The same rules as the memory plugin, because they are the reason the whole thing is safe to leave running:</p>
 
-        <p>Everything is plain files. Tasks are Markdown checkboxes in a Kanban board Obsidian renders natively; coach reports are dated Markdown in <code>coaching/</code>. Installs are dry-run first and confirmation-gated — they never overwrite an unmanaged skill of the same name, and every managed copy carries a marker file so updates are safe and removal is obvious. Scheduling uses the client's own scheduler; where there is no good native option, the setup skill hands you the exact manual command instead of quietly writing a cron job. And writes that could compound — task capture, goal commits — are idempotent, so a double-run or a retry never corrupts the board.</p>
+        <p>Everything is plain files. Tasks are Markdown checkboxes in a Kanban board Obsidian renders natively; coach reports are dated Markdown in <code>coaching/</code>. Installs are dry-run first and confirmation-gated: they never overwrite an unmanaged skill of the same name, and every managed copy carries a marker file so updates are safe and removal is obvious. Scheduling uses the client's own scheduler; where there is no good native option, the setup skill hands you the exact manual command instead of quietly writing a cron job. And writes that could compound (task capture, goal commits) are idempotent, so a double-run or a retry never corrupts the board.</p>
 
         <h2>What changed in practice</h2>
         <p>Four months of running this, measured off the vault it writes to:</p>
@@ -152,14 +152,14 @@ flowchart TB
           <div class="stat"><div class="num">19</div><div class="lbl">days I closed out with <code>/daily-wrapup</code></div></div>
         </div>
 
-        <p>The SessionEnd hook does the archiving, so those 610 summaries cost me nothing to keep — I stopped deciding what was worth writing down. On the 19 days with something to reconcile I ran <code>/daily-wrapup</code>, and each one means the next morning starts from a written plan instead of a cold read. Tasks moved out of chat scrollback and into the backlog, because capturing one is now cheaper than scrolling to find it. And the Friday coach reads that same pile and, often enough to matter, names a habit I had not clocked. The loops are small; the state compounds.</p>
+        <p>The SessionEnd hook does the archiving, so those 610 summaries cost me nothing to keep, and I stopped deciding what was worth writing down. On the 19 days with something to reconcile I ran <code>/daily-wrapup</code>, and each one means the next morning starts from a written plan instead of a cold read. Tasks moved out of chat scrollback and into the backlog, because capturing one is now cheaper than scrolling to find it. And the Friday coach reads that same pile and, often enough to matter, names a habit I had not clocked. The loops are small; the state compounds.</p>
 
         <div class="note">
           <p><strong>The practical test:</strong> if this is working, tasks stop living in chat scrollback, sessions end clean, and Friday's coach report occasionally surfaces a pattern you would otherwise have missed.</p>
         </div>
 
         <h2>Honest limitations</h2>
-        <p>It assumes the vault convention from the memory plugin — a <code>sessions/</code> directory of curated notes is what makes the coach useful; without it, weekly mode has little to read. The Kanban layout is an opinion (six fixed sections), not a framework. Scheduling is best-supported on the clients I use daily; elsewhere you get the manual command rather than a background job installed on your behalf. And like everything in this repo, it is tested primarily on macOS — Linux and Windows reports are welcome.</p>
+        <p>It assumes the vault convention from the memory plugin: a <code>sessions/</code> directory of curated notes is what makes the coach useful; without it, weekly mode has little to read. The Kanban layout is an opinion (six fixed sections), not a framework. Scheduling is best-supported on the clients I use daily; elsewhere you get the manual command rather than a background job installed on your behalf. And like everything in this repo, it is tested primarily on macOS; Linux and Windows reports are welcome.</p>
 
         <section class="install-block" id="install">
           <h2>Install the plugin</h2>
@@ -201,6 +201,7 @@ codex plugin add productivity@adzuci-plugins
           <div class="link-list">
             <a href="memory.html">Memory as reliability practice</a>
             <a href="learning.html">Reflecting your own work back as a learning plan</a>
+            <a href="skill-evals.html">Testing skills the way they actually run</a>
           </div>
         </section>
       </aside>
