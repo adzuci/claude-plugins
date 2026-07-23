@@ -16,11 +16,11 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
+  pull-requests: write # post the eval scorecard as a PR comment
 
 concurrency:
   group: skill-eval-${{ github.ref }}
-  cancel-in-progress: true # post the eval scorecard as a PR comment
+  cancel-in-progress: true
 
 jobs:
   standup:
@@ -87,14 +87,32 @@ jobs:
         working-directory: plugins/productivity/skills/standup/evals/promptfoo
         # promptfoo's claude-agent-sdk provider resolves @anthropic-ai/claude-agent-sdk
         # from the config directory; it is not bundled with promptfoo.
-        run: npm install --no-save @anthropic-ai/claude-agent-sdk
+        run: npm install --no-save @anthropic-ai/claude-agent-sdk@0.2.120
       - name: Run standup promptfoo eval
         id: eval
         # working_dir in the config is relative, so run from the promptfoo dir.
         working-directory: plugins/productivity/skills/standup/evals/promptfoo
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: npx promptfoo@latest eval -c promptfooconfig.yaml --no-cache --output results.json
+        run: |
+          set +e
+          npx --yes promptfoo@0.121.19 eval -c promptfooconfig.yaml --no-cache --output results.json
+          STATUS=$?
+          set -e
+
+          # promptfoo uses 100 for completed evals with failed assertions. Those
+          # failures are comparison data here, not a reason to fail this job.
+          # Provider/runtime errors remain real job failures.
+          ERRORS=$(jq -r '(.results.stats.errors // .stats.errors) // 0' results.json 2>/dev/null || echo 0)
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "::error::promptfoo completed with $ERRORS provider/runtime error(s)"
+            exit 1
+          fi
+          if [ "$STATUS" -eq 100 ]; then
+            echo "::notice::promptfoo completed with assertion failures; see results.json"
+            exit 0
+          fi
+          exit "$STATUS"
 
       - name: Upload promptfoo results
         if: always()
@@ -116,14 +134,18 @@ jobs:
           if [ -f "$RESULTS" ]; then
             PASSED=$(jq -r '(.results.stats.successes // .stats.successes) // empty' "$RESULTS" 2>/dev/null || true)
             FAILED=$(jq -r '(.results.stats.failures // .stats.failures) // empty' "$RESULTS" 2>/dev/null || true)
-            ERRORS=$(jq -r '(.results.stats.errors // .stats.errors) // 0' "$RESULTS" 2>/dev/null || echo 0)
+            ERRORS=$(jq -r '(.results.stats.errors // .stats.errors) // empty' "$RESULTS" 2>/dev/null || true)
           fi
-          if [ -n "$PASSED" ] && [ -n "$FAILED" ] && [ "${ERRORS:-0}" -gt 0 ]; then
-            BODY="$MARKER"$'\n'"**Standup promptfoo eval:** ERROR ⚠️ — $ERRORS case(s) errored before grading (not a pass/fail verdict). See the run log; results.json in the artifact."
-          elif [ -n "$PASSED" ] && [ -n "$FAILED" ] && [ $((PASSED + FAILED)) -gt 0 ]; then
-            TOTAL=$((PASSED + FAILED))
-            VERDICT=$([ "$FAILED" -eq 0 ] && echo "PASS ✅" || echo "FAIL ❌")
-            BODY="$MARKER"$'\n'"**Standup promptfoo eval:** ${PASSED}/${TOTAL} cases — $VERDICT. Same prompts as the action, graded by llm-rubric (opus) + skill routing checks. results.json in the run artifact; compare verdicts case-by-case."
+          if [ -n "$PASSED" ] && [ -n "$FAILED" ] && [ -n "$ERRORS" ] && [ "$((PASSED + FAILED + ERRORS))" -gt 0 ]; then
+            TOTAL=$((PASSED + FAILED + ERRORS))
+            if [ "$ERRORS" -gt 0 ]; then
+              VERDICT="ERROR ❌"
+            elif [ "$FAILED" -gt 0 ]; then
+              VERDICT="ASSERTION FAILURES ⚠️"
+            else
+              VERDICT="PASS ✅"
+            fi
+            BODY="$MARKER"$'\n'"**Standup promptfoo eval:** ${PASSED}/${TOTAL} cases passed (${FAILED} failed, ${ERRORS} errors) — $VERDICT. Same prompts and criteria as the action, with independent response generation plus skill-routing checks. results.json is in the run artifact."
           else
             BODY="$MARKER"$'\n'"**Standup promptfoo eval:** did not produce a score (step outcome: $OUTCOME) — likely an execution/auth failure (API key may be out of credits); see the run log and artifact."
           fi

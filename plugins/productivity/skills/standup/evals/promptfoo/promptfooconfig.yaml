@@ -3,10 +3,9 @@
 # Side-by-side promptfoo eval of the /standup skill. This mirrors three cases
 # from the skill-eval-action suite (../daily.yaml, ../no-false-trigger.yaml,
 # ../guardrail-no-post.yaml) so the two tools' grading verdicts can be compared
-# case-by-case. The point is NOT to re-test the skill — it is to see where an
-# llm-rubric grader (here) and the action's plain-language LLM grader disagree
-# on the SAME model output, which is what teaches us about each tool's grading
-# reliability. See README.md for how to read disagreements.
+# case-by-case. Each tool generates its own response, so a mismatch is an
+# end-to-end toolchain disagreement, not isolated evidence that the graders
+# disagree on the same model output. See README.md for interpretation limits.
 #
 # Prompts are byte-identical to the action YAMLs except for the vault path
 # token (documented as a parity caveat in README.md) because promptfoo has no
@@ -16,8 +15,8 @@
 # Requires ANTHROPIC_API_KEY. Run from THIS directory so the relative
 # working_dir resolves:
 #   cd plugins/productivity/skills/standup/evals/promptfoo
-#   npx promptfoo@latest eval -c promptfooconfig.yaml --no-cache
-description: "standup skill — grader-reliability comparison vs skill-eval-action"
+#   npx promptfoo@0.121.19 eval -c promptfooconfig.yaml --no-cache
+description: "standup skill — toolchain comparison vs skill-eval-action"
 
 # Agent under test: the Claude Agent SDK, loading the real skill from the
 # fixture working_dir so routing/behavior are exercised for real. Kept on a
@@ -47,6 +46,8 @@ defaultTest:
   options:
     # Grade llm-rubric assertions with a DIFFERENT (more capable) model than the
     # agent under test, so the grader is not marking its own homework.
+    # No numeric threshold is intentional: llm-rubric's boolean `pass` field
+    # controls PASS/FAIL, matching the action's per-criterion boolean verdict.
     provider: anthropic:messages:claude-opus-4-8
 
 tests:
