@@ -1,0 +1,4 @@
+interface:
+  display_name: "Standup"
+  short_description: "Draft concise evidence-backed standup updates"
+  default_prompt: "Use $standup in weekly mode to draft my concise standup update and identify quick closes."

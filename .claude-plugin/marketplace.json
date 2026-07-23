@@ -24,9 +24,9 @@
     {
       "name": "productivity",
       "source": "./plugins/productivity",
-      "description": "Portable productivity setup, Obsidian todo capture, session hygiene, daily planning, AI coaching, spend monitoring, and agent operations.",
+      "description": "Portable standups, productivity setup, Obsidian todo capture, session hygiene, daily planning, AI coaching, and agent operations.",
       "category": "productivity",
-      "tags": ["claude-code", "codex", "obsidian", "setup", "todo", "daily-wrapup", "ai-coach", "goals", "agent-operations"]
+      "tags": ["claude-code", "codex", "obsidian", "standup", "jira", "setup", "todo", "daily-wrapup", "ai-coach", "agent-operations"]
     }
   ]
 }

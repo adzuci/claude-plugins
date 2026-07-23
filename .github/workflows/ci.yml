@@ -42,7 +42,9 @@ jobs:
               plugins/productivity/skills/todo/scripts \
               plugins/productivity/skills/todo/tests \
               plugins/productivity/skills/productivity-setup/scripts \
-              plugins/productivity/skills/productivity-setup/tests
+              plugins/productivity/skills/productivity-setup/tests \
+              plugins/productivity/skills/standup/scripts \
+              plugins/productivity/skills/standup/tests
 
       - name: Run memory setup tests
         run: |
@@ -57,6 +59,8 @@ jobs:
             python -m pytest plugins/productivity/skills/todo/tests -q -p no:cacheprovider
           PYTHONDONTWRITEBYTECODE=1 \
             python -m pytest plugins/productivity/skills/productivity-setup/tests -q -p no:cacheprovider
+          PYTHONDONTWRITEBYTECODE=1 \
+            python -m pytest plugins/productivity/skills/standup/tests -q -p no:cacheprovider
 
       - name: Validate JSON manifests
         run: |

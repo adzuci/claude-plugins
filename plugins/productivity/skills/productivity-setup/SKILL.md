@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Productivity Setup
 
-Install managed local copies of `productivity-setup`, `todo`, `wrapup`, `daily-wrapup`, and `ai-coach`. Schedule only the AI Coach, using the product from which this setup skill is running.
+Install managed local copies of `productivity-setup`, `todo`, `wrapup`, `daily-wrapup`, `ai-coach`, and `standup`. Schedule only the AI Coach by default, using the product from which this setup skill is running.
 
 ## Usage
 
@@ -28,7 +28,7 @@ python3 scripts/install_productivity.py --vault <vault>
 Show one concise confirmation containing:
 
 - detected local clients and target directories,
-- the five managed skills,
+- the six managed skills,
 - the vault path,
 - `Friday at 16:30` in the user's local timezone unless another time was supplied,
 - the caller-native scheduled-task type.

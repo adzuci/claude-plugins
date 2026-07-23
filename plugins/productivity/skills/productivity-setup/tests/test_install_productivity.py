@@ -28,7 +28,7 @@ def test_dry_run_does_not_write(tmp_path: Path) -> None:
     result = MODULE.install(source, tmp_path / "home", ["claude", "codex"], tmp_path / "vault", False)
     assert result["dry_run"] is True
     assert not (tmp_path / "home").exists()
-    assert len(result["actions"]) == 10
+    assert len(result["actions"]) == len(MODULE.CORE_SKILLS) * 2
 
 
 def test_apply_installs_both_clients_and_sanitizes_codex(tmp_path: Path) -> None:

@@ -14,6 +14,10 @@ Installs managed local copies of the portable core skills for every detected Cla
 
 Reviews recent curated AI-work session notes for repeated friction, missed reusable workflows, and approval-safe memory candidates. Weekly mode writes a concise report to the user's Obsidian vault without changing durable memory.
 
+### `/productivity:standup`
+
+Drafts daily, weekly, or custom-range personal standups from Jira, an Obsidian backlog, and daily wrapup/session reports. The paste-ready block stays under 90 words and eight bullets; private notes identify evidence-backed tasks that should take under five minutes to close.
+
 ### `/productivity:todo`
 
 Captures one or more durable action items in an Obsidian Kanban backlog. It asks a concise question only when the task is materially ambiguous, preserves links and proper nouns, supports explicit urgent items, and writes idempotently to `backlog.md` under `## Inbox`.
