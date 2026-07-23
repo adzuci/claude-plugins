@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Memory as Reliability Practice</title>
+  <meta name="description" content="An infrastructure engineering manager's note on building a local memory layer for AI-assisted work.">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">Adam Blackwell</div>
+      <nav aria-label="Article links">
+        <a href="index.html">All posts</a>
+        <a href="https://github.com/adzuci/claude-plugins">GitHub repo</a>
+        <a href="#prereqs">Prerequisites</a>
+        <a href="#install">Install</a>
+        <a href="#system">Architecture sketch</a>
+        <a href="productivity.html">Productivity post</a>
+      </nav>
+    </div>
+
+    <header class="hero">
+      <section class="hero-copy">
+        <p class="eyebrow">Engineering leadership · operational memory · local-first AI tooling</p>
+        <h1>Memory as reliability practice</h1>
+        <p class="dek">I built this after noticing the same context tax over and over: a good AI session solved the immediate problem, but the useful residue did not make it into my operating system.</p>
+        <div class="meta-grid" aria-label="Article metadata">
+          <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
+          <div class="meta-card"><strong>Artifact</strong><code>memory</code> plugin</div>
+          <div class="meta-card"><strong>Scope</strong>Work and personal systems</div>
+        </div>
+      </section>
+
+      <figure class="hero-visual">
+        <img src="assets/memory-lattice.png" alt="Abstract lattice of notes, terminal lines, and connected memory nodes">
+        <figcaption class="caption">The texture of what gets lost: command traces, decisions, names, half-finished threads, and the one sentence that would save twenty minutes next time.</figcaption>
+      </figure>
+    </header>
+
+    <main>
+      <article>
+        <p class="lead">When a hard problem finally gets solved, the fix is rarely enough. Someone has to preserve the lesson in a way the next person can actually use.</p>
+
+        <p>That same pattern shows up in AI-assisted work. A session can be productive and still leave almost no durable residue. The assistant helped debug a strange failure, compare trade-offs, draft a review, or clarify a decision. Then the session ends. A week later, I remember that we figured it out, but not the exact shape of the answer.</p>
+
+        <p>That is fine for a throwaway task. It is expensive for real work. It is especially expensive for managers, because a lot of the job is continuity: what changed, why it changed, who needs context, what risk is still open, and which lesson should survive the week.</p>
+
+        <div class="pullquote">This is not a note-taking project. It is a small project for keeping my own context reliable.</div>
+
+        <h2>Why I built it</h2>
+        <p>I wanted a memory system that behaves like infrastructure I would trust: local-first, inspectable, reversible, and explicit about writes. I did not want an opaque memory feature that quietly shaped future sessions. I wanted plain Markdown, git history, and a setup flow that asks before touching dotfiles.</p>
+
+        <p>The result is a public plugin called <code>memory</code>. Its main skill, <code>/memory:memory-setup</code>, scaffolds a git-backed Obsidian vault, installs the useful Obsidian pieces, and wires session capture into Claude Code. The repo also includes compatibility notes and importers for Codex and Antigravity, because the useful context should belong to the person doing the work, not to one assistant vendor.</p>
+
+        <p>I have used this pattern in both work environments and personal environments. At work, it helps with project follow-ups, architecture reviews, team handoffs, vendor decisions, team preferences, and the small operational facts that otherwise get rediscovered every month. Personally, it helps with coaching notes, side projects, routines, reading trails, and decisions I keep revisiting.</p>
+
+        <div class="two-lane" aria-label="Work and personal memory examples">
+          <section class="lane">
+            <h3>Work memory</h3>
+            <ul>
+              <li>Debugging context and follow-ups after hard problems</li>
+              <li>Handoffs and open-risk notes</li>
+              <li>Architecture decisions and review patterns</li>
+              <li>Team conventions that should not live only in chat</li>
+            </ul>
+          </section>
+          <section class="lane">
+            <h3>Personal memory</h3>
+            <ul>
+              <li>Coaching reflections and recurring themes</li>
+              <li>Personal projects and unfinished threads</li>
+              <li>Learning notes from AI, systems, and leadership</li>
+              <li>Habits, routines, and decisions worth revisiting</li>
+            </ul>
+          </section>
+        </div>
+
+        <h2>The part worth copying</h2>
+        <p>The exact folder names matter less than the operating pattern. Start each assistant from a small index. Keep raw session exhaust out of the default context path. Promote only the facts, decisions, references, and preferences that are likely to help later.</p>
+
+        <p>That gives the system a useful bias: capture can be broad, but memory should be curated. The skill exists to make that setup easy to inspect, easy to repeat, and hard to confuse with a magic black box.</p>
+
+        <figure class="figure" id="system">
+          <img src="assets/memory-system-diagram.svg" alt="System diagram showing AI work sessions moving through a gated setup skill into a Markdown vault and back into future context">
+          <figcaption class="caption">The architecture is intentionally plain. Capture the residue, keep it inspectable, and bring it back only when it helps.</figcaption>
+        </figure>
+
+        <h2>Why continuity is worth engineering</h2>
+        <p>Continuity is not just about uptime. It is the discipline of making work understandable when the easy context is gone. Good notes, docs, decision records, and handoffs all do the same thing: they reduce the time it takes the next person to get oriented and act.</p>
+
+        <p>AI work needs some of that discipline. Agents are fast, but speed can hide context loss. If the assistant helps me reason through a tricky production question and the output never becomes durable, the organization learned less than it could have. If a coaching session surfaces a repeated pattern and I never capture it, I am asking future-me to do the same discovery again.</p>
+
+        <p>So I built the skill with the same guardrails I would want on any system I trust. It explains the trade-off first. It runs read-only preflight checks. It asks for the vault name, location, and remote. It backs up settings before editing. It makes the managed block visible. It keeps the recovery path boring.</p>
+
+        <h2>Influences: visible machinery</h2>
+        <p>I have been drawn to Andrej Karpathy's teaching style because it favors small systems you can inspect. <a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a> teaches neural networks from scratch in code. <a href="https://github.com/karpathy/micrograd">micrograd</a> makes backpropagation small enough to hold in your head. <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a> makes the training loop legible without burying the reader in platform machinery. I like that posture: build enough of the thing end to end that you can reason about it without mythology.</p>
+
+        <p>This memory skill is not trying to build an LLM. It borrows that operating principle: make the important machinery visible enough that you can debug it, trust it, and change it.</p>
+
+        <div class="note">
+          <p><strong>The practical test:</strong> if this is working, a future session should need less preamble, fewer repeated explanations, and fewer “wait, where did we decide that?” moments.</p>
+        </div>
+
+        <h2>Try it, inspect it, adapt it</h2>
+        <p>I published the <code>memory</code> plugin as a small, readable starting point for anyone who wants local AI-session memory without adopting a whole knowledge-management framework.</p>
+
+        <p>The important pieces are plain files: Markdown templates, Python scripts, and explicit setup steps. Read the README, inspect the writes, and change the workflow until it fits your own environment.</p>
+
+        <section class="install-block" id="prereqs">
+          <h2>Prerequisites</h2>
+          <p>Before running the setup skill, confirm these tools are available on your machine. The skill can install some of them automatically, but having them ready avoids interruptions.</p>
+          <div class="install-grid">
+            <section class="install-card">
+              <h3>Claude Code CLI</h3>
+              <p>Requires Node.js ≥ 18.</p>
+              <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
+              <p class="install-footnote">Or download from <a href="https://claude.ai/code">claude.ai/code</a>.</p>
+            </section>
+            <section class="install-card">
+              <h3>Homebrew (macOS)</h3>
+              <p>Needed if any tool installs fall back to Homebrew.</p>
+              <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+              <p class="install-footnote">Already installed but hitting "shallow clone" errors? Run: <code>git -C $(brew --repository)/Library/Taps/homebrew/homebrew-core fetch --unshallow</code> and <code>git -C $(brew --repository)/Library/Taps/homebrew/homebrew-cask fetch --unshallow</code></p>
+            </section>
+            <section class="install-card">
+              <h3>GitHub CLI (<code>gh</code>)</h3>
+              <p>Needed to create the private vault repo. The skill installs it automatically if missing, but to install manually:</p>
+              <pre><code>brew install gh
+gh auth login</code></pre>
+              <p class="install-footnote">Or download a release directly from <a href="https://github.com/cli/cli/releases">github.com/cli/cli/releases</a> (macOS: .zip for amd64 or arm64).</p>
+            </section>
+            <section class="install-card">
+              <h3>Auto mode</h3>
+              <p>Enable Auto mode in Claude Code before running setup to avoid approval prompts during installation. Type in Claude Code:</p>
+              <pre><code>/auto</code></pre>
+              <p class="install-footnote">Disable it after setup completes by typing <code>/auto</code> again.</p>
+            </section>
+          </div>
+        </section>
+
+        <section class="install-block" id="install">
+          <h2>Install the plugin</h2>
+          <p>Add the public marketplace, install the <code>memory</code> plugin, then run the setup skill.</p>
+          <div class="install-grid">
+            <section class="install-card">
+              <h3>Codex</h3>
+              <pre><code>codex plugin marketplace add adzuci/claude-plugins
+codex plugin add memory@adzuci-plugins
+/memory:memory-setup</code></pre>
+            </section>
+            <section class="install-card">
+              <h3>Claude Code</h3>
+              <pre><code># 1. Install Claude Code (requires node ≥ 18)
+npm install -g @anthropic-ai/claude-code
+
+# 2. Add the plugin marketplace
+claude plugin marketplace add adzuci/claude-plugins
+
+# 3. Install the memory plugin
+claude plugin install memory@adzuci-plugins
+
+# 4. Enable Auto mode (recommended — avoids approval prompts)
+# Type in Claude Code: /auto
+
+# 5. Run setup
+# Type in Claude Code: /memory:memory-setup</code></pre>
+            </section>
+          </div>
+          <div class="note">
+            <p><strong>During setup:</strong> When the skill asks you to run <code>gh auth login</code>, type <code>! gh auth login</code> directly into the Claude Code prompt — the <code>!</code> prefix runs it in your terminal so the browser flow works correctly.</p>
+          </div>
+          <p class="install-footnote">Tested on macOS. The skill installs Obsidian, the GitHub CLI, and <code>jq</code> automatically if missing. Linux and Windows compatibility PRs are welcome.</p>
+        </section>
+
+        <section class="install-block" id="more-plugins">
+          <h2>More plugins</h2>
+          <p>The marketplace also includes the <code>productivity</code> plugin, which has its own post.</p>
+          <div class="install-grid">
+            <section class="install-card">
+              <h3><code>productivity</code></h3>
+              <p>Portable Claude Code and Codex setup (<code>/productivity:productivity-setup</code>), Obsidian capture (<code>/productivity:todo</code>), weekly workflow coaching (<code>/productivity:ai-coach</code>), session hygiene, daily planning, spend monitoring (<code>/productivity:budgetclaw-setup</code>), and privacy-safe agent operations.</p>
+              <pre><code>claude plugin install productivity@adzuci-plugins</code></pre>
+              <p class="install-footnote"><a href="productivity.html">Read the post: An operating loop for AI-assisted work</a></p>
+            </section>
+          </div>
+        </section>
+
+        <h2>What I want from it</h2>
+        <p>I want future sessions to start with better orientation. I want decisions to have a place to land. I want patterns from work and life to become easier to see across time. And I want the memory layer to remain mine: plain files, local defaults, clear writes, and enough structure to be useful without becoming ceremony.</p>
+
+        <p>That is the practical reason. The leadership reason is simpler: if AI is becoming part of how I think, build, and manage, I do not want the context layer to be accidental.</p>
+
+        <div class="note">
+          <p><strong>Next in the series:</strong> <a href="productivity.html">An operating loop for AI-assisted work</a> — the task-capture, session-hygiene, and weekly-review loop that runs on top of this vault.</p>
+        </div>
+      </article>
+
+      <aside>
+        <section class="side-panel">
+          <h3>Project</h3>
+          <p><strong>Repo:</strong> <a href="https://github.com/adzuci/claude-plugins">adzuci/claude-plugins</a></p>
+          <p><strong>Plugin:</strong> <code>memory</code></p>
+          <p><strong>Skill:</strong> <code>/memory:memory-setup</code></p>
+          <p><strong>Principle:</strong> local, inspectable continuity across assistants.</p>
+        </section>
+
+        <section class="side-panel">
+          <h3>Credits</h3>
+          <p><a href="https://www.linkedin.com/in/i0exception/">Ani</a> for the git-crypt idea behind the vault's encryption option, and <a href="https://www.linkedin.com/in/jason-de-leon-37331321a/">Jason</a> for the initial inspiration and feedback.</p>
+        </section>
+
+        <section class="side-panel" id="references">
+          <h3>References</h3>
+          <p>Official and primary references that shaped the “visible machinery” framing.</p>
+          <div class="link-list">
+            <a href="https://karpathy.ai/">Karpathy official site</a>
+            <a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a>
+            <a href="https://github.com/karpathy/micrograd">micrograd</a>
+            <a href="https://github.com/karpathy/nanoGPT">nanoGPT</a>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      Drafted as a personal blog article and public note for the <code>memory</code> plugin.
+    </footer>
+  </div>
+</body>
+</html>

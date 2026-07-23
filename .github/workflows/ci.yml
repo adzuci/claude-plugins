@@ -114,8 +114,8 @@ jobs:
                   raise SystemExit(f"{path}: missing local refs: {missing}")
               if not parser.h1:
                   raise SystemExit(f"{path}: page has no H1")
-          index = SiteParser()
-          index.feed(Path("docs/index.html").read_text())
-          if "Memory as reliability practice" not in " ".join(index.h1):
-              raise SystemExit("Expected site H1 was not found")
+          memory = SiteParser()
+          memory.feed(Path("docs/memory.html").read_text())
+          if "Memory as reliability practice" not in " ".join(memory.h1):
+              raise SystemExit("Expected memory post H1 was not found")
           PY
