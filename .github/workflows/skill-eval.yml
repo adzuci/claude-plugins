@@ -53,11 +53,67 @@ jobs:
           MARKER="<!-- skill-eval-summary: standup -->"
           if [ -n "$RATE" ]; then
             VERDICT=$([ "${RATE%.*}" -ge 80 ] && echo "PASS ✅" || echo "FAIL ❌")
-            BODY="$MARKER
-**Standup eval:** ${PASSED:-?}/${TOTAL:-?} criteria (${RATE}%) across ${CASES:-?} cases — $VERDICT vs 80% threshold. Full scorecard above; per-case transcripts in the run artifact."
+            BODY="$MARKER"$'\n'"**Standup eval:** ${PASSED:-?}/${TOTAL:-?} criteria (${RATE}%) across ${CASES:-?} cases — $VERDICT vs 80% threshold. Full scorecard above; per-case transcripts in the run artifact."
           else
-            BODY="$MARKER
-**Standup eval:** did not produce a score (step outcome: $OUTCOME) — likely an execution/auth failure; see the run log and artifact."
+            BODY="$MARKER"$'\n'"**Standup eval:** did not produce a score (step outcome: $OUTCOME) — likely an execution/auth failure; see the run log and artifact."
+          fi
+          EXISTING=$(gh api "repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/comments" --paginate             --jq ".[] | select(.body | startswith(\"$MARKER\")) | .id" | head -1)
+          if [ -n "$EXISTING" ]; then
+            gh api "repos/${GITHUB_REPOSITORY}/issues/comments/$EXISTING" -X PATCH -f body="$BODY" >/dev/null
+          else
+            gh api "repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/comments" -f body="$BODY" >/dev/null
+          fi
+
+  promptfoo:
+    name: Eval standup skill (promptfoo)
+    runs-on: ubuntu-latest
+    # Independent from the `standup` job on purpose: the two graders run the
+    # same cases side by side, so one tool failing must not fail the other.
+    # (GitHub jobs are independent unless linked by `needs`.)
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Run standup promptfoo eval
+        id: eval
+        # working_dir in the config is relative, so run from the promptfoo dir.
+        working-directory: plugins/productivity/skills/standup/evals/promptfoo
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npx promptfoo@latest eval -c promptfooconfig.yaml --no-cache --output results.json
+
+      - name: Upload promptfoo results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: standup-promptfoo-results
+          path: plugins/productivity/skills/standup/evals/promptfoo/results.json
+          if-no-files-found: warn
+
+      - name: Post one-line summary comment
+        if: always() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESULTS: plugins/productivity/skills/standup/evals/promptfoo/results.json
+          OUTCOME: ${{ steps.eval.outcome }}
+        run: |
+          MARKER="<!-- skill-eval-summary: standup-promptfoo -->"
+          PASSED=""; FAILED=""
+          if [ -f "$RESULTS" ]; then
+            PASSED=$(jq -r '(.results.stats.successes // .stats.successes) // empty' "$RESULTS" 2>/dev/null || true)
+            FAILED=$(jq -r '(.results.stats.failures // .stats.failures) // empty' "$RESULTS" 2>/dev/null || true)
+          fi
+          if [ -n "$PASSED" ] && [ -n "$FAILED" ]; then
+            TOTAL=$((PASSED + FAILED))
+            VERDICT=$([ "$FAILED" -eq 0 ] && echo "PASS ✅" || echo "FAIL ❌")
+            BODY="$MARKER"$'\n'"**Standup promptfoo eval:** ${PASSED}/${TOTAL} cases — $VERDICT. Same prompts as the action, graded by llm-rubric (opus) + skill routing checks. results.json in the run artifact; compare verdicts case-by-case."
+          else
+            BODY="$MARKER"$'\n'"**Standup promptfoo eval:** did not produce a score (step outcome: $OUTCOME) — likely an execution/auth failure (API key may be out of credits); see the run log and artifact."
           fi
           EXISTING=$(gh api "repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/comments" --paginate             --jq ".[] | select(.body | startswith(\"$MARKER\")) | .id" | head -1)
           if [ -n "$EXISTING" ]; then

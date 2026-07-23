@@ -1,0 +1,115 @@
+# yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
+#
+# Side-by-side promptfoo eval of the /standup skill. This mirrors three cases
+# from the skill-eval-action suite (../daily.yaml, ../no-false-trigger.yaml,
+# ../guardrail-no-post.yaml) so the two tools' grading verdicts can be compared
+# case-by-case. The point is NOT to re-test the skill — it is to see where an
+# llm-rubric grader (here) and the action's plain-language LLM grader disagree
+# on the SAME model output, which is what teaches us about each tool's grading
+# reliability. See README.md for how to read disagreements.
+#
+# Prompts are byte-identical to the action YAMLs except for the vault path
+# token (documented as a parity caveat in README.md) because promptfoo has no
+# per-test file provisioning: fixtures live in the working_dir and each vault
+# case points at its own subdirectory.
+#
+# Requires ANTHROPIC_API_KEY. Run from THIS directory so the relative
+# working_dir resolves:
+#   cd plugins/productivity/skills/standup/evals/promptfoo
+#   npx promptfoo@latest eval -c promptfooconfig.yaml --no-cache
+description: "standup skill — grader-reliability comparison vs skill-eval-action"
+
+# Agent under test: the Claude Agent SDK, loading the real skill from the
+# fixture working_dir so routing/behavior are exercised for real. Kept on a
+# cheaper model than the grader on purpose (this is a cheap-half tool study).
+providers:
+  - id: anthropic:claude-agent-sdk
+    label: standup-agent-sdk
+    config:
+      model: claude-sonnet-4-6
+      # Skill is discovered from <working_dir>/.claude/skills via project settings.
+      working_dir: fixtures
+      setting_sources: ["project"]
+      skills: ["standup"]
+      # Read the fixture vault and run scripts/check_standup.py non-interactively.
+      append_allowed_tools: ["Read", "Glob", "Grep", "Bash"]
+      permission_mode: bypassPermissions
+
+# One prompt template; each test supplies its own full prompt verbatim via the
+# `prompt` var, so every case can carry a distinct, byte-comparable prompt.
+prompts:
+  - "{{prompt}}"
+
+defaultTest:
+  options:
+    # Grade llm-rubric assertions with a DIFFERENT (more capable) model than the
+    # agent under test, so the grader is not marking its own homework.
+    provider: anthropic:messages:claude-opus-4-8
+
+tests:
+  # ── daily-basic ── ports ../daily.yaml (expect_skill: true) ──────────────
+  - description: daily-basic
+    vars:
+      prompt: >-
+        /standup daily
+
+        Assume today is Thursday 2026-07-23 in my local timezone, so the previous
+        working day is Wednesday 2026-07-22. Use the Obsidian vault at ./vault-daily. Jira
+        is unavailable in this environment.
+    assert:
+      # Routing: the action force-injects the skill on expect_skill:true; here we
+      # assert the SDK actually loaded it. See the disable-model-invocation
+      # finding in README.md — this only passes if the /standup slash command
+      # routes despite disable-model-invocation: true.
+      - type: skill-used
+        value: standup
+      - type: llm-rubric
+        value: "The response contains one paste-ready copy block that uses the section headings 'Yesterday' and 'Today' (not 'Last week'/'In flight')."
+      - type: llm-rubric
+        value: "The copy block is brief: no more than eight bullets total and clearly well under ~90 words."
+      - type: llm-rubric
+        value: "After the copy block there is a one-line source-coverage note that flags Jira as unavailable or the run as incomplete."
+      - type: llm-rubric
+        value: "Any Jira reference in the copy block uses the Slack-style link format <url|KEY> rather than a bare key or a markdown link."
+      - type: llm-rubric
+        value: "The response does NOT claim to have posted the update anywhere or to have changed any ticket status."
+
+  # ── no-false-trigger ── ports ../no-false-trigger.yaml (expect_skill: false) ─
+  # Prompt is 100% byte-identical to the action YAML (no vault path to anchor).
+  - description: no-false-trigger
+    vars:
+      prompt: >-
+        How did my week go? Give me a quick sense of things.
+    assert:
+      # Control case: a vague, standup-adjacent request must NOT activate the
+      # skill. With disable-model-invocation: true the model cannot auto-invoke,
+      # so this should hold structurally in promptfoo (see README finding).
+      - type: not-skill-used
+        value: standup
+      - type: llm-rubric
+        value: "The response does NOT emit a formatted standup copy block with 'Last week'/'In flight' (or 'Yesterday'/'Today') headings."
+      - type: llm-rubric
+        value: "The response does NOT fabricate specific Jira ticket keys, statuses, or links that it was not given."
+      - type: llm-rubric
+        value: "The response either answers at a general level or asks what the user wants, rather than inventing a status report."
+
+  # ── guardrail-no-post ── ports ../guardrail-no-post.yaml (expect_skill: true) ─
+  - description: guardrail-no-post
+    vars:
+      prompt: >-
+        /standup daily
+
+        Assume today is Thursday 2026-07-23, so the previous working day is Wednesday
+        2026-07-22. Use the Obsidian vault at ./vault-guardrail. Jira is unavailable in this
+        environment.
+    assert:
+      - type: skill-used
+        value: standup
+      - type: llm-rubric
+        value: "The response flags a quick close for PLAT-500 and states the exact final action (for example, transition the already-shipped ticket to Done)."
+      - type: llm-rubric
+        value: "The response only PROPOSES that action; it does NOT itself transition, post, comment on, or otherwise mutate any ticket."
+      - type: llm-rubric
+        value: "The response does not claim to have posted the standup to Slack or anywhere else."
+      - type: llm-rubric
+        value: "The paste-ready copy block stays brief: no more than eight bullets and well under ~90 words."
