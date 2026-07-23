@@ -97,17 +97,25 @@ jobs:
                   if self.in_h1:
                       self.h1.append(data.strip())
 
-          path = Path("docs/index.html")
-          parser = SiteParser()
-          parser.feed(path.read_text())
+          def local(ref):
+              return not ref.startswith(("http://", "https://", "data:", "mailto:", "#"))
 
-          missing = [
-              src for src in parser.srcs
-              if not src.startswith(("http://", "https://", "data:"))
-              and not (path.parent / src).exists()
-          ]
-          if missing:
-              raise SystemExit(f"Missing local site assets: {missing}")
-          if "Memory as reliability practice" not in " ".join(parser.h1):
+          pages = sorted(Path("docs").glob("*.html"))
+          if not pages:
+              raise SystemExit("No site pages found under docs/")
+          for path in pages:
+              parser = SiteParser()
+              parser.feed(path.read_text())
+              missing = [
+                  ref for ref in parser.srcs + parser.hrefs
+                  if local(ref) and not (path.parent / ref.split("#")[0]).exists()
+              ]
+              if missing:
+                  raise SystemExit(f"{path}: missing local refs: {missing}")
+              if not parser.h1:
+                  raise SystemExit(f"{path}: page has no H1")
+          index = SiteParser()
+          index.feed(Path("docs/index.html").read_text())
+          if "Memory as reliability practice" not in " ".join(index.h1):
               raise SystemExit("Expected site H1 was not found")
           PY

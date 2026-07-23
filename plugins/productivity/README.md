@@ -2,6 +2,8 @@
 
 Local-first task capture, session hygiene, end-of-day, and agent-operations workflows for Claude Code and Codex.
 
+**Companion post:** [An operating loop for AI-assisted work](https://adzuci.github.io/claude-plugins/productivity.html)
+
 ## Skills
 
 ### `/productivity:productivity-setup`

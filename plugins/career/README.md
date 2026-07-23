@@ -2,6 +2,8 @@
 
 Job search intelligence tools for senior technical candidates. Currently includes one skill:
 
+**Companion post:** [Job search as market intelligence](https://adzuci.github.io/claude-plugins/career.html)
+
 ## Skills
 
 ### `/career:market-sweep`
