@@ -20,6 +20,7 @@ Needs `ANTHROPIC_API_KEY`. Run from **this** directory (the provider
 
 ```sh
 cd plugins/productivity/skills/standup/evals/promptfoo
+npm install --no-save @anthropic-ai/claude-agent-sdk  # provider dependency, resolved from this dir
 npx promptfoo@latest eval -c promptfooconfig.yaml --no-cache
 npx promptfoo@latest view          # browse results in the local UI
 ```

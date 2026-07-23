@@ -16,7 +16,11 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write # post the eval scorecard as a PR comment
+  pull-requests: write
+
+concurrency:
+  group: skill-eval-${{ github.ref }}
+  cancel-in-progress: true # post the eval scorecard as a PR comment
 
 jobs:
   standup:
@@ -79,6 +83,11 @@ jobs:
         with:
           node-version: 24
 
+      - name: Install Claude Agent SDK for the provider
+        working-directory: plugins/productivity/skills/standup/evals/promptfoo
+        # promptfoo's claude-agent-sdk provider resolves @anthropic-ai/claude-agent-sdk
+        # from the config directory; it is not bundled with promptfoo.
+        run: npm install --no-save @anthropic-ai/claude-agent-sdk
       - name: Run standup promptfoo eval
         id: eval
         # working_dir in the config is relative, so run from the promptfoo dir.
