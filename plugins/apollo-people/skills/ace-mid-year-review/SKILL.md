@@ -32,7 +32,7 @@ ______________________________________________________________________
 
 **Manager-aware attribution.** If the employee said in Step 1 that they manage a team, the draft must reflect leadership, not hands-on delivery. See [`references/attribution.md`](references/attribution.md) for the full framing rules (manager vs IC language, when to ask).
 
-**Positive sections, honest gaps.** Impact and Ownership document genuine achievements only. Growth & Mastery is where gaps and development areas live — grounded in real evidence, not generic aspirations.
+**Positive sections, honest gaps.** Impact and Ownership document genuine achievements only. Growth, Development & Mastery is where gaps and development areas live — grounded in real evidence, not generic aspirations.
 
 **The employee's voice comes first.** The draft should reflect how the employee sees their own performance — supported and sharpened by evidence, not replaced by it. You are a thinking partner, not a ghostwriter doing all the thinking for them.
 
@@ -45,7 +45,7 @@ know what they're walking into. Keep it warm and brief — three or four
 sentences, not a wall of text. Cover:
 
 - **What this does:** "I'll help you draft your ACE mid-year self-review for
-  CultureAmp — the Impact, Ownership, and Growth & Mastery sections."
+  CultureAmp — the Impact, Ownership, and Growth, Development & Mastery sections."
 - **How it works:** "I'll start by getting a bit of context about your role,
   then check which of your tools I can search, pull together evidence of your
   work from February–July 2026, talk through your own perspective, and draft
@@ -285,7 +285,7 @@ Search for:
 
 ### Career Framework
 
-Read [`references/links.md`](references/links.md) for the Apollo Career Framework URL and guidance. Find the employee's track (IC or manager) and their stated level to ensure achievements are framed at the right scope and complexity.
+Read [`references/links.md`](references/links.md) for career framework guidance — which file to use, how to handle department-specific frameworks, and what to note about the employee's current and next level. Use this to ensure achievements are framed at the right scope and complexity.
 
 ______________________________________________________________________
 
@@ -390,7 +390,7 @@ Then ask these questions (all at once so they can answer in one go):
 
 1. **What was the hardest thing you navigated this half year?** Could be a project, a relationship, an ambiguous situation, a stretch that didn't go as planned. What happened and how did you handle it?
 
-1. **Where do you feel you fell short, or what would you do differently?** Be honest — the Growth & Mastery section will be stronger if it comes from your own honest reading rather than just what I found in the data.
+1. **Where do you feel you fell short, or what would you do differently?** Be honest — the Growth, Development & Mastery section will be stronger if it comes from your own honest reading rather than just what I found in the data.
 
 1. **Is there anything you want reviewers to understand about your performance that might not show up clearly in the data?** Context, constraints, trade-offs, behind-the-scenes contributions.
 
@@ -412,7 +412,7 @@ Before writing, sort what you found into three buckets. Draw from **both the evi
 
 **Ownership** — behaviours showing follow-through, problem-solving, receiving and acting on feedback, navigating challenges. The challenges and hard moments the employee described in the coaching conversation often belong here. Constructive feedback the employee demonstrably addressed belongs here too — it shows they took ownership of their development.
 
-**Growth & Mastery gaps** — areas where KRs were missed or fell short, recurring constructive feedback not yet fully addressed, or skills the career framework expects at their level that aren't yet demonstrated. Use what the employee honestly named in the coaching conversation alongside what the evidence shows.
+**Growth, Development & Mastery** — what the employee would do differently looking back; areas where KRs were missed or fell short; recurring constructive feedback not yet fully addressed; skills the career framework expects at their level that aren't yet demonstrated; and specific focus areas for H2. Use what the employee honestly named in the coaching conversation alongside what the evidence shows.
 
 If evidence is thin for any bucket, flag it to the employee before writing and ask them to fill the gap.
 
@@ -451,7 +451,7 @@ ______________________________________________________________________
 
 ### Section 1: Impact
 
-*CultureAmp question: "What impact did you deliver, and how did your work meaningfully move team, customer, or company goals forward?"*
+*CultureAmp question: "What impact did you deliver, and how did your work meaningfully move Company, Department, or Team goals forward?"*
 
 Document genuine achievements only. This section is positive.
 
@@ -496,29 +496,29 @@ Draw from what the employee described as their hardest moments or challenges in 
 
 ______________________________________________________________________
 
-### Section 3: Growth & Mastery
+### Section 3: Growth, Development & Mastery
 
-*CultureAmp question: "What areas do you believe you should focus on for continued growth or mastery to strengthen your performance?"*
+*CultureAmp question: "Reflecting on this period, what would you do differently to strengthen your craft, and what should you focus on next for continued growth or mastery?"*
 
-This section documents honest gaps and development opportunities — grounded in both the evidence and what the employee acknowledged themselves in the coaching conversation.
+This section has two distinct parts — a retrospective reflection and a forward-looking development focus — grounded in both the evidence and what the employee acknowledged in the coaching conversation.
 
 **What to include:**
 
-- Specific areas where KRs were missed or fell short — link to the relevant KR tracker
+- **Retrospective (what you'd do differently):** Specific situations, projects, or behaviours where the employee would change their approach — referencing the coaching conversation and any evidence of missed KRs, constructive feedback, or decision points they'd handle differently.
+- **Forward-looking (what to focus on next):** Skills or competencies to develop, referenced against career framework expectations for their current and next level; 2–3 concrete, specific focus areas for H2.
 - Recurring constructive feedback that hasn't yet been fully addressed — link to the source
-- Skills or competencies to develop, referenced against career framework expectations for their level
-- 2–3 concrete, specific focus areas for H2
+- Specific areas where KRs were missed or fell short — link to the relevant KR tracker
 
-**Avoid generic aspirations.** "I want to improve my communication" tells reviewers nothing. Be specific: what happened, what the gap is, what you'll do differently.
+**Avoid generic aspirations.** "I want to improve my communication" tells reviewers nothing. Be specific: what happened, what the gap is, and what you'll do differently or focus on next.
 
 **Always offer two versions — let the employee choose:**
 
-Draft Growth & Mastery twice:
+Draft Growth, Development & Mastery twice:
 
-- **Version A (Explicit):** Names the specific shortfall or missed KR directly. Example: "In Q1, the X initiative ran three weeks behind schedule due to gaps in my stakeholder alignment process. I'm focusing on [specific behaviour] in H2 to address this."
-- **Version B (Directional):** Covers the same development areas framed as forward-looking growth, without calling out the specific miss. Example: "I'm focused on strengthening my stakeholder alignment process in H2, particularly for cross-functional initiatives."
+- **Version A (Explicit):** Names the specific shortfall or missed KR directly, with what the employee would do differently. Example: "In Q1, the X initiative ran three weeks behind schedule due to gaps in my stakeholder alignment process. Looking back, I would have engaged stakeholders earlier in the planning phase. I'm focusing on [specific behaviour] in H2 to address this."
+- **Version B (Directional):** Covers the same development areas framed as forward-looking growth, without calling out the specific miss. Example: "Reflecting on this period, I'm focused on strengthening my stakeholder alignment process in H2, particularly for cross-functional initiatives, and deepening [specific craft area] to build toward [next-level expectation]."
 
-Say to the employee: "Here are two versions of your Growth & Mastery section. Version A names the specific gaps directly — more honest, stronger signal to reviewers. Version B covers the same ground but frames it as forward-looking development. Which would you like to use, or would you like to blend them?"
+Say to the employee: "Here are two versions of your Growth, Development & Mastery section. Version A names the specific gaps and what you'd do differently — more honest, stronger signal to reviewers. Version B covers the same ground but frames it as forward-looking development. Which would you like to use, or would you like to blend them?"
 
 ______________________________________________________________________
 
@@ -531,8 +531,9 @@ Run this check before showing the draft to the employee:
 ☐ No adjectives beyond what the evidence supports\
 ☐ Impact section contains only positive achievements\
 ☐ Ownership section contains only positive ownership behaviours\
-☐ Growth & Mastery is evidence-grounded (links to real gaps found in the data or acknowledged by the employee)\
-☐ Growth & Mastery offers Version A and Version B\
+☐ Growth, Development & Mastery is evidence-grounded (links to real gaps found in the data or acknowledged by the employee)\
+☐ Growth, Development & Mastery offers Version A and Version B\
+☐ Growth, Development & Mastery covers both retrospective (what you'd do differently) and forward-looking (what to focus on next) components\
 ☐ Both Impact and Ownership have Tier 1 summary bullets + Tier 2 narratives\
 ☐ Impact headers follow "[Outcome] Through [Method]" format\
 ☐ All feedback citations include the person's name, context, and a direct hyperlink\
@@ -563,12 +564,12 @@ ______________________________________________________________________
 | "My exceptional leadership drove..." | "I led X, which resulted in Y" |
 | Rating language ("exceeding expectations") | State facts only — no evaluation |
 | "I received positive feedback" (anonymous, no link) | "In April, [Priya said in our 1:1](link) that..." |
-| Generic growth areas | Specific, evidence-grounded gaps with Version A and B |
+| Generic growth areas | Specific, evidence-grounded gaps covering what you'd do differently + what to focus on next; offer Version A and B |
 | Sole credit for team achievements | Name collaborators; use "we" for team work |
 | Manager claiming "I built/led/executed" a report's work | "My team delivered / we executed / I enabled & coached" — manager-aware framing |
 | Inferring outcomes not supported by evidence | Flag the gap; ask the employee to fill it |
 | Only recent months (May–Jul) | Full Feb–Jul 2026 period |
-| Adding extra sections | Three sections only: Impact, Ownership, Growth & Mastery |
+| Adding extra sections | Three sections only: Impact, Ownership, Growth, Development & Mastery |
 | Adding an AI usage section | Weave AI examples into Impact or Ownership where relevant; no standalone section |
 | Using unverified mid-quarter metrics | Only use figures confirmed in the Metrics Verification Table |
 | Unlinked numbers or feedback | Every metric and feedback citation must be hyperlinked, or marked [source needed] |

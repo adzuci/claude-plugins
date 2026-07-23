@@ -19,14 +19,18 @@ rolling figures or cumulative data that may include periods outside the review w
 
 ## Apollo Career Framework
 
-**Apollo Career Framework (draft — confirm final version before launch):**
-https://docs.google.com/spreadsheets/d/1PFHL5XYZhzxmRLQ4H6qseJHveaxadj73FwgmHfNtC7U/edit?gid=147060806#gid=147060806
+**Primary reference:** [`references/career-framework/company-framework.md`](../career-framework/company-framework.md)
 
-View this framework. Find the employee's track (IC or manager) and their stated
-level. Note:
+This file contains the live company baseline framework, organised by level and track (IC vs Manager). Use it to find the employee's current and next-level expectations.
+
+**Which framework to use:**
+
+- **No department-specific framework:** Use the company baseline above. It applies to all departments until department-specific versions are published (expected Q3 2026).
+- **Department-specific framework exists:** Ask the employee to upload or paste it, or to provide the current-level and next-level expectations for their specific role/track. Department-specific frameworks take precedence for Growth, Development & Mastery framing.
+
+Find the employee's track (IC or manager) and their stated level. Note:
+
 - Expected competencies and scope at their current level
-- Next-level competencies (to inform Growth & Mastery framing)
+- Next-level competencies (to inform Growth, Development & Mastery framing)
 
-Use this to ensure achievements are framed at the right scope and complexity.
-Note that this framework is a draft proposal — if a finalised version has been
-published, use that instead.
+Use this to ensure achievements and development areas are framed at the right scope and complexity.
