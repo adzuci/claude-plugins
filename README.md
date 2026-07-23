@@ -5,9 +5,9 @@
 
 Public Claude Code and Codex plugins for local-first AI workflows.
 
-The flagship plugin is **`memory`**: a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions. The **`productivity`** plugin builds on that vault with task capture, session hygiene, daily planning, and a weekly AI coach; **`career`** adds a job-market intelligence sweep.
+The flagship plugin is **`memory`**: a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions. The **`productivity`** plugin builds on that vault with task capture, session hygiene, daily planning, and a weekly AI coach; **`learning`** adds a weekly engineering self-retro that reflects your own work back as a ranked learning plan; **`career`** adds a job-market intelligence sweep.
 
-The [companion site](https://adzuci.github.io/claude-plugins/) has a post per plugin: [Memory as reliability practice](https://adzuci.github.io/claude-plugins/memory.html) · [An operating loop for AI-assisted work](https://adzuci.github.io/claude-plugins/productivity.html)
+The [companion site](https://adzuci.github.io/claude-plugins/) has a post per plugin: [Memory as reliability practice](https://adzuci.github.io/claude-plugins/memory.html) · [An operating loop for AI-assisted work](https://adzuci.github.io/claude-plugins/productivity.html) · [Reflecting your own work back as a learning plan](https://adzuci.github.io/claude-plugins/learning.html)
 
 ![Memory setup architecture](docs/assets/memory-system-diagram.svg)
 
@@ -56,6 +56,15 @@ Current support note: the setup flow has been tested on macOS. Linux and Windows
 
 It also ships `create-agent` and the `agent-ops-setup`/`agent-ops-report` pair for privacy-safe scheduled-agent operations. See `plugins/productivity/README.md` for details.
 
+## What the `learning` Plugin Does
+
+| Skill | Purpose |
+| --- | --- |
+| `/learning:self-retro` | Generate a weekly engineering self-retro and ranked learning plan. Auto-detects its environment: reads local Claude Code sessions when present, or GitHub/Jira/Glean signals in a cloud/web routine. |
+| `/learning:learning-setup` | Schedule the weekly run with the caller-native scheduler and choose where reports are stored (a git-backed vault, with a running meta index). |
+
+The self-retro idea is [Harshit Pandey's](https://www.linkedin.com/in/harshit-pandey-84779114a/): keep the retro focused on where you actually spend your time and end in concrete next steps. Reports are report-only and cite specific session or PR evidence for every claim. See `plugins/learning/README.md` and `plugins/learning/skills/self-retro/references/web-routine.md` for the cloud-routine prompt.
+
 ## Install
 
 Claude Code marketplace metadata lives in `.claude-plugin/marketplace.json`.
@@ -82,7 +91,7 @@ Then invoke the setup skill:
 /memory:memory-setup
 ```
 
-The other plugins install the same way (`claude plugin install productivity@adzuci-plugins`, `claude plugin install career@adzuci-plugins`).
+The other plugins install the same way (`claude plugin install productivity@adzuci-plugins`, `claude plugin install learning@adzuci-plugins`, `claude plugin install career@adzuci-plugins`).
 
 ## Safety Model
 
@@ -115,7 +124,7 @@ The repo includes CI for the bundled Python scripts and plugin metadata:
     ci.yml
 docs/
   index.html          # blog landing page
-  memory.html  productivity.html  career.html
+  memory.html  productivity.html  learning.html  career.html
   assets/
 plugins/
   memory/
@@ -135,6 +144,12 @@ plugins/
       productivity-setup/  todo/  ai-coach/
       wrapup/  daily-wrapup/  budgetclaw-setup/
       create-agent/  agent-ops-setup/  agent-ops-report/
+  learning/
+    .claude-plugin/plugin.json
+    README.md
+    skills/
+      self-retro/          # SKILL.md, parse_sessions.py, references/, agents/, tests/
+      learning-setup/      # SKILL.md, agents/
   career/
     skills/market-sweep/
 ```

@@ -1,0 +1,8 @@
+{
+  "name": "learning",
+  "version": "0.1.0",
+  "description": "A weekly engineering self-retro that reflects your own work back as a ranked learning plan. Runs locally from Claude Code sessions or as a cloud/web routine from GitHub, Jira, and Glean signals.",
+  "author": {
+    "name": "adzuci"
+  }
+}
