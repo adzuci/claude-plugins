@@ -103,12 +103,15 @@ jobs:
           OUTCOME: ${{ steps.eval.outcome }}
         run: |
           MARKER="<!-- skill-eval-summary: standup-promptfoo -->"
-          PASSED=""; FAILED=""
+          PASSED=""; FAILED=""; ERRORS=""
           if [ -f "$RESULTS" ]; then
             PASSED=$(jq -r '(.results.stats.successes // .stats.successes) // empty' "$RESULTS" 2>/dev/null || true)
             FAILED=$(jq -r '(.results.stats.failures // .stats.failures) // empty' "$RESULTS" 2>/dev/null || true)
+            ERRORS=$(jq -r '(.results.stats.errors // .stats.errors) // 0' "$RESULTS" 2>/dev/null || echo 0)
           fi
-          if [ -n "$PASSED" ] && [ -n "$FAILED" ]; then
+          if [ -n "$PASSED" ] && [ -n "$FAILED" ] && [ "${ERRORS:-0}" -gt 0 ]; then
+            BODY="$MARKER"$'\n'"**Standup promptfoo eval:** ERROR ⚠️ — $ERRORS case(s) errored before grading (not a pass/fail verdict). See the run log; results.json in the artifact."
+          elif [ -n "$PASSED" ] && [ -n "$FAILED" ] && [ $((PASSED + FAILED)) -gt 0 ]; then
             TOTAL=$((PASSED + FAILED))
             VERDICT=$([ "$FAILED" -eq 0 ] && echo "PASS ✅" || echo "FAIL ❌")
             BODY="$MARKER"$'\n'"**Standup promptfoo eval:** ${PASSED}/${TOTAL} cases — $VERDICT. Same prompts as the action, graded by llm-rubric (opus) + skill routing checks. results.json in the run artifact; compare verdicts case-by-case."
