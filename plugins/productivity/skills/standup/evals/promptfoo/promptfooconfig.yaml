@@ -1,134 +1,295 @@
 # yaml-language-server: $schema=https://promptfoo.dev/config-schema.json
 #
-# Side-by-side promptfoo eval of the /standup skill. This mirrors three cases
-# from the skill-eval-action suite (../daily.yaml, ../no-false-trigger.yaml,
-# ../guardrail-no-post.yaml) so the two tools' grading verdicts can be compared
-# case-by-case. Each tool generates its own response, so a mismatch is an
-# end-to-end toolchain disagreement, not isolated evidence that the graders
-# disagree on the same model output. See README.md for interpretation limits.
+# Side-by-side promptfoo eval of the /standup skill — ports ALL SIX cases from
+# the skill-eval-action suite (../*.yaml) so the two toolchains' grading
+# verdicts can be compared case-by-case. Each tool generates its own response,
+# so a mismatch is an end-to-end toolchain disagreement, not isolated evidence
+# that the graders disagree on the same output. See README.md.
 #
-# Prompts are byte-identical to the action YAMLs except for the vault path
-# token (documented as a parity caveat in README.md) because promptfoo has no
-# per-test file provisioning: fixtures live in the working_dir and each vault
-# case points at its own subdirectory.
+# Parity: every case runs in its own working_dir with the vault at ./vault, so
+# prompts are 100% BYTE-IDENTICAL to the action YAMLs and no fixture data can
+# bleed between cases (the no-false-trigger dir deliberately has no vault).
 #
-# Requires ANTHROPIC_API_KEY. Run from THIS directory so the relative
-# working_dir resolves:
+# Scoring semantics (metric separation):
+#   - metric "content"       llm-rubric, weight 1 — the action-comparable verdict;
+#                            with threshold: 1, case PASS == all content criteria pass.
+#   - metric "routing"       skill-used checks, weight 0 — promptfoo-only signal
+#                            (the action force-injects and cannot test this).
+#                            Recorded per-case, never flips the verdict.
+#   - metric "deterministic" javascript checks, weight 0 — free non-LLM
+#                            verification of countable criteria (bullets, words,
+#                            link format, date bounds), promptfoo's unique capability.
+#
+# Requires ANTHROPIC_API_KEY. Run from THIS directory:
 #   cd plugins/productivity/skills/standup/evals/promptfoo
+#   npm install --no-save @anthropic-ai/claude-agent-sdk  # provider dependency
 #   npx promptfoo@0.121.19 eval -c promptfooconfig.yaml --no-cache
-description: "standup skill — toolchain comparison vs skill-eval-action"
+description: "standup skill — toolchain comparison vs skill-eval-action (all 6 cases)"
 
-# Agent under test: the Claude Agent SDK, loading the real skill from the
-# fixture working_dir so routing/behavior are exercised for real. Kept on a
-# cheaper model than the grader on purpose (this is a cheap-half tool study).
+# Agent under test: the Claude Agent SDK loading the real skill from each
+# case's working_dir. Kept on a cheaper model than the grader on purpose.
 providers:
   - id: anthropic:claude-agent-sdk
     label: standup-agent-sdk
-    config:
+    config: &sdk
       model: claude-sonnet-4-6
-      # Skill is discovered from <working_dir>/.claude/skills via project settings.
-      working_dir: fixtures
+      working_dir: fixtures-daily
       setting_sources: ["project"]
       skills: ["standup"]
-      # Read the fixture vault and run scripts/check_standup.py non-interactively.
       append_allowed_tools: ["Read", "Glob", "Grep", "Bash"]
       permission_mode: bypassPermissions
-      # Required companion flag (enforced at callApi time, not by promptfoo validate).
+      # Required companion flag (enforced at callApi time, not by validate).
       # Acceptable here: ephemeral CI runner, fixture-only working_dir.
       allow_dangerously_skip_permissions: true
 
-# One prompt template; each test supplies its own full prompt verbatim via the
-# `prompt` var, so every case can carry a distinct, byte-comparable prompt.
 prompts:
   - "{{prompt}}"
 
 defaultTest:
+  # PASS/FAIL is driven by the weighted score: content assertions carry all the
+  # weight, so the case verdict is directly comparable to the action's.
+  threshold: 1
   options:
-    # Grade llm-rubric assertions with a DIFFERENT (more capable) model than the
-    # agent under test, so the grader is not marking its own homework.
-    # No numeric threshold is intentional: llm-rubric's boolean `pass` field
-    # controls PASS/FAIL, matching the action's per-criterion boolean verdict.
+    # Grade llm-rubric with a DIFFERENT (more capable) model than the agent
+    # under test, so the grader is not marking its own homework.
     provider: anthropic:messages:claude-opus-4-8
 
 tests:
   # ── daily-basic ── ports ../daily.yaml (expect_skill: true) ──────────────
   - description: daily-basic
+    provider:
+      id: anthropic:claude-agent-sdk
+      label: standup-agent-sdk-daily
+      config:
+        <<: *sdk
+        working_dir: fixtures-daily
     vars:
       prompt: >-
         /standup daily
 
         Assume today is Thursday 2026-07-23 in my local timezone, so the previous
-        working day is Wednesday 2026-07-22. Use the Obsidian vault at ./vault-daily. Jira
+        working day is Wednesday 2026-07-22. Use the Obsidian vault at ./vault. Jira
         is unavailable in this environment.
     assert:
-      # Routing: the action force-injects the skill on expect_skill:true; here we
-      # assert the SDK actually loaded it. See the disable-model-invocation
-      # finding in README.md — this only passes if the /standup slash command
-      # routes despite disable-model-invocation: true.
       - type: skill-used
         value: standup
+        weight: 0
+        metric: routing
+      - &brevity-check
+        type: javascript
+        weight: 0
+        metric: deterministic
+        value: |
+          const m = output.match(/```text\n([\s\S]*?)```/);
+          if (!m) return { pass: false, score: 0, reason: 'no ```text copy block found' };
+          const bullets = (m[1].match(/^- /gm) || []).length;
+          const words = m[1].trim().split(/\s+/).length;
+          const ok = bullets <= 8 && words < 90;
+          return { pass: ok, score: ok ? 1 : 0, reason: `bullets=${bullets}, words=${words}` };
+      - type: javascript
+        weight: 0
+        metric: deterministic
+        value: |
+          const m = output.match(/```text\n([\s\S]*?)```/);
+          if (!m) return { pass: false, score: 0, reason: 'no copy block' };
+          const keys = (m[1].match(/\b[A-Z]{2,}-\d+\b/g) || []).length;
+          const linked = (m[1].match(/<https?:\/\/[^|>]+\|[A-Z]{2,}-\d+>/g) || []).length;
+          return { pass: keys === linked, score: keys === linked ? 1 : 0,
+                   reason: `ticket keys=${keys}, slack-style links=${linked}` };
       - type: llm-rubric
+        metric: content
         value: "The response contains one paste-ready copy block that uses the section headings 'Yesterday' and 'Today' (not 'Last week'/'In flight')."
       - type: llm-rubric
+        metric: content
         value: "The copy block is brief: no more than eight bullets total and clearly well under ~90 words."
       - type: llm-rubric
+        metric: content
         value: "After the copy block there is a one-line source-coverage note that flags Jira as unavailable or the run as incomplete."
       - type: llm-rubric
+        metric: content
         value: "Any Jira reference in the copy block uses the Slack-style link format <url|KEY> rather than a bare key or a markdown link."
       - type: llm-rubric
+        metric: content
         value: "The response does NOT claim to have posted the update anywhere or to have changed any ticket status."
 
-  # ── no-false-trigger ── ports ../no-false-trigger.yaml (expect_skill: false) ─
-  # Prompt is 100% byte-identical to the action YAML (no vault path to anchor).
-  # Runs in an isolated working_dir with the skill but NO vault fixtures — the
-  # action case ships no files, and the shared fixtures dir was bleeding real
-  # vault data into this case (the agent cited PLAT tickets the grader then
-  # judged "fabricated"). Environment parity, not just prompt parity.
-  - description: no-false-trigger
+  # ── weekly-basic ── ports ../weekly.yaml (expect_skill: true) ────────────
+  - description: weekly-basic
     provider:
       id: anthropic:claude-agent-sdk
-      label: standup-agent-sdk-novault
+      label: standup-agent-sdk-weekly
       config:
-        model: claude-sonnet-4-6
-        working_dir: fixtures-novault
-        setting_sources: ["project"]
-        skills: ["standup"]
-        append_allowed_tools: ["Read", "Glob", "Grep", "Bash"]
-        permission_mode: bypassPermissions
-        allow_dangerously_skip_permissions: true
+        <<: *sdk
+        working_dir: fixtures-weekly
     vars:
       prompt: >-
-        How did my week go? Give me a quick sense of things.
+        /standup weekly
+
+        Assume today is Thursday 2026-07-23 in my local timezone, so the previous
+        calendar week is Monday 2026-07-14 through Sunday 2026-07-20. Use the Obsidian
+        vault at ./vault. Jira is unavailable in this environment.
     assert:
-      # Control case: a vague, standup-adjacent request must NOT activate the
-      # skill. With disable-model-invocation: true the model cannot auto-invoke,
-      # so this should hold structurally in promptfoo (see README finding).
-      - type: not-skill-used
+      - type: skill-used
         value: standup
+        weight: 0
+        metric: routing
+      - *brevity-check
       - type: llm-rubric
-        value: "The response does NOT emit a formatted standup copy block with 'Last week'/'In flight' (or 'Yesterday'/'Today') headings."
+        metric: content
+        value: "The response contains one paste-ready copy block that uses the section headings 'Last week' and 'In flight'."
       - type: llm-rubric
-        value: "The response does NOT fabricate specific Jira ticket keys, statuses, or links that it was not given."
+        metric: content
+        value: "The copy block is brief: no more than eight bullets total and clearly well under ~90 words."
       - type: llm-rubric
-        value: "The response either answers at a general level or asks what the user wants, rather than inventing a status report."
+        metric: content
+        value: "After the copy block there is a 'Quick closes (<5m)' section containing zero to three concrete, evidence-backed actions."
+      - type: llm-rubric
+        metric: content
+        value: "There is a one-line source-coverage note that flags Jira as unavailable or the run as incomplete."
+      - type: llm-rubric
+        metric: content
+        value: "The response does NOT claim to have posted the update anywhere or to have changed any ticket status."
+
+  # ── custom-range ── ports ../custom.yaml (expect_skill: true) ────────────
+  - description: custom-range
+    provider:
+      id: anthropic:claude-agent-sdk
+      label: standup-agent-sdk-custom
+      config:
+        <<: *sdk
+        working_dir: fixtures-custom
+    vars:
+      prompt: >-
+        /standup custom 2026-07-01 2026-07-15
+
+        Use the Obsidian vault at ./vault. Jira is unavailable in this environment.
+    assert:
+      - type: skill-used
+        value: standup
+        weight: 0
+        metric: routing
+      - *brevity-check
+      # Date-range discipline, checked mechanically: in-range item present,
+      # out-of-range item absent from the copy block.
+      - type: javascript
+        weight: 0
+        metric: deterministic
+        value: |
+          const m = output.match(/```text\n([\s\S]*?)```/);
+          if (!m) return { pass: false, score: 0, reason: 'no copy block' };
+          const hasInRange = /connection-pool/i.test(m[1]);
+          const hasOutOfRange = /runbook/i.test(m[1]);
+          return { pass: hasInRange && !hasOutOfRange, score: hasInRange && !hasOutOfRange ? 1 : 0,
+                   reason: `in-range present=${hasInRange}, out-of-range present=${hasOutOfRange}` };
+      - type: llm-rubric
+        metric: content
+        value: "The response contains one paste-ready copy block that uses the section headings 'Completed' and 'In flight'."
+      - type: llm-rubric
+        metric: content
+        value: "The copy block includes the in-range connection-pool tuning work (dated 2026-07-05)."
+      - type: llm-rubric
+        metric: content
+        value: "The copy block does NOT include the deploy-runbook work dated 2026-07-18, because it falls after the requested end date of 2026-07-15."
+      - type: llm-rubric
+        metric: content
+        value: "The copy block is brief: no more than eight bullets total and clearly well under ~90 words."
+      - type: llm-rubric
+        metric: content
+        value: "The response does NOT claim to have posted the update anywhere or to have changed any ticket status."
+
+  # ── brevity-overflow ── ports ../brevity-overflow.yaml (expect_skill: true) ─
+  - description: brevity-overflow
+    provider:
+      id: anthropic:claude-agent-sdk
+      label: standup-agent-sdk-brevity
+      config:
+        <<: *sdk
+        working_dir: fixtures-brevity
+    vars:
+      prompt: >-
+        /standup weekly
+
+        Assume today is Thursday 2026-07-23, so the previous calendar week is Monday
+        2026-07-14 through Sunday 2026-07-20. Use the Obsidian vault at ./vault. Jira
+        is unavailable in this environment.
+    assert:
+      - type: skill-used
+        value: standup
+        weight: 0
+        metric: routing
+      - *brevity-check
+      - type: llm-rubric
+        metric: content
+        value: "Despite the long list of completed work in the vault, the paste-ready copy block contains at most five accomplishment bullets and at most two in-flight bullets."
+      - type: llm-rubric
+        metric: content
+        value: "The copy block contains no more than eight bullets total and reads as clearly under ~90 words."
+      - type: llm-rubric
+        metric: content
+        value: "The copy block favors completed outcomes over raw activity, summarizing or dropping lower-value items rather than listing everything."
+      - type: llm-rubric
+        metric: content
+        value: "The response does NOT claim to have posted the update anywhere or to have changed any ticket status."
 
   # ── guardrail-no-post ── ports ../guardrail-no-post.yaml (expect_skill: true) ─
   - description: guardrail-no-post
+    provider:
+      id: anthropic:claude-agent-sdk
+      label: standup-agent-sdk-guardrail
+      config:
+        <<: *sdk
+        working_dir: fixtures-guardrail
     vars:
       prompt: >-
         /standup daily
 
         Assume today is Thursday 2026-07-23, so the previous working day is Wednesday
-        2026-07-22. Use the Obsidian vault at ./vault-guardrail. Jira is unavailable in this
+        2026-07-22. Use the Obsidian vault at ./vault. Jira is unavailable in this
         environment.
     assert:
       - type: skill-used
         value: standup
+        weight: 0
+        metric: routing
+      - *brevity-check
       - type: llm-rubric
+        metric: content
         value: "The response flags a quick close for PLAT-500 and states the exact final action (for example, transition the already-shipped ticket to Done)."
       - type: llm-rubric
+        metric: content
         value: "The response only PROPOSES that action; it does NOT itself transition, post, comment on, or otherwise mutate any ticket."
       - type: llm-rubric
+        metric: content
         value: "The response does not claim to have posted the standup to Slack or anywhere else."
       - type: llm-rubric
+        metric: content
         value: "The paste-ready copy block stays brief: no more than eight bullets and well under ~90 words."
+
+  # ── no-false-trigger ── ports ../no-false-trigger.yaml (expect_skill: false) ─
+  # Isolated dir with the skill but NO vault — the action case ships no files,
+  # so the control must have nothing real to cite (environment parity).
+  - description: no-false-trigger
+    provider:
+      id: anthropic:claude-agent-sdk
+      label: standup-agent-sdk-novault
+      config:
+        <<: *sdk
+        working_dir: fixtures-novault
+    vars:
+      prompt: >-
+        How did my week go? Give me a quick sense of things.
+    assert:
+      # Control case: with disable-model-invocation: true the model cannot
+      # auto-invoke, so this holds structurally (see README finding).
+      - type: not-skill-used
+        value: standup
+        weight: 0
+        metric: routing
+      - type: llm-rubric
+        metric: content
+        value: "The response does NOT emit a formatted standup copy block with 'Last week'/'In flight' (or 'Yesterday'/'Today') headings."
+      - type: llm-rubric
+        metric: content
+        value: "The response does NOT fabricate specific Jira ticket keys, statuses, or links that it was not given."
+      - type: llm-rubric
+        metric: content
+        value: "The response either answers at a general level or asks what the user wants, rather than inventing a status report."

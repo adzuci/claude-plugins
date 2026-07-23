@@ -126,3 +126,17 @@ So the two tools do not test the same thing at the routing layer: the action
 assumes the skill is active and grades only output; promptfoo grades output
 *and* whether real activation happened. Log the `skill-used` / `not-skill-used`
 outcomes alongside the rubric verdicts.
+
+
+## v2: all six cases, metric separation, deterministic checks
+
+- **All 6 action cases are ported** and every prompt is **byte-identical** — each case runs
+  in its own `fixtures-<case>/` working dir with the vault at `./vault`, which also prevents
+  fixture bleed between cases.
+- **Three metrics** per case: `content` (llm-rubric, weight 1 — drives PASS/FAIL, directly
+  comparable to the action's verdict), `routing` (skill-used, weight 0 — promptfoo-only
+  signal; recorded but never flips the verdict), `deterministic` (javascript, weight 0 —
+  free mechanical checks of bullets/words/link-format/date-bounds; where these disagree
+  with the LLM grader's countable criteria, trust these).
+- Case success = all content criteria pass (`threshold: 1` + weights), so the comparison
+  table is apples-to-apples with the action scorecard.
