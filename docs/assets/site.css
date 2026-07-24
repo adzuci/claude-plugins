@@ -79,6 +79,15 @@
       padding: 16px 0 44px;
     }
 
+    .hero-compact {
+      grid-template-columns: minmax(0, 1fr);
+      min-height: auto;
+    }
+
+    .hero-compact .hero-copy {
+      padding-bottom: 24px;
+    }
+
     .eyebrow {
       margin: 0 0 18px;
       color: var(--teal);

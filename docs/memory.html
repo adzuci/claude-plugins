@@ -22,33 +22,39 @@
       </nav>
     </div>
 
-    <header class="hero">
+    <header class="hero hero-compact">
       <section class="hero-copy">
         <p class="eyebrow">Engineering leadership · operational memory · local-first AI tooling</p>
         <h1>Memory as reliability practice</h1>
-        <p class="dek">I built this after noticing the same context tax over and over: a good AI session solved the immediate problem, but the useful residue did not make it into my operating system.</p>
+        <p class="dek">The first big win from a simple Karpathy-style LLM wiki is being able to ask questions about my past AI sessions—so I can improve how I work and track whether the time and tokens are producing useful outcomes.</p>
         <div class="meta-grid" aria-label="Article metadata">
-          <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
-          <div class="meta-card"><strong>Artifact</strong><code>memory</code> plugin</div>
-          <div class="meta-card"><strong>Scope</strong>Work and personal systems</div>
+          <div class="meta-card"><strong>First unlock</strong>Query past sessions</div>
+          <div class="meta-card"><strong>Foundation</strong>Git-backed Markdown</div>
+          <div class="meta-card"><strong>This post</strong>One basic setup</div>
         </div>
       </section>
-
-      <figure class="hero-visual">
-        <img src="assets/memory-lattice.png" alt="Abstract lattice of notes, terminal lines, and connected memory nodes">
-        <figcaption class="caption">The texture of what gets lost: command traces, decisions, names, half-finished threads, and the one sentence that would save twenty minutes next time.</figcaption>
-      </figure>
     </header>
 
     <main>
       <article>
-        <p class="lead">When a hard problem finally gets solved, the fix is rarely enough. Someone has to preserve the lesson in a way the next person can actually use.</p>
+        <p class="lead">A good AI session should become evidence I can use later, not another conversation I vaguely remember having.</p>
 
-        <p>That same pattern shows up in AI-assisted work. A session can be productive and still leave almost no durable residue. The assistant helped debug a strange failure, compare trade-offs, draft a review, or clarify a decision. Then the session ends. A week later, I remember that we figured it out, but not the exact shape of the answer.</p>
+        <p>This post stays intentionally basic: what a Karpathy-style LLM wiki unlocks, and one way to set one up. After only a few days of session recaps, you can ask ad hoc questions across your work history. Later, the same context can power scheduled retrospectives, daily wrap-ups, coaching reports, and ROI reviews—but the useful foundation is simply a small, navigable collection of Markdown.</p>
 
-        <p>That is fine for a throwaway task. It is expensive for real work. It is especially expensive for managers, because a lot of the job is continuity: what changed, why it changed, who needs context, what risk is still open, and which lesson should survive the week.</p>
+        <div class="pullquote">The wiki is not the product. The first product is being able to ask, “What does my own work history say I should improve?”</div>
 
-        <div class="pullquote">This is not a note-taking project. It is a small project for keeping my own context reliable.</div>
+        <h2>The first unlock: question your own work history</h2>
+        <p>Once session recaps are durable, I can ask questions that are difficult to answer from memory or from one chat transcript: Where am I repeating the same manual work? Which tools consistently help? What did I leave half-finished? Which expensive sessions produced a shipped artifact, saved time, or reduced risk?</p>
+
+        <p>That turns session history into a process-improvement and ROI dataset. The answers are still imperfect, but they are grounded in work I actually did instead of a generic productivity theory.</p>
+
+        <figure class="figure">
+          <img src="assets/memory-lattice.png" alt="Abstract lattice of notes, terminal lines, and connected memory nodes">
+          <figcaption class="caption">The texture of what gets lost: command traces, decisions, names, half-finished threads, and the one sentence that would save twenty minutes next time.</figcaption>
+        </figure>
+
+        <h2>What the foundation can unlock later</h2>
+        <p>After a few days of capture, an ad hoc retrospective can look for recurring friction or missed follow-ups. With more history, a scheduled report can compare costs with visible outcomes. A wrap-up workflow can surface half-completed work, merge-ready changes, and a sensible goal for tomorrow. Those workflows are where the compounding value appears; this article focuses on the much simpler wiki underneath them.</p>
 
         <h2>Why I built it</h2>
         <p>I wanted a memory system that behaves like infrastructure I would trust: local-first, inspectable, reversible, and explicit about writes. I did not want an opaque memory feature that quietly shaped future sessions. I wanted plain Markdown, git history, and a setup flow that asks before touching dotfiles.</p>
