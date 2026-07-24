@@ -1,0 +1,4 @@
+interface:
+  display_name: "ccflare Setup"
+  short_description: "Install local Claude usage analytics safely"
+  default_prompt: "Use $setup-ccflare to install my local ccflare usage analytics relay."

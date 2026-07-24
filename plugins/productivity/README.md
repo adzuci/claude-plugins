@@ -36,6 +36,10 @@ Use `/productivity:todo` for immediate capture, `/productivity:daily-wrapup` for
 
 Installs [budgetclaw](https://github.com/RoninForge/budgetclaw) in monitor-only mode on macOS with local Notification Center alerts. Sets a daily spend cap and fires a debounced popup when you breach it — no external services.
 
+### `/productivity:setup-ccflare`
+
+Installs Apollo's private `ccflare-relay` stack on macOS for a local Claude Code analytics dashboard and centralized routing. It performs a read-only preflight, explains the local data boundary, and runs an idempotent clone, Compose, replay-account, shell-routing, and dashboard flow.
+
 ### `/productivity:create-agent`
 
 Guided interview that turns a job description into a ready-to-use Claude Code skill. Answer a few questions about the agent's purpose, audience, tools, and vault access — the skill writes a `SKILL.md` in `.claude/skills/<name>/` and optionally registers the agent in your Obsidian vault under `agents/<name>.md`.

@@ -53,6 +53,7 @@ Current support note: the setup flow has been tested on macOS. Linux and Windows
 | `/productivity:wrapup` | Pre-`/clear` hygiene check: uncommitted work, unpushed commits, open loose ends. |
 | `/productivity:daily-wrapup` | End-of-day review, tomorrow preview, and goal capture into the vault session note. |
 | `/productivity:budgetclaw-setup` | Claude Code spend monitoring with local macOS notifications. |
+| `/productivity:setup-ccflare` | Install Apollo's private local Claude usage analytics relay on macOS. |
 
 It also ships `create-agent` and the `agent-ops-setup`/`agent-ops-report` pair for privacy-safe scheduled-agent operations. See `plugins/productivity/README.md` for details.
 
@@ -142,7 +143,7 @@ plugins/
     README.md
     skills/
       productivity-setup/  todo/  ai-coach/
-      wrapup/  daily-wrapup/  budgetclaw-setup/
+      wrapup/  daily-wrapup/  budgetclaw-setup/  setup-ccflare/
       create-agent/  agent-ops-setup/  agent-ops-report/
   learning/
     .claude-plugin/plugin.json
