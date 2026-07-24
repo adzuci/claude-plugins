@@ -38,7 +38,7 @@ Installs [budgetclaw](https://github.com/RoninForge/budgetclaw) in monitor-only 
 
 ### `/productivity:setup-ccflare`
 
-Installs Apollo's private `ccflare-relay` stack on macOS for a local Claude Code analytics dashboard and centralized routing. It performs a read-only preflight, explains the local data boundary, and runs an idempotent clone, Compose, replay-account, shell-routing, and dashboard flow.
+Installs the public `tombii/better-ccflare` container on macOS for a local Claude Code analytics dashboard and centralized routing. It needs no Apollo access, binds the dashboard to localhost, and disables stored request/response bodies. The packaged `/setup-ccflare` flow has not yet been tested end to end from this repository location.
 
 ### `/productivity:create-agent`
 
