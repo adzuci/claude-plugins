@@ -22,11 +22,13 @@ def _make_vault(tmp_path: Path) -> Path:
 
 def test_merge_obsidian_git_settings_preserves_existing_keys() -> None:
     existing = {"theme": "custom", "autoSaveInterval": 99}
+    desired = install_sync.obsidian_git_sync_settings(900)
     merged = install_sync.merge_obsidian_git_settings(
-        existing, install_sync.OBSIDIAN_GIT_SYNC_SETTINGS
+        existing, desired
     )
     assert merged["theme"] == "custom"                # preserved
-    assert merged["autoSaveInterval"] == 10           # enforced
+    assert merged["autoSaveInterval"] == 15           # enforced
+    assert merged["autoPullInterval"] == 15
     assert merged["pullBeforePush"] is True
     assert existing["autoSaveInterval"] == 99         # input not mutated
 
@@ -49,7 +51,7 @@ def test_install_darwin_writes_script_plist_and_data_json(tmp_path: Path) -> Non
     data_json.write_text(json.dumps({"theme": "keep-me"}))
 
     result = install_sync.run(
-        vault=vault, home=home, interval=600, uninstall=False,
+        vault=vault, home=home, interval=900, uninstall=False,
         load=False, now=1234, platform_name="Darwin",
     )
 
@@ -63,16 +65,20 @@ def test_install_darwin_writes_script_plist_and_data_json(tmp_path: Path) -> Non
 
     plist = Path(result["launchd_plist"])
     assert plist.exists()
-    assert "<integer>600</integer>" in plist.read_text()
+    assert "<integer>900</integer>" in plist.read_text()
 
     # data.json merged with backup
     merged = json.loads(data_json.read_text())
     assert merged["theme"] == "keep-me"
-    assert merged["autoSaveInterval"] == 10
+    assert merged["autoSaveInterval"] == 15
+    assert merged["autoPullInterval"] == 15
+    assert result["obsidian_git_interval_minutes"] == 15
     assert (data_json.parent / "data.json.bak-1234").exists()
 
     # The overwritten keys are declared in the output
-    assert result["enforced_settings"] == sorted(install_sync.OBSIDIAN_GIT_SYNC_SETTINGS)
+    assert result["enforced_settings"] == sorted(
+        install_sync.obsidian_git_sync_settings(900)
+    )
 
 
 def test_install_non_darwin_suggests_cron(tmp_path: Path) -> None:

@@ -29,15 +29,18 @@ from lib import render_template
 _SKILL_DIR = Path(__file__).resolve().parent.parent
 _TEMPLATE_PATH = _SKILL_DIR / "templates" / "vault-sync.sh.tmpl"
 
-# obsidian-git settings we enforce; every other existing key is preserved.
-OBSIDIAN_GIT_SYNC_SETTINGS = {
-    "autoSaveInterval": 10,       # minutes: auto commit-and-sync
-    "autoPullInterval": 10,       # minutes
-    "autoPushInterval": 0,        # push rides on the commit-and-sync
-    "pullBeforePush": True,
-    "disablePush": False,
-    "commitMessage": "vault backup: {{date}}",
-}
+
+def obsidian_git_sync_settings(interval_seconds: int) -> dict:
+    """Return obsidian-git settings aligned to the requested sync interval."""
+    minutes = max(1, interval_seconds // 60)
+    return {
+        "autoSaveInterval": minutes,  # auto commit-and-sync
+        "autoPullInterval": minutes,
+        "autoPushInterval": 0,        # push rides on the commit-and-sync
+        "pullBeforePush": True,
+        "disablePush": False,
+        "commitMessage": "vault backup: {{date}}",
+    }
 
 
 def render_launchd_plist(label: str, script: str, interval: int, log: str) -> str:
@@ -80,7 +83,9 @@ def _launchctl(args: list) -> None:
         pass  # best-effort; the plist on disk is the source of truth
 
 
-def _write_obsidian_git_settings(vault: Path, now: int) -> dict:
+def _write_obsidian_git_settings(
+    vault: Path, now: int, desired_settings: dict
+) -> dict:
     data_path = vault / ".obsidian" / "plugins" / "obsidian-git" / "data.json"
     existing: dict = {}
     backup = None
@@ -92,7 +97,7 @@ def _write_obsidian_git_settings(vault: Path, now: int) -> dict:
         backup = data_path.parent / f"data.json.bak-{now}"
         shutil.copy2(str(data_path), str(backup))
     data_path.parent.mkdir(parents=True, exist_ok=True)
-    merged = merge_obsidian_git_settings(existing, OBSIDIAN_GIT_SYNC_SETTINGS)
+    merged = merge_obsidian_git_settings(existing, desired_settings)
     data_path.write_text(json.dumps(merged, indent=2) + "\n")
     return {"path": str(data_path), "backup": str(backup) if backup else None}
 
@@ -131,13 +136,21 @@ def run(
     if not (vault / ".git").exists():
         return {"ok": False, "error": f"Not a git repository: {vault}"}
 
-    result: dict = {"ok": True, "vault": str(vault), "interval": interval}
+    desired_settings = obsidian_git_sync_settings(interval)
+    result: dict = {
+        "ok": True,
+        "vault": str(vault),
+        "interval": interval,
+        "obsidian_git_interval_minutes": desired_settings["autoSaveInterval"],
+    }
 
     # 1. obsidian-git settings
-    result["obsidian_git"] = _write_obsidian_git_settings(vault, now)
+    result["obsidian_git"] = _write_obsidian_git_settings(
+        vault, now, desired_settings
+    )
     # These keys are re-enforced on every run (manual edits to them are
     # overwritten; everything else in data.json is preserved).
-    result["enforced_settings"] = sorted(OBSIDIAN_GIT_SYNC_SETTINGS)
+    result["enforced_settings"] = sorted(desired_settings)
 
     # 2. Headless sync script
     import shlex

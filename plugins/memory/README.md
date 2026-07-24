@@ -48,14 +48,17 @@ claude plugin install memory@adzuci-plugins
 
 The default Claude Code path sets up:
 
-- A local Obsidian vault under a user-selected parent directory
+- A local Obsidian vault under a user-selected parent directory, including a root `README.md` with the operating model, folder map, sync details, privacy guidance, and recovery commands
+- A private GitHub remote: `apolloio/<name>-vault` is the recommended default for Apollo work, with explicit personal-private, existing-remote, and local-only alternatives
 - `claudian` and `obsidian-git` as Obsidian community plugins
 - A `SessionEnd` hook in `~/.claude/settings.json`
 - A managed memory block in `~/.claude/CLAUDE.md`
-- Optional scheduled git sync: obsidian-git auto commit/pull while Obsidian is open, plus a launchd agent (macOS) that pulls/commits/pushes headlessly so multiple machines stay converged
+- Optional scheduled git sync, enabled at a 15-minute default for remote-backed vaults: obsidian-git auto commit/pull while Obsidian is open, plus a launchd agent (macOS) that pulls/commits/pushes headlessly so multiple machines stay converged
 - Optional git-crypt encryption of sensitive directories (`crypt` argument)
 
 Codex and Antigravity compatibility paths append summaries into the same vault without writing to `~/.claude` unless the user explicitly asks for shared Claude setup.
+
+At the end of setup, Obsidian opens. The user must choose **Open folder as vault**, select the generated `<name>-vault` folder, then trust and enable the installed plugins. Obsidian does not provide a URI action that can register a brand-new vault automatically.
 
 ## Safety Model
 

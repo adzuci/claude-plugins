@@ -38,6 +38,12 @@ Read `references/cost-benefit.md` and present a concise summary covering:
 - Anticipated token cost per substantive session (Claude Haiku summary ~1¢ warm / ~4¢ cold; Codex token line is free because it reads local JSONL; Antigravity local token totals are unavailable unless the installed version exposes them; vault reads are on-demand and bounded)
 - Why it is worth it vs the alternative (see cost-benefit.md for the full comparison)
 
+Also set expectations with a short **What you will still do** list:
+
+- Authenticate GitHub in a browser if `gh` is not already authenticated.
+- When setup opens Obsidian, choose **Open folder as vault**, select `<parent>/<name>-vault`, then trust and enable the two installed community plugins. Obsidian's URI scheme can open only vaults it already knows about, so this one-time registration cannot be automated reliably.
+- If a remote is selected, setup creates or connects the private repository, establishes the first push, and configures both sync mechanisms for every 15 minutes by default.
+
 **Tip:** This setup works best in Auto mode, which lets Claude run all install steps without pausing for approval on each tool call. If you're not already in Auto mode, type `/auto` in the Claude Code prompt before selecting Proceed. You can disable it after setup with `/auto` again.
 
 Then ask for one of three choices: **Proceed**, **Explain more**, **Cancel**.
@@ -91,18 +97,20 @@ Ask the user the following in one message:
 1. **Vault name** — will become `<name>-vault` on disk (e.g., `work` → `work-vault`)
 1. **Parent directory** — where to create the vault (default: `~/code`)
 1. **Git remote** — choose one:
-   - **A) Create a private GitHub repo for me** (requires `gh` CLI — Claude will create `<name>-vault` on GitHub and set the HTTPS remote automatically)
-   - **B) I'll provide an existing URL** — paste your HTTPS or SSH remote URL
-   - **C) Local-only for now** — no remote; you can add one later with `git remote add origin <URL>`
+   - **A) Private `apolloio/<name>-vault`** — recommended and the default for Apollo work vaults; requires permission to create private repositories in the `apolloio` organization
+   - **B) Personal private repository** — create `<github-user>/<name>-vault`; use this for personal notes that should not live in the Apollo organization
+   - **C) Existing repository URL** — paste an HTTPS or SSH remote URL
+   - **D) Local-only for now** — no remote; you can add one later with `git remote add origin <URL>`
 
-   If the user picks A, Claude will create the repo in Step 2.5. Default to HTTPS remotes; only use SSH if the user explicitly provides an SSH URL (ssh:// or git@).
+   All repositories created by this skill are private. Never create a public vault repository. Do not silently fall back from the Apollo organization to the user's personal account if organization creation fails. Default to HTTPS remotes; only use SSH if the user explicitly provides an SSH URL (`ssh://` or `git@`).
+1. **Scheduled sync** — for any remote choice, default to **Enable every 15 minutes**. Allow **Disable** or a custom interval. Local-only defaults to disabled.
 1. **Obsidian install** — if Obsidian was not found in Step 1, confirm whether to install it automatically (macOS: direct DMG download from GitHub; Linux/Windows: manual download path).
 
-Echo the resolved plan as a short bullet list (vault path, remote choice, Obsidian action). Ask for a final go-ahead before continuing.
+Echo the resolved plan as a short bullet list: vault path, exact private repository owner/name or existing URL, whether setup will perform an initial push, sync interval, and the final manual Obsidian action. Ask for a final go-ahead before continuing.
 
 ## Step 2.5: Install Prerequisites (If Missing)
 
-Run this step only if `gh` or `jq` was reported missing in Step 1, or if the user selected option A in Step 2 (GitHub repo creation).
+Run this step only if `gh` or `jq` was reported missing in Step 1, or if the user selected option A or B in Step 2 (GitHub repo creation).
 
 ### Fix Homebrew permission (if /usr/local/share/info not writable)
 
@@ -180,13 +188,31 @@ Then wire HTTPS credentials:
 gh auth setup-git
 ```
 
-### Create GitHub repo (if user chose option A in Step 2)
+### Create GitHub repo (if user chose option A or B in Step 2)
 
-After `gh auth setup-git`, create the private repo and capture the remote URL:
+First verify authentication:
+
+```bash
+gh auth status
+gh auth setup-git
+```
+
+For option A, verify the name is available, create the private Apollo repository, and capture its HTTPS URL:
+
+```bash
+gh repo view apolloio/<name>-vault
+# Continue only when the command confirms the repository does not already exist.
+gh repo create apolloio/<name>-vault --private --description "Git-backed Obsidian memory vault"
+REMOTE_URL="https://github.com/apolloio/<name>-vault.git"
+```
+
+If the repository already exists, **STOP** and ask whether to use it as an existing repository or choose a new name. If creation fails because the user lacks organization permission, **STOP** and offer: retry after access is fixed, choose a new name, choose the personal-private option, provide an existing URL, or continue local-only. Never choose a fallback for the user.
+
+For option B, resolve the authenticated user, create a private personal repository, and capture its HTTPS URL:
 
 ```bash
 GH_USER=$(gh api user --jq .login)
-gh repo create ${GH_USER}/<name>-vault --private --description "Personal knowledge vault"
+gh repo create ${GH_USER}/<name>-vault --private --description "Git-backed Obsidian memory vault"
 REMOTE_URL="https://github.com/${GH_USER}/<name>-vault.git"
 ```
 
@@ -271,7 +297,15 @@ ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
 
 This prevents "REMOTE HOST IDENTIFICATION HAS CHANGED" errors on machines set up before March 2023.
 
-Do not auto-push. If `initial_commit` is true, tell the user: "Initial commit created. Push when ready: `git -C <vault> push -u origin main`". If `initial_commit` is false, tell the user the vault was scaffolded but the initial commit failed, show `initial_commit_error`, and suggest configuring git identity with `git config --global user.name` and `git config --global user.email` before rerunning `git -C <vault> commit --allow-empty -m "chore: initial vault scaffold"`.
+If `initial_commit` is false, tell the user the vault was scaffolded but the initial commit failed, show `initial_commit_error`, and suggest configuring git identity with `git config --global user.name` and `git config --global user.email` before rerunning `git -C <vault> commit --allow-empty -m "chore: initial vault scaffold"`.
+
+For a new private repository created in Step 2.5, the approved plan includes establishing its upstream. If `crypt` is not enabled, run:
+
+```bash
+git -C <vault> push -u origin main
+```
+
+If `crypt` is enabled, wait until Step 4.5 finishes so the first push contains the encryption rules. For an existing repository URL, inspect its history and default branch first and ask before pushing or reconciling histories. For local-only, skip the push.
 
 ## Step 4.5: Encryption (`crypt` Argument Only — Gate)
 
@@ -289,7 +323,7 @@ Skip this step unless the skill was invoked with the `crypt` argument. Read `ref
 
    For **unlock** (second machine): ask the user to download the key from their password manager to a temporary path, then `python3 scripts/setup_crypt.py --vault <vaultpath> --unlock <keyfile> --apply && rm <keyfile>`.
 
-3. **Verify:** `git -C <vaultpath> crypt status | head` shows `encrypted:` for the sensitive dirs. Do not auto-push; the push guidance from Step 4 applies.
+3. **Verify:** `git -C <vaultpath> crypt status | head` shows `encrypted:` for the sensitive dirs. For a new private repository created in Step 2.5, now run `git -C <vaultpath> push -u origin main`. For an existing repository, follow the confirmation rule in Step 4.
 
 ## Step 5: Install Plugins
 
@@ -306,20 +340,36 @@ Optional flags: `--pin-claudian <TAG>` and `--pin-git <TAG>` to lock to specific
 
 If the command exits nonzero, show the manual fallback steps from `references/plugin-gui-fallback.md` and continue (plugin install failure is not fatal for the hook and CLAUDE.md steps).
 
-## Step 5.5: Scheduled Sync (Gate)
+## Step 5.5: Scheduled Sync
 
-Ask one question: "Enable automatic vault sync (pull + commit + push) every 15 minutes? (yes / no / custom interval)". If no, skip. Otherwise:
+Use the scheduled-sync choice confirmed in Step 2. If disabled, skip. If enabled, first require a usable remote and upstream:
 
 ```bash
-python3 scripts/install_sync.py --vault <vaultpath> --interval <seconds>
+git -C <vaultpath> remote get-url origin
+git -C <vaultpath> rev-parse --abbrev-ref --symbolic-full-name '@{u}'
+```
+
+If either check fails, stop and fix the remote/upstream with the user's approval before installing sync. Do not install a silently ineffective scheduler.
+
+For the default 15-minute interval:
+
+```bash
+python3 scripts/install_sync.py --vault <vaultpath> --interval 900
 ```
 
 This configures both sync layers:
 
-- **obsidian-git settings** (`<vault>/.obsidian/plugins/obsidian-git/data.json`, backed up first) — auto commit/pull every 10 minutes while Obsidian is open. Note: re-running re-enforces the sync keys listed in the JSON output (`enforced_settings`), overwriting manual changes to those specific keys; all other settings are preserved.
+- **obsidian-git settings** (`<vault>/.obsidian/plugins/obsidian-git/data.json`, backed up first) — auto commit/pull on the chosen interval while Obsidian is open. Note: re-running re-enforces the sync keys listed in the JSON output (`enforced_settings`), overwriting manual changes to those specific keys; all other settings are preserved.
 - **launchd agent** (macOS) — `~/.claude/hooks/vault-sync.sh` on the chosen interval, covering headless writes like the SessionEnd hook. The script is safe by construction: it skips when there's no remote, when a rebase/merge is in progress, or when a git-crypt checkout is locked. On Linux/Windows the JSON output includes a `cron_line` to add with `crontab -e` instead.
 
-Requires a git remote to be useful — if the user chose local-only in Step 2, note that sync will silently no-op until they add a remote. Rollback: `python3 scripts/install_sync.py --uninstall`.
+Run one manual sync to verify the full path, then confirm the branch is clean and still has an upstream:
+
+```bash
+~/.claude/hooks/vault-sync.sh
+git -C <vaultpath> status --short --branch
+```
+
+For local-only, report that scheduled sync was intentionally skipped. Rollback: `python3 scripts/install_sync.py --uninstall`.
 
 ## Step 6: Install Hook and Register in Settings
 
@@ -428,21 +478,38 @@ Verification:
 - [ ] First real run appends an `(antigravity)` entry to `<vault>/sessions/<today>.md`
 - [ ] Re-running skips already-ingested conversation ids
 
+## Step 10.5: Open the New Vault in Obsidian
+
+On macOS, launch Obsidian:
+
+```bash
+open -a Obsidian
+```
+
+Then tell the user to complete these one-time UI actions:
+
+1. Choose **Open folder as vault**.
+2. Select `<parent>/<name>-vault`.
+3. Trust the vault and enable `realclaudian` and `obsidian-git` when prompted.
+
+Do not claim that setup registered the folder automatically. `obsidian://open?path=...` only works after Obsidian already knows the vault. On Linux or Windows, ask the user to launch Obsidian manually and follow the same three actions.
+
 ## Step 11: Verify and Record Setup Notes
 
 Print the following verification checklist for the user to work through:
 
 **Checklist:**
 
-- [ ] Shared vault exists at `<vault>` and has `index.md`
+- [ ] Shared vault exists at `<vault>` and has both `README.md` and `index.md`
+- [ ] The configured remote is the exact approved private repository, and `git -C <vault> rev-parse --abbrev-ref --symbolic-full-name '@{u}'` shows an upstream (remote setups only)
 - [ ] `VAULT` env variable in Claude hook script matches the vault path: check `~/.claude/hooks/session-end.sh` line 15 (Claude mode only)
 - [ ] `~/.claude/settings.json` has a `SessionEnd` entry with command `~/.claude/hooks/session-end.sh` (Claude mode only)
 - [ ] `<vault>/.obsidian/community-plugins.json` lists both `realclaudian` and `obsidian-git`
-- [ ] Open Obsidian → open the vault folder → trust and enable both plugins → confirm Claudian sidebar appears and Git commands are available in the command palette
+- [ ] Obsidian is open with `<vault>` registered; both plugins are trusted and enabled; the Claudian sidebar appears and Git commands are available in the command palette
 - [ ] Run a session/import for the selected client, then check `<vault>/sessions/<today>.md` — should contain a metadata stub and a client-tagged entry
 - [ ] `grep "memory-setup" ~/.claude/CLAUDE.md` returns the managed block (Claude mode only)
 - [ ] (`crypt` only) `git -C <vault> crypt status | head` shows `encrypted:` for the sensitive dirs, and the key file is in the password manager with the local copy deleted
-- [ ] (sync only) `launchctl list | grep vault-sync` shows the agent (macOS), and after the first interval `git -C <vault> log --oneline -1` shows a `chore(sync)` commit when there were pending changes
+- [ ] (sync only) `.obsidian/plugins/obsidian-git/data.json` has `autoSaveInterval` and `autoPullInterval` set to `15`, `launchctl list | grep vault-sync` shows the agent (macOS), and the manual sync completed without error
 
 **Setup log:**
 
@@ -492,12 +559,14 @@ The scheduled-sync step may also write to:
 - `~/.claude/hooks/vault-sync.sh` and `~/.claude/logs/vault-sync.log` — sync script and its log
 - `~/Library/LaunchAgents/com.<user>.vault-sync.plist` — launchd agent (macOS)
 
+Repository setup may also create and push the first commit to the exact private GitHub repository approved in Step 2. No public repository is created.
+
 ## Multi-Machine Quickstart
 
 Setting up a second machine against an existing encrypted vault:
 
 1. Install the plugin, then run `/memory:memory-setup crypt`.
-2. In Step 2, choose **B** and give the existing remote URL. **Skip Step 4's scaffold entirely** — on a machine where the vault path doesn't exist yet, scaffolding would create a fresh empty vault instead of erroring. Clone instead: `git clone <remote> <vault>`.
+2. In Step 2, choose **C** and give the existing remote URL. **Skip Step 4's scaffold entirely** — on a machine where the vault path doesn't exist yet, scaffolding would create a fresh empty vault instead of erroring. Clone instead: `git clone <remote> <vault>`.
 3. Step 4.5 detects `unlock` mode — download the key from your password manager, unlock, delete the key file.
 4. Continue with Steps 5–7 (plugins, hook) and 5.5 (sync) as normal. The scheduled sync keeps both machines converged via pull-rebase/commit/push.
 
