@@ -64,7 +64,7 @@ See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill comman
 | `apollo-rnd` | Research and development skills for Apollo R&D | 3 |
 | `apollo-gtm-systems` | Apollo's GTM Systems concierge. | 4 |
 | `apollo-legal` | End-to-end contract review for Apollo's Commercial Legal team. | 3 |
-| `apollo-people` | People Enablement skills for Apollo employees — performance reviews, career development, and growth tools | 7 |
+| `apollo-people` | People Enablement skills for Apollo employees — performance reviews, career development, and growth tools | 8 |
 | `apollo-marketing` | Apollo's internal brand copilot. | 1 |
 | `apollo-gtm-enablement` | Creates facilitator-ready enablement decks for Apollo's GTM teams (Sales, CS, Product). | 2 |
 | `apollo-risk` | Privacy and compliance skills for Apollo's Legal Risk team — DSR response drafting, privacy queue triage, and regulatory compliance workflows. | 1 |
