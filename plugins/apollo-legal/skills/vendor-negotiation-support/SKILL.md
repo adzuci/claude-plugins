@@ -50,6 +50,18 @@ Gather real evidence before answering. Prefer primary sources over memory:
   size, and other directional scale signals. Read `references/apollo-cli.md` and
   `references/apollo-data-negotiation.md` when Apollo data could improve leverage or tone.
 
+Check two places before negotiating:
+
+- **Slack, for vendor-named channels** — `#<vendor>`, `#ext-<vendor>*`, `#ext-*-<vendor>`,
+  `#tmp-<vendor>-negotiation`, `#ZC:*:<Vendor>`. They hold the live state of the relationship:
+  who owns it, what has already been asked, whether Legal is mid-thread. A `#ZC:` channel is
+  Zip-created, so one existing means a procurement record probably does too.
+- **Apollo CRM, for the vendor as an account** — an open opportunity or customer record means the
+  vendor buys from Apollo while Apollo buys from them: a 360 / two-way deal.
+
+Either check can surface the two-way signal. When one does, read `references/360-deals.md` before
+drafting any ask.
+
 Keep a source ledger in the output when confidence matters:
 
 ```text
@@ -79,7 +91,8 @@ Read `references/negotiation-playbook.md`, `references/apollo-data-negotiation.m
 `references/multiyear-strategy.md` before writing negotiation options. When the user asks
 about how hard to push on discount, term length, ramp-up pricing, use-or-lose credits, or
 whether to renew or reopen a competitive process, read `references/multiyear-strategy.md`
-first.
+first. When the vendor is also an Apollo customer or prospect, read `references/360-deals.md`
+and frame the deal as a partnership — help both deals land, never signature for signature.
 
 Always present options, not just one recommendation:
 
@@ -91,6 +104,31 @@ Always present options, not just one recommendation:
 
 Prefer crisp, respectful vendor-facing language. Make asks concrete enough to paste into an
 email or Slack thread.
+
+### When The Deal Is Stalled
+
+Time is the expensive thing, not the last few points of discount. Two unblocks to suggest
+whenever a deal or contract goes quiet:
+
+**Find a leadership warm contact.** Check whether Apollo leadership already knows someone at the
+vendor — exec-to-exec relationships, board or investor ties, former colleagues. Apollo people
+data can surface contacts (see `references/apollo-cli.md`). A warm intro from Apollo's CTO or CEO
+to the vendor's VP of Sales or Contracts & Renewals is often the fastest unblock. Spend that
+capital on process — legal sequencing, deal speed, named owners — plus one clean commercial ask.
+Not on nickel-and-diming.
+
+**Push for a legal-to-legal call.** Propose a live 30 minutes between both legal teams even when
+the vendor has not offered it. Redline ping-pong across MSA and DPA rounds burns weeks that one
+call resolves. Make the ask concrete: name Apollo's counsel, say their calendars are open, offer
+same-day turnaround, and parallel-track the documents instead of holding one hostage to the
+other. Fill in the real names and dates from context before sending:
+
+```text
+Rather than another redline round, can we put 30 minutes on the calendar with both legal teams
+this week? <Apollo counsel name> has open time <days> and we can turn changes around same day.
+We'd also like to parallel-track: release the MSA redlines now while DPA review continues, so
+the two documents aren't waiting on each other.
+```
 
 ## Mode: Email
 
@@ -189,6 +227,8 @@ For email mode, use:
 - Do not over-optimize price when the vendor is critical and the value story is strong.
 - Separate recurring annual commitment, total contract value, and cash due on signing.
 - Use Apollo data as directional negotiation context, not proof of vendor finances.
+- On two-way deals, never put signature contingency in writing and keep both deals in their own
+  formal approval paths (see `references/360-deals.md`).
 - Ask before using enrichment or other Apollo CLI operations that may consume credits.
 - Use exact dates, not "soon" or "next month", when renewal or signature deadlines matter.
 - Keep manager-facing messages short enough to paste into Slack.
