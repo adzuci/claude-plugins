@@ -1,6 +1,7 @@
 ---
 name: product-ship-post
-description: Generate product ship room posts for Slack announcements. Activate when user asks to write a ship post, product ship room post, release notes, or feature launch announcement.
+description: Generate product ship room posts for Slack announcements. Activate when user asks to write a ship post or feature launch announcement.
+argument-hint: '[--length WORDS]'
 ---
 
 # Product Ship Post Generator
@@ -15,6 +16,27 @@ Follow user's writing style for:
 - Sentence length and complexity
 - Technical depth
 - Emoji usage
+
+## Length
+
+Default to 120-200 words for the complete post, sized to customer impact:
+
+- 120-140 words for narrow or incremental improvements
+- 140-170 words for meaningful workflow improvements
+- 170-200 words for broad impact or repeated customer demand
+
+Do not inflate the post to imply more impact than the evidence supports. Count
+every whitespace-separated item, including the title, headings, emoji codes,
+links, channel names, and @mentions. Use a word-count tool when available.
+Otherwise, count best-effort and do not claim the total was verified exactly.
+
+When the user passes `/apollo-eng:product-ship-post --length WORDS`, treat that
+positive integer as the hard maximum instead of the default range. Apply it even
+when following a custom example. If required links and mentions cannot fit, ask
+for a higher value.
+
+- Return the post without an explanatory preamble. After drafting, count the
+  words and revise until it is within the active range or limit.
 
 ## Step 1: Gather Resources
 
@@ -137,9 +159,14 @@ Do NOT write the post until you deeply understand the feature AND have clear pro
 
 **MUST follow these rules exactly:**
 
-- NO mdashes (--) - use hyphens or rewrite the sentence
-- NO curly quotes (" ") - use straight quotes (" ")
+- NO em dashes or double-hyphen substitutes - use commas, periods, or rewrite
+  the sentence
+- Use only straight quotation marks and apostrophes
 - NO overly formal language - write like a human, not a press release
+- Avoid canned contrasts such as "not just X, but Y," generic superlatives, and
+  self-congratulatory launch language
+- Remove generic setup, repeated claims, filler, and headings that do not help
+  the reader act
 - Keep bullet points concise and scannable
 - Use direct, active voice
 - Use Slack emoji codes (e.g., :rocket:, :sparkles:, :movie_camera:)
@@ -162,13 +189,7 @@ Follow this structure (adapt sections as needed):
 :clock1: *What's next* (optional - only if there are clear next steps)
 [Bullet points of planned follow-ups]
 
-:apollo_logo_spin_sunbeam: *Team*
-Product: @names
-Design: @names
-EM: @names
-Engineering: @names
-QA: @names (if applicable)
-Special thanks: @names (if applicable)
+:teamwork_hands: *Team:* @engineers *(Eng)* @qa *(QA)* @product *(PM)* @em *(EM)* @reviewers *(Reviewers)*
 
 For visibility: @names @groups
 
@@ -178,17 +199,27 @@ Share them in #[relevant-channel]!
 
 ### Section Guidelines
 
-**Title:** Use :rocket: emoji. Keep it punchy. Add a short tagline after the feature name.
+**Title:** Use :rocket: emoji. Keep it punchy. Add a short tagline after the
+feature name.
 
-**Intro:** 2-3 sentences. MUST include product context: the problem being solved, the opportunity, or data showing why this matters. Don't just say "we shipped X" - explain WHY it matters.
+**Intro:** 2-3 sentences. MUST include product context: the problem being solved,
+the opportunity, or data showing why this matters. Don't just say "we shipped
+X" - explain WHY it matters.
 
-**What's new:** Focus on user-facing value, not technical details. Use simple language. Each bullet should be scannable.
+**What's new:** Focus on user-facing value, not technical details. Use simple
+language. Each bullet should be scannable.
 
-**Demo:** Just the Loom link with :movie_camera: emoji.
+**Demo:** Include the Loom link with the :movie_camera: header. Do not replace
+the Demo section with a generic resource link.
 
-**What's next:** Only include if there are concrete next steps. Skip if uncertain.
+**What's next:** Only include if there are concrete next steps. Skip if
+uncertain.
 
-**Team:** List in order: Product, Design, EM, Engineering, QA, Special thanks. Use @mentions.
+**Team:** Keep contributors on one line. Put each role after its mentions:
+`@names *(Eng)* @names *(QA)* @names *(PM)* @names *(EM)* @names *(Reviewers)*`.
+Separate multiple names with commas inside a role. Group all reviewers before one
+`*(Reviewers)*` label. Omit roles that have no contributors. `:teamwork_hands:`
+is an Apollo workspace custom emoji.
 
 **For visibility:** Tag relevant stakeholders and groups.
 
@@ -206,10 +237,11 @@ Add these only if relevant:
 
 Before presenting the draft, verify:
 
+- [ ] Estimated word count is within the active range (120-200 by default) or requested limit
+- [ ] Every sentence or section adds distinct, specific value
 - [ ] **Intro includes product context** - explains WHY (problem, opportunity, or impact data), not just WHAT shipped
-- [ ] No mdashes used anywhere
+- [ ] No em dashes or double-hyphen substitutes used anywhere
 - [ ] No curly quotes used anywhere
-- [ ] All sections have appropriate emoji headers
 - [ ] Bullet points are concise and scannable
 - [ ] Technical jargon is minimal or explained
 - [ ] Team section has all contributors properly tagged
@@ -221,3 +253,6 @@ Before presenting the draft, verify:
 After presenting the draft and making any requested edits, remind the user:
 
 "Use `/copy` to copy the post to your clipboard. Then in Slack: paste, select all (Cmd+A), and press Cmd+Shift+F to apply formatting."
+
+Send this reminder separately from the post. Do not include it in the word count
+or copied post.
