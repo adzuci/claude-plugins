@@ -13,6 +13,7 @@ const {
   reconcileTeamsWithNotion,
   renderNotionReconcile,
   renderNotionDiscovery,
+  parseExcludeList,
 } = require(scriptPath);
 
 function makeFixture() {
@@ -302,9 +303,22 @@ test('renderNotionDiscovery explains it will not guess mappings', () => {
   assert.match(output, /--key-notion/);
 });
 
-test('notion mode requires an export before touching the YAML', () => {
+test('notion mode requires rows via --notion-json or stdin', () => {
   const { root, teamsPath } = makeFixture();
-  assert.throws(() => run(['notion', '--teams', teamsPath], root), /requires --notion-json/);
+  // No --notion-json and empty stdin → clear error naming both input paths.
+  assert.throws(
+    () => execFileSync('node', [scriptPath, 'notion', '--teams', teamsPath], { cwd: root, encoding: 'utf8', input: '' }),
+    /pipe the export JSON via stdin/,
+  );
+});
+
+test('notion mode rejects --write (read-only)', () => {
+  const { root, teamsPath } = makeFixture();
+  const notionPath = writeNotionFixture(root);
+  assert.throws(
+    () => run(['notion', '--repo-root', root, '--teams', teamsPath, '--notion-json', notionPath, '--write'], root),
+    /read-only/,
+  );
 });
 
 test('notion mode stops for setup when no key is given', () => {
@@ -353,6 +367,95 @@ test('notion mode rejects an unknown key property', () => {
     () => run(['notion', '--repo-root', root, '--teams', teamsPath, '--notion-json', notionPath, '--key-notion', 'Nope'], root),
     /not found in export/,
   );
+});
+
+test('parseExcludeList splits comma-separated and repeated values, normalized like the join key', () => {
+  const set = parseExcludeList(['db-migrations, Call-Commander', 'FRAUD'], false);
+  // normalizeCompareKey (the join-key normalizer) lowercases and trims.
+  assert.ok(set.has('db-migrations'));
+  assert.ok(set.has('call-commander'));
+  assert.ok(set.has('fraud'));
+  assert.equal(set.size, 3);
+});
+
+test('excluded team absent from Notion is intentionally-not-synced, not a create candidate', () => {
+  const teams = [
+    { name: 'inbound', team_slack: '#xfn-team-inbound' },
+    { name: 'db-migrations', team_slack: '' },
+  ];
+  // Notion only has inbound; db-migrations has no page and is on the exclude list.
+  const notionRows = normalizeNotionRows({
+    results: [{ id: 'a', properties: { Team: { type: 'title', title: [{ plain_text: 'Inbound' }] } } }],
+  });
+  const excluded = parseExcludeList('db-migrations', false);
+  const result = reconcileTeamsWithNotion(teams, notionRows, {
+    keyYaml: 'name',
+    keyNotion: 'Team',
+    maps: [],
+    exact: false,
+    excluded,
+  });
+  const dbEntry = result.yamlOnly.find((e) => e.key === 'db-migrations');
+  assert.ok(dbEntry && dbEntry.excluded === true);
+
+  const output = renderNotionReconcile(result, { keyYaml: 'name', keyNotion: 'Team', maps: [], exact: false });
+  const notSynced = output.slice(output.indexOf('## Intentionally Not Synced'));
+  assert.match(notSynced.slice(0, notSynced.indexOf('## Excluded Teams')), /db-migrations/);
+  // db-migrations must NOT appear as a create candidate.
+  const createSection = output.slice(output.indexOf('## In YAML, Not Found in Notion (Create)'), output.indexOf('## Intentionally Not Synced'));
+  assert.doesNotMatch(createSection, /db-migrations/);
+});
+
+test('excluded team present in Notion produces a possible-cleanup note', () => {
+  const teams = [{ name: 'inbound', team_slack: '#xfn-team-inbound' }];
+  const notionRows = normalizeNotionRows({
+    results: [{ id: 'a', url: 'https://n/a', properties: { Team: { type: 'title', title: [{ plain_text: 'Inbound' }] } } }],
+  });
+  const excluded = parseExcludeList('inbound', false);
+  const result = reconcileTeamsWithNotion(teams, notionRows, {
+    keyYaml: 'name',
+    keyNotion: 'Team',
+    maps: [],
+    exact: false,
+    excluded,
+  });
+  assert.ok(result.matched[0].excluded === true);
+  const output = renderNotionReconcile(result, { keyYaml: 'name', keyNotion: 'Team', maps: [], exact: false });
+  const cleanup = output.slice(output.indexOf('## Excluded Teams With a Notion Page'), output.indexOf('## In Notion, Not Found in YAML'));
+  assert.match(cleanup, /inbound/);
+  assert.match(cleanup, /possible cleanup|archived/i);
+});
+
+test('renderNotionReconcile flags orphaned Notion rows for human review, never auto-deleted', () => {
+  const teams = [{ name: 'inbound', team_slack: '#xfn-team-inbound' }];
+  const notionRows = normalizeNotionRows({
+    results: [
+      { id: 'a', url: 'https://n/a', properties: { Team: { type: 'title', title: [{ plain_text: 'Inbound' }] } } },
+      { id: 'b', url: 'https://n/b', properties: { Team: { type: 'title', title: [{ plain_text: 'ghost' }] } } },
+    ],
+  });
+  const result = reconcileTeamsWithNotion(teams, notionRows, { keyYaml: 'name', keyNotion: 'Team', maps: [], exact: false });
+  const output = renderNotionReconcile(result, { keyYaml: 'name', keyNotion: 'Team', maps: [], exact: false });
+  const orphan = output.slice(output.indexOf('## In Notion, Not Found in YAML'));
+  assert.match(orphan, /Orphaned/);
+  assert.match(orphan, /Never auto-deleted/);
+  assert.match(orphan, /ghost \(https:\/\/n\/b\)/);
+});
+
+test('notion mode reads rows from stdin when --notion-json is omitted', () => {
+  const { root, teamsPath } = makeFixture();
+  const stdinJson = JSON.stringify([
+    { id: 'a', properties: { Team: { type: 'title', title: [{ plain_text: 'Inbound' }] }, Slack: { type: 'rich_text', rich_text: [{ plain_text: '#inbound' }] } } },
+    { id: 'b', properties: { Team: { type: 'title', title: [{ plain_text: 'ghost-team' }] } } },
+  ]);
+  const output = execFileSync(
+    'node',
+    [scriptPath, 'notion', '--repo-root', root, '--teams', teamsPath, '--key-notion', 'Team', '--map', 'team_slack=Slack'],
+    { cwd: root, encoding: 'utf8', input: stdinJson, timeout: 30_000 },
+  );
+  assert.match(output, /Reconciliation \(Draft — Read Only\)/);
+  assert.match(output, /team_slack: YAML="#xfn-team-inbound" vs Notion\[Slack\]="#inbound"/);
+  assert.match(output, /ghost-team/);
 });
 
 test('staleKnownSignals flags entries older than the threshold', () => {

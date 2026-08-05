@@ -1590,8 +1590,53 @@ function parseMapExpression(expression) {
   return { yaml: yamlField, notion: notionProperty };
 }
 
+// Parses a --exclude value (repeatable and/or comma-separated) into a Set of
+// keys normalized the same way the join key is (normalizeCompareKey), so an
+// excluded team lines up with its yamlByKey entry. Teams on this list that have
+// no Notion page are intentional opt-outs (e.g. db-migrations) — they are not
+// reported as "needs creating".
+function parseExcludeList(value, exact) {
+  const excluded = new Set();
+  for (const entry of asArray(value)) {
+    if (typeof entry !== 'string') continue;
+    for (const name of entry.split(',')) {
+      const trimmed = name.trim();
+      if (trimmed) excluded.add(normalizeCompareKey(trimmed, exact));
+    }
+  }
+  return excluded;
+}
+
+// Reads Notion rows JSON from stdin when --notion-json is omitted. Accepts the
+// raw Notion query response ({ results: [...] }) or a flat array (normalizeNotionRows
+// handles both shapes).
+function readNotionJsonFromStdin() {
+  if (process.stdin.isTTY) {
+    throw new Error(
+      'notion mode needs Notion rows: pass --notion-json <path> or pipe the export JSON via stdin.',
+    );
+  }
+  let input = '';
+  try {
+    input = fs.readFileSync(0, 'utf8');
+  } catch {
+    input = '';
+  }
+  if (!input.trim()) {
+    throw new Error(
+      'notion mode needs Notion rows: pass --notion-json <path> or pipe the export JSON via stdin. Export the Notion Teams DB via the Notion MCP (retrieve the data source, then query its pages).',
+    );
+  }
+  try {
+    return JSON.parse(input);
+  } catch (error) {
+    throw new Error(`Could not parse Notion JSON from stdin: ${error.message}`);
+  }
+}
+
 function reconcileTeamsWithNotion(teams, notionRows, options) {
   const { keyYaml, keyNotion, maps, exact } = options;
+  const excluded = options.excluded instanceof Set ? options.excluded : new Set();
   const yamlByKey = new Map();
   const yamlUnkeyed = [];
   for (const team of teams) {
@@ -1618,7 +1663,7 @@ function reconcileTeamsWithNotion(teams, notionRows, options) {
   const yamlOnly = [];
   for (const [key, { rawKey, team }] of yamlByKey) {
     if (!notionByKey.has(key)) {
-      yamlOnly.push({ key: rawKey, team });
+      yamlOnly.push({ key: rawKey, team, excluded: excluded.has(key) });
       continue;
     }
     const { row } = notionByKey.get(key);
@@ -1638,7 +1683,7 @@ function reconcileTeamsWithNotion(teams, notionRows, options) {
         });
       }
     }
-    matched.push({ key: rawKey, team, row, diffs });
+    matched.push({ key: rawKey, team, row, diffs, excluded: excluded.has(key) });
   }
 
   const notionOnly = [];
@@ -1688,6 +1733,9 @@ function renderNotionDiscovery(teams, notionRows, notionProps, keyYaml) {
 function renderNotionReconcile(result, options) {
   const { keyYaml, keyNotion, maps, exact } = options;
   const matchedWithDiffs = result.matched.filter((entry) => entry.diffs.length > 0);
+  const toCreate = result.yamlOnly.filter((entry) => !entry.excluded);
+  const intentionallyNotSynced = result.yamlOnly.filter((entry) => entry.excluded);
+  const excludedWithPage = result.matched.filter((entry) => entry.excluded);
   const lines = [
     '# Notion Teams DB Reconciliation (Draft — Read Only)',
     '',
@@ -1696,12 +1744,14 @@ function renderNotionReconcile(result, options) {
     '',
     '## Summary',
     '',
-    `- Matched teams: ${result.matched.length} (${matchedWithDiffs.length} with field differences)`,
-    `- In YAML, missing from Notion: ${result.yamlOnly.length}`,
-    `- In Notion, missing from YAML: ${result.notionOnly.length}`,
+    `- Matched teams: ${result.matched.length} (${matchedWithDiffs.length} with field differences to update)`,
+    `- To create in Notion (in YAML, not in Notion, not excluded): ${toCreate.length}`,
+    `- Intentionally not synced (excluded, no Notion page): ${intentionallyNotSynced.length}`,
+    `- Orphaned in Notion (in Notion, not in YAML): ${result.notionOnly.length}`,
+    `- Excluded teams that still have a Notion page (possible cleanup): ${excludedWithPage.length}`,
     `- Mapped fields compared: ${maps.length ? maps.map((m) => `${m.yaml}→${m.notion}`).join(', ') : 'none (pass --map to compare fields)'}`,
     '',
-    '## Field Differences on Matched Teams',
+    '## Field Differences on Matched Teams (Update — YAML Wins)',
     '',
   ];
 
@@ -1710,6 +1760,7 @@ function renderNotionReconcile(result, options) {
   } else if (!matchedWithDiffs.length) {
     lines.push('- None. All mapped fields agree on matched teams.', '');
   } else {
+    lines.push('These are UPDATE candidates: YAML is the source of truth, so update the Notion page to match. Only mapped fields are compared — nothing is guessed.', '');
     for (const entry of matchedWithDiffs) {
       lines.push(`- ${entry.key}`);
       for (const diff of entry.diffs) {
@@ -1720,18 +1771,34 @@ function renderNotionReconcile(result, options) {
     lines.push('');
   }
 
-  lines.push('## In YAML, Not Found in Notion', '');
+  lines.push('## In YAML, Not Found in Notion (Create)', '');
   lines.push(
-    ...(result.yamlOnly.length
-      ? result.yamlOnly.map((entry) => `- ${entry.key} (YAML team; consider adding/reconciling in Notion)`)
+    ...(toCreate.length
+      ? toCreate.map((entry) => `- ${entry.key} (YAML team with no Notion page; create/reconcile it in Notion)`)
       : ['- None.']),
     '',
-    '## In Notion, Not Found in YAML',
+    '## Intentionally Not Synced (No Notion Page)',
+    '',
+  );
+  lines.push(
+    ...(intentionallyNotSynced.length
+      ? intentionallyNotSynced.map((entry) => `- ${entry.key} (on the --exclude list; intentionally has no Notion page — not a create candidate)`)
+      : ['- None. No excluded team is missing from Notion.']),
+    '',
+    '## Excluded Teams With a Notion Page (Possible Cleanup)',
+    '',
+  );
+  lines.push(
+    ...(excludedWithPage.length
+      ? excludedWithPage.map((entry) => `- ${entry.key}${entry.row && entry.row.url ? ` (${entry.row.url})` : ''} (on the --exclude list but a Notion page exists; confirm whether the page should be archived)`)
+      : ['- None.']),
+    '',
+    '## In Notion, Not Found in YAML (Orphaned — Human Review, Never Auto-Deleted)',
     '',
   );
   lines.push(
     ...(result.notionOnly.length
-      ? result.notionOnly.map((entry) => `- ${entry.key}${entry.row.url ? ` (${entry.row.url})` : ''} (Notion row; needs human decision — stale row, rename, or missing from source of truth)`)
+      ? result.notionOnly.map((entry) => `- ${entry.key}${entry.row.url ? ` (${entry.row.url})` : ''} (orphaned Notion row; needs human decision — stale row, rename, or missing from source of truth. Never auto-deleted.)`)
       : ['- None.']),
     '',
   );
@@ -1757,16 +1824,22 @@ function renderNotionReconcile(result, options) {
 }
 
 function commandNotion(args) {
-  // Validate inputs before the ruby-backed YAML read so a missing/unreadable
-  // export fails fast with a clear message.
-  const notionJsonPath = args['notion-json'];
-  if (!notionJsonPath || notionJsonPath === true) {
-    throw new Error(
-      'notion mode requires --notion-json <path>. Export the Notion Teams DB via the Notion MCP (retrieve the data source, then query its pages) and save the JSON, e.g. /tmp/notion-teams.json.',
-    );
+  // Notion mode is read-only: it never edits the YAML or Notion.
+  if (args.write) {
+    throw new Error('notion mode is read-only; it never writes to the YAML or Notion. Remove --write.');
   }
-  const raw = readJsonIfPresent(path.resolve(notionJsonPath), null);
-  if (raw === null) throw new Error(`Could not read Notion export at ${notionJsonPath}.`);
+
+  // Validate inputs before the ruby-backed YAML read so an unreadable export
+  // fails fast with a clear message. Rows come from --notion-json <path>, or
+  // from stdin when the flag is omitted.
+  const notionJsonPath = args['notion-json'];
+  let raw;
+  if (notionJsonPath && notionJsonPath !== true) {
+    raw = readJsonIfPresent(path.resolve(notionJsonPath), null);
+    if (raw === null) throw new Error(`Could not read Notion export at ${notionJsonPath}.`);
+  } else {
+    raw = readNotionJsonFromStdin();
+  }
 
   const repoRoot = path.resolve(args['repo-root'] || process.cwd());
   const teamsPath = path.resolve(repoRoot, args.teams || 'apollo-dev-teams.yml');
@@ -1777,6 +1850,7 @@ function commandNotion(args) {
   const keyYaml = (typeof args['key-yaml'] === 'string' && args['key-yaml']) || 'name';
   const keyNotion = typeof args['key-notion'] === 'string' ? args['key-notion'] : undefined;
   const exact = Boolean(args.exact);
+  const excluded = parseExcludeList(args.exclude, exact);
 
   if (!keyNotion) {
     process.stdout.write(renderNotionDiscovery(teams, notionRows, notionProps, keyYaml));
@@ -1795,7 +1869,7 @@ function commandNotion(args) {
     }
   }
 
-  const result = reconcileTeamsWithNotion(teams, notionRows, { keyYaml, keyNotion, maps, exact });
+  const result = reconcileTeamsWithNotion(teams, notionRows, { keyYaml, keyNotion, maps, exact, excluded });
   if (args.json) {
     process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
     return;
@@ -1834,6 +1908,7 @@ module.exports = {
   normalizeNotionRows,
   normalizeNotionValue,
   parseArgs,
+  parseExcludeList,
   parseMapExpression,
   reconcileTeamsWithNotion,
   renderNotionDiscovery,
