@@ -19,6 +19,26 @@ jobs:
       pull-requests: write
     steps:
       - uses: googleapis/release-please-action@v4
+        id: release
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+
+      # github-actions[bot] authors this PR, so it can't approve its own PR (GitHub
+      # rejects self-review regardless of token). Use a separate bot identity.
+      - name: Auto-approve release PR
+        if: steps.release.outputs.prs_created == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.APOLLOIO_TOKEN }}
+        run: |
+          pr_number=$(jq -r '.number' <<< '${{ steps.release.outputs.pr }}')
+          gh pr review "$pr_number" --repo "${{ github.repository }}" \
+            --approve --body "Auto-approved: release-please version bump (manifest/plugin.json/CHANGELOG only, no logic changes)."
+
+      - name: Enable auto-merge on release PR
+        if: steps.release.outputs.prs_created == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pr_number=$(jq -r '.number' <<< '${{ steps.release.outputs.pr }}')
+          gh pr merge "$pr_number" --repo "${{ github.repository }}" --squash --auto
