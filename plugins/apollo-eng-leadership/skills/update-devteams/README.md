@@ -59,9 +59,36 @@ node "$SCRIPT" update \
   --write
 ```
 
+## Notion Mode
+
+Read-only reconciliation of `apollo-dev-teams.yml` (source of truth) against the Notion Teams DB. It reports drift and never edits the YAML or Notion.
+
+First export the Notion Teams DB via the Notion MCP (retrieve the data source, then query its pages) and save the JSON, e.g. `/tmp/notion-teams.json`. Then discover the schema — the tool lists Notion properties and YAML fields and stops, so it never guesses the mapping:
+
+```bash
+SCRIPT=$(find ~/.claude ~/.codex "$PWD" -maxdepth 10 -path '*/update-devteams/scripts/update-devteams.js' -print -quit 2>/dev/null)
+node "$SCRIPT" notion --repo-root . --teams apollo-dev-teams.yml --notion-json /tmp/notion-teams.json
+```
+
+Then reconcile with an explicit identifier and field mappings (case-insensitive match by default; add `--exact` for strict):
+
+```bash
+SCRIPT=$(find ~/.claude ~/.codex "$PWD" -maxdepth 10 -path '*/update-devteams/scripts/update-devteams.js' -print -quit 2>/dev/null)
+node "$SCRIPT" notion \
+  --repo-root . \
+  --teams apollo-dev-teams.yml \
+  --notion-json /tmp/notion-teams.json \
+  --key-notion "Team" \
+  --map name="Team" \
+  --map team_slack="Slack Channel"
+```
+
+The report lists matched-team field differences, teams missing from Notion, and Notion rows missing from the YAML. Present the findings as concise draft changes, confirm with the caller, then apply confirmed YAML fixes with update mode. Notion-side edits are made by a human. Add `--json` for the raw reconciliation.
+
 ## Safety
 
 - Do not delete or rename teams when ownership is ambiguous.
+- Notion mode is read-only and never guesses the join key, field mappings, or unmatched rows — confirm draft changes before applying anything.
 - Verify replacement Slack channels and on-call usergroups before writing.
 - Keep metadata string fixes separate from ownership transfers.
 - Treat generated ownership outputs as generated unless the repo workflow says otherwise.

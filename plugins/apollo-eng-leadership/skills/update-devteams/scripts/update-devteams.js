@@ -1486,6 +1486,323 @@ function commandUpdate(args) {
   for (const summary of summaries) process.stdout.write(`- ${summary}\n`);
 }
 
+// --- Notion reconciliation (read-only) ---------------------------------------
+// The Teams DB in Notion is a secondary view; apollo-dev-teams.yml is the source
+// of truth. This mode compares the two and reports drift WITHOUT guessing. The
+// caller supplies the Notion export (fetched via the Notion MCP), the identifier
+// property, and any field mappings. Nothing is inferred: unmapped fields and
+// unmatched rows are reported for a human to decide, never auto-reconciled.
+
+// Notion comparison intentionally covers only stable, human-readable metadata
+// fields. Ownership fields (packs_owned/files_owned/routes_owned/pagerduty) are
+// excluded here — they are not maintained in the Teams DB and transferring them
+// requires the confirmed-owner workflow in update mode.
+const NOTION_COMPARABLE_YAML_FIELDS = VALUE_FIELDS.slice();
+
+function normalizeNotionValue(prop) {
+  if (prop === undefined || prop === null) return '';
+  if (typeof prop === 'string') return prop.trim();
+  if (typeof prop === 'number') return String(prop);
+  if (typeof prop === 'boolean') return prop ? 'true' : 'false';
+  const type = prop.type;
+  switch (type) {
+    case 'title':
+    case 'rich_text':
+      return (prop[type] || []).map((t) => t.plain_text || '').join('').trim();
+    case 'select':
+      return prop.select ? prop.select.name : '';
+    case 'status':
+      return prop.status ? prop.status.name : '';
+    case 'multi_select':
+      return (prop.multi_select || []).map((s) => s.name).join(', ');
+    case 'people':
+      return (prop.people || []).map((p) => p.name || p.id || '').join(', ');
+    case 'email':
+      return prop.email || '';
+    case 'phone_number':
+      return prop.phone_number || '';
+    case 'url':
+      return prop.url || '';
+    case 'number':
+      return prop.number === null || prop.number === undefined ? '' : String(prop.number);
+    case 'checkbox':
+      return prop.checkbox ? 'true' : 'false';
+    case 'date':
+      return prop.date ? prop.date.start || '' : '';
+    case 'relation':
+      return (prop.relation || []).map((r) => r.id).join(', ');
+    case 'formula':
+      return prop.formula ? normalizeNotionValue(prop.formula) : '';
+    case 'rollup': {
+      const rollup = prop.rollup;
+      if (!rollup) return '';
+      if (rollup.type === 'array') return (rollup.array || []).map(normalizeNotionValue).join(', ');
+      return normalizeNotionValue(rollup);
+    }
+    default:
+      // Formula/rollup scalar subtypes, e.g. { type: 'string', string: 'x' }.
+      if (type && prop[type] !== undefined) {
+        const value = prop[type];
+        if (value === null || value === undefined) return '';
+        if (typeof value === 'object') return '';
+        return String(value);
+      }
+      return '';
+  }
+}
+
+function normalizeNotionRows(raw) {
+  const rows = Array.isArray(raw) ? raw : Array.isArray(raw?.results) ? raw.results : [];
+  return rows.map((row) => {
+    if (row && row.properties && typeof row.properties === 'object') {
+      const props = {};
+      for (const [key, value] of Object.entries(row.properties)) props[key] = normalizeNotionValue(value);
+      return { id: row.id || '', url: row.url || '', props };
+    }
+    const props = {};
+    for (const [key, value] of Object.entries(row || {})) {
+      if (key === 'id' || key === 'url') continue;
+      props[key] = normalizeNotionValue(value);
+    }
+    return { id: row?.id || '', url: row?.url || '', props };
+  });
+}
+
+function collectNotionPropertyNames(notionRows) {
+  const names = new Set();
+  for (const row of notionRows) {
+    for (const key of Object.keys(row.props)) names.add(key);
+  }
+  return Array.from(names).sort();
+}
+
+function normalizeCompareKey(value, exact) {
+  const raw = value === undefined || value === null ? '' : String(value).trim();
+  return exact ? raw : raw.toLowerCase();
+}
+
+function parseMapExpression(expression) {
+  const eqIndex = String(expression).indexOf('=');
+  if (eqIndex < 0) throw new Error(`Invalid --map expression "${expression}". Use yamlField=NotionProperty.`);
+  const yamlField = expression.slice(0, eqIndex).trim();
+  const notionProperty = expression.slice(eqIndex + 1).trim();
+  if (!yamlField || !notionProperty) throw new Error('--map requires a non-empty yamlField and NotionProperty.');
+  return { yaml: yamlField, notion: notionProperty };
+}
+
+function reconcileTeamsWithNotion(teams, notionRows, options) {
+  const { keyYaml, keyNotion, maps, exact } = options;
+  const yamlByKey = new Map();
+  const yamlUnkeyed = [];
+  for (const team of teams) {
+    const rawKey = team[keyYaml];
+    if (normalizedBlank(rawKey)) {
+      yamlUnkeyed.push({ team });
+      continue;
+    }
+    yamlByKey.set(normalizeCompareKey(rawKey, exact), { rawKey: String(rawKey), team });
+  }
+
+  const notionByKey = new Map();
+  const notionUnkeyed = [];
+  for (const row of notionRows) {
+    const rawKey = row.props[keyNotion];
+    if (normalizedBlank(rawKey)) {
+      notionUnkeyed.push({ row });
+      continue;
+    }
+    notionByKey.set(normalizeCompareKey(rawKey, exact), { rawKey: String(rawKey), row });
+  }
+
+  const matched = [];
+  const yamlOnly = [];
+  for (const [key, { rawKey, team }] of yamlByKey) {
+    if (!notionByKey.has(key)) {
+      yamlOnly.push({ key: rawKey, team });
+      continue;
+    }
+    const { row } = notionByKey.get(key);
+    const diffs = [];
+    for (const map of maps) {
+      const yamlValueRaw = team[map.yaml];
+      const notionValueRaw = row.props[map.notion];
+      const yamlValue = yamlValueRaw === undefined || yamlValueRaw === null ? '' : String(yamlValueRaw).trim();
+      const notionValue = notionValueRaw === undefined || notionValueRaw === null ? '' : String(notionValueRaw).trim();
+      if (yamlValue !== notionValue) {
+        diffs.push({
+          field: map.yaml,
+          notionProperty: map.notion,
+          yaml: yamlValue,
+          notion: notionValue,
+          notionPropertyMissing: notionValueRaw === undefined,
+        });
+      }
+    }
+    matched.push({ key: rawKey, team, row, diffs });
+  }
+
+  const notionOnly = [];
+  for (const [key, { rawKey, row }] of notionByKey) {
+    if (!yamlByKey.has(key)) notionOnly.push({ key: rawKey, row });
+  }
+
+  return { matched, yamlOnly, notionOnly, yamlUnkeyed, notionUnkeyed };
+}
+
+function renderNotionDiscovery(teams, notionRows, notionProps, keyYaml) {
+  const yamlFields = NOTION_COMPARABLE_YAML_FIELDS.filter((field) => teams.some((team) => team[field] !== undefined));
+  const lines = [
+    '# Notion Teams DB Reconciliation — Setup Needed',
+    '',
+    `Loaded ${teams.length} YAML team(s) and ${notionRows.length} Notion row(s).`,
+    '',
+    'No comparison was run: pass --key-notion so the tool knows which Notion property identifies a team.',
+    'This is intentional — the skill does not guess how the two systems line up.',
+    '',
+    '## Notion Properties Detected',
+    '',
+    ...(notionProps.length ? notionProps.map((name) => `- ${name}`) : ['- (none — is the export empty or in an unexpected shape?)']),
+    '',
+    '## YAML Fields Available to Compare',
+    '',
+    `- Identifier field in use (--key-yaml): ${keyYaml}`,
+    ...yamlFields.map((field) => `- ${field}`),
+    '',
+    '## Next Step',
+    '',
+    '```bash',
+    'node "$SCRIPT" notion \\',
+    '  --repo-root . --teams apollo-dev-teams.yml \\',
+    '  --notion-json /tmp/notion-teams.json \\',
+    '  --key-notion "<NotionIdentifierProperty>" \\',
+    '  --map name="<NotionNameProperty>" \\',
+    '  --map team_slack="<NotionSlackProperty>"',
+    '```',
+    '',
+    'Only mapped fields are compared. Confirm each mapping with the caller before relying on it.',
+    '',
+  ];
+  return `${lines.join('\n')}\n`;
+}
+
+function renderNotionReconcile(result, options) {
+  const { keyYaml, keyNotion, maps, exact } = options;
+  const matchedWithDiffs = result.matched.filter((entry) => entry.diffs.length > 0);
+  const lines = [
+    '# Notion Teams DB Reconciliation (Draft — Read Only)',
+    '',
+    'Source of truth: apollo-dev-teams.yml. Notion Teams DB is the secondary view.',
+    `Join key: YAML \`${keyYaml}\` ↔ Notion \`${keyNotion}\` (${exact ? 'exact match' : 'case-insensitive match'}).`,
+    '',
+    '## Summary',
+    '',
+    `- Matched teams: ${result.matched.length} (${matchedWithDiffs.length} with field differences)`,
+    `- In YAML, missing from Notion: ${result.yamlOnly.length}`,
+    `- In Notion, missing from YAML: ${result.notionOnly.length}`,
+    `- Mapped fields compared: ${maps.length ? maps.map((m) => `${m.yaml}→${m.notion}`).join(', ') : 'none (pass --map to compare fields)'}`,
+    '',
+    '## Field Differences on Matched Teams',
+    '',
+  ];
+
+  if (!maps.length) {
+    lines.push('- No field mappings provided; only membership (present/absent) was compared.', '');
+  } else if (!matchedWithDiffs.length) {
+    lines.push('- None. All mapped fields agree on matched teams.', '');
+  } else {
+    for (const entry of matchedWithDiffs) {
+      lines.push(`- ${entry.key}`);
+      for (const diff of entry.diffs) {
+        const notionShown = diff.notionPropertyMissing ? '(property missing)' : `"${diff.notion}"`;
+        lines.push(`  - ${diff.field}: YAML="${diff.yaml}" vs Notion[${diff.notionProperty}]=${notionShown}`);
+      }
+    }
+    lines.push('');
+  }
+
+  lines.push('## In YAML, Not Found in Notion', '');
+  lines.push(
+    ...(result.yamlOnly.length
+      ? result.yamlOnly.map((entry) => `- ${entry.key} (YAML team; consider adding/reconciling in Notion)`)
+      : ['- None.']),
+    '',
+    '## In Notion, Not Found in YAML',
+    '',
+  );
+  lines.push(
+    ...(result.notionOnly.length
+      ? result.notionOnly.map((entry) => `- ${entry.key}${entry.row.url ? ` (${entry.row.url})` : ''} (Notion row; needs human decision — stale row, rename, or missing from source of truth)`)
+      : ['- None.']),
+    '',
+  );
+
+  if (result.yamlUnkeyed.length || result.notionUnkeyed.length) {
+    lines.push('## Skipped (Blank Identifier — Needs Human Attention)', '');
+    if (result.yamlUnkeyed.length) lines.push(`- ${result.yamlUnkeyed.length} YAML team(s) had a blank \`${keyYaml}\` and were not matched.`);
+    if (result.notionUnkeyed.length) lines.push(`- ${result.notionUnkeyed.length} Notion row(s) had a blank \`${keyNotion}\` and were not matched.`);
+    lines.push('');
+  }
+
+  lines.push(
+    '## Draft Changes — Confirm Before Applying',
+    '',
+    '- These are findings only. No files or Notion pages were changed.',
+    '- Do not guess unmapped values or unmatched rows; surface them for a human decision.',
+    '- After confirmation, apply YAML metadata fixes with update mode, e.g.:',
+    '  `node "$SCRIPT" update --teams apollo-dev-teams.yml --set <team>.<field>=<confirmed-value> --write`',
+    '- Notion-side edits are made by a human in Notion; this skill does not write to Notion.',
+    '',
+  );
+  return `${lines.join('\n')}\n`;
+}
+
+function commandNotion(args) {
+  // Validate inputs before the ruby-backed YAML read so a missing/unreadable
+  // export fails fast with a clear message.
+  const notionJsonPath = args['notion-json'];
+  if (!notionJsonPath || notionJsonPath === true) {
+    throw new Error(
+      'notion mode requires --notion-json <path>. Export the Notion Teams DB via the Notion MCP (retrieve the data source, then query its pages) and save the JSON, e.g. /tmp/notion-teams.json.',
+    );
+  }
+  const raw = readJsonIfPresent(path.resolve(notionJsonPath), null);
+  if (raw === null) throw new Error(`Could not read Notion export at ${notionJsonPath}.`);
+
+  const repoRoot = path.resolve(args['repo-root'] || process.cwd());
+  const teamsPath = path.resolve(repoRoot, args.teams || 'apollo-dev-teams.yml');
+  const { teams } = readTeams(teamsPath);
+
+  const notionRows = normalizeNotionRows(raw);
+  const notionProps = collectNotionPropertyNames(notionRows);
+  const keyYaml = (typeof args['key-yaml'] === 'string' && args['key-yaml']) || 'name';
+  const keyNotion = typeof args['key-notion'] === 'string' ? args['key-notion'] : undefined;
+  const exact = Boolean(args.exact);
+
+  if (!keyNotion) {
+    process.stdout.write(renderNotionDiscovery(teams, notionRows, notionProps, keyYaml));
+    return;
+  }
+  if (!notionProps.includes(keyNotion)) {
+    throw new Error(`Notion property "${keyNotion}" not found in export. Available: ${notionProps.join(', ') || '(none)'}.`);
+  }
+
+  const maps = asArray(args.map)
+    .filter((expression) => typeof expression === 'string')
+    .map(parseMapExpression);
+  for (const map of maps) {
+    if (!notionProps.includes(map.notion)) {
+      throw new Error(`Mapped Notion property "${map.notion}" not found in export. Available: ${notionProps.join(', ') || '(none)'}.`);
+    }
+  }
+
+  const result = reconcileTeamsWithNotion(teams, notionRows, { keyYaml, keyNotion, maps, exact });
+  if (args.json) {
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return;
+  }
+  process.stdout.write(renderNotionReconcile(result, { keyYaml, keyNotion, maps, exact, notionProps }));
+}
+
 function main() {
   const [command, ...rest] = process.argv.slice(2);
   const args = parseArgs(rest);
@@ -1495,8 +1812,10 @@ function main() {
       commandReport(args);
     } else if (command === 'update') {
       commandUpdate(args);
+    } else if (command === 'notion') {
+      commandNotion(args);
     } else {
-      process.stderr.write('Usage: update-devteams.js <report|update> [options]\n');
+      process.stderr.write('Usage: update-devteams.js <report|update|notion> [options]\n');
       process.exitCode = 2;
     }
   } catch (error) {
@@ -1512,7 +1831,13 @@ if (require.main === module) {
 module.exports = {
   assertValidYaml,
   assessTeams,
+  normalizeNotionRows,
+  normalizeNotionValue,
   parseArgs,
+  parseMapExpression,
+  reconcileTeamsWithNotion,
+  renderNotionDiscovery,
+  renderNotionReconcile,
   renderReport,
   renderReportHtml,
   scanOutsideReferences,

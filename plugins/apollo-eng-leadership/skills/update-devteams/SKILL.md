@@ -1,13 +1,21 @@
 ---
 name: update-devteams
-description: Maintain apollo-dev-teams.yml after engineering reorganizations — report-only audits and safe metadata updates.
-allowed-tools: Bash(node *update-devteams*/scripts/update-devteams.js *), Bash(find *update-devteams*), Bash(rg *), Bash(git diff *), Bash(git status *), Bash(bundle exec rspec packs/util/spec/lib/apollo_dev_team_spec.rb *), Bash(pnpm run generate:route-owners *), Read, Edit
+description: Maintain apollo-dev-teams.yml after engineering reorganizations — report-only audits, safe metadata updates, and read-only reconciliation against the Notion Teams DB.
+allowed-tools: Bash(node *update-devteams*/scripts/update-devteams.js *), Bash(find *update-devteams*), Bash(rg *), Bash(git diff *), Bash(git status *), Bash(bundle exec rspec packs/util/spec/lib/apollo_dev_team_spec.rb *), Bash(pnpm run generate:route-owners *), Read, Edit, mcp__notion__API-post-search, mcp__notion__API-retrieve-a-database, mcp__notion__API-retrieve-a-data-source, mcp__notion__API-query-data-source
 disable-model-invocation: true
 ---
 
 # Update Dev Teams
 
 Use `/update-devteams` to keep `apollo-dev-teams.yml` accurate after engineering reorgs. The file drives dashboards, automations, ownership, on-call routing, Sentry/PagerDuty metadata, Slack notifications, GitHub teams, and generated ownership files.
+
+Modes:
+
+- `/update-devteams` (report) — audit the YAML and nearby owner metadata (default).
+- `/update-devteams update` — apply explicit, reviewed metadata fixes.
+- `/update-devteams notion` — read-only reconciliation of `apollo-dev-teams.yml` against the Notion Teams DB; reports what needs updating without guessing.
+
+`apollo-dev-teams.yml` is the source of truth. The Notion Teams DB is a secondary view; when they disagree, prefer the YAML unless the caller confirms otherwise.
 
 ## Workflow Contract
 
@@ -29,6 +37,7 @@ Use `/update-devteams` to keep `apollo-dev-teams.yml` accurate after engineering
 - Treat generated files (`CODEOWNERS`, `.github/teams.yml`, route owner constants) as generated outputs unless the repo workflow says to update them directly.
 - Preserve comments and formatting where possible. For non-trivial YAML movement, prefer hand edits with review over broad serialization.
 - Emit TODOs in the report for unclear cases instead of guessing.
+- In Notion mode, never guess the join key, field mappings, or unmatched rows. Ask the caller (or leave the item unmapped) instead of inferring. Notion mode is read-only — it does not write to the YAML or to Notion.
 
 ## Report Mode
 
@@ -129,6 +138,69 @@ node "$SCRIPT" update \
 ```
 
 If a requested change implies transferring ownership (`packs_owned`, `files_owned`, `routes_owned`, PagerDuty keys, generated ownership outputs), stop and make a report/TODO unless the user has provided an explicit canonical mapping and verification source.
+
+## Notion Mode
+
+`/update-devteams notion` compares `apollo-dev-teams.yml` (source of truth) with the Notion Teams DB and reports what needs updating. It is **read-only**: it never edits the YAML or Notion, and it never guesses how the two systems line up.
+
+Teams DB: <https://app.notion.com/p/apolloio/9c146c222de24dc7aba0d4a4ab7a1378?v=14f923ad1dac434b9f7ebd2172a0c7c5>
+
+### Step 1 — Export the Notion Teams DB
+
+Fetch the DB with the Notion MCP and save the raw response to a local JSON file. Use the page/database ID from the link above (`9c146c222de24dc7aba0d4a4ab7a1378`).
+
+1. Retrieve the database, then its data source(s) (`API-retrieve-a-database` → `API-retrieve-a-data-source`). If the ID is not directly accessible, find it with `API-post-search` (filter `data_source`).
+2. Query the data source pages (`API-query-data-source`), paging through all results.
+3. Save the response as JSON, e.g. `/tmp/notion-teams.json`. The script accepts either the raw Notion query response (`{ "results": [ ... ] }`) or a flat array of rows.
+
+Do not hand-transcribe values from the Notion UI — export the actual data so the comparison is deterministic.
+
+### Step 2 — Discover the schema (no guessing)
+
+Run without a key to list the Notion properties and YAML fields, then decide the mapping with the caller:
+
+```bash
+SCRIPT=$(find ~/.claude ~/.codex "$PWD" -maxdepth 10 -path '*/update-devteams/scripts/update-devteams.js' -print -quit 2>/dev/null)
+node "$SCRIPT" notion \
+  --repo-root . \
+  --teams apollo-dev-teams.yml \
+  --notion-json /tmp/notion-teams.json
+```
+
+The tool prints the detected Notion property names and the comparable YAML fields, then stops. It will not assume which property identifies a team or how fields correspond.
+
+### Step 3 — Reconcile with an explicit mapping
+
+Pass the identifier property (`--key-notion`) and one `--map yamlField=NotionProperty` per field to compare. Only mapped fields are checked; matching is case-insensitive by default (add `--exact` for strict equality). Confirm each mapping with the caller before relying on it.
+
+```bash
+SCRIPT=$(find ~/.claude ~/.codex "$PWD" -maxdepth 10 -path '*/update-devteams/scripts/update-devteams.js' -print -quit 2>/dev/null)
+node "$SCRIPT" notion \
+  --repo-root . \
+  --teams apollo-dev-teams.yml \
+  --notion-json /tmp/notion-teams.json \
+  --key-notion "Team" \
+  --key-yaml name \
+  --map name="Team" \
+  --map team_slack="Slack Channel"
+```
+
+The report shows:
+
+- matched teams and their mapped-field differences (`YAML="…" vs Notion[Property]="…"`)
+- teams in the YAML but missing from Notion (candidates to add/reconcile in Notion)
+- rows in Notion but missing from the YAML (needs a human decision — stale row, rename, or missing from source of truth)
+- rows/teams skipped because their identifier was blank
+
+Add `--json` to emit the raw reconciliation for further processing.
+
+### Step 4 — Confirm drafts, then apply
+
+Summarize the findings concisely as draft changes and ask the caller to confirm before doing anything:
+
+- YAML metadata fixes go through update mode after confirmation, e.g. `node "$SCRIPT" update --teams apollo-dev-teams.yml --set <team>.<field>=<confirmed-value> --write`.
+- Notion-side edits are made by a human in the Notion UI — this skill does not write to Notion.
+- Leave unmatched rows and unmapped fields as open TODOs for a human; never invent mappings or values.
 
 ## Validation
 

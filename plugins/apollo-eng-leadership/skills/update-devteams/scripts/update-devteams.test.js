@@ -6,7 +6,14 @@ const path = require('path');
 const test = require('node:test');
 
 const scriptPath = path.join(__dirname, 'update-devteams.js');
-const { staleKnownSignals, assertValidYaml } = require(scriptPath);
+const {
+  staleKnownSignals,
+  assertValidYaml,
+  normalizeNotionRows,
+  reconcileTeamsWithNotion,
+  renderNotionReconcile,
+  renderNotionDiscovery,
+} = require(scriptPath);
 
 function makeFixture() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'update-devteams-'));
@@ -192,6 +199,160 @@ test('assertValidYaml accepts good YAML and rejects corrupt YAML', () => {
   assert.doesNotThrow(() => assertValidYaml("teams:\n  - name: 'inbound'\n"));
   // Unclosed flow sequence is not valid YAML.
   assert.throws(() => assertValidYaml('teams: [unbalanced\n  - name: x'), /invalid YAML/);
+});
+
+function writeNotionFixture(root) {
+  // Shape mirrors a Notion API query response (results[].properties[].type).
+  const notionPath = path.join(root, 'notion-teams.json');
+  fs.writeFileSync(
+    notionPath,
+    JSON.stringify({
+      results: [
+        {
+          id: 'page-inbound',
+          url: 'https://notion.so/inbound',
+          properties: {
+            Team: { type: 'title', title: [{ plain_text: 'Inbound' }] },
+            'Slack Channel': { type: 'rich_text', rich_text: [{ plain_text: '#inbound' }] },
+          },
+        },
+        {
+          id: 'page-ghost',
+          url: 'https://notion.so/ghost',
+          properties: {
+            Team: { type: 'title', title: [{ plain_text: 'ghost-team' }] },
+            'Slack Channel': { type: 'rich_text', rich_text: [{ plain_text: '#ghost' }] },
+          },
+        },
+      ],
+    }),
+  );
+  return notionPath;
+}
+
+test('normalizeNotionRows flattens API property types to strings', () => {
+  const rows = normalizeNotionRows({
+    results: [
+      {
+        id: 'p1',
+        url: 'https://n/p1',
+        properties: {
+          Team: { type: 'title', title: [{ plain_text: 'Inbound' }] },
+          Active: { type: 'checkbox', checkbox: true },
+          Tags: { type: 'multi_select', multi_select: [{ name: 'a' }, { name: 'b' }] },
+        },
+      },
+    ],
+  });
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].props.Team, 'Inbound');
+  assert.equal(rows[0].props.Active, 'true');
+  assert.equal(rows[0].props.Tags, 'a, b');
+});
+
+test('reconcileTeamsWithNotion matches case-insensitively without guessing', () => {
+  const teams = [
+    { name: 'inbound', team_slack: '#xfn-team-inbound' },
+    { name: 'ops-lite', team_slack: '#ops-lite' },
+  ];
+  const notionRows = normalizeNotionRows({
+    results: [
+      { id: 'a', properties: { Team: { type: 'title', title: [{ plain_text: 'Inbound' }] }, Slack: { type: 'rich_text', rich_text: [{ plain_text: '#inbound' }] } } },
+      { id: 'b', properties: { Team: { type: 'title', title: [{ plain_text: 'ghost' }] }, Slack: { type: 'rich_text', rich_text: [{ plain_text: '#ghost' }] } } },
+    ],
+  });
+  const result = reconcileTeamsWithNotion(teams, notionRows, {
+    keyYaml: 'name',
+    keyNotion: 'Team',
+    maps: [{ yaml: 'team_slack', notion: 'Slack' }],
+    exact: false,
+  });
+  assert.equal(result.matched.length, 1);
+  assert.equal(result.matched[0].diffs.length, 1);
+  assert.equal(result.matched[0].diffs[0].yaml, '#xfn-team-inbound');
+  assert.equal(result.matched[0].diffs[0].notion, '#inbound');
+  assert.deepEqual(result.yamlOnly.map((e) => e.key), ['ops-lite']);
+  assert.deepEqual(result.notionOnly.map((e) => e.key), ['ghost']);
+});
+
+test('renderNotionReconcile marks output as read-only draft and surfaces drift', () => {
+  const teams = [{ name: 'inbound', team_slack: '#xfn-team-inbound' }];
+  const notionRows = normalizeNotionRows({
+    results: [
+      { id: 'a', url: 'https://n/a', properties: { Team: { type: 'title', title: [{ plain_text: 'Inbound' }] }, Slack: { type: 'rich_text', rich_text: [{ plain_text: '#inbound' }] } } },
+      { id: 'b', url: 'https://n/b', properties: { Team: { type: 'title', title: [{ plain_text: 'ghost' }] }, Slack: { type: 'rich_text', rich_text: [{ plain_text: '#ghost' }] } } },
+    ],
+  });
+  const maps = [{ yaml: 'team_slack', notion: 'Slack' }];
+  const result = reconcileTeamsWithNotion(teams, notionRows, { keyYaml: 'name', keyNotion: 'Team', maps, exact: false });
+  const output = renderNotionReconcile(result, { keyYaml: 'name', keyNotion: 'Team', maps, exact: false, notionProps: ['Slack', 'Team'] });
+
+  assert.match(output, /Draft — Read Only/);
+  assert.match(output, /team_slack: YAML="#xfn-team-inbound" vs Notion\[Slack\]="#inbound"/);
+  assert.match(output, /ghost \(https:\/\/n\/b\)/);
+  assert.match(output, /No files or Notion pages were changed/);
+});
+
+test('renderNotionDiscovery explains it will not guess mappings', () => {
+  const teams = [{ name: 'inbound', team_slack: '#xfn-team-inbound' }];
+  const notionRows = normalizeNotionRows({ results: [{ id: 'a', properties: { Team: { type: 'title', title: [{ plain_text: 'Inbound' }] } } }] });
+  const output = renderNotionDiscovery(teams, notionRows, ['Team'], 'name');
+  assert.match(output, /Setup Needed/);
+  assert.match(output, /does not guess/);
+  assert.match(output, /--key-notion/);
+});
+
+test('notion mode requires an export before touching the YAML', () => {
+  const { root, teamsPath } = makeFixture();
+  assert.throws(() => run(['notion', '--teams', teamsPath], root), /requires --notion-json/);
+});
+
+test('notion mode stops for setup when no key is given', () => {
+  const { root, teamsPath } = makeFixture();
+  const notionPath = writeNotionFixture(root);
+  const setup = run(['notion', '--repo-root', root, '--teams', teamsPath, '--notion-json', notionPath], root);
+  assert.match(setup, /Setup Needed/);
+  assert.match(setup, /Notion Properties Detected/);
+  assert.match(setup, /- Slack Channel/);
+  assert.match(setup, /- Team/);
+});
+
+test('notion mode reports drift as a read-only draft', () => {
+  const { root, teamsPath } = makeFixture();
+  const notionPath = writeNotionFixture(root);
+  const output = run(
+    [
+      'notion',
+      '--repo-root',
+      root,
+      '--teams',
+      teamsPath,
+      '--notion-json',
+      notionPath,
+      '--key-notion',
+      'Team',
+      '--map',
+      'team_slack=Slack Channel',
+    ],
+    root,
+  );
+
+  assert.match(output, /Reconciliation \(Draft — Read Only\)/);
+  // inbound matches (case-insensitive) and its team_slack differs from Notion.
+  assert.match(output, /team_slack: YAML="#xfn-team-inbound" vs Notion\[Slack Channel\]="#inbound"/);
+  // ghost-team exists only in Notion; componentization/zenleads/ops-lite only in YAML.
+  assert.match(output, /In Notion, Not Found in YAML/);
+  assert.match(output, /ghost-team/);
+  assert.match(output, /Confirm Before Applying/);
+});
+
+test('notion mode rejects an unknown key property', () => {
+  const { root, teamsPath } = makeFixture();
+  const notionPath = writeNotionFixture(root);
+  assert.throws(
+    () => run(['notion', '--repo-root', root, '--teams', teamsPath, '--notion-json', notionPath, '--key-notion', 'Nope'], root),
+    /not found in export/,
+  );
 });
 
 test('staleKnownSignals flags entries older than the threshold', () => {
