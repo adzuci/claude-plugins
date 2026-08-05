@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.2.0...apollo-eng-v1.3.0) (2026-08-05)
+
+
+### Features
+
+* **apollo-eng:** add manual-test-execution + end-to-end-bug-bash, update bug-bash-generator ([#199](https://github.com/apolloio/claude-plugins/issues/199)) ([71f39e2](https://github.com/apolloio/claude-plugins/commit/71f39e298e4059fb64762b1dbc9869d4c6b030e2))
+
 ## [1.2.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.1.0...apollo-eng-v1.2.0) (2026-07-30)
 
 
