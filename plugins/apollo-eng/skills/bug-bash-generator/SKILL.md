@@ -1,15 +1,40 @@
 ---
 name: bug-bash-generator
-description: Generate bug bash test cases from a Notion bug bash page and write them to a Notion test case database. Activate when user asks to generate bug bash test cases, create bug bash tests, or mentions bug bash generation.
+description: Generate bug bash test cases from a Notion bug bash page. Deliver to Notion Test Case DB or export to tmp/ markdown. Activate when user asks to generate bug bash test cases, create bug bash tests, or mentions bug bash generation.
+disable-model-invocation: true
 ---
 
 # Bug Bash Test Cases Generator
 
 You are a senior QA engineer specialized in creating focused, high-impact test cases for Apollo.io features. Follow this exact 5-step workflow to generate comprehensive test coverage.
 
+**Reference docs** (read when the workflow step points to them):
+
+| Doc | Path |
+| --- | ---- |
+| ERD proposed delta pass | `references/erd-proposed-delta-pass.md` |
+| Automation risk checklist | `references/automation-risk-checklist.md` |
+| Notion upload format (Step 5A) | `references/notion-upload-format.md` |
+| Local export format (Step 5B) | `references/local-export-format.md` |
+
 ______________________________________________________________________
 
 # MANDATORY 5-STEP WORKFLOW
+
+## CRITICAL WORKFLOW ENFORCEMENT
+
+| Step | Requirement | Enforcement |
+| -------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
+| **Step 1** | User MUST provide EXACT Bug Bash Notion URL | If missing, workflow MUST STOP immediately |
+| **Sequential** | Steps MUST be executed sequentially | Cannot skip or combine steps |
+| **Step 2** | ALL 5 required links (ERD, PRD, Figma, Jira, GitHub PR) | If ANY missing, MUST STOP and request from user |
+| **Step 3** | NO analysis begins | Until Step 2 validation passes completely |
+| **Step 4** | User must explicitly approve delivery path | With `UPLOAD TO NOTION` **or** `EXPORT TO LOCAL` before Step 5 |
+| **Step 5 (Notion)** | Notion path only | Sample test case + `APPROVED - PROCEED` before bulk upload |
+| **Step 5 (Local)** | Local path only | Write full markdown file after `EXPORT TO LOCAL` — no Notion |
+| **URL** | EXACT URL ENFORCEMENT | Feature field MUST contain EXACT Bug Bash URL (no variations) |
+
+______________________________________________________________________
 
 # STEP 1: EXTRACT DOCUMENTATION LINKS FROM BUG BASH PAGE
 
@@ -20,18 +45,18 @@ ______________________________________________________________________
 #### 1. MUST Verify Bug Bash Notion URL is provided by user
 
 - User MUST provide EXACT Bug Bash Notion URL in their request
-- URL MUST be a valid Notion URL
+- URL MUST be in format: `https://www.notion.so/apolloio/[page-id]` or similar valid Notion URL
 - **If URL is NOT provided**: IMMEDIATELY STOP and use AskUserQuestion to request it
 
-#### 2. MUST also ask for the target Notion test case database URL
+#### 2. MUST Store and validate the EXACT URL for use in Step 5
 
-- Ask the user for the Notion database URL where test cases should be created
-- This is needed in Step 5 to write the test cases
-- Store both URLs exactly as provided
+- Store the EXACT URL exactly as provided by user (no modifications)
+- This EXACT URL will be used in the "Feature" field when creating test cases
+- Validate URL is accessible and contains Bug Bash content
 
 ### DOCUMENTATION EXTRACTION PROCESS
 
-**ONLY AFTER URL VALIDATION PASSES** - Use the Notion MCP to fetch the Bug Bash page and extract:
+**ONLY AFTER URL VALIDATION PASSES** - Use `mcp__Notion__notion-fetch` to fetch the Bug Bash page and extract:
 
 | Document Type | Purpose |
 | ------------------ | --------------------------------------------------------- |
@@ -95,7 +120,7 @@ ______________________________________________________________________
 
 ### A. DEEP ERD Analysis (if available)
 
-- Use the Notion MCP to read ERD content COMPLETELY
+- Use `mcp__Notion__notion-fetch` to read ERD content COMPLETELY
 
 #### Data Architecture Deep Dive:
 
@@ -111,9 +136,15 @@ ______________________________________________________________________
 - Data validation scenarios (valid/invalid inputs)
 - Integration failure and recovery scenarios
 
+#### MANDATORY ERD Proposed Delta Pass:
+
+Read and apply `references/erd-proposed-delta-pass.md`. Create atomic test cases per proposed ERD addition — do **not** fold into journey E2E cases only.
+
+**Scope:** schema/design level — new entities, config fields, guard definitions, validation at save/setup time.
+
 ### B. COMPREHENSIVE PRD Analysis (if available)
 
-- Use the Notion MCP to read PRD content THOROUGHLY
+- Use `mcp__Notion__notion-fetch` to read PRD content THOROUGHLY
 
 #### Business Logic Extraction:
 
@@ -122,7 +153,7 @@ ______________________________________________________________________
 - Identify ALL business rules and conditional logic
 - Map user roles, permissions, and access patterns
 
-#### Generate Test Cases For (PRD):
+#### Generate Test Cases For:
 
 - Each user story end-to-end
 - All business rule variations
@@ -132,7 +163,7 @@ ______________________________________________________________________
 
 ### C. DETAILED Figma Analysis (if available)
 
-- Use the Figma MCP (if available) to analyze design
+- Use `mcp__figma__get_screenshot` and `mcp__figma__get_metadata` to analyze design
 
 #### UI/UX Component Analysis:
 
@@ -141,7 +172,7 @@ ______________________________________________________________________
 - Map ALL user interaction patterns and micro-interactions
 - Identify responsive breakpoints and adaptive behaviors
 
-#### Generate Test Cases For (Figma):
+#### Generate Test Cases For:
 
 - Each UI component in all visual states
 - All user interaction scenarios
@@ -152,10 +183,11 @@ ______________________________________________________________________
 
 ### D. Jira Epic Analysis (if available)
 
-- Use the Jira MCP to read epic details
-- **Focus on:** Summary, Implementation context, sub-tasks, technical requirements
+- Prefer `mcp__atlassian__getJiraIssue` (or equivalent Jira MCP) to read epic details
+- **If Jira MCP is unavailable:** use the epic URL from the Bug Bash / PRD / ERD pages, fetch linked Notion implementation plans, and use `gh` / web search only as a fallback for publicly linked tickets
+- **Focus on:** Summary, implementation context, sub-tasks, technical requirements, descoped/stretch labels
 - **Identify:** Development scope, dependencies, acceptance criteria
-- Get all child work items and add relevant test cases
+- Get **all child work items** and add at least one relevant test case per committed sub-task when behavior is user-visible or data-impacting
 
 ### E. GitHub PR Analysis (if available)
 
@@ -208,6 +240,44 @@ ______________________________________________________________________
 - Create test for accessibility compliance
 - Create test for error handling
 
+### I. Implementation Notes & Known Bugs Pass
+
+Scan the Bug Bash page, parent initiative page, ERD, PRD, and linked meeting/implementation notes for:
+
+- Explicit bugs, regressions, or "fix before alpha" callouts
+- Week-by-week demo commitments and descoped items
+- Discussion comments that change expected behavior
+- Stretch vs committed scope — mark stretch cases as **P2+** or note "skip if not shipped"
+
+Turn each committed, user-visible risk into a **focused atomic test case** (not only a journey case).
+
+**Scope:** documented bugs, descoped items, and implementation notes — turn explicit callouts into cases; do not re-test generic guard/cycle behavior already covered by ERD (config) or J (runtime).
+
+### J. Automation & Scheduled Workflow Risk Checklist
+
+When schedules, background runs, entity push/sync, dedup/keys, or downstream actions are in scope, read and apply `references/automation-risk-checklist.md`.
+
+**Scope:** runtime/execution level — scheduled runs, retries, concurrency, batch outcomes, and live system behavior.
+
+### K. Dual Coverage Requirement (Journeys + Atomic Risks)
+
+Step 3 output **MUST** include both:
+
+1. **Journey / E2E cases** — PRD user stories and end-to-end flows
+1. **Atomic risk cases** — data integrity, guards, concurrency, validation, and proposed-ERD deltas
+
+**Avoid duplicate atomic cases:** ERD pass and Section J may touch similar topics (cycles, keys, guards) at different layers. Use this split:
+
+| Topic | ERD pass (config/schema) | Automation checklist (runtime) |
+| ----- | ------------------------ | ------------------------------ |
+| **Cycles / depth limits** | Save blocked or warned when configuring invalid push graph | Executing automation respects limits; no runaway chain at runtime |
+| **Keys / dedup** | Primary-key field config, merge-strategy selection, invalid key validation in setup | Re-sync/enrollment behavior on scheduled runs; no bad merges during live execution |
+| **Guards** | Guard entity fields, config UI, pre-save validation | Guard triggers during actual runs (block, warn, or fail as designed) |
+
+If one case fully covers both layers end-to-end, keep the E2E case and skip the redundant atomic pair.
+
+Before Step 4, run a **gap self-review**: list 5–10 high-risk areas from the docs and confirm each has a dedicated case or an explicit "out of scope" note.
+
 ## Test Case Organization
 
 ### Test Case Grouping Based on Analysis:
@@ -244,17 +314,22 @@ ______________________________________________________________________
 
 - **MUST Display ALL Test Case Names** in simple numbered list format
 - Include priority and group for each test case
+- **MUST Present two labeled sections:**
+  1. **Journey / E2E test cases**
+  1. **Atomic risk test cases** (ERD deltas, guards, concurrency, validation, idempotency)
+- **MUST Include a short gap self-review** (5–10 high-risk areas and whether each is covered or out of scope)
 
 ### B. FEEDBACK OPTIONS
 
 Use AskUserQuestion to present feedback options:
 
 | Command | Purpose |
-| ---------------------------- | ----------------------------- |
+| ---------------------------- | ---------------------------------------------------- |
 | `MODIFY [specific changes]` | Request adjustments |
 | `ADD [additional scenarios]` | Include more test cases |
 | `PRIORITIZE [changes]` | Adjust priority levels |
-| `UPLOAD TO NOTION` | Approve and proceed to upload |
+| `UPLOAD TO NOTION` | Approve and proceed to Step 5 Notion upload path |
+| `EXPORT TO LOCAL` | Approve and proceed to Step 5 local markdown export |
 
 ### C. ITERATIVE IMPROVEMENT PROCESS
 
@@ -265,73 +340,18 @@ Use AskUserQuestion to present feedback options:
 
 ### D. FINAL APPROVAL WORKFLOW
 
-- Only proceed to Step 5 when user explicitly approves with "UPLOAD TO NOTION"
-- Do NOT create test cases until explicit approval is given
+- Only proceed to Step 5 when the user explicitly approves with **`UPLOAD TO NOTION`** or **`EXPORT TO LOCAL`**
+- Do NOT deliver test cases until one of those commands is given
+- **`UPLOAD TO NOTION`** → follow **Step 5A (Notion path)** below
+- **`EXPORT TO LOCAL`** → follow **Step 5B (Local export path)** below — skip all Notion MCP steps
 
 ______________________________________________________________________
 
-# STEP 5: CREATE TEST CASES IN NOTION DATABASE
+# STEP 5A: CREATE TEST CASES IN NOTION DATABASE (NOTION PATH)
 
-## ONLY EXECUTE THIS STEP AFTER USER APPROVAL FROM STEP 4
+## ONLY EXECUTE AFTER STEP 4 APPROVAL WITH `UPLOAD TO NOTION`
 
-Use the Notion MCP (`notion-create-pages`) to create test cases in the database URL provided by the user in Step 1.
-
-### Required Fields for Each Test Case:
-
-| Field | Format | Allowed Values | Notes |
-| ------------------ | ----------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| **Name** | `"Verify [Clear descriptive name]"` | Any descriptive text | MUST NOT include priority like P0/P1 in name |
-| **Priority** | Single value | P0, P1, P2, P3 | NO other values allowed |
-| **Test Case Type** | Single value | Functional, Performance, Security, Usability, Cross-browser, Accessibility, Migration, business case | EXACTLY one from list |
-| **Test Suite** | Priority-based | Sanity (P0), Regression (P1), Smoke (P2+) | Follows priority mapping |
-| **Status** | Fixed value | "Not started" | Always for new test cases |
-| **Feature** | Exact URL | EXACT Bug Bash Notion URL from Step 1 | MANDATORY - NO EXCEPTIONS |
-| **Group** | Feature identifier | Feature name for grouping | MANDATORY - helps organize test cases |
-| **AI-Generated?** | Fixed value | `"__YES__"` | Always checked for AI-generated test cases |
-
-### Test Case Content Format:
-
-```markdown
-## This is Generated by AI
-
-## Preconditions
-[Setup requirements, permissions, data state]
-
-## Test Steps
-1. [Specific action]
-2. [Expected system response]
-3. [Verification step]
-
-## Expected Result
-[Clear success criteria and expected outcomes]
-```
-
-## MANDATORY SAMPLE TEST CASE VALIDATION PROCESS
-
-### A. CREATE ONE SAMPLE TEST CASE FIRST
-
-1. Select ONE high-priority (P0 or P1) test case from the analysis
-1. Use the Notion MCP to create it in the user's target database
-1. Use EXACT Bug Bash URL from Step 1 in the Feature field
-
-### B. SAMPLE TEST CASE VALIDATION
-
-After creating the sample, present it to the user showing:
-
-- Name, Priority, Test Case Type, Group, Feature URL used
-- Link to the Notion database
-
-Use AskUserQuestion with options:
-
-- "APPROVED - PROCEED" to continue with full test case generation
-- "MODIFY [specific changes]" to request adjustments
-- "CANCEL" if there are issues
-
-### C. CREATE REMAINING TEST CASES (ONLY AFTER SAMPLE APPROVAL)
-
-- ONLY PROCEED if user approved with "APPROVED - PROCEED"
-- Follow ALL field requirements for each test case
-- **MANDATORY HEADER**: Content MUST start with "## This is Generated by AI"
+Read and follow **every rule** in `references/notion-upload-format.md` — JSON structure, enforcement rules, required fields, sample-then-bulk workflow, and content standards.
 
 #### Essential Test Categories:
 
@@ -342,6 +362,14 @@ Use AskUserQuestion with options:
 | **INTEGRATION** | External systems | API interactions, data sync |
 | **EDGE CASES** | Boundary conditions | Large datasets, concurrent operations |
 | **REGRESSION** | Existing features | Backward compatibility |
+
+______________________________________________________________________
+
+# STEP 5B: EXPORT TEST CASES TO LOCAL MARKDOWN (LOCAL PATH)
+
+## ONLY EXECUTE AFTER STEP 4 APPROVAL WITH `EXPORT TO LOCAL`
+
+Read and follow `references/local-export-format.md`. Do **not** use Notion MCP for this path.
 
 ______________________________________________________________________
 
@@ -363,8 +391,8 @@ ______________________________________________________________________
 
 | Category | Reason |
 | ------------------------------------------ | -------------------------------------- |
-| **Duplicate test cases** | Avoid redundant scenarios |
-| **Framework functionality** | Don't test internals |
+| **Duplicate test cases** | Avoid redundant scenarios — but do not collapse journey E2E and atomic risk cases that test different failure modes |
+| **Framework functionality** | Don't test Rails/MongoDB internals |
 | **Trivial scenarios** | Obvious or self-evident cases |
 | **Obvious UI elements** | Basic rendering without business logic |
 | **Overly specific implementation details** | Focus on behavior, not code |
@@ -382,7 +410,31 @@ ______________________________________________________________________
 
 # MANDATORY OUTPUT REQUIREMENT
 
-Upon successful completion of test case creation in Step 5, you **MUST** return:
+Upon successful completion of Step 5, return output based on the delivery path chosen in Step 4:
+
+### If `UPLOAD TO NOTION` (Step 5A)
 
 1. **Direct link** to the Notion Test Case Database where all test cases were created
 1. **Summary** of test cases created with counts by priority and Group
+
+**Database link**: https://www.notion.so/apolloio/c65ce600697842f793a56f8fa3f72113?v=111a80a0a1414ce0a2a7eb19e45d2bb0
+
+### If `EXPORT TO LOCAL` (Step 5B)
+
+1. **Full path** to the markdown file under `tmp/`
+1. **Summary** of test cases with counts by priority and Group
+
+______________________________________________________________________
+
+# CRITICAL SUCCESS FACTOR
+
+The **Feature field** (Notion) or **Bug Bash URL in the file header** (local export) links test cases to the feature being tested.
+
+**FAILURE TO INCLUDE THE EXACT BUG BASH URL IS CONSIDERED INCOMPLETE WORK.**
+
+| Step / path | Requirement | Consequence |
+| ----------------- | ---------------------------------------------- | ------------------------ |
+| **Step 1** | MUST validate user provided EXACT Bug Bash URL | STOP if missing |
+| **Step 5A Notion**| MUST use that EXACT URL in Feature field | NO modifications allowed |
+| **Step 5B Local** | MUST use that EXACT URL in file header | NO modifications allowed |
+| **ANY deviation** | Truncation, modification, variation | = **WORKFLOW FAILURE** |
