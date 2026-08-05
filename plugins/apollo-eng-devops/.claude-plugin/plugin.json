@@ -2,7 +2,7 @@
   "name": "apollo-eng-devops",
   "displayName": "Apollo Engineering DevOps",
   "description": "DevOps, SRE, and production reliability skills for Apollo engineers",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "mcpServers": {
     "atlassian": {
       "type": "sse",
