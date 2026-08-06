@@ -19,7 +19,7 @@ rolling figures or cumulative data that may include periods outside the review w
 
 ## Apollo Career Framework
 
-**Primary reference:** [`references/career-framework/company-framework.md`](../career-framework/company-framework.md)
+**Primary reference:** [`plugins/apollo-people/references/career-framework/company-framework.md`](../../../references/career-framework/company-framework.md)
 
 This file contains the live company baseline framework, organised by level and track (IC vs Manager). Use it to find the employee's current and next-level expectations.
 
