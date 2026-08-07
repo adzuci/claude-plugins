@@ -44,6 +44,10 @@ plugins/apollo-eng/
 
 `skills/`, `agents/`, `hooks/`, `commands/`, and `.mcp.json` live at the plugin root. Only `plugin.json` goes inside `.claude-plugin/` and `.codex-plugin/`.
 
+Inside a skill, keep agent-readable prose in `SKILL.md` or `references/`. A skill may also
+use `evals/` for machine-executed evaluation fixtures and runner configuration; do not put
+runbooks or other prose-only support files there.
+
 ## Plugin Inventory
 
 See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill command inventory.
@@ -52,7 +56,7 @@ See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill comman
 
 | Plugin | Description | Skills |
 | --- | --- | ---: |
-| `apollo-eng` | Shared engineering skills for Apollo repos | 24 |
+| `apollo-eng` | Shared engineering skills for Apollo repos | 25 |
 | `apollo-eng-devops` | DevOps, SRE, and production reliability skills for Apollo engineers | 20 |
 | `apollo-analytics` | Apollo Analytics Copilot — answers data questions using governed Snowflake metrics, runs product debriefs, generates account profiles, and surfaces weekly strategic insights. | 12 |
 | `apollo-eng-leadership` | Cowork skills for engineering leadership and customer-care rotation support | 9 |

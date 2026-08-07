@@ -34,6 +34,9 @@ Routing and activation
 Structure
 
 - Expect the standard pattern: `SKILL.md` plus optional `scripts/`, `references/`, and `assets/`.
+- Allow `evals/` for machine-executed evaluation fixtures and runner configuration. Keep
+  prose rubrics and runbooks in `references/`; do not flag an `evals/` directory merely
+  because it extends the standard runtime-oriented skill layout.
 - Flag unnecessary support docs such as `README.md`, `CHANGELOG.md`, `INSTALLATION_GUIDE.md`, or similar extra process docs inside a skill.
 - Check that optional resources directly support repeated execution of the skill.
 - For each new `agents/<agent-name>.md`, consider a concise `suggestion` asking the author to add an agent README when it would help future maintainers understand why the agent exists, when to use it instead of a skill, and what operational contract or ownership expectations it carries.
