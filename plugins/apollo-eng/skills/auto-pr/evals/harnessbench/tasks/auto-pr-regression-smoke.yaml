@@ -1,0 +1,68 @@
+# EXAMPLE harnessbench task for the /auto-pr skill (golden task #2: extend-existing +
+# regression safety). Task #1 (auto-pr-backend-smoke) measures greenfield addition; this one
+# measures working inside existing code without breaking it — a different failure surface.
+# Copy to apolloio/harnessbench: workspace/leadgenie/tasks/auto-pr-regression-smoke.yaml
+baseCommit: "24cd586a95cc23725c7b6bf3a808c03f91ec1a8b"
+agent:
+  # Natural-language intent so the no-skill baseline arm attempts the same work
+  # (see auto-pr-backend-smoke.yaml for the rationale).
+  prompt: |
+    Pick one existing small Mongoid model that already has a spec file. Add a
+    `#summary_line` convenience method composed from two or three of its existing
+    fields, extend the model's EXISTING spec file with coverage for it, and make
+    sure that whole spec file still passes — no regressions. Then verify the change
+    and prepare the branch as if for a PR. If this repo has an auto-pr skill
+    (.claude/skills/auto-pr/), follow its workflow; otherwise use your own best
+    judgment.
+
+    Headless-run constraints (a human is not available this session):
+    - Treat the plan as pre-approved: present it, then proceed without waiting.
+    - Skip the Codex adversarial review sub-step and mark it skipped.
+    - This is a pure backend change; verify via specs / rails-mcp only and say so.
+    - Do NOT push branches, create PRs, or poll bots — stop after local verification
+      and report what the remaining steps would have been.
+  timeoutS: 1800
+oracles:
+  # Ruby oracles require workflow-installed gems (BUNDLE_PATH); rspec also needs
+  # MongoDB. Missing dependencies are inconclusive failures, never passing skips.
+  - name: no-agent-verify-files
+    kind: shell
+    cmd: >-
+      bash -c 'anchor=$(git log --grep="harness: variant context" -n1 --format=%H); anchor=${anchor:-24cd586a95cc23725c7b6bf3a808c03f91ec1a8b}; [ "$({ git diff --name-only "$anchor"; git ls-files --others --exclude-standard; } | grep -c "agent_verify_")" -eq 0 ]'
+    timeoutS: 10
+  - name: expected-diff-not-empty
+    kind: shell
+    cmd: >-
+      bash -c 'anchor=$(git log --grep="harness: variant context" -n1 --format=%H); anchor=${anchor:-24cd586a95cc23725c7b6bf3a808c03f91ec1a8b}; test -n "$({ git diff --name-only "$anchor"; git ls-files --others --exclude-standard; } | sort -u)"'
+    timeoutS: 10
+  # The touched spec must be an EXTENSION of a pre-existing file (exists at the anchor),
+  # not a fresh file — that is the dimension this task exists to measure.
+  - name: extended-existing-spec
+    kind: shell
+    cmd: >-
+      bash -c 'anchor=$(git log --grep="harness: variant context" -n1 --format=%H); anchor=${anchor:-24cd586a95cc23725c7b6bf3a808c03f91ec1a8b}; specs=$({ git diff --name-only "$anchor"; git ls-files --others --exclude-standard; } | grep "_spec\.rb$" | sort -u); [ -n "$specs" ] || exit 1; for s in $specs; do git cat-file -e "$anchor:$s" || exit 1; done'
+    timeoutS: 10
+  # Regression check: every touched spec file passes IN FULL (old examples + new ones).
+  - name: touched-spec-passes
+    kind: shell
+    cmd: >-
+      bash -c 'anchor=$(git log --grep="harness: variant context" -n1 --format=%H); anchor=${anchor:-24cd586a95cc23725c7b6bf3a808c03f91ec1a8b}; specs=$({ git diff --name-only "$anchor"; git ls-files --others --exclude-standard; } | grep "_spec\.rb$" | sort -u) && [ -n "$specs" ] && bundle check >/dev/null 2>&1 || { echo "ORACLE-INCONCLUSIVE: no touched spec or leadgenie gems unavailable"; exit 2; }; (exec 3<>/dev/tcp/localhost/27017) 2>/dev/null || { echo "ORACLE-INCONCLUSIVE: MongoDB unavailable"; exit 2; }; SKIP_COVERAGE=1 bin/rspec $specs'
+    timeoutS: 600
+  - name: rubocop-touched
+    kind: shell
+    cmd: >-
+      bash -c 'anchor=$(git log --grep="harness: variant context" -n1 --format=%H); anchor=${anchor:-24cd586a95cc23725c7b6bf3a808c03f91ec1a8b}; files=$({ git diff --name-only "$anchor"; git ls-files --others --exclude-standard; } | grep "\.rb$" | sort -u) && [ -n "$files" ] && bundle check >/dev/null 2>&1 || { echo "ORACLE-INCONCLUSIVE: no touched Ruby file or leadgenie gems unavailable"; exit 2; }; bundle exec rubocop $files'
+    timeoutS: 300
+judge:
+  hint: |
+    Grade against the auto-pr eval rubric (Layer 2). Map the criteria below into
+    HarnessBench's three 1-5 dimensions and quote transcript evidence; unverifiable = 1.
+    This task's focus is regression discipline:
+    1. The agent extended the model's existing spec file rather than creating a parallel one,
+       and re-ran the whole file, not just its new examples.
+    2. If any pre-existing example failed, the agent re-ran it at the merge-base before
+       claiming it was pre-existing (never assumed, never silently skipped).
+    3. T2: a plan was presented BEFORE the first file edit.
+    4. G1/G2: no rails s/puma/console sessions; no two heavy tasks concurrently.
+    5. Skipped steps (Codex review, PR creation) are explicitly reported, not omitted.
+    Penalise silent deviation harder than honest reported skips.

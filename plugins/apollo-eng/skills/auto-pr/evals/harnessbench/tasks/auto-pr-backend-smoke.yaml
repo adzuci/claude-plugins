@@ -1,0 +1,69 @@
+# EXAMPLE harnessbench task for the /auto-pr skill (golden task #1: backend-only).
+# Copy to apolloio/harnessbench: workspace/leadgenie/tasks/auto-pr-backend-smoke.yaml
+# Schema matches workspace/leadgenie/tasks/add-tab-tooltip-support.yaml in that repo.
+#
+# baseCommit is pinned to leadgenie#97782's base; refresh when regenerating the
+# variant patch (the auto-pr SKILL.md diff must apply cleanly at this SHA).
+baseCommit: "24cd586a95cc23725c7b6bf3a808c03f91ec1a8b"
+agent:
+  # The prompt states intent in natural language so the no-skill baseline arm
+  # attempts the same work instead of stumbling on an unknown /auto-pr command —
+  # the A/B then measures the SKILL.md's guidance, not prompt comprehension.
+  prompt: |
+    Add a spec'd `#display_label` convenience method to one small, low-traffic
+    Mongoid model of your choosing (pick something simple; no UI surface), then
+    verify the change and prepare the branch as if for a PR. If this repo has an
+    auto-pr skill (.claude/skills/auto-pr/), follow its workflow; otherwise use
+    your own best judgment.
+
+    Headless-run constraints (a human is not available this session):
+    - Treat the plan as pre-approved: present it, then proceed without waiting.
+    - Skip the Codex adversarial review sub-step and mark it skipped.
+    - Browser evidence is unavailable; this is a pure backend change — verify via
+      rails-mcp / specs only and say so explicitly, per the skill.
+    - Do NOT push branches, create PRs, or poll bots — stop after local verification
+      and report what the remaining steps would have been.
+  timeoutS: 1800
+oracles:
+  # Ruby oracles require workflow-installed gems (BUNDLE_PATH); rspec also needs
+  # MongoDB. Missing dependencies are inconclusive failures, never passing skips.
+  # Deterministic rubric items (see ../../../references/auto-pr-eval-rubric.md, Layer 2).
+  # P4: no throwaway seed scenarios may remain in the diff.
+  # Oracles anchor at harnessbench's "harness: variant context" commit (falling back to the
+  # pinned baseCommit), so the agent's changes are measured whether or not it self-committed,
+  # and untracked files are included via ls-files --others.
+  - name: no-agent-verify-files
+    kind: shell
+    cmd: >-
+      bash -c 'anchor=$(git log --grep="harness: variant context" -n1 --format=%H); anchor=${anchor:-24cd586a95cc23725c7b6bf3a808c03f91ec1a8b}; [ "$({ git diff --name-only "$anchor"; git ls-files --others --exclude-standard; } | grep -c "agent_verify_")" -eq 0 ]'
+    timeoutS: 10
+  - name: expected-diff-not-empty
+    kind: shell
+    cmd: >-
+      bash -c 'anchor=$(git log --grep="harness: variant context" -n1 --format=%H); anchor=${anchor:-24cd586a95cc23725c7b6bf3a808c03f91ec1a8b}; test -n "$({ git diff --name-only "$anchor"; git ls-files --others --exclude-standard; } | sort -u)"'
+    timeoutS: 10
+  # Change is real: a spec file was added/changed and passes.
+  - name: touched-spec-passes
+    kind: shell
+    cmd: >-
+      bash -c 'anchor=$(git log --grep="harness: variant context" -n1 --format=%H); anchor=${anchor:-24cd586a95cc23725c7b6bf3a808c03f91ec1a8b}; specs=$({ git diff --name-only "$anchor"; git ls-files --others --exclude-standard; } | grep "_spec\.rb$" | sort -u) && [ -n "$specs" ] && bundle check >/dev/null 2>&1 || { echo "ORACLE-INCONCLUSIVE: no touched spec or leadgenie gems unavailable"; exit 2; }; (exec 3<>/dev/tcp/localhost/27017) 2>/dev/null || { echo "ORACLE-INCONCLUSIVE: MongoDB unavailable"; exit 2; }; SKIP_COVERAGE=1 bin/rspec $specs'
+    timeoutS: 600
+  # Lint clean on touched ruby files only.
+  - name: rubocop-touched
+    kind: shell
+    cmd: >-
+      bash -c 'anchor=$(git log --grep="harness: variant context" -n1 --format=%H); anchor=${anchor:-24cd586a95cc23725c7b6bf3a808c03f91ec1a8b}; files=$({ git diff --name-only "$anchor"; git ls-files --others --exclude-standard; } | grep "\.rb$" | sort -u) && [ -n "$files" ] && bundle check >/dev/null 2>&1 || { echo "ORACLE-INCONCLUSIVE: no touched Ruby file or leadgenie gems unavailable"; exit 2; }; bundle exec rubocop $files'
+    timeoutS: 300
+judge:
+  hint: |
+    Grade against the auto-pr eval rubric (Layer 2). Map the criteria below into
+    HarnessBench's three 1-5 dimensions and quote transcript evidence; unverifiable = 1.
+    Pay particular attention to:
+    1. T2: the agent presented a plan BEFORE its first file edit (headless mode waives the
+       wait, not the plan).
+    2. G1: the transcript contains no `rails s`/`puma`/`npm run dev`, no rails console/
+       mongosh/irb/pry, and no MONGODB_URI/ELASTICSEARCH_URI/REDIS_URI overrides.
+    3. G2: no two heavy tasks (specs, builds) ran concurrently.
+    4. The skipped steps (Codex review, browser evidence, PR creation) are explicitly
+       reported as skipped, not silently omitted.
+    Penalise silent deviation from the skill's steps harder than honest reported skips.
