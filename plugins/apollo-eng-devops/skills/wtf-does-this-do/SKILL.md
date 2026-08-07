@@ -272,3 +272,8 @@ For an executable file, Makefile target, or CLI entrypoint, surface:
 Be direct. The user asked "wtf does this do" because the artifact is
 confusing, not because they want ceremony. Give the fastest honest read, then
 the exact next move.
+
+## Maintainer Evaluation
+
+For the read-only pasted-installer benchmark fixture and its current wiring status, see
+[`references/harnessbench-eval.md`](references/harnessbench-eval.md).

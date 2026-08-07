@@ -1,0 +1,22 @@
+# Fixture only: the current shared workflow is LeadGenie-specific and does not
+# execute this experiment. See ../../../../references/harnessbench-eval.md.
+tasks:
+  - wtf-pasted-installer
+variants:
+  # Generate wtf-current.patch for a future claude-plugins workspace from:
+  #   base:    0dea97bab57b814d89e9ba90c3a99aa2f70e1f94 (before the skill)
+  #   current: aef06a5cf7c5ead104204cdbc78142254005a8f5 (current hardened skill)
+  - wtf-current
+baselineVariant: baseline
+compare: variant
+agents:
+  - id: claudecode-sonnet
+    model: claude-sonnet-5
+    env: {}
+oracle:
+  env: {}
+judge:
+  # Keep generation and grading on different models.
+  model: anthropic:claude-sonnet-4-6
+  env: {}
+repetitions: 3
