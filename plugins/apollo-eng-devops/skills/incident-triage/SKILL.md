@@ -1,6 +1,7 @@
 ---
 name: incident-triage
 description: Manual-invocation only. Triage Jira INCIDENT tickets. Run via /apollo-eng-devops:incident-triage.
+disable-model-invocation: true
 ---
 
 # Incident Triage

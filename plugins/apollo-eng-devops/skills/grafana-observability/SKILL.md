@@ -1,6 +1,6 @@
 ---
 name: grafana-observability
-description: Grafana dashboard design and alert quality specialist. Activate when reviewing or creating Grafana dashboards, tuning alerts, reducing alert fatigue, designing SLO-based alerting, or conducting observability reviews.
+description: Grafana dashboard design and review, alert tuning and alert-fatigue reduction, SLO burn-rate alerting, and observability reviews.
 ---
 
 # Grafana Observability Specialist

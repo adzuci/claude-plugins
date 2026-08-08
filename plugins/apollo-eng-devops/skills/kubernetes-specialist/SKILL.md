@@ -1,6 +1,6 @@
 ---
 name: kubernetes-specialist
-description: Kubernetes debugging and rollout specialist for Apollo's GKE clusters. Activate when debugging pod crashes, CrashLoopBackOff, OOMKilled, readiness or liveness failures, deployment rollouts, HPA scaling, or resource limit tuning.
+description: Manual-invocation only. Kubernetes debugging and rollout runbook for Apollo's GKE clusters — pod triage, resource tuning, rollouts, HPA. Run via /apollo-eng-devops:kubernetes-specialist.
 disable-model-invocation: true
 ---
 

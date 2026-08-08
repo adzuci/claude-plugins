@@ -1,6 +1,7 @@
 ---
 name: news-feed
-description: Weekly vendor announcement triage for DevOps-relevant AI, security, observability, platform, and infrastructure changes. Pulls OpenAI, Anthropic, Cloudflare, Grafana, Google Cloud, PagerDuty, Slack, Atlassian/Jira, and Cursor feeds, delegates individual posts to wtf-does-this-do, checks Apps DB ownership, and shares only key Apollo-impacting items.
+description: Manual-invocation only. Weekly vendor announcement triage for DevOps-relevant AI, security, observability, platform, and infrastructure changes. Run via /apollo-eng-devops:news-feed.
+disable-model-invocation: true
 ---
 
 # DevOps Vendor News Feed

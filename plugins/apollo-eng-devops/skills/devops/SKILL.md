@@ -1,6 +1,6 @@
 ---
 name: devops
-description: Apollo SRE orchestrator — apply reliability engineering to any production task. Activate when discussing incidents, reliability design reviews, production debugging, architecture proposals, alert tuning, performance regressions, or toil reduction.
+description: Apollo SRE orchestrator. Activate for reliability design reviews, production-readiness reviews, architecture proposals, SLO and error-budget decisions, capacity planning, and toil reduction.
 ---
 
 # Apollo SRE Orchestrator
@@ -120,7 +120,7 @@ When task scope extends into a specialist domain, apply those conventions:
 - **If Kubernetes concepts are involved** (pods, deployments, HPA, node pools, CrashLoopBackOff, OOMKilled): apply `kubernetes-specialist` conventions. Follow the ordered debugging flow: Describe → Logs → Events → Exec → Metrics → Scale.
 - **If dashboards or alerts are involved** (Grafana, alert fatigue, SLO dashboards, alert rules): apply `grafana-observability` conventions. Every alert must be actionable with a runbook.
 - **If incident severity or comms are involved** (SEV declaration, stakeholder updates, postmortem): apply `incident-response` conventions. Incident commander owns the room, not the fix.
-- **If the user is reviewing the unassigned Jira INCIDENT queue** (weekly triage, "review production incidents", filter 11741): hand off to `devops-incident-triage`.
+- **If the user is reviewing the unassigned Jira INCIDENT queue** (weekly triage, "review production incidents", filter 11741): direct the user to run `/apollo-eng-devops:incident-triage`. That skill is manual-invocation only and cannot be auto-loaded.
 
 ## Safe Production Behavior
 

@@ -53,25 +53,31 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 
 ## Example Prompts
 
-| Prompt | Skills activated |
-|---|---|
-| "We're seeing 500s spike after today's deploy" | devops (incident path) + kubernetes-specialist + incident-response |
-| "Check Cloudflare for 5xx spikes and challenge activity" | check-cloudflare + grafana-observability |
-| "Pod keeps restarting with OOMKilled" | kubernetes-specialist OOMKilled triage |
-| "Alert noise is too high in the payments service" | grafana-observability alert audit |
-| "Investigate the logs ingestion rate alert" | logs-ingestion-rate |
-| "Make a weekly on-call handoff artifact" | oncall-handoff |
-| "Review unassigned production incidents" | incident-triage |
-| "Who is on DevOps on-call next week?" | oncall schedule |
-| "Run a MongoDB failover tabletop" | gameday |
-| "I'm paged for Mongo::Error::NoServerAvailable right now" | mongo-specialist (live-incident-mode) + incident-response |
-| "Plan creating a Mongo index on LoginAttempt" | create-mongo-index + mongo-specialist |
-| "Who should I ask about a Mongo balancer issue?" | mongo-specialist |
-| "Postmortem for Feb 14 incident" | incident-response postmortem template |
-| "Design review: new async ingestion pipeline" | devops (design review path) |
-| "We need SLOs for the Elasticsearch cluster" | devops (SLOs module) + grafana-observability |
-| "Bump max_workers for my_queue_worker" | sidekiq-worker-specialist |
-| "Add a new Sidekiq queue to production" | sidekiq-worker-specialist |
+Only five skills auto-activate from natural language: `devops`, `incident-response`,
+`systematic-debugging`, `grafana-observability`, and `wtf-does-this-do`. Everything else is
+manual-invocation only and must be run as a slash command — shown as `/…` below.
+The "Auto-activates" column is indicative, not guaranteed: Claude picks the best match for
+the actual prompt, so a differently-worded question may route elsewhere.
+
+| Prompt | Auto-activates | Then run |
+|---|---|---|
+| "We're seeing 500s spike after today's deploy" | systematic-debugging + incident-response | `/apollo-eng-devops:kubernetes-specialist` |
+| "Check Cloudflare for 5xx spikes and challenge activity" | — | `/apollo-eng-devops:check-cloudflare` |
+| "Pod keeps restarting with OOMKilled" | systematic-debugging | `/apollo-eng-devops:kubernetes-specialist` |
+| "Alert noise is too high in the payments service" | grafana-observability alert audit | — |
+| "Investigate the logs ingestion rate alert" | — | `/apollo-eng-devops:logs-ingestion-rate` |
+| "Make a weekly on-call handoff artifact" | — | `/apollo-eng-devops:oncall-handoff` |
+| "Review unassigned production incidents" | — | `/apollo-eng-devops:incident-triage` |
+| "Who is on DevOps on-call next week?" | — | `/apollo-eng-devops:oncall` |
+| "Run a MongoDB failover tabletop" | — | `/apollo-eng-devops:gameday` |
+| "I'm paged for Mongo::Error::NoServerAvailable right now" | incident-response and/or systematic-debugging | `/apollo-eng-devops:mongo-specialist` (live-incident-mode) |
+| "Plan creating a Mongo index on LoginAttempt" | — | `/apollo-eng-devops:create-mongo-index` |
+| "Who should I ask about a Mongo balancer issue?" | — | `/apollo-eng-devops:mongo-specialist` |
+| "Postmortem for Feb 14 incident" | incident-response postmortem template | — |
+| "Design review: new async ingestion pipeline" | devops (design review path) | — |
+| "We need SLOs for the Elasticsearch cluster" | devops (SLOs module) | — |
+| "Bump max_workers for my_queue_worker" | — | `/apollo-eng-devops:sidekiq-worker-specialist` |
+| "Add a new Sidekiq queue to production" | — | `/apollo-eng-devops:sidekiq-worker-specialist` |
 
 ## When to Enable Each Skill
 
@@ -79,7 +85,7 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 
 **`kubernetes-specialist`** — Invoke explicitly via `/apollo-eng-devops:kubernetes-specialist` when working with pods, deployments, HPAs, node pools, or GKE-level issues. Does not auto-activate from natural-language prompts.
 
-**`sidekiq-worker-specialist`** — Enable when editing `kubernetes/production/sidekiq-workers/values.yaml`: new queues, `max_workers` / `threads_per_pod` tuning, resource changes, or shared-cluster queue additions.
+**`sidekiq-worker-specialist`** — Invoke directly via `/apollo-eng-devops:sidekiq-worker-specialist` when editing `kubernetes/production/sidekiq-workers/values.yaml`: new queues, `max_workers` / `threads_per_pod` tuning, resource changes, or shared-cluster queue additions.
 
 **`grafana-observability`** — Enable when creating or reviewing dashboards, tuning alerts, or auditing alert fatigue. Ensures every alert is actionable and every dashboard follows USE/RED method.
 
@@ -87,7 +93,7 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 
 **`check-cloudflare`** — Invoke directly as `/apollo-eng-devops:check-cloudflare` when checking Cloudflare edge health, bot/challenge behavior, throughput/errors, Workers, or cloudflared tunnel health during incidents or routine reviews. Pair with `grafana-observability` when the finding should feed dashboard, alert, SLO, or runbook improvements.
 
-**`logs-ingestion-rate`** — Enable for Grafana Cloud logs ingestion spikes or alert `eetj859g01kw0f`. Confirms applicability first, then attributes log volume and recommends whether the alert should be tuned.
+**`logs-ingestion-rate`** — Invoke directly via `/apollo-eng-devops:logs-ingestion-rate` for Grafana Cloud logs ingestion spikes or alert `eetj859g01kw0f`. Confirms applicability first, then attributes log volume and recommends whether the alert should be tuned.
 
 **`incident-response`** — Enable when declaring an incident, running a war room, writing stakeholder comms, or conducting a postmortem. Provides severity model, comms templates, and blameless postmortem structure.
 
@@ -99,7 +105,7 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 
 **`gameday`** — Invoke directly for MongoDB incident drills, tabletop scenarios, and on-call practice.
 
-**`wtf-does-this-do`** — Invoke directly when you need to understand an unfamiliar skill, plugin, repo, script, or artifact before changing it.
+**`wtf-does-this-do`** — Auto-activates when you paste an unfamiliar skill, plugin, repo, script, or artifact and ask what it does or whether to install it. Also available directly as `/apollo-eng-devops:wtf-does-this-do`.
 
 **`mongo-specialist`** - Invoke directly for shared Apollo MongoDB context: cluster/client lookup, escalation channels, TapData/Mason guidance, consult targets, and read-only inspection commands. Other Mongo skills should reference this instead of duplicating stale-prone Mongo facts. Also carries the live-incident-mode playbook (PagerDuty/Grafana/Tempo triage, watcher subagents, known traps) for an active Mongo page — pair with `incident-response` for SEV/comms.
 

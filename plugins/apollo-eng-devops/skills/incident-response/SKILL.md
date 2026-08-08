@@ -1,6 +1,6 @@
 ---
 name: incident-response
-description: Incident commander guide for Apollo production incidents. Activate when declaring or managing an incident, writing stakeholder communications, conducting a postmortem, or defining incident severity.
+description: Incident command for Apollo production incidents. Activate when classifying severity (SEV1–SEV4), declaring or managing an incident, writing stakeholder comms, or running a blameless postmortem.
 ---
 
 # Incident Response Guide

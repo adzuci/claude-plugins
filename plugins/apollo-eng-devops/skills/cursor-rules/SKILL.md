@@ -1,6 +1,7 @@
 ---
 name: cursor-rules
-description: Export Apollo skills as Cursor rules (.mdc files) into a project's .cursor/rules/ directory. Activate when the user wants to use Apollo skills in Cursor, asks to set up Cursor rules, export skills to Cursor, or mentions cursor-rules or .mdc.
+description: Manual-invocation only. Export Apollo skills as Cursor rules (.mdc files) into a project's .cursor/rules/ directory. Run via /apollo-eng-devops:cursor-rules.
+disable-model-invocation: true
 ---
 
 # Export Apollo Skills to Cursor Rules

@@ -1,6 +1,6 @@
 ---
 name: wtf-does-this-do
-description: Triage and explain an unfamiliar skill, plugin, agent, repo, script, or pasted artifact before installing, adapting, or cleaning it up. Use `/apollo-eng-devops:wtf-does-this-do` when you want a first-pass explanation and exact next step.
+description: Triage an unfamiliar skill, plugin, agent, repo, or script before installing or adapting it. Activate when the user pastes an artifact, file, or URL and asks what it does or whether to install it.
 ---
 
 # WTF Does This Do

@@ -1,6 +1,6 @@
 ---
 name: systematic-debugging
-description: Apply a four-phase root-cause debugging methodology to any production issue. Activate when the user is debugging a production problem, performance regression, or unexpected system behavior.
+description: Four-phase root-cause debugging methodology for Apollo production issues. Activate when debugging production errors, crashes, elevated error rates, performance regressions, Kubernetes pod crashes, CrashLoopBackOff, OOMKilled, or unexpected system behavior.
 ---
 
 # Systematic Debugging
@@ -66,6 +66,17 @@ Only after root cause is confirmed:
 | Sidekiq failures | Sidekiq web UI, `Sidekiq::Stats.new`, dead queue inspection |
 | MongoDB slow ops | Atlas Performance Advisor, `db.currentOp()` |
 | General latency | Grafana RED dashboard for the service, distributed traces |
+
+## Escalating to Specialists
+
+This skill gets you to a root cause. For deep triage or any mutating operation, direct the
+user to the specialist skill — these are manual-invocation only and cannot be auto-loaded:
+
+- **Kubernetes** (node drains, rollout rollbacks, HPA tuning, resource limits) —
+  `/apollo-eng-devops:kubernetes-specialist`
+- **Sidekiq worker Helm values** — `/apollo-eng-devops:sidekiq-worker-specialist`
+- **MongoDB** (cluster/client lookup, escalation, read-only inspection) —
+  `/apollo-eng-devops:mongo-specialist`
 
 ## Red Flags — Return to Phase 1
 
