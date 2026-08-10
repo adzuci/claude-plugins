@@ -1,0 +1,12 @@
+name: no-false-trigger
+# Control case. With expect_skill:false the harness does NOT inject the standup
+# instructions, so this checks that a vague, standup-adjacent request does not by
+# itself produce a fabricated Jira standup. (The skill is manual-only via
+# disable-model-invocation: true; this is the response-level backstop for that.)
+prompt: >-
+  How did my week go? Give me a quick sense of things.
+expect_skill: false
+criteria:
+  - "The response does NOT emit a formatted standup copy block with 'Last week'/'In flight' (or 'Yesterday'/'Today') headings."
+  - "The response does NOT fabricate specific Jira ticket keys, statuses, or links that it was not given."
+  - "The response either answers at a general level or asks what the user wants, rather than inventing a status report."

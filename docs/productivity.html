@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>An Operating Loop for AI-Assisted Work</title>
-  <meta name="description" content="An engineering note on turning a memory vault into an operating system: small, inspectable, mostly-idempotent loops for task capture, session hygiene, standups, and a weekly report-only AI coach.">
+  <meta name="description" content="AI makes it cheap to start more work. Follow-through is the bottleneck. This local-first operating loop keeps tasks, context, and lessons from disappearing between sessions.">
   <link rel="stylesheet" href="assets/site.css">
   <style>
     .diagram { padding: 30px 24px 8px; overflow-x: auto; }
@@ -19,6 +19,8 @@
     .stat { flex: 1 1 150px; border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; background: var(--soft); }
     .stat .num { font-size: 1.95rem; font-weight: 820; color: var(--ink); line-height: 1.05; }
     .stat .lbl { color: var(--muted); font-size: 0.9rem; margin-top: 5px; }
+    .social-draft summary { cursor: pointer; font-weight: 750; color: var(--ink); }
+    .social-draft[open] summary { margin-bottom: 12px; }
   </style>
 </head>
 <body>
@@ -37,8 +39,8 @@
       <section class="hero-copy">
         <p class="eyebrow">Operating loops · task capture · local-first AI tooling</p>
         <h1>An operating loop for AI-assisted work</h1>
-        <p class="dek">A memory layer tells you what you decided. It does not, on its own, move work forward. This is the set of small, inspectable loops I run on top of one Obsidian vault to close that gap — and the design rules that make them safe to trust.</p>
-        <p class="install-footnote">Part two of a series — start with <a href="memory.html">Memory as reliability practice</a>, then <a href="learning.html">Reflecting your own work back as a learning plan</a>.</p>
+        <p class="dek">AI makes it cheap to start more work. The bottleneck is carrying that work across sessions without dropping commitments, rebuilding context, or handing an agent unchecked control. These small, inspectable loops make the work easier to carry forward and the process easier to improve.</p>
+        <p class="install-footnote">Part two of a series. Start with <a href="memory.html">Memory as reliability practice</a>, then <a href="learning.html">Reflecting your own work back as a learning plan</a>.</p>
         <div class="meta-grid" aria-label="Article metadata">
           <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
           <div class="meta-card"><strong>Artifact</strong><code>productivity</code> plugin</div>
@@ -49,13 +51,18 @@
 
     <main>
       <article>
-        <p class="lead">A memory layer on its own is a filing cabinet. It becomes an operating system when small, boring loops move work through it — and when each loop is cheap enough to run without thinking and safe enough to trust without checking.</p>
+        <h2>Why I built this</h2>
+        <p class="lead">The scarce resource in AI-assisted work is not output. It is continuity: knowing what matters, what changed, and what needs to happen next.</p>
 
-        <p>The <a href="memory.html">memory vault</a> fixed decision loss and surfaced a different problem: the gaps between sessions. A task comes up mid-session and never reaches the backlog. A session gets cleared with uncommitted work still in the tree. Friday arrives and I can't say what the week's AI work actually produced. The vault remembers fine — these are missing loops, not missing memory.</p>
+        <p>LLMs let me explore more ideas and move through implementation faster. They also create more places for useful work to evaporate. A task comes up mid-session and never reaches the backlog. A session gets cleared with uncommitted work still in the tree. Friday arrives and I have to reconstruct what the week's AI work actually produced. AI made each session faster while making the gaps between sessions the new bottleneck.</p>
 
-        <p>The engineering instinct here is the same one I bring to reliability work: when a manual step keeps failing, you do not try harder, you build a small system with a clear contract. The <code>productivity</code> plugin is that system — a handful of skills that share one vault and one convention, each small enough to read in a few minutes and reason about completely.</p>
+        <p>My <a href="memory.html">memory vault</a> fixed decision loss, but remembering is not the same as following through. I needed a lightweight way to turn transient AI work into durable state: important commitments land in one backlog, sessions end with recoverable work, daily status comes from source evidence, and repeated friction becomes visible at the end of the week.</p>
 
-        <div class="pullquote">Capture is cheap. What is expensive is re-finding the task, the loose end, or the pattern three weeks later.</div>
+        <p>That is the reason for this plugin. It is not an attempt to automate every part of my job. It is a way to make AI's speed compound instead of reset. The loops handle capture and reconstruction so I can spend attention on judgment, collaboration, and the work itself.</p>
+
+        <p>The engineering instinct is the same one I bring to reliability work: when a manual step keeps failing, you do not try harder, you build a small system with a clear contract. The <code>productivity</code> plugin is that system: a handful of skills that share one vault and one convention, each small enough to read in a few minutes and reason about completely.</p>
+
+        <div class="pullquote">AI makes work cheaper to start. The loop makes it more likely to finish and easier to improve.</div>
 
         <h2>The loop</h2>
         <p>The skills form a daily-to-weekly cadence around a single git-backed vault. The vault is the only shared state; every skill reads from it and writes plain Markdown back to it, so any one of them works standalone and none of them depends on another's runtime.</p>
@@ -85,7 +92,7 @@ flowchart TB
   C -.->|"writes a report, changes nothing"| V
             </pre>
           </div>
-          <figcaption class="caption">The vault is the substrate. Capture skills write to it in the moment; review skills read from it on a daily-to-weekly rhythm. The Friday coach is deliberately one-directional — it reads the week and writes a report, but changes nothing on its own.</figcaption>
+          <figcaption class="caption">The vault is the substrate. Capture skills write to it in the moment; review skills read from it on a daily-to-weekly rhythm. The Friday coach is deliberately one-directional: it reads the week and writes a report, but changes nothing on its own.</figcaption>
         </figure>
 
         <p>Two skills run in the moment, three on a daily-to-weekly rhythm:</p>
@@ -94,16 +101,16 @@ flowchart TB
           <section class="lane">
             <h3>In the moment</h3>
             <ul>
-              <li><code>/todo</code> — capture a durable task in the vault's Kanban <code>backlog.md</code>. Idempotent by design: re-adding an item deduplicates instead of stacking, and an explicit "urgent" promotes the existing item rather than creating a second copy.</li>
-              <li><code>/wrapup</code> — the pre-<code>/clear</code> preflight. Before you throw away a session, it checks for uncommitted changes, unpushed commits, running jobs, and open obligations, and tells you whether it is actually safe to clear.</li>
+              <li><code>/todo</code>: capture a durable task in the vault's Kanban <code>backlog.md</code>. Idempotent by design: re-adding an item deduplicates instead of stacking, and an explicit "urgent" promotes the existing item rather than creating a second copy.</li>
+              <li><code>/wrapup</code>: the pre-<code>/clear</code> preflight. Before you throw away a session, it checks for uncommitted changes, unpushed commits, running jobs, and open obligations, and tells you whether it is actually safe to clear.</li>
             </ul>
           </section>
           <section class="lane">
             <h3>Daily and weekly</h3>
             <ul>
-              <li><code>/standup</code> — a daily or weekly status built from Jira, the backlog, and daily reports. The paste-ready block is capped at 90 words and eight bullets; private notes surface the credible five-minute closes.</li>
-              <li><code>/daily-wrapup</code> — end-of-day review: yesterday's goals, today's outcomes, tomorrow's preview, and a goal commit written back into the vault's session note.</li>
-              <li><code>/ai-coach</code> — a Friday, report-only review of the week's session notes: repeated friction, capabilities I keep bypassing, and memory candidates. It writes a report and changes nothing.</li>
+              <li><code>/standup</code>: a daily or weekly status built from Jira, the backlog, and daily reports. The paste-ready block is capped at 90 words and eight bullets; private notes surface the credible five-minute closes.</li>
+              <li><code>/daily-wrapup</code>, end-of-day review: yesterday's goals, today's outcomes, tomorrow's preview, and a goal commit written back into the vault's session note.</li>
+              <li><code>/ai-coach</code>: a Friday, report-only review of the week's session notes: repeated friction, capabilities I keep bypassing, and memory candidates. It writes a report and changes nothing.</li>
             </ul>
           </section>
         </div>
@@ -122,7 +129,7 @@ flowchart TB
             <tr>
               <td><code>/todo</code></td>
               <td>Adding the same task twice is a no-op; "urgent" promotes rather than duplicates.</td>
-              <td>A Python helper normalizes bullets, deduplicates case-insensitively, and writes atomically — behavior pinned by unit tests, not by prompt wording.</td>
+              <td>A Python helper normalizes bullets, deduplicates case-insensitively, and writes atomically; behavior is pinned by unit tests, not by prompt wording.</td>
             </tr>
             <tr>
               <td><code>/standup</code></td>
@@ -141,10 +148,10 @@ flowchart TB
         <h2>Design guardrails</h2>
         <p>The same rules as the memory plugin, because they are the reason the whole thing is safe to leave running:</p>
 
-        <p>Everything is plain files. Tasks are Markdown checkboxes in a Kanban board Obsidian renders natively; coach reports are dated Markdown in <code>coaching/</code>. Installs are dry-run first and confirmation-gated — they never overwrite an unmanaged skill of the same name, and every managed copy carries a marker file so updates are safe and removal is obvious. Scheduling uses the client's own scheduler; where there is no good native option, the setup skill hands you the exact manual command instead of quietly writing a cron job. And writes that could compound — task capture, goal commits — are idempotent, so a double-run or a retry never corrupts the board.</p>
+        <p>Everything is plain files. Tasks are Markdown checkboxes in a Kanban board Obsidian renders natively; coach reports are dated Markdown in <code>coaching/</code>. Installs are dry-run first and confirmation-gated: they never overwrite an unmanaged skill of the same name, and every managed copy carries a marker file so updates are safe and removal is obvious. Scheduling uses the client's own scheduler; where there is no good native option, the setup skill hands you the exact manual command instead of quietly writing a cron job. And writes that could compound (task capture, goal commits) are idempotent, so a double-run or a retry never corrupts the board.</p>
 
         <h2>What changed in practice</h2>
-        <p>Four months of running this, measured off the vault it writes to:</p>
+        <p>The outcomes I care about are fewer dropped commitments, faster restarts, and evidence I can use to improve how I work. Four months of running this, measured off the vault it writes to:</p>
 
         <div class="stats" aria-label="Usage metrics">
           <div class="stat"><div class="num">610</div><div class="lbl">session summaries archived since Mar 16</div></div>
@@ -152,14 +159,17 @@ flowchart TB
           <div class="stat"><div class="num">19</div><div class="lbl">days I closed out with <code>/daily-wrapup</code></div></div>
         </div>
 
-        <p>The SessionEnd hook does the archiving, so those 610 summaries cost me nothing to keep — I stopped deciding what was worth writing down. On the 19 days with something to reconcile I ran <code>/daily-wrapup</code>, and each one means the next morning starts from a written plan instead of a cold read. Tasks moved out of chat scrollback and into the backlog, because capturing one is now cheaper than scrolling to find it. And the Friday coach reads that same pile and, often enough to matter, names a habit I had not clocked. The loops are small; the state compounds.</p>
+        <p>The SessionEnd hook does the archiving, so those 610 summaries cost me nothing to keep, and I stopped deciding what was worth writing down. On the 19 days with something to reconcile I ran <code>/daily-wrapup</code>, and each one means the next morning starts from a written plan instead of a cold read. Tasks moved out of chat scrollback and into the backlog, because capturing one is now cheaper than scrolling to find it. And the Friday coach reads that same pile and, often enough to matter, names a habit I had not clocked. The loops are small; the state compounds.</p>
 
         <div class="note">
           <p><strong>The practical test:</strong> if this is working, tasks stop living in chat scrollback, sessions end clean, and Friday's coach report occasionally surfaces a pattern you would otherwise have missed.</p>
         </div>
 
+        <h2>Why I am publishing it</h2>
+        <p>The interesting part is not one more personal productivity setup. It is comparing failure modes and better contracts with other people building AI-assisted workflows. I am sharing the working implementation so others can test it, challenge it, and show me better loops. If you are working on this too, <a href="https://github.com/adzuci/claude-plugins/issues">open an issue</a> or reach out. If AI leverage, operational rigor, and explicit guardrails sound like your kind of engineering culture, I would enjoy connecting. You may also find <a href="https://www.apollo.io/careers">Apollo's open roles</a> interesting.</p>
+
         <h2>Honest limitations</h2>
-        <p>It assumes the vault convention from the memory plugin — a <code>sessions/</code> directory of curated notes is what makes the coach useful; without it, weekly mode has little to read. The Kanban layout is an opinion (six fixed sections), not a framework. Scheduling is best-supported on the clients I use daily; elsewhere you get the manual command rather than a background job installed on your behalf. And like everything in this repo, it is tested primarily on macOS — Linux and Windows reports are welcome.</p>
+        <p>It assumes the vault convention from the memory plugin: a <code>sessions/</code> directory of curated notes is what makes the coach useful; without it, weekly mode has little to read. The Kanban layout is an opinion (six fixed sections), not a framework. Scheduling is best-supported on the clients I use daily; elsewhere you get the manual command rather than a background job installed on your behalf. And like everything in this repo, it is tested primarily on macOS; Linux and Windows reports are welcome.</p>
 
         <section class="install-block" id="install">
           <h2>Install the plugin</h2>
@@ -180,6 +190,11 @@ codex plugin add productivity@adzuci-plugins
           </div>
           <p class="install-footnote">Setup asks before it writes anything outside the current project. Pairs best with the <a href="memory.html">memory plugin's vault</a>, but any Obsidian vault works.</p>
         </section>
+
+        <details class="note social-draft">
+          <summary>Draft LinkedIn post (53 words)</summary>
+          <p>LLMs made it cheap to start more work; follow-through became the bottleneck. I built a local-first operating loop to keep AI-assisted work moving across sessions. I’m sharing it so others can test, challenge, and improve it, and imagine new ways to work with LLMs. It’s my experiment at Apollo. <a href="https://adzuci.github.io/claude-plugins/productivity.html">Read the post</a>.</p>
+        </details>
       </article>
 
       <aside>
@@ -201,6 +216,7 @@ codex plugin add productivity@adzuci-plugins
           <div class="link-list">
             <a href="memory.html">Memory as reliability practice</a>
             <a href="learning.html">Reflecting your own work back as a learning plan</a>
+            <a href="skill-evals.html">Testing skills the way they actually run</a>
           </div>
         </section>
       </aside>

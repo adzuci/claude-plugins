@@ -1,0 +1,65 @@
+name: Skill eval
+
+# Behavioral eval for the standup skill. Kept separate from ci.yml so the
+# hermetic, no-secret test job stays untouched and this paid, LLM-backed job is
+# gated independently. Only runs when the standup skill (or its evals) change.
+#
+# Prerequisite: add an ANTHROPIC_API_KEY repository secret
+# (Settings -> Secrets and variables -> Actions). Until then this job errors on auth.
+
+on:
+  pull_request:
+    paths:
+      - "plugins/productivity/skills/standup/**"
+      - ".github/workflows/skill-eval.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write # post the eval scorecard as a PR comment
+
+jobs:
+  standup:
+    name: Eval standup skill
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Run standup evals
+        id: eval
+        # Temporarily pinned to adzuci's fork: v1.3.0 + a grader fix (parse raw
+        # JSON before stripping code fences — upstream's order mangles valid JSON
+        # whose evidence quotes a fenced block, failing whole cases with
+        # "Expecting value: line 1 column 1"). Repoint to upstream once merged.
+        uses: adzuci/skill-eval-action@bd6215df6c9dc3f1b91270a42a9e9662e81a49d5 # v1.3.0 + grader fix + stderr surfacing
+        with:
+          skill-name: standup
+          skill-path: ./plugins/productivity/skills/standup
+          anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          pass-threshold: "80" # LLM grading is non-deterministic; 80% absorbs occasional flake
+          allowed-tools: "Read,Glob,Grep,Bash" # read the fixture vault; run check_standup.py
+
+      - name: Post one-line summary comment
+        if: always() && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RATE: ${{ steps.eval.outputs.pass-rate }}
+          PASSED: ${{ steps.eval.outputs.passed }}
+          TOTAL: ${{ steps.eval.outputs.total }}
+          CASES: ${{ steps.eval.outputs.cases-run }}
+          OUTCOME: ${{ steps.eval.outcome }}
+        run: |
+          MARKER="<!-- skill-eval-summary: standup -->"
+          if [ -n "$RATE" ]; then
+            VERDICT=$([ "${RATE%.*}" -ge 80 ] && echo "PASS ✅" || echo "FAIL ❌")
+            BODY="$MARKER"$'\n'"**Standup eval:** ${PASSED:-?}/${TOTAL:-?} criteria (${RATE}%) across ${CASES:-?} cases — $VERDICT vs 80% threshold. Full scorecard above; per-case transcripts in the run artifact."
+          else
+            BODY="$MARKER"$'\n'"**Standup eval:** did not produce a score (step outcome: $OUTCOME) — likely an execution/auth failure; see the run log and artifact."
+          fi
+          EXISTING=$(gh api "repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/comments" --paginate             --jq ".[] | select(.body | startswith(\"$MARKER\")) | .id" | head -1)
+          if [ -n "$EXISTING" ]; then
+            gh api "repos/${GITHUB_REPOSITORY}/issues/comments/$EXISTING" -X PATCH -f body="$BODY" >/dev/null
+          else
+            gh api "repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/comments" -f body="$BODY" >/dev/null
+          fi

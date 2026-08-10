@@ -1,0 +1,41 @@
+name: brevity-overflow
+# Stress the brevity contract: a vault stuffed with completed work must still
+# produce a copy block within the hard limits (<=5 accomplishment bullets,
+# <=2 in-flight, <8 bullets total, <90 words).
+prompt: >-
+  /standup weekly
+
+  Assume today is Thursday 2026-07-23, so the previous calendar week is Monday
+  2026-07-14 through Sunday 2026-07-20. Use the Obsidian vault at ./vault. Jira
+  is unavailable in this environment.
+expect_skill: true
+files:
+  - path: vault/backlog.md
+    content: |
+      # Backlog
+
+      ## Done This Week
+      - Migrated auth service to the new token format
+      - Deleted three deprecated cron jobs
+      - Fixed the paging gap in the on-call rotation
+      - Upgraded the base image and repinned dependencies
+      - Wrote the incident review for the 2026-07-16 blip
+      - Added dashboards for the new indexing pipeline
+      - Cleaned up 40 stale feature flags
+      - Documented the deploy freeze process
+
+      ## In Progress
+      - Rolling out the token format to remaining services
+      - Drafting the capacity plan for Q3
+      - Reviewing the exporter migration PR
+  - path: vault/sessions/2026-07-16.md
+    content: |
+      # 2026-07-16
+
+      ## Accomplishments
+      - Migrated auth to the new token format and cleaned up stale flags.
+criteria:
+  - "Despite the long list of completed work in the vault, the paste-ready copy block contains at most five accomplishment bullets and at most two in-flight bullets."
+  - "The copy block contains no more than eight bullets total and reads as clearly under ~90 words."
+  - "The copy block favors completed outcomes over raw activity, summarizing or dropping lower-value items rather than listing everything."
+  - "The response does NOT claim to have posted the update anywhere or to have changed any ticket status."
