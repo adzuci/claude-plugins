@@ -53,11 +53,9 @@ jobs:
           MARKER="<!-- skill-eval-summary: standup -->"
           if [ -n "$RATE" ]; then
             VERDICT=$([ "${RATE%.*}" -ge 80 ] && echo "PASS ✅" || echo "FAIL ❌")
-            BODY="$MARKER
-**Standup eval:** ${PASSED:-?}/${TOTAL:-?} criteria (${RATE}%) across ${CASES:-?} cases — $VERDICT vs 80% threshold. Full scorecard above; per-case transcripts in the run artifact."
+            BODY="$MARKER"$'\n'"**Standup eval:** ${PASSED:-?}/${TOTAL:-?} criteria (${RATE}%) across ${CASES:-?} cases — $VERDICT vs 80% threshold. Full scorecard above; per-case transcripts in the run artifact."
           else
-            BODY="$MARKER
-**Standup eval:** did not produce a score (step outcome: $OUTCOME) — likely an execution/auth failure; see the run log and artifact."
+            BODY="$MARKER"$'\n'"**Standup eval:** did not produce a score (step outcome: $OUTCOME) — likely an execution/auth failure; see the run log and artifact."
           fi
           EXISTING=$(gh api "repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/comments" --paginate             --jq ".[] | select(.body | startswith(\"$MARKER\")) | .id" | head -1)
           if [ -n "$EXISTING" ]; then
