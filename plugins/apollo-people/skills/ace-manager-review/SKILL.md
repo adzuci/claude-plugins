@@ -323,6 +323,8 @@ The draft must read like a thoughtful human manager wrote it. Apply all of the f
 
 **Source linking is mandatory throughout the draft.** Every metric, every piece of named feedback, and every claim that references a specific document, project, or event must include an inline hyperlink. Use Markdown link format: `[claim or figure](url)`. If you have evidence but no direct link, write [source needed] so the manager can add it before submitting.
 
+**Never cite the manager's own recognition as third-party validation.** When the only source for a piece of recognition is a message the manager writing this review authored — a kudos post, a DM, a Slack message they sent to the report or to leadership — do not cite or link it as external evidence attributed to the manager by name. It reads as the manager quoting their own praise. Instead, describe the underlying work or outcome directly and factually in the manager's own narrative voice, with no attribution device ("recognised in", "as [manager] noted", "praised by [manager]") pointing back at the manager. Only cite and link recognition when the source is someone other than the manager writing this review.
+
 ______________________________________________________________________
 
 ### Section 1: Impact
@@ -342,7 +344,7 @@ Document genuine achievements only. This section is positive.
 - **Opening sentence:** State the result with accurate attribution. For ICs: "[Name] led..." when they drove it, "[Name] contributed to..." for a team effort, "[Name] collaborated with [Name] to..." when partnership was central. For reports who manage their own team: "Their team delivered...", "They set the direction for...", "They enabled the team to..." — never claim the report personally built something their reports owned.
 - **Body:** Problem → actions taken → outcome. Name collaborators. Use "they" for their personal actions, "their team" for delivery they directed.
 - **KR connection:** Link the outcome to the relevant OKR or KR — hyperlinked.
-- **Feedback:** Weave in named recognition where it validates the achievement, with a link to the source. "In March, [Daniel recognised this in #kudos](link), noting that [specific feedback]."
+- **Feedback:** Weave in named recognition where it validates the achievement, with a link to the source. "In March, [Daniel recognised this in #kudos](link), noting that [specific feedback]." Only cite recognition authored by someone other than the manager writing this review. If the manager is the source, describe the work directly in their own voice with no attribution back to them.
 - **Metrics:** All figures hyperlinked to their verified source. Format: `[X%](link to source)`
 
 ______________________________________________________________________
@@ -362,6 +364,8 @@ Document genuine ownership behaviours only. This section is positive.
 - **Outcome:** What resulted from their ownership
 
 Draw from what the manager described in Step 6 (the ownership moment). Constructive feedback that was given and demonstrably acted on is strong ownership evidence. Example: "In February, \[their manager flagged in a 1:1\](link to 1:1 note) that project updates lacked business context. From that point, [Name] restructured the weekly updates to lead with KR impact. By April, [the improvement was directly noted](link)."
+
+When recognition of their ownership comes only from the manager writing this review, describe the work and its outcome directly in the manager's voice — do not cite or link it as third-party validation attributed to the manager.
 
 ______________________________________________________________________
 
@@ -454,6 +458,7 @@ ______________________________________________________________________
 | "Their exceptional leadership drove remarkable results" | "They coordinated across four teams to deliver X, which contributed to KR Y" |
 | Rating language or performance level judgments | State facts only — no evaluation |
 | "They received positive feedback" (anonymous, no link) | "In April, [Priya said in a 1:1](link) that..." |
+| Citing the manager's own kudos/Slack post as third-party validation | Describe the work directly in the manager's voice; no self-citation |
 | Generic growth areas | Specific, evidence-grounded gaps with a concrete example of stronger execution |
 | Sole credit for team achievements | Name collaborators; for manager-reports, use "their team delivered" |
 | Claiming report personally built what their team owned | "Their team delivered / they enabled the team to / they set the direction for" |
