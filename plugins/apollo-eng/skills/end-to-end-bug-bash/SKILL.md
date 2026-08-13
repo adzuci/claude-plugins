@@ -73,7 +73,7 @@ ______________________________________________________________________
 - [ ] **Phase 3 — Execute (per feature):** drive the UI with `playwright-cli` per
   `manual-test-execution`'s gates and rules, using the Phase 2 test plan as the scenario source.
 - [ ] **Phase 4 — Evidence + bug logging (Notion always; Jira only on explicit request):** update every
-  executed Test Case DB row's `AI-tested` status with the real outcome and upload its run evidence,
+  executed Test Case DB row's `AI Status` with the real outcome and upload its run evidence,
   then log every genuine bug as a
   Notion Bugs DB row (full write-up in `content`, real screenshot/video/scrubbed-trace attached to
   `Files & media`/`Screenshot`) under this feature's Test Plan page — unconditionally, every run. Write the
@@ -470,7 +470,7 @@ Jira.
 ### 4.0 Update Test Case DB rows with the run outcome (mandatory, every executed case)
 
 Read and follow `references/notion-test-case-status.md` in full. In short: every Test Case row that
-Phase 3 actually executed gets its `AI-tested` property set to `Pass`/`Fail`/`Partially pass` —
+Phase 3 actually executed gets its `AI Status` property set to `Pass`/`Conditional Pass`/`Fail` —
 whichever this run really produced — so a viewer can see execution status directly on the row instead
 of it looking untouched forever. Cases genuinely not reached this run stay at the default `Not tested`; don't touch those.
 

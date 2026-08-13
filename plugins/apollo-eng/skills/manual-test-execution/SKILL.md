@@ -4,7 +4,7 @@ description: >-
   Execute manual test scenarios against a running web app by driving the UI with
   playwright-cli, producing an auditable report.md + failed-step screenshots + video under
   playwright/reports/ai_manual/[run_id]/, and (when scenarios come from Notion) writing the
-  run summary and _AI-tested_ status back to each Test case page via the Notion MCP.
+  run summary and AI Status back to each Test case page (never the human-owned Status) via the Notion MCP.
   Use whenever the user asks to "run manual tests", "execute manual test scenarios",
   "manual test execution", "run the test plan", "run test cases from Notion",
   "AI-execute these test cases", "test this scenario in the browser", or pastes a Notion
@@ -36,10 +36,12 @@ Migrated from `.cursor/commands/manual-test-execution.md`. Canonical usage doc:
 - [ ] **Report:** PASS / FAIL / PARTIAL; document every step and every issue. Never guess URL, login, or password — ask if missing.
 - [ ] **Notion Test case pages (only when scenario source was Notion):** After **each** executed case,
   **mandatorily** (1) append an "AI Manual test run summary (AI-executed)" section with Run ID, date,
-  result, steps, brief summary, and evidence-upload state; (2) set the **`_AI-tested_`** property to
-  **Pass**, **Partially pass**, or **Fail** for THIS run — never leave a stale value; and (3) upload
-  the report, applicable screenshots, video, and only confirmed-scrubbed trace/HAR to the existing
-  Test Case file property. Skip entirely when the scenario was user-provided.
+  result, steps, brief summary, and evidence-upload state; (2) set the **`AI Status`** property to this
+  run's verdict — **Pass** / **Conditional Pass** / **Fail** (or **Blocked** / **Out of scope**), chosen
+  from that data source's own `AI Status` options — never leave a stale value, and **never set the
+  human-owned `Status` property** (a human sets that; AI writes it only when the user explicitly asks in
+  this run); and (3) upload the report, applicable screenshots, video, and only confirmed-scrubbed
+  trace/HAR to the existing Test Case file property. Skip entirely when the scenario was user-provided.
 - [ ] **Notion test plan / workflow status (Notion source only):** If the Test case or parent test plan exposes workflow status properties (e.g. **QA in progress**, **In progress**, **In review**), update them with the run lifecycle. Ask the user once which property names to use if ambiguous.
 
 ______________________________________________________________________
@@ -111,7 +113,7 @@ ______________________________________________________________________
   1. `playwright-cli goto <base-url>` and log in (fill login/password using snapshot refs).
   1. Per step: **snapshot → interact (click/fill/type/select/press) using exact refs → wait → assert** by re-reading the snapshot (and screenshots at key points).
   1. After actions that change the page (submit, navigation), take a fresh snapshot before the next interaction.
-  1. At the end: `playwright-cli video-stop playwright/reports/ai_manual/[run_id]/video/run.webm` then `playwright-cli close`.
+  1. At the end: `playwright-cli video-stop --filename=playwright/reports/ai_manual/[run_id]/video/run.webm` then `playwright-cli close`. **Gotcha:** `video-stop` takes the path via the `--filename=` flag, NOT as a positional argument (a positional path errors with "too many arguments" and the recording is lost). Stop the video **before** `close`, and confirm the `.webm` exists; if it is missing, say so rather than implying a video was captured.
 - **Best practices:** prefer semantic, stable targets (roles, labels, test ids) exposed by the snapshot; prefer waiting for content over fixed sleeps.
 - **Recovery — do not give up early (required):**
   - Do **not** stop on the first missing element or empty state if the UI offers a path forward (e.g. "No AI sheet found", "Create…", empty lists with **Add**/**New** buttons).
@@ -177,9 +179,9 @@ All artifacts under `playwright/reports/ai_manual/[run_id]/`:
 
 ### Notion test cases update
 
-- [Notion source: per executed case — link + what was appended + `_AI-tested_` value set + attached
-  filenames + evidence state (`Uploaded` or `Pending: reason`). User-provided source: "N/A — scenario
-  was user-provided; no Notion pages to update."]
+- [Notion source: per executed case — link + what was appended + `AI Status` value set (and confirmation
+  that `Status` was left untouched) + attached filenames + evidence state (`Uploaded` or `Pending: reason`).
+  User-provided source: "N/A — scenario was user-provided; no Notion pages to update."]
 
 ### Recommendations
 
@@ -193,7 +195,7 @@ Status meaning — **PASS:** all steps completed and expectations met. **FAIL:**
 For **each** executed Test case page, in the same session as the run completes:
 
 1. **Append** a section **"AI Manual test run summary (AI-executed)"** with: Run ID, Date (UTC), Base URL, Result (PASS/FAIL/PARTIAL), steps executed/passed/failed, a short bullet summary, and **Evidence upload: Uploaded** with filenames or **Evidence upload: Pending** with the exact blocker (use `notion-update-page`).
-1. **Set the `_AI-tested_` status property** — allowed values: **Not tested**, **Partially pass**, **Pass**, **Fail**. Map: all critical expectations met → Pass; mixed → Partially pass; blocked or critical miss → Fail. Never finish a Notion-sourced run without writing this for every executed case; treat a stale value from a prior run as a bug and fix it. If the property doesn't exist on the database, create it (Status type) via `notion-update-data-source`.
+1. **Set the `AI Status` property** — the AI-executed run verdict. Choose a value from the data source's own `AI Status` options (fetch the schema first — do not assume names): all critical expectations met → **Pass**; mixed / non-critical gaps → **Conditional Pass**; critical miss (bug logged) → **Fail**; couldn't execute → **Blocked**; not applicable to this build → **Out of scope**; never reached → leave **Not started**. Never finish a Notion-sourced run without writing this for every executed case; treat a stale value from a prior run as a bug and fix it. **Do not touch the `Status` property** — that field is owned by humans (its options are dev/QA triage such as `Fix Deployed`, `Fix in review`, `Retest Required`) and AI must never set it unless the user explicitly asks for it in this run.
 1. **Upload real evidence to the Test Case row.** Read and follow
    `${CLAUDE_PLUGIN_ROOT}/skills/end-to-end-bug-bash/references/notion-bugs-and-evidence.md`'s
    **Executed Test Case evidence** section. Do this for Pass, Fail, and Partially pass outcomes. Never
