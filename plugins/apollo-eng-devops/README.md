@@ -14,6 +14,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 |---|---|
 | `/apollo-eng-devops:check-apdex` | Snowflake-first Apdex dip investigation with Grafana deep triage |
 | `/apollo-eng-devops:check-cloudflare` | Cloudflare edge, bot/challenge, throughput/error, and tunnel health checks |
+| `/apollo-eng-devops:cron-oom-remediation` | Diagnose a cron OOMKilled alert and ship the right fix — limit bump vs streaming/projection/chunking |
 | `/apollo-eng-devops:create-mongo-index` | Safe read-only planning and DevOps handoff for Apollo MongoDB index creation |
 | `/apollo-eng-devops:devops` | SRE devops — applies reliability engineering to any production task |
 | `/apollo-eng-devops:gameday` | MongoDB incident gameday drills for on-call practice |

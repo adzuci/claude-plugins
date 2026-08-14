@@ -53,7 +53,7 @@ See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill comman
 | Plugin | Description | Skills |
 | --- | --- | ---: |
 | `apollo-eng` | Shared engineering skills for Apollo repos | 24 |
-| `apollo-eng-devops` | DevOps, SRE, and production reliability skills for Apollo engineers | 20 |
+| `apollo-eng-devops` | DevOps, SRE, and production reliability skills for Apollo engineers | 21 |
 | `apollo-analytics` | Apollo Analytics Copilot — answers data questions using governed Snowflake metrics, runs product debriefs, generates account profiles, and surfaces weekly strategic insights. | 12 |
 | `apollo-eng-leadership` | Cowork skills for engineering leadership and customer-care rotation support | 9 |
 | `apollo-gtm` | Go-to-market strategy, sales enablement, and demand generation | 8 |
