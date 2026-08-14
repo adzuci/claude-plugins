@@ -1,6 +1,7 @@
 ---
 name: kubernetes-specialist
-description: Manual-invocation only. Kubernetes debugging and rollout runbook for Apollo's GKE clusters — pod triage, resource tuning, rollouts, HPA. Run via /apollo-eng-devops:kubernetes-specialist.
+description: Manual-invocation only. Kubernetes debugging and rollout runbook for Apollo's GKE clusters — pod triage, resource tuning, rollouts, HPA, and a cluster version/EOL report. Run via /apollo-eng-devops:kubernetes-specialist.
+argument-hint: "[--versions] [--kubent] [--project ID] [--cluster NAME] [--refresh]"
 disable-model-invocation: true
 ---
 
@@ -249,6 +250,62 @@ kubectl exec -it <pod-name> -n <namespace> -- cat /sys/fs/cgroup/cpu/cpu.stat | 
 
 ______________________________________________________________________
 
+## Versions Report (`--versions`)
+
+```text
+/apollo-eng-devops:kubernetes-specialist --versions [--project ID] [--cluster NAME] [--refresh] [--kubent]
+```
+
+Reports every known GKE cluster's Kubernetes version and flags any cluster running a
+past-EOL (or soon-to-be-EOL) minor version, ahead of a required upgrade.
+
+**This mode is read-only against GCP**: `gcloud container clusters list`,
+`gcloud container clusters get-credentials` (local kubeconfig context switch only —
+no cluster mutation), and a `kubent` scan (also read-only). It never runs `apply`,
+`delete`, `drain`, or any other mutating `kubectl`/`gcloud` command.
+
+**Step 1: Run the report**
+
+```bash
+python3 scripts/gke_versions_report.py --versions
+```
+
+This reads the seed inventory in [`scripts/gke_clusters.json`](scripts/gke_clusters.json)
+(one entry per known Apollo GCP project), calls `gcloud container clusters list --project <project> --format=json` for each, and cross-references each cluster's master
+version against live Kubernetes EOL data from
+[endoflife.date](https://endoflife.date/kubernetes) to render a markdown table:
+
+| Project | Cluster | Location | Master Version | Node Version | Status | EOL Date | Flag |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+
+Flagged clusters (🔴 past EOL, 🟡 EOL within 60 days) sort to the top. A blank flag means
+the minor version is still supported.
+
+**Step 2 (optional): `--refresh`** — also probes every GCP project the caller can see
+(`gcloud projects list`) for GKE clusters not already in `gke_clusters.json`, and prints a
+diff to review. It does **not** write the file automatically — a human reviews and commits
+the addition, since a project showing up here doesn't necessarily mean it belongs in the
+steady-state inventory.
+
+**Step 3 (optional): `--kubent`** — for each 🔴/🟡 cluster from Step 1 (or a single cluster
+via `--cluster NAME --project ID`), runs `kubent` against it to find which deployed
+resources actually use deprecated/removed APIs, so the upgrade has a concrete worklist
+instead of just a version number:
+
+```bash
+gcloud container clusters get-credentials <cluster> --project <project> --location <location>
+kubent --context gke_<project>_<location>_<cluster> -o json -e
+```
+
+Requires `kubent` installed locally (`brew install kubent`; see
+[kube-no-trouble](https://github.com/doitintl/kube-no-trouble) for other platforms). If it's
+missing, the script prints the install command instead of failing silently.
+
+See [`references/versions-report.md`](references/versions-report.md) for exact commands,
+sample output, and the EOL/flag thresholds.
+
+______________________________________________________________________
+
 ## Sidekiq worker values
 
 For **adding or tuning** Sidekiq entries in `kubernetes/production/sidekiq-workers/values.yaml` **in the [`apolloio/leadgenie`](https://github.com/apolloio/leadgenie) repo**, use the [`sidekiq-worker-specialist`](../sidekiq-worker-specialist/SKILL.md) skill (handles cluster selection, impact calculation, and CI validation).
@@ -284,3 +341,4 @@ Once installed, Claude can call `mcp__apollo_gke__pods_list`, `mcp__apollo_gke__
 
 - [`references/debugging-playbook.md`](references/debugging-playbook.md) — Step-by-step kubectl flows with exact commands
 - [`references/rollout-patterns.md`](references/rollout-patterns.md) — Rollout strategies with when-to-use guidance
+- [`references/versions-report.md`](references/versions-report.md) — `--versions`/`--kubent` commands, sample output, and EOL flag thresholds

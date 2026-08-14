@@ -1,0 +1,3 @@
+# Runtime deps for gke_versions_report.py: none -- it uses only the Python standard
+# library and shells out to `gcloud` / `kubent`. This file exists so CI's dependency
+# auto-install step has a target; keep it empty unless a real dependency is added.

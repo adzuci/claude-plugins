@@ -1,0 +1,11 @@
+{
+  "_comment": "Seed inventory of known Apollo GCP projects with GKE clusters, used by gke_versions_report.py as the default scan list. Updated manually -- review the diff `--refresh` prints before adding a project here.",
+  "projects": [
+    { "project": "stage-23704", "env": "staging" },
+    { "project": "indigo-lotus-415", "env": "prod" },
+    { "project": "apollo-ops", "env": "ops" },
+    { "project": "apollo-cdc", "env": "cdc" },
+    { "project": "apollo-hermes-prod", "env": "hermes" },
+    { "project": "apollo-data-platform-prod", "env": "data-platform" }
+  ]
+}
