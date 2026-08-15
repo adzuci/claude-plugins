@@ -314,6 +314,14 @@ This `kubernetes-specialist` skill covers **runtime debugging** of deployed `sid
 
 ______________________________________________________________________
 
+## Container Image Review
+
+For build-time Docker/OCI image size and layer-efficiency reviews, use
+[`image-review`](../image-review/SKILL.md). Keep this skill focused on runtime GKE
+diagnosis and rollout operations.
+
+______________________________________________________________________
+
 ## Apollo Cluster Context
 
 - **Production cluster**: GKE on GCP, primary workloads in `default` and service-specific namespaces
