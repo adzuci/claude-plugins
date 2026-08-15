@@ -1,7 +1,7 @@
 ---
 name: mongo-specialist
-description: Manual-invocation only. Shared Apollo MongoDB operations context for safe read-only triage, routing, escalation, and links to cluster, channel, TapData, people, and related-skill references. Run via /apollo-eng-devops:mongo-specialist.
-argument-hint: optional model, collection, cluster, incident, or Mongo question
+description: Manual-invocation only. Shared Apollo MongoDB operations context for safe read-only triage, routing, escalation, links to cluster/channel/TapData/people/related-skill references, and an experimental general Mongo query/schema health review mode for PRs. Run via /apollo-eng-devops:mongo-specialist.
+argument-hint: optional model, collection, cluster, incident, Mongo question, or "review <PR#> --repo <owner/repo>"
 disable-model-invocation: true
 ---
 
@@ -26,7 +26,7 @@ database and cluster before making recommendations.
 
 1. Classify the task: index creation, unused index cleanup, index discrepancy, sharding,
    **live incident** (currently paged / active outage), collection change audit, access,
-   or architecture lookup.
+   **PR/diff review** for general Mongo query/schema health, or architecture lookup.
 1. If the task is a live incident — a Mongo-flavored PagerDuty page
    (`NoServerAvailable`, connection errors, Mongo-signature 5xx) or a user actively on an
    incident Zoom/thread about Mongo — load
@@ -36,6 +36,15 @@ database and cluster before making recommendations.
    status-page, and impact references below. Pair it with `incident-response` for
    SEV/comms; use `incident-triage` instead if this is Jira bookkeeping rather than an
    active page, and `gameday` instead if this is a rehearsal, not a real incident.
+1. If the task is reviewing a specific PR/branch — e.g.
+   `/apollo-eng-devops:mongo-specialist review 98835 --repo apolloio/leadgenie` — load
+   [`references/pr-review-mode.md`](references/pr-review-mode.md). This mode is a one-stop
+   shop: it checks whether the separate `apollo-eng` plugin is enabled, **delegates** to
+   `/apollo-eng:mongo-pr-guard` for the proven-incident BLOCK patterns when it is (do not
+   reimplement those checks here), and adds its own broader, WARN-only general query/schema
+   health pass on top. If `apollo-eng` isn't enabled, it stops and tells the user how to
+   enable it rather than silently running only the WARN-only half. Experimental and
+   non-blocking.
 1. Load only the other reference files that are relevant:
    - `references/read-only-commands.md` for safe inspection commands.
    - `references/mongo-clusters.md` for current known client/cluster mapping, the prod
@@ -65,7 +74,9 @@ Prefer the narrower skill when the task matches one:
 - Use `/apollo-eng-devops:incident-response` alongside live-incident-mode for SEV
   classification, comms cadence, and postmortems during a real incident.
 - Use `/apollo-eng-devops:incident-triage` for Jira INCIDENT ticket bookkeeping.
-- Use `/apollo-eng:mongo-pr-guard` for Mongo PR safety review.
+- Use `/apollo-eng:mongo-pr-guard` directly for just the proven-incident checks. This
+  skill's own `references/pr-review-mode.md` wraps that call and adds a broader,
+  experimental general query/schema health pass for a one-stop PR review.
 - Use repo-local `mongo-index-discrepancies`, `mongo-unused-indexes`,
   `mongo-shard-collection`, or `mongo-collection-check` when those are available and the
   task exactly matches them. These are not shipped with this plugin; confirm they are
@@ -75,6 +86,9 @@ Prefer the narrower skill when the task matches one:
 
 - [`references/live-incident-mode.md`](references/live-incident-mode.md) — live incident
   technical diagnostic playbook
+- [`references/pr-review-mode.md`](references/pr-review-mode.md) — experimental general
+  Mongo query/schema health review for PRs; delegates incident patterns to
+  `mongo-pr-guard`
 - [`references/gcloud-access.md`](references/gcloud-access.md) — gcloud CLI, VM SSH, and
   read-only forensics
 - [`references/mcp-setup.md`](references/mcp-setup.md) — Grafana/Glean/Granola MCP setup

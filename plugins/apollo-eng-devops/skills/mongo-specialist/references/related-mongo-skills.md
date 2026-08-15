@@ -6,7 +6,8 @@ Use this file to avoid rebuilding the wrong workflow inside `mongo-specialist`.
 | --- | --- | --- |
 | `/apollo-eng-devops:create-mongo-index` | `plugins/apollo-eng-devops/skills/create-mongo-index` | Read-only planning and handoff for creating Mongo indexes. |
 | `/apollo-eng-devops:gameday` | `plugins/apollo-eng-devops/skills/gameday` | Mongo incident tabletop drills from real Apollo failure modes. |
-| `/apollo-eng:mongo-pr-guard` | `plugins/apollo-eng/skills/mongo-pr-guard` | PR safety review for Mongo query, sharding, routing, and bulk-write risks. |
+| `/apollo-eng:mongo-pr-guard` | `plugins/apollo-eng/skills/mongo-pr-guard` | PR safety review for Mongo query, sharding, routing, and bulk-write risks — proven-incident patterns only. |
+| `mongo-specialist` review mode | `plugins/apollo-eng-devops/skills/mongo-specialist/references/pr-review-mode.md` | One-stop PR review: delegates to `mongo-pr-guard` for incident patterns, adds an experimental WARN-only general query/schema health pass. |
 | `mongo-index-discrepancies` | `leadgenie/.claude/skills/mongo-index-discrepancies` | Checks prod indexes not declared in source and looks for incoming PRs. |
 | `mongo-unused-indexes` | `leadgenie/.claude/skills/mongo-unused-indexes` | Processes unused-index emails, `$indexStats`, hide/drop planning. |
 | `mongo-shard-collection` | `leadgenie/.claude/skills/mongo-shard-collection` | Shard-key recommendation for new or existing collections. |

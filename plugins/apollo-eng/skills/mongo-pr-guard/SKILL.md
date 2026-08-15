@@ -1,6 +1,6 @@
 ---
 name: mongo-pr-guard
-description: MongoDB safety review for PRs. Detects patterns that have caused real production incidents at Apollo (unsharded collections, hint+or query collisions, bulk write risks, cluster routing changes). Activate when /mongo-pr-guard is called, or proactively when reviewing a PR that touches Mongoid model files, query code, or config/mongoid.yml.
+description: MongoDB safety review for PRs. Detects patterns that have caused real production incidents at Apollo (unsharded collections, hint+or query collisions, hint+partial-index mismatches, bulk write risks, cluster routing changes). Activate when /mongo-pr-guard is called, or proactively when reviewing a PR that touches Mongoid model files, query code, or config/mongoid.yml.
 argument-hint: optional PR number or branch name (defaults to current branch diff vs master)
 ---
 
@@ -12,8 +12,9 @@ it only flags patterns with proven blast radius, not hypothetical risks.
 
 > **Note:** This skill complements (does not replace) the existing static analyzer in
 > `packs/mongo/spec/mongo_query_static_analyzer_spec.rb`. That analyzer validates hint/index
-> alignment but **explicitly skips `.or()` queries** (see `CRITERIA_CHANGERS`). This skill
-> covers those gaps.
+> alignment but **explicitly skips `.or()` queries** (see `CRITERIA_CHANGERS`), and it does
+> not check whether a `.hint()`'d field's query predicate actually satisfies that index's
+> `partial_filter_expression` (Check 6). This skill covers those gaps.
 
 ______________________________________________________________________
 
@@ -40,7 +41,7 @@ whether any db-migration-files changed, and whether any worker files changed.
 
 ______________________________________________________________________
 
-## Step 2: Run all 5 checks
+## Step 2: Run all 6 checks
 
 Run each check independently. For each finding, record:
 
@@ -257,6 +258,69 @@ end
 
 ______________________________________________________________________
 
+### Check 6 — `.hint()` on a field whose value can fall outside a partial index's filter
+
+**What to look for:**
+
+In the diff, find any Ruby code that calls `.hint(<fields>)` on a Mongoid criteria chain
+(with or without `.or()` — this check is **not** limited to `.or()` chains; Check 2 covers
+that narrower case). Grep added lines for:
+
+```
+\.hint\(
+```
+
+For each hit:
+
+1. Identify the model class the query runs against (e.g. `Contact` in `Contact.hint(...)`).
+1. Find that model's file and read its `index(...)` declarations. Match one against the
+   hinted field(s) (same fields, direction can differ). If that index declaration has a
+   `partial_filter_expression`, note its condition (e.g. `<field>.exists => true`).
+1. Look at the same chain's `.where(...)` (or `.criteria`) predicate for that field. Ask: can
+   this predicate's value ever fall outside the partial filter's condition?
+   - A literal `nil`, or a bare local variable/method result with no guard before the query,
+     is the common case when the partial filter requires `$exists => true` — trace the value
+     back to where it's assigned; if it comes from a helper method, read that helper (just
+     the method body, not the whole file) and check for `return nil` / blank-returning paths.
+   - Also flag an explicit value or range in `.where()` that plainly contradicts the partial
+     filter's condition (e.g. filter restricts to `status: 'active'`, query passes `status: 'inactive'`).
+1. If the predicate can fall outside the filter and there is no guard (e.g. no
+   `if <field>.present?` / `unless <field>.nil?`) before the query → **BLOCK**.
+
+**Why this matters:**
+
+> PR #98835 (Jul 2026) added a LinkedIn reverse-lookup to `enricher.rb`:
+> `Contact.hint(linkedin_url: -1, team_id: -1).where(linkedin_url: linkedin_url, ...)`, where
+> `linkedin_url` came from `LinkedinUrlUtil.sanitize_person_url`, which returns `nil` for
+> short/non-person URLs. The hinted index,
+> `index({linkedin_url: -1, team_id: -1}, {partial_filter_expression: Contact.where(:linkedin_url.exists => true).selector})`,
+> only covers documents where `linkedin_url` exists — a `nil` value falls **outside** that
+> filter. Mongo couldn't use the hinted index for those rows and instead scanned broadly
+> (~5,000 unrelated null-`linkedin_url` contacts per shard per call), spiking worker queue
+> latency. SEV-1, fixed in PR #99141 by adding an `if linkedin_url.present?` guard.
+>
+> This has no `.or()` in the chain, so `mongo_query_static_analyzer_spec.rb`
+> (`CRITERIA_CHANGERS`-based skip logic doesn't apply here) and Check 2 above (`.or()`-
+> specific) both miss it — it needs this dedicated check.
+> **Source:** [RCA: SEV-1 Stuck CSV Enrichment Jobs Increase Worker Queue Latency](https://app.notion.com/p/apolloio/SEV-1-Stuck-CSV-Enrichment-Jobs-Increase-Worker-Queue-Latency-3b2ab2b3b49680f28a70d614b1e9a08f?source=copy_link)
+
+**Recommended action:**
+
+Add a presence/existence guard before the hinted query so the predicate always satisfies the
+partial filter, e.g.:
+
+```ruby
+if linkedin_url.present?
+  Contact.hint(linkedin_url: -1, team_id: -1).where(linkedin_url: linkedin_url, ...)
+end
+```
+
+If the field's absence is a valid case the query needs to handle, don't hint it — let Mongo
+choose a plan that can also use a non-partial index or a collection scan for that branch, or
+split into two queries (one guarded/hinted, one unguarded/unhinted).
+
+______________________________________________________________________
+
 ## Step 3: Output the findings report
 
 Format findings as a structured report:
@@ -265,7 +329,7 @@ Format findings as a structured report:
 ## Mongo PR Guard Report
 
 **PR / Branch:** <name>
-**Checks run:** 5
+**Checks run:** 6
 **Findings:** <N> (X blocks, Y warnings)
 
 ---
@@ -289,7 +353,7 @@ If there are **no findings**, output:
 ## Mongo PR Guard Report — All Clear ✅
 
 **PR / Branch:** <name>
-**Checks run:** 5
+**Checks run:** 6
 **Findings:** 0
 
 No MongoDB incident patterns detected in this diff.
