@@ -62,7 +62,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-### L5 — Senior I
+### L5 — Career
 
 **Level Question:** Are you owning large-sized projects end-to-end, unblocking others, and navigating ambiguity without being told what to do?
 
@@ -84,7 +84,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-### L6 — Senior II
+### L6 — Advanced
 
 **Level Question:** Are you acting decisively on the highest-impact work, bringing ideas to the table, and leading cross-team collaboration without needing direction?
 
@@ -106,7 +106,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-### L7 — Staff / Expert
+### L7 — Expert
 
 **Level Question:** Are you influencing roadmaps and strategy within your department and creating the conditions for multiple teams to operate better?
 
