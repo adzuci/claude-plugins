@@ -17,6 +17,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 | `/apollo-eng-devops:cron-oom-remediation` | Diagnose a cron OOMKilled alert and ship the right fix — limit bump vs streaming/projection/chunking |
 | `/apollo-eng-devops:create-mongo-index` | Safe read-only planning and DevOps handoff for Apollo MongoDB index creation |
 | `/apollo-eng-devops:devops` | SRE devops — applies reliability engineering to any production task |
+| `/apollo-eng-devops:es-specialist` | Read-only Elasticsearch performance investigation and RCA guidance |
 | `/apollo-eng-devops:gameday` | MongoDB incident gameday drills for on-call practice |
 | `/apollo-eng-devops:grafana-observability` | Grafana dashboard design and alert quality specialist |
 | `/apollo-eng-devops:incident-response` | Incident commander guide for Apollo production incidents |
@@ -50,6 +51,7 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 - **Mongo operations lookup**: `mongo-specialist` + the narrower Mongo skill for the task
 - **Architecture design review**: `devops` (design review path)
 - **Postmortem writing**: `incident-response`
+- **Elasticsearch latency investigation**: `/apollo-eng-devops:es-specialist` + `devops` for cluster context
 - **Sidekiq worker specialist PR**: `sidekiq-worker-specialist` + `/apollo-eng-devops:kubernetes-specialist` (post-deploy verification)
 
 ## Example Prompts
@@ -77,6 +79,8 @@ the actual prompt, so a differently-worded question may route elsewhere.
 | "Postmortem for Feb 14 incident" | incident-response postmortem template | — |
 | "Design review: new async ingestion pipeline" | devops (design review path) | — |
 | "We need SLOs for the Elasticsearch cluster" | devops (SLOs module) | — |
+| "Search p99 spikes every afternoon but the ES cluster is green" | — | `/apollo-eng-devops:es-specialist` + `devops` (ES operations context) |
+| "ES is returning 429s but CPU looks fine" | — | `/apollo-eng-devops:es-specialist` queue-pressure triage |
 | "Bump max_workers for my_queue_worker" | — | `/apollo-eng-devops:sidekiq-worker-specialist` |
 | "Add a new Sidekiq queue to production" | — | `/apollo-eng-devops:sidekiq-worker-specialist` |
 
@@ -85,6 +89,8 @@ the actual prompt, so a differently-worded question may route elsewhere.
 **`devops`** — Enable for any production-touching task. It sets the reliability frame for everything else.
 
 **`kubernetes-specialist`** — Invoke explicitly via `/apollo-eng-devops:kubernetes-specialist` when working with pods, deployments, HPAs, node pools, or GKE-level issues. Does not auto-activate from natural-language prompts.
+
+**`es-specialist`** — Invoke explicitly via `/apollo-eng-devops:es-specialist` for ES search latency, slow or oversized queries, 429s, merge waves, cache behavior, planner pressure, or an ES RCA. It proposes evidence-backed remediations and human-run maintenance handoffs; it never executes mutating ES calls.
 
 **`sidekiq-worker-specialist`** — Invoke directly via `/apollo-eng-devops:sidekiq-worker-specialist` when editing `kubernetes/production/sidekiq-workers/values.yaml`: new queues, `max_workers` / `threads_per_pod` tuning, resource changes, or shared-cluster queue additions.
 

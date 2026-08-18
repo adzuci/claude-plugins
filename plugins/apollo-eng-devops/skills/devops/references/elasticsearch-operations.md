@@ -2,6 +2,8 @@
 
 Apollo ES cluster landscape, backup/restore workflows, and operational checklists.
 
+For runtime performance investigation — search latency, slow queries, 429s, merge waves, cache effectiveness, Siren Federate — use the [`es-specialist`](../../es-specialist/SKILL.md) skill. This file stays authoritative for cluster inventory, auth, backups, and ownership.
+
 ______________________________________________________________________
 
 ## Cluster Landscape
