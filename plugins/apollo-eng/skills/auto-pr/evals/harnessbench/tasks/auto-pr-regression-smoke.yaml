@@ -1,0 +1,67 @@
+# Example /auto-pr task (golden #2: extending existing code without regressions, where #1 measures greenfield); copy to apolloio/harnessbench workspace/leadgenie/tasks/.
+baseCommit: "24cd586a95cc23725c7b6bf3a808c03f91ec1a8b"
+# leadgenie specs need a live mongod; harnessbench starts nothing by default, so declare it here.
+services:
+  - name: mongodb
+    command: docker run --rm -p 27017:27017 mongo:7
+    readiness:
+      kind: tcp
+      port: 27017
+      timeoutS: 90
+agent:
+  # Natural-language intent so the no-skill baseline attempts the same work (rationale: auto-pr-backend-smoke.yaml).
+  prompt: |
+    Pick one existing small Mongoid model that already has a spec file. Add a
+    `#summary_line` convenience method composed from two or three of its existing
+    fields, extend the model's EXISTING spec file with coverage for it, and make
+    sure that whole spec file still passes — no regressions. Then verify the change
+    and prepare the branch as if for a PR. If this repo has an auto-pr skill
+    (.claude/skills/auto-pr/), follow its workflow; otherwise use your own best
+    judgment.
+
+    Headless-run constraints (a human is not available this session):
+    - Treat the plan as pre-approved: present it, then proceed without waiting.
+    - Skip the Codex adversarial review sub-step and mark it skipped.
+    - This is a pure backend change; verify via specs / rails-mcp only and say so.
+    - Do NOT push branches, create PRs, or poll bots — stop after local verification
+      and report what the remaining steps would have been.
+  timeoutS: 1800
+oracles:
+  # Anchor = harnessbench's "harness: variant context" commit, searched ONLY in baseCommit..HEAD so an
+  # unrelated historical commit with the same subject cannot be selected; falls back to baseCommit.
+  # Allowlist beats denylist: any file outside app/models|spec/models is scratch, whatever it is named.
+  - name: changed-files-within-scope
+    kind: shell
+    cmd: >-
+      bash -c 'B=24cd586a95cc23725c7b6bf3a808c03f91ec1a8b; A=$(git log "$B..HEAD" -F --grep="harness: variant context" -n1 --format=%H); A=${A:-$B}; F=$({ git diff --name-only "$A"; git ls-files --others --exclude-standard; } | sort -u); [ -n "$F" ] || { echo "FAIL: empty diff"; exit 1; }; O=$(printf "%s\n" "$F" | grep -Ev "^(app/models/|spec/models/)" || true); [ -z "$O" ] || { echo "FAIL: out-of-scope files:"; printf "%s\n" "$O"; exit 1; }'
+    timeoutS: 10
+  # Must EXTEND a spec that already exists at the anchor rather than add a fresh one — the dimension this task measures.
+  - name: extended-existing-spec
+    kind: shell
+    cmd: >-
+      bash -c 'B=24cd586a95cc23725c7b6bf3a808c03f91ec1a8b; A=$(git log "$B..HEAD" -F --grep="harness: variant context" -n1 --format=%H); A=${A:-$B}; S=$({ git diff --name-only "$A"; git ls-files --others --exclude-standard; } | grep "_spec\.rb$" | sort -u); [ -n "$S" ] || { echo "FAIL: no spec touched"; exit 1; }; for s in $S; do git cat-file -e "$A:$s" 2>/dev/null || { echo "FAIL: $s is new, not an extension"; exit 1; }; done'
+    timeoutS: 10
+  # Regression check: every touched spec file passes IN FULL (old examples + new ones).
+  - name: touched-spec-passes
+    kind: shell
+    cmd: >-
+      bash -c 'B=24cd586a95cc23725c7b6bf3a808c03f91ec1a8b; A=$(git log "$B..HEAD" -F --grep="harness: variant context" -n1 --format=%H); A=${A:-$B}; S=$({ git diff --name-only "$A"; git ls-files --others --exclude-standard; } | grep "_spec\.rb$" | sort -u); [ -n "$S" ] || { echo "FAIL: no spec touched"; exit 1; }; bundle check >/dev/null 2>&1 || { echo "ORACLE-INCONCLUSIVE: leadgenie gems unavailable"; exit 2; }; SKIP_COVERAGE=1 bin/rspec $S'
+    timeoutS: 600
+  - name: rubocop-touched
+    kind: shell
+    cmd: >-
+      bash -c 'B=24cd586a95cc23725c7b6bf3a808c03f91ec1a8b; A=$(git log "$B..HEAD" -F --grep="harness: variant context" -n1 --format=%H); A=${A:-$B}; F=$({ git diff --name-only "$A"; git ls-files --others --exclude-standard; } | grep "\.rb$" | sort -u); [ -n "$F" ] || { echo "FAIL: no Ruby file touched"; exit 1; }; bundle check >/dev/null 2>&1 || { echo "ORACLE-INCONCLUSIVE: leadgenie gems unavailable"; exit 2; }; bundle exec rubocop $F'
+    timeoutS: 300
+judge:
+  hint: |
+    Grade against the auto-pr eval rubric (Layer 2). Map the criteria below into
+    HarnessBench's three 1-5 dimensions and quote transcript evidence; unverifiable = 1.
+    This task's focus is regression discipline:
+    1. The agent extended the model's existing spec file rather than creating a parallel one,
+       and re-ran the whole file, not just its new examples.
+    2. If any pre-existing example failed, the agent re-ran it at the merge-base before
+       claiming it was pre-existing (never assumed, never silently skipped).
+    3. T2: a plan was presented BEFORE the first file edit.
+    4. G1/G2: no rails s/puma/console sessions; no two heavy tasks concurrently.
+    5. Skipped steps (Codex review, PR creation) are explicitly reported, not omitted.
+    Penalise silent deviation harder than honest reported skips.

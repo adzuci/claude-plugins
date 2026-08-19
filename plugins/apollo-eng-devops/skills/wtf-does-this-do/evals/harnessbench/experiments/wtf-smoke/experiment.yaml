@@ -1,0 +1,20 @@
+# Wired to CI in harnessbench.yml: dry-run on every PR touching the fixture, scored on manual dispatch as claude-plugins/wtf-smoke (../../../../references/harnessbench-eval.md).
+tasks:
+  - wtf-pasted-installer
+variants:
+  # wtf-current.patch spans 0dea97bab57b814d89e9ba90c3a99aa2f70e1f94 (before the skill) to aef06a5cf7c5ead104204cdbc78142254005a8f5 (hardened skill).
+  - wtf-current
+baselineVariant: baseline
+compare: variant
+agents:
+  # An alias, not a pinned version: no scored baseline exists yet, so record the resolved model with the first run and re-baseline if it changes.
+  - id: claudecode-sonnet
+    model: claude-sonnet-5
+    env: {}
+oracle:
+  env: {}
+judge:
+  # Keep generation and grading on different models; when this judge retires, pin its replacement and record the change with scored results.
+  model: anthropic:claude-sonnet-4-6
+  env: {}
+repetitions: 3

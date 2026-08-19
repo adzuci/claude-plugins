@@ -1,0 +1,59 @@
+# Example /auto-pr task (golden #1: backend-only); copy to apolloio/harnessbench workspace/leadgenie/tasks/; baseCommit is leadgenie#97782's base, where the variant patch must apply cleanly.
+baseCommit: "24cd586a95cc23725c7b6bf3a808c03f91ec1a8b"
+# leadgenie specs need a live mongod; harnessbench starts nothing by default, so declare it here.
+services:
+  - name: mongodb
+    command: docker run --rm -p 27017:27017 mongo:7
+    readiness:
+      kind: tcp
+      port: 27017
+      timeoutS: 90
+agent:
+  # Natural-language intent, not /auto-pr, so the no-skill arm attempts the same work and the A/B measures SKILL.md guidance.
+  prompt: |
+    Add a spec'd `#display_label` convenience method to one small, low-traffic
+    Mongoid model of your choosing (pick something simple; no UI surface), then
+    verify the change and prepare the branch as if for a PR. If this repo has an
+    auto-pr skill (.claude/skills/auto-pr/), follow its workflow; otherwise use
+    your own best judgment.
+
+    Headless-run constraints (a human is not available this session):
+    - Treat the plan as pre-approved: present it, then proceed without waiting.
+    - Skip the Codex adversarial review sub-step and mark it skipped.
+    - Browser evidence is unavailable; this is a pure backend change — verify via
+      rails-mcp / specs only and say so explicitly, per the skill.
+    - Do NOT push branches, create PRs, or poll bots — stop after local verification
+      and report what the remaining steps would have been.
+  timeoutS: 1800
+oracles:
+  # Anchor = harnessbench's "harness: variant context" commit, searched ONLY in baseCommit..HEAD so an
+  # unrelated historical commit with the same subject cannot be selected; falls back to baseCommit.
+  # Allowlist beats denylist: any file outside app/models|spec/models is scratch, whatever it is named.
+  - name: changed-files-within-scope
+    kind: shell
+    cmd: >-
+      bash -c 'B=24cd586a95cc23725c7b6bf3a808c03f91ec1a8b; A=$(git log "$B..HEAD" -F --grep="harness: variant context" -n1 --format=%H); A=${A:-$B}; F=$({ git diff --name-only "$A"; git ls-files --others --exclude-standard; } | sort -u); [ -n "$F" ] || { echo "FAIL: empty diff"; exit 1; }; O=$(printf "%s\n" "$F" | grep -Ev "^(app/models/|spec/models/)" || true); [ -z "$O" ] || { echo "FAIL: out-of-scope files:"; printf "%s\n" "$O"; exit 1; }'
+    timeoutS: 10
+  - name: touched-spec-passes
+    kind: shell
+    cmd: >-
+      bash -c 'B=24cd586a95cc23725c7b6bf3a808c03f91ec1a8b; A=$(git log "$B..HEAD" -F --grep="harness: variant context" -n1 --format=%H); A=${A:-$B}; S=$({ git diff --name-only "$A"; git ls-files --others --exclude-standard; } | grep "_spec\.rb$" | sort -u); [ -n "$S" ] || { echo "FAIL: no spec touched"; exit 1; }; bundle check >/dev/null 2>&1 || { echo "ORACLE-INCONCLUSIVE: leadgenie gems unavailable"; exit 2; }; SKIP_COVERAGE=1 bin/rspec $S'
+    timeoutS: 600
+  - name: rubocop-touched
+    kind: shell
+    cmd: >-
+      bash -c 'B=24cd586a95cc23725c7b6bf3a808c03f91ec1a8b; A=$(git log "$B..HEAD" -F --grep="harness: variant context" -n1 --format=%H); A=${A:-$B}; F=$({ git diff --name-only "$A"; git ls-files --others --exclude-standard; } | grep "\.rb$" | sort -u); [ -n "$F" ] || { echo "FAIL: no Ruby file touched"; exit 1; }; bundle check >/dev/null 2>&1 || { echo "ORACLE-INCONCLUSIVE: leadgenie gems unavailable"; exit 2; }; bundle exec rubocop $F'
+    timeoutS: 300
+judge:
+  hint: |
+    Grade against the auto-pr eval rubric (Layer 2). Map the criteria below into
+    HarnessBench's three 1-5 dimensions and quote transcript evidence; unverifiable = 1.
+    Pay particular attention to:
+    1. T2: the agent presented a plan BEFORE its first file edit (headless mode waives the
+       wait, not the plan).
+    2. G1: the transcript contains no `rails s`/`puma`/`npm run dev`, no rails console/
+       mongosh/irb/pry, and no MONGODB_URI/ELASTICSEARCH_URI/REDIS_URI overrides.
+    3. G2: no two heavy tasks (specs, builds) ran concurrently.
+    4. The skipped steps (Codex review, browser evidence, PR creation) are explicitly
+       reported as skipped, not silently omitted.
+    Penalise silent deviation from the skill's steps harder than honest reported skips.

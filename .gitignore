@@ -7,3 +7,11 @@ __pycache__/
 .claude/scheduled_tasks.lock
 .windsurf/
 .wt-*/
+
+# repowise local index/cache artifacts (tool state, not source)
+.repowise/
+repowise-*.tgz
+repowise-*.sha256
+
+# machine-local MCP registration (contains absolute paths); force-add if a shared one is ever agreed
+.mcp.json

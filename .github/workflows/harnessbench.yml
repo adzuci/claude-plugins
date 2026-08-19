@@ -1,0 +1,376 @@
+# HarnessBench fixtures per skill (see harnessbench-evals-guide.md): PRs dry-run both fixtures for free, manual dispatch scores exactly one paid experiment.
+name: harnessbench
+
+permissions:
+  contents: read
+  pull-requests: write # one-line eval summary comment
+
+env:
+  # Pinned, not floated: an upstream harness merge would move scores mid-INFRA-2087-pilot. Bump deliberately.
+  HARNESSBENCH_REF: 260894dca73c8c71fed123b0e06379a4dc108f5e
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "plugins/apollo-eng/skills/auto-pr/evals/harnessbench/**"
+      - "plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/**"
+      - ".github/workflows/harnessbench.yml"
+  workflow_dispatch:
+    inputs:
+      full_run:
+        description: "Execute the full experiment (spends Anthropic tokens; ~hours)"
+        type: boolean
+        default: false
+      experiment:
+        description: "Which experiment to score"
+        type: choice
+        options:
+          - leadgenie/auto-pr-smoke
+          - claude-plugins/wtf-smoke
+        default: leadgenie/auto-pr-smoke
+      pr_number:
+        description: "PR whose sticky eval summary should be updated"
+        type: string
+        required: true
+
+concurrency:
+  group: harnessbench-${{ github.ref }}
+  # PR dry-runs are cheap and supersedable. Never cancel manually dispatched paid runs.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  dry-run:
+    runs-on:
+      group: arc-scale-sets
+      labels: general-low
+    timeout-minutes: 30
+    env:
+      REPO_TOKEN: ${{ secrets.APOLLOIO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Check cross-repo access
+        id: access
+        run: |
+          if [ -n "$REPO_TOKEN" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::APOLLOIO_TOKEN is not configured; the default github.token cannot read apolloio/harnessbench or apolloio/leadgenie, so the harnessbench dry-run is skipped. Provision the secret to enable it."
+          fi
+      - uses: actions/checkout@v6
+        if: steps.access.outputs.available == 'true'
+        with:
+          repository: apolloio/harnessbench
+          ref: ${{ env.HARNESSBENCH_REF }}
+          token: ${{ secrets.APOLLOIO_TOKEN }}
+          path: harnessbench
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        if: steps.access.outputs.available == 'true'
+        with:
+          repository: apolloio/leadgenie
+          token: ${{ secrets.APOLLOIO_TOKEN }}
+          path: harnessbench/.harness/repositories/leadgenie
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Checkout claude-plugins into harness workspace
+        # Same repo, so no APOLLOIO_TOKEN; full history is needed to reach the fixture's pinned commits.
+        uses: actions/checkout@v6
+        with:
+          path: harnessbench/.harness/repositories/claude-plugins
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        if: steps.access.outputs.available == 'true'
+        with:
+          node-version: 24
+      - name: Install harnessbench
+        if: steps.access.outputs.available == 'true'
+        working-directory: harnessbench
+        run: npm ci
+      - name: Copy example experiment into workspace
+        if: steps.access.outputs.available == 'true'
+        run: |
+          cp plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml \
+            harnessbench/workspace/leadgenie/tasks/
+          cp -r plugins/apollo-eng/skills/auto-pr/evals/harnessbench/experiments/auto-pr-smoke \
+            harnessbench/workspace/leadgenie/experiments/
+          mkdir -p harnessbench/workspace/claude-plugins/{tasks,experiments,variants}
+          cp plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/tasks/*.yaml \
+            harnessbench/workspace/claude-plugins/tasks/
+          cp -r plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/experiments/wtf-smoke \
+            harnessbench/workspace/claude-plugins/experiments/
+      - name: Generate variant patch from skill PR
+        if: steps.access.outputs.available == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.APOLLOIO_TOKEN }}
+        run: |
+          curl -sfL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3.diff" \
+            https://api.github.com/repos/apolloio/leadgenie/pulls/97782 \
+            > harnessbench/workspace/leadgenie/variants/auto-pr-v1.patch
+          V2_HEAD=$(curl -sfL -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/apolloio/leadgenie/pulls/97942 | \
+            python3 -c "import sys,json;print(json.load(sys.stdin)['head']['sha'])")
+          curl -sfL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3.diff" \
+            "https://api.github.com/repos/apolloio/leadgenie/compare/master...$V2_HEAD" \
+            > harnessbench/workspace/leadgenie/variants/auto-pr-v2.patch
+      - name: Generate wtf-does-this-do variant patch
+        if: steps.access.outputs.available == 'true'
+        working-directory: harnessbench/.harness/repositories/claude-plugins
+        run: |
+          git diff --binary \
+            0dea97bab57b814d89e9ba90c3a99aa2f70e1f94 \
+            aef06a5cf7c5ead104204cdbc78142254005a8f5 \
+            -- plugins/apollo-eng-devops/skills/wtf-does-this-do \
+            > ../../../workspace/claude-plugins/variants/wtf-current.patch
+      - name: Align repository base with the pinned tasks
+        if: steps.access.outputs.available == 'true'
+        run: |
+          BASE_COMMIT=$(grep -h '^baseCommit:' plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml | head -1 | cut -d'"' -f2)
+          test -n "$BASE_COMMIT"
+          sed -i "s|defaultBaseCommit: .*|defaultBaseCommit: \"$BASE_COMMIT\"|" harnessbench/workspace/leadgenie/repo.yaml
+          WTF_BASE=$(grep -h '^baseCommit:' plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/tasks/*.yaml | head -1 | cut -d'"' -f2)
+          test -n "$WTF_BASE"
+          sed -i "s|defaultBaseCommit: .*|defaultBaseCommit: \"$WTF_BASE\"|" harnessbench/workspace/claude-plugins/repo.yaml
+      - name: Dry-run (schema + patch-applies validation, no agent runs)
+        id: dryrun
+        if: steps.access.outputs.available == 'true'
+        working-directory: harnessbench
+        env:
+          # Dry-run makes no API calls, but harnessbench's wiring check exits 2 if the key is unset.
+          ANTHROPIC_API_KEY: ${{ secrets.APOLLO_REVIEW_BOT_ANTHROPIC_KEY || 'dry-run-placeholder' }}
+        run: |
+          set -o pipefail
+          npm run harnessbench -- run leadgenie/auto-pr-smoke --dry-run | tee dryrun-autopr.out
+          npm run harnessbench -- run claude-plugins/wtf-smoke --dry-run | tee dryrun-wtf.out
+      - name: Post one-line summary comment
+        if: always() && github.event_name == 'pull_request' && steps.dryrun.outcome != 'cancelled'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ACCESS: ${{ steps.access.outputs.available }}
+          DRYRUN_OUTCOME: ${{ steps.dryrun.outcome }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          MARKER="<!-- harnessbench-autopr-summary -->"
+          summarize_experiment() {
+            # $1 = label, $2 = dryrun.out path, $3 = task glob (for the pinned base short-SHA)
+            local LABEL="$1" OUT="$2" TASKGLOB="$3"
+            local CELLS OK BASE ICON
+            CELLS=$(grep -cE $'\ttrue$|\tfalse$' "$OUT" || echo 0)
+            OK=$(grep -cE $'\ttrue$' "$OUT" || echo 0)
+            BASE=$(grep -rh '^baseCommit:' $TASKGLOB | head -1 | sed 's/.*"\(.\{7\}\).*/\1/')
+            ICON=$([ "$OK" = "$CELLS" ] && echo "✅" || echo "⚠️")
+            echo "- **$LABEL:** $ICON $OK/$CELLS cells validated at base \`$BASE\`"
+          }
+          if [ "$ACCESS" != "true" ]; then
+            BODY="$MARKER"$'\n'"**harnessbench dry-run:** skipped — cross-repo token not configured; validation did not run."
+          elif [ "$DRYRUN_OUTCOME" = "success" ]; then
+            AUTOPR_LINE=$(summarize_experiment "leadgenie/auto-pr-smoke" harnessbench/dryrun-autopr.out "plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml")
+            WTF_LINE=$(summarize_experiment "claude-plugins/wtf-smoke" harnessbench/dryrun-wtf.out "plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/tasks/*.yaml")
+            BODY="$MARKER"$'\n'"**harnessbench dry-run: schema + patch-apply validation**"$'\n\n'"$AUTOPR_LINE"$'\n'"$WTF_LINE"$'\n\n'"- **Checked:** experiment/task schemas parse; every variant patch applies cleanly at its pinned baseCommit"$'\n'"- **Cost:** 0 tokens — dry-run never starts agents or the judge"$'\n'"- **Scored A/B:** manually dispatch \`harnessbench\` with \`full_run\`, the target \`experiment\`, and this PR number after the dry-run is green."$'\n'"- Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          else
+            BODY="$MARKER"$'\n'"**harnessbench dry-run:** FAILED (schema or patch-apply error) — see the dry-run step log."
+          fi
+          export BODY
+          API="https://api.github.com/repos/$GITHUB_REPOSITORY"
+          AUTH="Authorization: Bearer $GH_TOKEN"
+          CID=$(curl -sf -H "$AUTH" "$API/issues/$PR/comments?per_page=100" | \
+            python3 -c "import sys,json;m=[c['id'] for c in json.load(sys.stdin) if c['body'].startswith('<!-- harnessbench-autopr-summary -->')];print(m[0] if m else '')")
+          PAYLOAD=$(python3 -c "import json,os;print(json.dumps({'body':os.environ['BODY']}))")
+          if [ -n "$CID" ]; then
+            curl -sf -X PATCH -H "$AUTH" -d "$PAYLOAD" "$API/issues/comments/$CID" >/dev/null
+          else
+            curl -sf -X POST -H "$AUTH" -d "$PAYLOAD" "$API/issues/$PR/comments" >/dev/null
+          fi
+
+  full-run:
+    # Manual by design: each dispatch starts many long agent sessions on the org Anthropic key.
+    if: github.event_name == 'workflow_dispatch' && inputs.full_run == true
+    needs: dry-run
+    concurrency:
+      # Global lock: one scored run at a time repo-wide, whichever branch dispatched it; the rest queue.
+      group: harnessbench-full-run
+      cancel-in-progress: false
+    runs-on:
+      group: arc-scale-sets
+      # general-low (1 CPU/3Gi) OOM'd mid "Run experiment" on 2026-08-05 (run 30983399866); rspec oracles plus a live agent need the headroom.
+      labels: general-high
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Require cross-repo token and Anthropic key
+        env:
+          REPO_TOKEN: ${{ secrets.APOLLOIO_TOKEN }}
+          ANTHROPIC_KEY: ${{ secrets.APOLLO_REVIEW_BOT_ANTHROPIC_KEY }}
+        run: |
+          if [ -z "$REPO_TOKEN" ]; then
+            echo "::error::Full run requires the APOLLOIO_TOKEN secret (read access to apolloio/harnessbench and apolloio/leadgenie)."
+            exit 1
+          fi
+          if [ -z "$ANTHROPIC_KEY" ]; then
+            echo "::error::Full run requires the APOLLO_REVIEW_BOT_ANTHROPIC_KEY secret (agent + judge API access)."
+            exit 1
+          fi
+      - uses: actions/checkout@v6
+        with:
+          repository: apolloio/harnessbench
+          ref: ${{ env.HARNESSBENCH_REF }}
+          token: ${{ secrets.APOLLOIO_TOKEN }}
+          path: harnessbench
+          persist-credentials: false
+      - uses: actions/checkout@v6
+        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
+        with:
+          repository: apolloio/leadgenie
+          token: ${{ secrets.APOLLOIO_TOKEN }}
+          path: harnessbench/.harness/repositories/leadgenie
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Checkout claude-plugins into harness workspace
+        if: inputs.experiment == 'claude-plugins/wtf-smoke'
+        uses: actions/checkout@v6
+        with:
+          path: harnessbench/.harness/repositories/claude-plugins
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Install harnessbench + claude CLI + pnpm
+        working-directory: harnessbench
+        run: |
+          npm ci
+          npm install -g @anthropic-ai/claude-code pnpm
+      - name: Set up Ruby for leadgenie oracles
+        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4.9" # leadgenie .ruby-version at the pinned baseCommit
+          bundler-cache: false
+      - name: Install leadgenie gems (shared path for all worktree cells)
+        # Absolute BUNDLE_PATH so every harnessbench worktree resolves the same gems, and gem failures land here rather than mid paid cell.
+        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
+        working-directory: harnessbench/.harness/repositories/leadgenie
+        env:
+          BUNDLE_PATH: /home/runner/.leadgenie-bundle
+        run: bundle install --jobs 4 --retry 2
+      - name: Adapt LeadGenie setup and pinned base
+        # harnessbench's repo.yaml predates leadgenie's npm -> pnpm move: no package-lock.json at our base, so npm ci fails in every cell.
+        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
+        run: |
+          BASE_COMMIT=$(grep -h '^baseCommit:' plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml | head -1 | cut -d'"' -f2)
+          test -n "$BASE_COMMIT"
+          sed -i "s|defaultBaseCommit: .*|defaultBaseCommit: \"$BASE_COMMIT\"|" \
+            harnessbench/workspace/leadgenie/repo.yaml
+          sed -i 's|installCmd: npm ci|installCmd: pnpm install --frozen-lockfile|' \
+            harnessbench/workspace/leadgenie/repo.yaml
+          grep -E 'defaultBaseCommit|installCmd' harnessbench/workspace/leadgenie/repo.yaml
+      - name: Copy auto-pr experiment into workspace
+        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
+        run: |
+          cp plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml \
+            harnessbench/workspace/leadgenie/tasks/
+          cp -r plugins/apollo-eng/skills/auto-pr/evals/harnessbench/experiments/auto-pr-smoke \
+            harnessbench/workspace/leadgenie/experiments/
+      - name: Generate variant patch from skill PR
+        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
+        env:
+          GH_TOKEN: ${{ secrets.APOLLOIO_TOKEN }}
+        run: |
+          curl -sfL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3.diff" \
+            https://api.github.com/repos/apolloio/leadgenie/pulls/97782 \
+            > harnessbench/workspace/leadgenie/variants/auto-pr-v1.patch
+          V2_HEAD=$(curl -sfL -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/apolloio/leadgenie/pulls/97942 | \
+            python3 -c "import sys,json;print(json.load(sys.stdin)['head']['sha'])")
+          curl -sfL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github.v3.diff" \
+            "https://api.github.com/repos/apolloio/leadgenie/compare/master...$V2_HEAD" \
+            > harnessbench/workspace/leadgenie/variants/auto-pr-v2.patch
+      - name: Copy wtf-does-this-do experiment into workspace
+        if: inputs.experiment == 'claude-plugins/wtf-smoke'
+        run: |
+          mkdir -p harnessbench/workspace/claude-plugins/{tasks,experiments,variants}
+          cp plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/tasks/*.yaml \
+            harnessbench/workspace/claude-plugins/tasks/
+          cp -r plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/experiments/wtf-smoke \
+            harnessbench/workspace/claude-plugins/experiments/
+          WTF_BASE=$(grep -h '^baseCommit:' plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/tasks/*.yaml | head -1 | cut -d'"' -f2)
+          test -n "$WTF_BASE"
+          sed -i "s|defaultBaseCommit: .*|defaultBaseCommit: \"$WTF_BASE\"|" harnessbench/workspace/claude-plugins/repo.yaml
+      - name: Generate wtf-does-this-do variant patch
+        if: inputs.experiment == 'claude-plugins/wtf-smoke'
+        working-directory: harnessbench/.harness/repositories/claude-plugins
+        run: |
+          git diff --binary \
+            0dea97bab57b814d89e9ba90c3a99aa2f70e1f94 \
+            aef06a5cf7c5ead104204cdbc78142254005a8f5 \
+            -- plugins/apollo-eng-devops/skills/wtf-does-this-do \
+            > ../../../workspace/claude-plugins/variants/wtf-current.patch
+      - name: Run experiment
+        id: experiment
+        working-directory: harnessbench
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.APOLLO_REVIEW_BOT_ANTHROPIC_KEY }}
+        run: npm run harnessbench -- run "${{ inputs.experiment }}"
+      - name: Upload report
+        id: artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: harnessbench-report
+          path: harnessbench/runs/${{ inputs.experiment }}/
+      - name: Update sticky PR eval summary
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ inputs.pr_number }}
+          EXPERIMENT: ${{ inputs.experiment }}
+          EXPERIMENT_OUTCOME: ${{ steps.experiment.outcome }}
+          ARTIFACT_URL: ${{ steps.artifact.outputs.artifact-url }}
+        run: |
+          MARKER="<!-- harnessbench-autopr-summary -->"
+          RUN_DIR=$(find "harnessbench/runs/$EXPERIMENT" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1 || true)
+          if [ "$EXPERIMENT_OUTCOME" = "success" ] && [ -f "$RUN_DIR/aggregate.json" ] && [ -f "$RUN_DIR/manifest.json" ]; then
+            AGG="$RUN_DIR/aggregate.json"
+            CELLS=$(jq -r '.totals.cells' "$AGG")
+            ERRORS=$(jq -r '.totals.errors' "$AGG")
+            ORACLE_FAIL=$(jq -r '.totals.oracle.fail' "$AGG")
+            COST=$(jq -r '.totals.cost.total | (. * 100 | round) / 100' "$AGG")
+            INCONCLUSIVE=$(jq '[.cells[].oracle.outcome.checks[] | select(((.stdoutTail // "") + (.stderrTail // "")) | test("ORACLE-(SKIP|INCONCLUSIVE)"))] | length' "$AGG")
+            EMPTY_DIFFS=$(jq '[.cells[] | select((.diffShape.filesChanged // 0) == 0)] | length' "$AGG")
+            INVALID_JUDGES=$(jq '[.cells[] | select((((.judge.outcome.scores // {}) | length) == 0) or ([.judge.outcome.scores[]?.justification // ""] | any(length == 0)))] | length' "$AGG")
+            FLAKY=$(jq '[.perTask[].flakyVariants[]] | unique | length' "$AGG")
+            WINNERS=$(jq -r '.perTask[] | "\(.taskId)=\(.winnerVariantId)"' "$AGG" | paste -sd ', ' -)
+            MANIFEST="$RUN_DIR/manifest.json"
+            WALL_MIN=$(jq -nr --slurpfile m "$MANIFEST" '($m[0].startedAt | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) as $start | ($m[0].finishedAt | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) as $finish | (($finish - $start) / 60 | floor)')
+            STATUS="VALID"
+            if [ "$ERRORS" -ne 0 ] || [ "$ORACLE_FAIL" -ne 0 ] || [ "$INCONCLUSIVE" -ne 0 ] || [ "$EMPTY_DIFFS" -ne 0 ] || [ "$INVALID_JUDGES" -ne 0 ]; then
+              STATUS="INCONCLUSIVE"
+            fi
+            BODY="$MARKER"$'\n'"## HarnessBench scored eval: $STATUS"$'\n\n'"- **Matrix:** $CELLS cells; $ERRORS infrastructure errors; $ORACLE_FAIL oracle failures"$'\n'"- **Validity:** $INCONCLUSIVE skipped/inconclusive checks; $EMPTY_DIFFS empty diffs; $INVALID_JUDGES invalid judge outputs; $FLAKY flaky variants"$'\n'"- **Per-task winners:** $WINNERS"$'\n'"- **Cost/time:** \$$COST; ${WALL_MIN}m wall time"$'\n'"- **Run:** ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"$'\n'"- **Artifact:** ${ARTIFACT_URL:-unavailable}"
+          else
+            BODY="$MARKER"$'\n'"## HarnessBench scored eval: FAILED"$'\n\n'"The paid experiment did not complete. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
+          fi
+          export BODY
+          API="https://api.github.com/repos/$GITHUB_REPOSITORY"
+          AUTH="Authorization: Bearer $GH_TOKEN"
+          CID=$(curl -sf -H "$AUTH" "$API/issues/$PR/comments?per_page=100" | python3 -c "import sys,json;m=[c['id'] for c in json.load(sys.stdin) if c['body'].startswith('<!-- harnessbench-autopr-summary -->')];print(m[0] if m else '')")
+          PAYLOAD=$(python3 -c "import json,os;print(json.dumps({'body':os.environ['BODY']}))")
+          if [ -n "$CID" ]; then
+            curl -sf -X PATCH -H "$AUTH" -d "$PAYLOAD" "$API/issues/comments/$CID" >/dev/null
+          else
+            curl -sf -X POST -H "$AUTH" -d "$PAYLOAD" "$API/issues/$PR/comments" >/dev/null
+          fi

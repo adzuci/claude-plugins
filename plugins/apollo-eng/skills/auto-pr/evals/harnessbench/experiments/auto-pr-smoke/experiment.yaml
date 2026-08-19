@@ -1,0 +1,24 @@
+# Example experiment, /auto-pr vs no-skill baseline; copy to apolloio/harnessbench workspace/leadgenie/experiments/auto-pr-smoke/.
+tasks:
+  - auto-pr-backend-smoke
+  - auto-pr-regression-smoke
+variants:
+  # Generate these first (../../../../references/harnessbench-evals.md): v1 = skill as proposed in leadgenie#97782, v2 = review-refined #97942 stacked on it, so the pair shows whether review changed behavior.
+  - auto-pr-v1
+  - auto-pr-v2
+baselineVariant: baseline
+compare: variant
+agents:
+  # Keep the agent on the coding model this skill targets; re-baseline before comparing results across models.
+  - id: claudecode-sonnet
+    model: claude-sonnet-5
+    env: {}
+oracle:
+  env:
+    # Shared gem path installed by the workflow so bin/rspec and rubocop run in any worktree cell; harmless locally.
+    BUNDLE_PATH: /home/runner/.leadgenie-bundle
+judge:
+  # Deliberately differs from the agent model and is the last calibrated judge config; re-run calibration before changing it (../../../../references/harnessbench-evals.md#known-limitations-v1).
+  model: anthropic:claude-sonnet-4-6
+  env: {}
+repetitions: 3 # single-rep leaderboards flip-flopped (runs 3 and 4); 3 reps is the decision bar
