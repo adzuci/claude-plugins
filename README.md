@@ -73,6 +73,7 @@ See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill comman
 | `apollo-procurement` | Procurement & Finance Operations assistant — answers questions about travel & expense (Navan), procurement intake (Zip), accounts payable, corporate cards (Ramp/Brex), and contracts (IronClad) by grounding every answer in the canonical FAQ. | 1 |
 | `apollo-accounting` | Accounting and finance skills for Apollo's Finance team — contract clause analysis, ASC 606 revenue recognition assessment, and Ironclad contract review workflows. | 1 |
 | `apollo-eng-agentic-engineering` | Agentic Engineering team skills | 1 |
+| `ai-overage-admins` | Skills for admins managing engineers' Claude and Codex monthly spend limits | 1 |
 
 <!-- PLUGIN-INVENTORY-END -->
 

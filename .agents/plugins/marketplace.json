@@ -255,6 +255,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Engineering"
+    },
+    {
+      "name": "ai-overage-admins",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ai-overage-admins"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Engineering"
     }
   ]
 }

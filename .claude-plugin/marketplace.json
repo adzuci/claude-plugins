@@ -151,6 +151,13 @@
       "description": "Agentic Engineering team skills",
       "category": "engineering",
       "tags": ["claude-code", "engineering", "agentic-engineering"]
+    },
+    {
+      "name": "ai-overage-admins",
+      "source": "./plugins/ai-overage-admins",
+      "description": "Skills for admins managing engineers' Claude and Codex monthly spend limits",
+      "category": "engineering",
+      "tags": ["claude-code", "engineering", "admin"]
     }
   ]
 }

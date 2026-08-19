@@ -1,0 +1,6 @@
+{
+  "name": "ai-overage-admins",
+  "displayName": "AI Overage Admins",
+  "description": "Skills for admins managing engineers' Claude and Codex monthly spend limits",
+  "version": "1.0.0"
+}

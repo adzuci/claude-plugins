@@ -1,0 +1,14 @@
+{
+  "name": "ai-overage-admins",
+  "version": "1.0.0",
+  "description": "Skills for admins managing engineers' Claude and Codex monthly spend limits",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AI Overage Admins",
+    "shortDescription": "Skills for admins managing engineers' Claude and Codex monthly spend limits",
+    "developerName": "Apollo",
+    "category": "Engineering"
+  }
+}
