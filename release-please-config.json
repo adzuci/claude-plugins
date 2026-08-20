@@ -163,6 +163,22 @@
         }
       ]
     },
+    "plugins/apollo-infosec": {
+      "release-type": "simple",
+      "component": "apollo-infosec",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": ".codex-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
     "plugins/apollo-it": {
       "release-type": "simple",
       "component": "apollo-it",

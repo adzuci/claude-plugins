@@ -1,0 +1,19 @@
+{
+  "name": "apollo-infosec",
+  "version": "1.0.0",
+  "description": "Information security skills for Apollo's InfoSec team — security incident response, data exposure investigation, and verifying whether leaked or claimed-stolen data is real.",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "author": {
+    "name": "Apollo",
+    "email": "security@apollo.io"
+  },
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Information Security",
+    "shortDescription": "Information security skills for Apollo's InfoSec team — security incident response, data exposure investigation, and verifying whether leaked or claimed-stolen data is real.",
+    "developerName": "Apollo",
+    "category": "Security",
+    "brandColor": "#1F2937"
+  }
+}

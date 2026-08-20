@@ -36,6 +36,7 @@ EXPECTED_DISPLAY_NAMES = {
     "apollo-gtm-enablement": "Apollo GTM Enablement",
     "apollo-risk": "Apollo Risk",
     "apollo-corpsec": "Apollo Corporate Security",
+    "apollo-infosec": "Apollo Information Security",
     "apollo-talent": "Apollo Talent",
     "apollo-procurement": "Apollo Procurement",
     "apollo-accounting": "Apollo Accounting",

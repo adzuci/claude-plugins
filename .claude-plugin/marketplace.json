@@ -125,6 +125,13 @@
       "tags": ["cowork", "security", "corpsec", "compliance"]
     },
     {
+      "name": "apollo-infosec",
+      "source": "./plugins/apollo-infosec",
+      "description": "Information security skills for Apollo's InfoSec team — security incident response, data exposure investigation, and verifying whether leaked or claimed-stolen data is real.",
+      "category": "security",
+      "tags": ["cowork", "security", "incident-response", "data-protection"]
+    },
+    {
       "name": "apollo-talent",
       "source": "./plugins/apollo-talent",
       "description": "Talent Acquisition skills for Apollo's TA team — company knowledge for candidate briefings and project planning tools for TA initiatives.",

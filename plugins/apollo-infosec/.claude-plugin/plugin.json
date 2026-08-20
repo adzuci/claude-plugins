@@ -1,0 +1,11 @@
+{
+  "name": "apollo-infosec",
+  "displayName": "Apollo Information Security",
+  "version": "1.0.0",
+  "description": "Information security skills for Apollo's InfoSec team — security incident response, data exposure investigation, and verifying whether leaked or claimed-stolen data is real.",
+  "author": {
+    "name": "Apollo",
+    "email": "security@apollo.io"
+  },
+  "license": "UNLICENSED"
+}

@@ -209,6 +209,18 @@
       "category": "Security"
     },
     {
+      "name": "apollo-infosec",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-infosec"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Security"
+    },
+    {
       "name": "apollo-talent",
       "source": {
         "source": "local",

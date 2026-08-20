@@ -9,6 +9,7 @@
   "plugins/apollo-gtm": "0.2.0",
   "plugins/apollo-gtm-enablement": "1.0.0",
   "plugins/apollo-gtm-systems": "0.1.0",
+  "plugins/apollo-infosec": "1.0.0",
   "plugins/apollo-it": "0.1.0",
   "plugins/apollo-legal": "1.2.0",
   "plugins/apollo-marketing": "1.0.0",
