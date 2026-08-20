@@ -20,7 +20,7 @@ This is Apollo's shared Claude Code and Codex skills marketplace. Skills live in
 - If a direct-invoked skill needs inputs, document them in the skill body as concise usage examples (e.g. `/plugin-name:skill-name <target> --flag value`). Do not add unsupported `arguments` frontmatter.
 - Keep both plugin manifests when adding or changing a plugin: `.claude-plugin/plugin.json` for Claude Code and `.codex-plugin/plugin.json` for Codex
 - Keep both marketplace files in sync: `.claude-plugin/marketplace.json` for Claude Code and `.agents/plugins/marketplace.json` for Codex
-- Bump the plugin version in both manifests when adding or meaningfully changing a skill (new skill → minor bump e.g. `1.0.0` → `1.1.0`; breaking change → major bump). No bump needed for docs-only or metadata-only fixes.
+- Do not hand-bump `version` in either plugin manifest. `release-please` (`.github/workflows/release-please.yml`, `release-please-config.json`, `.release-please-manifest.json`) owns versioning per plugin via `extra-files` and bumps both manifests automatically from Conventional Commit messages on merge to `main`.
 - Repo-local `.claude/skills` must work for Claude Code users who do not have Codex installed. Do not make those skills depend on Codex-only commands.
 
 ## Validation
