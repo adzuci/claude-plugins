@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.1](https://github.com/apolloio/claude-plugins/compare/apollo-people-v0.3.0...apollo-people-v0.3.1) (2026-08-20)
+
+
+### Bug Fixes
+
+* **apollo-people:** correct broken career framework link in ace-mid-year-review ([#209](https://github.com/apolloio/claude-plugins/issues/209)) ([c46dde7](https://github.com/apolloio/claude-plugins/commit/c46dde74e11bbb4dd36e2d077ebfb92821818af0))
+* stop ace-manager-review citing manager's own praise as third-party evidence ([#217](https://github.com/apolloio/claude-plugins/issues/217)) ([b121abf](https://github.com/apolloio/claude-plugins/commit/b121abf2ab116a8150fb22a7045539ef0e09492a))
+
 ## [0.3.0](https://github.com/apolloio/claude-plugins/compare/apollo-people-v0.2.0...apollo-people-v0.3.0) (2026-07-30)
 
 

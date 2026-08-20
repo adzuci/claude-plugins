@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.3.0...apollo-eng-v1.4.0) (2026-08-20)
+
+
+### Features
+
+* **apollo-eng, apollo-eng-devops:** Mongo hint/partial-index check + gated PR review mode ([#219](https://github.com/apolloio/claude-plugins/issues/219)) ([16d2197](https://github.com/apolloio/claude-plugins/commit/16d2197bb51755461b23fbfd909870902fe72cd3))
+* **apollo-eng:** add describe-changes and ticket-for-pr skills ([#207](https://github.com/apolloio/claude-plugins/issues/207)) ([5fc9f90](https://github.com/apolloio/claude-plugins/commit/5fc9f90c869129864deb65fbb8ce33e6d5cba9a4))
+* **apollo-eng:** HarnessBench skill-eval pilot — auto-pr staging skill, fixtures, CI (INFRA-2087) ([#182](https://github.com/apolloio/claude-plugins/issues/182)) ([aaf9611](https://github.com/apolloio/claude-plugins/commit/aaf9611b09e2593b210fa2a6a8d0af32f1488382))
+
 ## [1.3.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.2.0...apollo-eng-v1.3.0) (2026-08-05)
 
 
