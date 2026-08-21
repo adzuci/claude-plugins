@@ -163,6 +163,22 @@ claude mcp add --transport sse -s user atlassian https://mcp.atlassian.com/v1/ss
 
 Once installed, use Glean to search internal runbooks and postmortems and Atlassian to read/update Jira incidents without leaving Claude.
 
+### Glean CLI (Preferred for Runbook and Postmortem Lookups)
+
+When you need source-backed internal knowledge (runbooks, postmortems, RCAs,
+prior incident history), prefer the local Glean CLI over model recall, mirroring
+the intercom-assistant Glean bridge. Route through the helper script:
+
+```bash
+python3 scripts/ask_glean.py --mode runbook --question "<what you need to find>"
+```
+
+Follow [`references/glean-cli.md`](references/glean-cli.md) for modes, the agent-id
+requirement (`--agent-id` / `GLEAN_SRE_AGENT_ID`), and output integration. If the
+`glean` CLI is missing or unauthenticated, label the gap and fall back to Glean
+MCP/search as clearly labeled degraded research, then run `glean auth login` or
+set `GLEAN_API_TOKEN`.
+
 ## References
 
 - [`references/sre-top-10.md`](references/sre-top-10.md) — 10 enforceable reliability modules with Apollo context
@@ -171,3 +187,4 @@ Once installed, use Glean to search internal runbooks and postmortems and Atlass
 - [`references/production-readiness-checklist.md`](references/production-readiness-checklist.md) — Production readiness checklist
 - [`references/infrastructure-map.md`](references/infrastructure-map.md) — Apollo infrastructure topology, data flow, and Terraform patterns
 - [`references/elasticsearch-operations.md`](references/elasticsearch-operations.md) — ES cluster landscape, backup/restore workflows, and operational checklists
+- [`references/glean-cli.md`](references/glean-cli.md) — Local Glean CLI bridge for source-backed runbook, postmortem, and RCA lookups
