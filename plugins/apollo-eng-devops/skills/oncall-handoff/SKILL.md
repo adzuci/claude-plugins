@@ -47,10 +47,38 @@ Monday-start week containing the requested date, using both NAM and IST shift ca
 
 ## Preflight
 
+### Daily Window Resolution
+
+When resolving "today's" shift window for `daily` mode without an explicit `--date`, do not
+assume the current calendar date's shift is the right one:
+
+- Compute the caller's current time in the shift timezone (`shift_tz`, default
+  `America/New_York`).
+- If today's shift window start is still in the future relative to now, the shift has not
+  started yet: resolve to the immediately prior calendar day's shift (the most recently
+  *completed* shift), not the not-yet-started one.
+- If now falls inside today's shift window, use today's in-progress shift as-is.
+- If now is after today's shift end, today's now-completed shift is correct as-is.
+- When PagerDuty is available, cross-check this resolution against the caller's actual
+  on-call schedule (`/oncalls`) for the window in question. If PagerDuty disagrees with the
+  computed window, state the mismatch in preflight rather than silently trusting the static
+  default (see `references/adam-defaults.md`).
+- An explicit `--date` always wins; skip this fallback when `--date` is supplied.
+- Carry the same completed / in-progress / not-yet-started distinction into the report
+  itself (see Output below) — it is reader-facing context, not just an internal preflight
+  check. Weekly or multi-shift reports label each covered shift this way individually.
+
 Print one resolved line before collecting evidence:
 
 ```text
 window=<daily|weekly> since=<ISO8601> until=<ISO8601> shift_tz=America/New_York outgoing_oncall=<caller> pd_rotation=DevOps format=<text|html>
+```
+
+When the resolved window is not the naive "today's calendar date" shift, append a short
+reasoning clause so the fallback is visible, for example:
+
+```text
+window=daily since=2026-08-20T14:00:00Z until=2026-08-21T02:00:00Z shift_tz=America/New_York outgoing_oncall=Adam pd_rotation=DevOps format=text (resolved to previous shift: current time precedes today's shift start)
 ```
 
 Then print a compact tool table:
@@ -148,24 +176,101 @@ there were genuinely no relevant operational skill changes.
 
 ## Output
 
+### Report Content Model
+
+Both text and HTML reports share one content model — gather the evidence once, then render it
+per mode. Only include areas 4-8 when the window actually has content for them; a quiet
+single-incident (or zero-incident) day can skip Deployments, Investigations, and Toil cleanup
+entirely and stay a short report.
+
+1. **Header** — org/rotation/caller, plus each covered shift's short local date and whether it
+   is completed, in-progress, or not-yet-started (the same distinction Preflight's Daily
+   Window Resolution computes).
+2. **Stats** — high-urgency count, low-urgency count, resolved-same-day count, still-open /
+   active-gap count. Purely numeric, scannable at a glance.
+3. **Must know** — 3-5 bullets, in this order: the most urgent/open item first, the most
+   recent significant event next, then toil/recurring items, then a source-confidence caveat
+   if one affects trust in the above.
+4. **Incidents** — the full in-window PD incident table (uncapped; see Verification in
+   [`references/source-order.md`](references/source-order.md)), plus a short root-cause note
+   per incident (e.g. "traced to X, closed out in-thread, no action needed" vs "still needs
+   follow-up").
+5. **Deployments** — production-deployment channel failures and any DevOps-relevant thread in
+   the window; see the Deployments channel step in
+   [`references/source-order.md`](references/source-order.md).
+6. **Investigations** — one entry per active cross-cutting investigation that spans 2+ linked
+   tickets/threads: a relationship diagram, a plain-language root cause, a recommendation, and
+   an explicit "what couldn't be verified" note naming any unavailable tool (Cloudflare, New
+   Relic, live Slack, etc.) rather than silently omitting the limitation.
+7. **Toil cleanup** — triggers when the same alert produced 3+ near-identical open tickets: a
+   ticket inventory, a consolidation plan (canonical ticket + duplicate links, per the
+   existing convention in
+   [`incident-triage/references/duplicate-heuristics.md`](../incident-triage/references/duplicate-heuristics.md)
+   rather than a new one), and a runbook stub draft if Notion/Glean search confirms none
+   exists.
+8. **Gaps & runbooks** — the existing gap logic, plus a "Source confidence" note per source
+   (live / degraded / unavailable and why — e.g. the Slack Fallback caveat in
+   [`references/cli-setup.md`](references/cli-setup.md)).
+9. **Footer** — the provenance line (see HTML Mode).
+
 ### Text Mode
 
 Keep the report short, link-first, and action-oriented. Prefer one compact table over many
 sections. Use Markdown links for PD, Slack, Grafana, Jira, and Notion pages when URLs are
 available. Keep IDs visible in link text.
 
+Show the handoff window in short local-date form in the human-facing header and Must-know
+area (e.g. `Aug 20, 10:00-22:00 ET`), not raw ISO8601. ISO8601 stays in the machine-readable
+preflight line and in evidence-table timestamps where precision matters. Label each covered
+shift as `completed`, `in-progress`, or `not-yet-started` in the header, mirroring the Daily
+Window Resolution outcome.
+
 ```markdown
-## On-call handoff - <daily|weekly> - <window>
+## On-call handoff - <daily|weekly> - <caller> - DevOps
+
+<Aug 20, 10:00-22:00 ET - completed> [one line per covered shift in weekly/multi-shift mode]
 
 Scope: DevOps PD rotation, <caller>, <shift window>. Non-DevOps rotations excluded unless directly connected.
 
+Stats: <H> high-urgency · <L> low-urgency · <R> resolved same day · <G> open gaps
+
 ### Must know
-- <up to 3 bullets the next on-call must know>
+- <most urgent / still-open item>
+- <most recent significant event>
+- <toil / recurring item>
+- <source-confidence caveat, only if one affects trust in the above>
 
 ### Handoff items
 | Item | State | Evidence | Possible next step |
 | --- | --- | --- | --- |
 | <linked alert/thread/ticket> | <active/resolved/noisy> | <linked PD/Slack/Grafana/Notion> | <owner + action> |
+
+### Incidents in window
+| Time | Urgency | Service | Link |
+| --- | --- | --- | --- |
+| <local time> | <high/low> | <PD service> | <linked PD incident> |
+
+Add a one-line root-cause note under this table for any incident worth explaining (e.g.
+"traced to X, closed out in-thread, no action needed" vs "still needs follow-up"). If the
+resolved window truly had zero PD incidents, keep this table but state which queries
+confirmed it, e.g. "0 incidents (DevOps-scoped and company-wide cross-check both agree)"
+instead of a bare "zero incidents" line.
+
+### Deployments
+Include only when the deployments channel had a DevOps-relevant failure or thread in the window.
+- <production-deployment channel failure or thread, with link>
+
+### Investigations
+Include only when 2+ linked tickets/threads form an active cross-cutting investigation.
+- <name> — <plain-language root cause>. Recommendation: <recommendation>. Not verified: <unavailable tool(s), or "none">.
+
+### Toil cleanup
+Include only when the same alert produced 3+ near-identical open tickets.
+| Ticket | Summary | Status | Canonical / duplicate |
+| --- | --- | --- | --- |
+| <linked ticket> | <summary> | <status> | <canonical or "duplicate of <canonical>"> |
+- Consolidation plan: <canonical ticket + proposed duplicate links, per `incident-triage/references/duplicate-heuristics.md`>
+- Runbook stub: <proposed stub, or "existing runbook found: <link>">
 
 ### Fatigue telemetry
 | Surface | NAM week | IST week | Read |
@@ -178,15 +283,19 @@ Scope: DevOps PD rotation, <caller>, <shift window>. Non-DevOps rotations exclud
 ### Gaps / notes
 - Runbook/guideline gaps: <linked proposal or "none found">
 - Runbooks / skills: <runbooks or guidelines updated/referenced during the window; new skills added, or "none found">
+- Source confidence: <per-source live/degraded/unavailable note, e.g. "Slack: no live access, reconstructed from Jira-linked threads per the Slack Fallback order">
 - Possible next steps: <1-3 short changes to reduce next week's PD/Slack load, or "none">
 - FYI: <optional one-line context only if useful>
 ```
 
 Use links and IDs verbatim. Mark confidence as `confirmed`, `likely`, or `unknown` when the
 evidence is incomplete. Keep non-DevOps rotations out of the main sections unless they
-create a DevOps action. Do not include an "Excluded" section in the report. Cap the handoff
-table at 5 rows; summarize lower-value noise in one sentence. Keep possible next steps
-brief; prefer one action sentence over process narration.
+create a DevOps action. Do not include an "Excluded" section in the report. Cap the
+**Handoff items** table at 5 rows; summarize lower-value noise in one sentence. The
+**Incidents in window** table is not subject to that cap — it exists so a reader can verify
+the incident count and urgency mix themselves. Omit **Deployments**, **Investigations**, and
+**Toil cleanup** entirely on a quiet day rather than printing "none" for all three; keep
+possible next steps brief and prefer one action sentence over process narration.
 
 ### HTML Mode
 
@@ -198,25 +307,60 @@ contains the same evidence and recommendations as text mode. It must work in Cow
 - use one gathered report model for both text and HTML so the analysis does not diverge;
 - use self-contained HTML with inline CSS only;
 - do not use remote scripts, remote fonts, CDNs, local files, or external assets;
-- optimize the first viewport for the next on-call: a short headline, active/repeated
-  issues, and immediate actions;
+- structure the first viewport as: an eyebrow (org / rotation / caller), a title, and a
+  subtitle stating each covered shift's short local date (e.g. `Aug 20, 10:00-22:00 ET`) and
+  whether it is completed, in-progress, or not-yet-started; a stat row of small cards for
+  high-urgency count, low-urgency count, resolved-same-day count, and still-open/active-gap
+  count; then a "Must know" card with an accent-colored left border holding 3-5 bullets
+  ordered per the Report Content Model above (most urgent/open item, most recent significant
+  event, toil/recurring items, then any source-confidence caveat). Keep this whole viewport a
+  short scannable summary;
+- make tabs the **default** layout once there is enough content to warrant them, not merely
+  an allowed option: **Incidents** (the full, uncapped in-window incident table plus a
+  root-cause note per incident), **Deployments**, one tab per active **Investigation**, and
+  **Toil cleanup**, plus an always-present **Gaps & runbooks** tab. A quiet single-incident
+  (or zero-incident) day may stay a single panel instead of tabs — don't force empty tabs;
+- in each Investigation tab, include a Mermaid relationship diagram
+  (`<pre class="mermaid">...</pre>`) showing how the linked tickets/threads connect, a
+  plain-language root-cause writeup, a recommendation, and an explicit "what couldn't be
+  verified" subsection naming which tools were unavailable (Cloudflare, New Relic, live
+  Slack, etc.) rather than silently omitting the limitation;
+- in the Toil cleanup tab, include a ticket inventory table, a consolidation plan (canonical
+  ticket plus duplicate links, following the existing convention in
+  `incident-triage/references/duplicate-heuristics.md` rather than inventing a new one), a
+  Mermaid tree diagram (canonical -> duplicates), and a runbook stub draft when Notion/Glean
+  search confirms none exists. Keep this tab's language about any named person's open ask
+  neutral and outcome-focused (see Safety Rules) — do not draft a "please respond" nudge
+  inside the report;
+- when the on-call alias tag sweep (see `references/source-order.md`) returns results, show
+  deployment-failure-related mentions first and collapse the rest behind a
+  `<details>`/`<summary>` labeled with the total count, so incidental pings don't dominate the
+  view. Note plainly if the search tool indicated more results existed than were pulled;
 - keep the tool/source area compact. Use icon-led chips such as `Current state: Slack, PD, Jira` and `References: Grafana, Notion, GitHub PRs`; do not add a `Mode: read-only` chip
   or verbose source-audit prose;
 - call the handoff action column "Possible next step", not "Next action";
 - add `title` hover text to Slack thread, PagerDuty, and Jira incident links when rendering
   HTML so a reader can tell what each evidence link represents before opening it;
-- include a compact "Runbooks / skills" section that lists runbooks or guidelines updated
-  during the window, relevant runbooks referenced but not updated, and any operational
-  skills added. Include relevant GitHub Actions / deployment workflow runbooks when they
-  explain a handoff item. Avoid source-mechanics phrasing such as "Glean showed"; state the
-  page/update directly. Do not add filler sentences saying guidance was merely "referenced
-  as existing guidance";
-- in weekly mode, include a compact "Fatigue telemetry" section with PagerDuty alert counts
-  and Slack message/thread counts for NAM and IST Monday-start weeks. Do not bury the
-  interpretation: call out the top load driver and the smallest next action;
+- in the Gaps & runbooks tab, include a compact "Runbooks / skills" section that lists
+  runbooks or guidelines updated during the window, relevant runbooks referenced but not
+  updated, and any operational skills added, plus a "Source confidence" subsection listing
+  each source's live/degraded/unavailable status and caveats (e.g. "Glean's Slack index has
+  real gaps — an exact permalink not found there means 'not indexed,' not 'didn't happen,'"
+  per the Slack Fallback section in `references/cli-setup.md`). Include relevant GitHub
+  Actions / deployment workflow runbooks when they explain a handoff item. Avoid
+  source-mechanics phrasing such as "Glean showed"; state the page/update directly. Do not
+  add filler sentences saying guidance was merely "referenced as existing guidance";
+- in weekly mode, include a compact "Fatigue telemetry" section (its own tab, or folded into
+  Gaps & runbooks) with PagerDuty alert counts and Slack message/thread counts for NAM and
+  IST Monday-start weeks. Do not bury the interpretation: call out the top load driver and
+  the smallest next action;
 - omit an "Excluded" card/section. If excluded context matters, keep it to a single FYI
   line;
-- make links visually obvious and keep the artifact scannable on mobile and desktop.
+- make links visually obvious and keep the artifact scannable on mobile and desktop;
+- include a small, muted footer stating which skill/invocation produced the artifact (e.g.
+  `Generated by /apollo-eng-devops:oncall-handoff daily DevOps 10-10pm html`) plus a one-line
+  note on how to regenerate or correct it (e.g. re-invoke the skill with corrected
+  `--date`/window args, or where to raise a correction).
 
 ## Safety Rules
 
@@ -230,6 +374,12 @@ contains the same evidence and recommendations as text mode. It must work in Cow
   or ticket during the initial handoff.
 - If the on-call guideline has a gap, suggest the update text or ticket body rather than
   editing the guideline directly.
+- These reports are routinely shared with named colleagues mentioned in them. When
+  describing a pending ask or unresolved toil involving a specific named person, keep the
+  language neutral and outcome-focused (what's open, what's next) — do not draft, embed, or
+  imply a "please respond" follow-up message addressed at that person inside the report
+  itself. Any such nudge is a separate, human-sent message, not report content. This matters
+  most in the Toil cleanup area.
 
 ## Reuse These Skills
 
@@ -238,7 +388,9 @@ contains the same evidence and recommendations as text mode. It must work in Cow
   recurrence/no-runbook signal — re-scope the results to the resolved daily/weekly window
   (and any backdated `--date`) before summarizing, rather than adopting its seven-day window.
 - `/apollo-eng-devops:incident-triage report` and `pd-reconcile` rules for Jira/PD update
-  proposals.
+  proposals. Its `duplicate-heuristics.md` reference is the existing convention for
+  canonical-ticket selection and `Duplicate`/`Relates` issue links — reuse it for the Toil
+  cleanup consolidation plan rather than inventing a new dedupe convention.
 - `/apollo-eng-devops:grafana-observability` for alert actionability, RED/USE checks, and
   runbook annotation expectations.
 - `/apollo-eng-devops:logs-ingestion-rate` only when the alert matches that specific

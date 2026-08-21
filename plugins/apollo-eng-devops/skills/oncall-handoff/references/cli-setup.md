@@ -61,6 +61,21 @@ Fallbacks:
 3. Mark Jira status/assignee/update-age checks incomplete if neither CLI nor MCP can read
    live Jira.
 
+## Slack Fallback
+
+If live Slack access is unavailable (no local CLI token, no MCP OAuth), use this fallback
+order rather than treating missing Slack access as a dead end:
+
+1. **Jira/PagerDuty ticket descriptions and comments that reference a Slack thread** are a
+   first-party fallback source. Prefer reading the quoted or linked Slack content directly
+   from the ticket over trying to re-find the same thread in Glean's Slack index.
+2. **Glean's indexed Slack messages** are a second-tier source. Glean's Slack index has real
+   gaps — a specific permalink or timestamp not turning up in Glean does not mean the
+   message did not happen, it means Glean has not indexed it. Report this as "not found in
+   Glean's index," not as evidence the content doesn't exist.
+3. If neither source confirms a piece of Slack context, mark it degraded/unverified rather
+   than omitting it or asserting it did not occur.
+
 ## Reporting Language
 
 Use precise source labels in the tool table:

@@ -10,6 +10,9 @@ directly to DevOps ownership, customer impact, a Sev0/Sev1 incident, or a handof
 - The caller's resolved DevOps shift window from PagerDuty, or the explicit shift window
   supplied by the caller.
 - Infrastructure/DevOps Slack channels and threads.
+- The org's production-deployment notification channel and the caller's resolved on-call
+  alias mentions (see the Deployments channel and On-call alias tag sweep steps below for how
+  to discover both — do not hardcode either).
 - Grafana alerts owned by DevOps or infrastructure.
 - Jira INCIDENT tickets only when linked to DevOps-owned PD/Grafana/Slack evidence.
 
@@ -46,6 +49,15 @@ on Native Data unless the caller explicitly asks.
    using the PagerDuty MCP/CLI time-range filters before summarizing. Widen `--days` enough to
    cover a backdated window, then filter back down to the printed window.
 
+   Verification: for the exact resolved `since`/`until` window, always run both a
+   DevOps-service-scoped incident query and a broader cross-check query (company-wide, or the
+   caller's user-scoped incidents) covering the same ISO window. Treat a count — including
+   "zero incidents" — as trustworthy only when both queries agree; if they disagree, show
+   both raw counts and say so rather than silently picking one. Report the underlying
+   incident instances (timestamp, urgency, service, link) as a table so the count can be
+   checked against evidence; never assert a bare summary count or a "zero incidents" claim
+   without showing what was queried.
+
 1. **Slack context**: read the DevOps handoff channels first:
 
    Verify channel IDs periodically; renamed or archived Slack channels can make this table
@@ -64,6 +76,27 @@ on Native Data unless the caller explicitly asks.
    action" outcome. Slack thread context is required because PD resolution is not the same
    as human follow-up completion.
 
+1. **Deployments channel**: search for the org's production-deployment notification channel
+   by pattern-matching on name/description — e.g. "production deployment", or "deploy"
+   combined with bot-posted pass/fail messages — rather than hardcoding a channel ID, since
+   it can be renamed. Recap failures and any DevOps-relevant thread inside the resolved
+   window. If GKE, Cloudflare, or other in-scope infrastructure shows up here, it is in scope
+   under the DevOps-ownership rule above even though it surfaced as a deploy-pipeline ping
+   rather than a PD page — deploy-pipeline issues (node-pool contention, CI flakiness,
+   rate-limit incidents that first appear as customer-impact pings here) are a common,
+   easy-to-miss handoff source.
+
+1. **On-call alias tag sweep**: resolve the on-call alias for the caller's rotation from the
+   PagerDuty escalation policy (or ask if it cannot be resolved — do not hardcode an alias
+   string) and search Slack via Glean (given no reliable live Slack access; see the Slack
+   Fallback order in [`references/cli-setup.md`](cli-setup.md)) for every place the alias was
+   tagged across a wider lookback than the shift window itself — default to 14 days. Alias
+   pings are often the earliest signal of a problem, before it becomes a PD incident. Split
+   results into "deployment-failure-related" (prioritized, shown first) and "other"
+   (collapsed, e.g. behind `<details>` in HTML mode). If the search tool indicates more
+   results exist than were pulled, say the inventory is a strong sample, not exhaustive,
+   rather than implying completeness.
+
 1. **PagerDuty details**: for each relevant DevOps PD incident, collect status,
    responders, service, notes, timestamps, and linked Slack/Jira/Grafana URLs. Use current
    PD status; do not infer state from `[FIRING]` or `[RESOLVED]` in an old title. If a PD
@@ -73,6 +106,13 @@ on Native Data unless the caller explicitly asks.
 1. **Jira follow-up state**: use the `incident-triage` skill's PD reconciliation rules to
    identify DevOps-linked INCIDENT tickets that need assignment, status updates, dedupe,
    comments, or follow-up tickets. Stage proposals only.
+
+   When gathering DevOps-linked Jira tickets, check whether multiple tickets cite the same
+   Slack permalink/thread as their originating incident context. If they do, cross-link them
+   explicitly in the report as related tickets (e.g. a short "related tickets" note) instead
+   of listing them as unrelated rows — even if closer inspection shows they only share a
+   theme and not a root cause, note that determination in the report rather than assuming
+   either way.
 
 1. **Grafana evidence**: for active, repeated, high-severity, or high-blast-radius alerts,
    use `grafana-observability` principles:
