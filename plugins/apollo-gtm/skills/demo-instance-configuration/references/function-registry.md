@@ -42,6 +42,21 @@ Content-Type: application/json
 Cache-Control: no-cache
 ```
 
+**Send exactly those three headers and nothing else — a leftover `Authorization` header will `401` an otherwise-valid `X-Api-Key` call.** This is the natural failure mode of this skill's own two-step flow, because the provisioning step immediately before these calls legitimately authenticates with `Authorization: Bearer <OAuth token>`, and any caller that reuses a header set or a shared curl template will carry that bearer forward. Apollo's auth resolves the API key and **then still validates the bearer token**, so a leftover bearer that is invalid, expired, or scoped to the provisioning user returns `401 {"error":"Access token is invalid","error_code":"INVALID_ACCESS_TOKEN"}` even when the `X-Api-Key` is valid and provably present on the wire. Clear the header explicitly before any `direct_api` call — in curl, `-H "Authorization:"` deletes it (note that `-H "Authorization;"` sends it *empty*, which is harmless but is not the same thing).
+
+Tell this apart from the other auth failures by response body, since all of them surface as a bare `401`/`422` with no other distinguishing signal:
+
+| Response body | What it means |
+|---|---|
+| `422 Api key required` | Neither header present — `X-Api-Key` missing or empty, and no `Authorization` either |
+| `401 Invalid API key. See ...` | `X-Api-Key` present but malformed, truncated, or wrong |
+| `401 Invalid access credentials.` | An `Authorization` header with no `X-Api-Key` at all |
+| `401 Access token is invalid` / `INVALID_ACCESS_TOKEN` | **The leftover-bearer case** — a valid `X-Api-Key` poisoned by a bad `Authorization` header |
+
+Confirmed live 2026-08-21 against a real demo sub-account, on both hosts and all six configuration endpoints below. A server-side request log is **not** sufficient to diagnose this: the persisted row's `access_mode` field only labels the request, and a poisoned call logs `access_mode: api_access_token` with `api_key_id: null` — indistinguishable from a call that never sent an API key at all, even though it did.
+
+**This rule is duplicated in `agents/democles.md` on purpose, and the two must stay in sync.** Democles is the agent that actually builds these calls, and it cannot read this file — it works only from the per-function `registry_entry` inlined into its dispatch, which by definition never carries this shared auth section. A warning documented only here would guide planning and reach nothing at execution time, so `democles.md`'s Execution surfaces section carries its own copy. If you change the header contract, change it in both places.
+
 **Host is per-object, not one global API host.** None of these four object types are on Apollo's public documented API reference, so none of them are guaranteed to share a host with each other or with the documented `api.apollo.io/v1/...` examples:
 
 **Scope note: every function in this registry is `direct_api`, as of 2026-07-28.** The `apollo_cli` surface was retired — it authenticates via `apollo auth login`/`apollo auth whoami` as whatever account the operator's local session belongs to, which can never be the freshly provisioned sub-account a plan targets (see `stage_demo_sequence`'s command sequence and `agents/democles.md`'s Execution surfaces). Any function or step still described anywhere as CLI-based is unavailable, not an alternative to consider.

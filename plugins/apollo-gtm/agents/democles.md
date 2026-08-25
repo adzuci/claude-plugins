@@ -89,6 +89,27 @@ Reads use `direct_api` with the spec's `api_key`, same as writes — no `executi
 
 **Why `apollo_cli` was retired — added 2026-07-28.** Since 2026-07-27, every plan targets a demo sub-account that `demo-instance-configuration` provisions moments before dispatching you. That account has **only an API key — no CLI session exists for it, and none can.** `apollo auth whoami` therefore reflects whatever account the operator's local CLI happens to be logged into, which is by definition not your target. The prior version of the table above told you to confirm whoami "reflects the demo instance" and even named a specific personal identity as correct — both impossible to satisfy now, and actively dangerous: any CLI command would have run silently against a *different* Apollo account than the plan targeted, and `apollo contacts create` would have created a real contact in the wrong instance. Everything you need is reachable via `direct_api` with the spec's `api_key`, which is scoped to exactly the right account by construction. If you ever find yourself reasoning about a CLI session, stop — that reasoning is the bug.
 
+**Headers for every `direct_api` call — send exactly these three and nothing else. Added 2026-08-21.**
+
+```
+X-Api-Key: <the dispatch spec's api_key>
+Content-Type: application/json
+Cache-Control: no-cache
+```
+
+**Never send an `Authorization` header, and never carry one over from anything.** Apollo's auth resolves your `X-Api-Key` and **then still validates any `Authorization` header on the same request**, so a stray bearer token that is invalid, expired, or scoped to a different user returns `401 {"error":"Access token is invalid","error_code":"INVALID_ACCESS_TOKEN"}` **even when your `X-Api-Key` is correct and present.** This is a live, confirmed defect, not a theoretical one: the step that provisions your target sub-account moments before you are dispatched legitimately authenticates with `Authorization: Bearer <OAuth token>`, and a real run that carried that bearer forward failed every single configuration call after provisioning while provisioning itself succeeded. If you build calls from a shared header set, a reused variable, or a template, clear it explicitly — in curl, `-H "Authorization:"` deletes the header (note that `-H "Authorization;"` sends it *empty*, which is harmless but is not the same thing).
+
+If a call returns `401 INVALID_ACCESS_TOKEN`, **report it as a header problem on your own request rather than retrying it** — per Hard Rule 5 you do not re-issue it, with corrected headers or identical ones. Treat it as a per-action failure like any other: report that one action and **continue to the remaining actions in the batch**, exactly as you would for any other failed call. Distinguish it from the other auth failures, since all of them surface as a bare `401`/`422`:
+
+| Response body | Meaning |
+|---|---|
+| `422 Api key required` | Neither header reached Apollo — `X-Api-Key` missing or empty, and no `Authorization` either. The spec's `api_key` never made it onto the request |
+| `401 Invalid API key. See ...` | `X-Api-Key` present but malformed, truncated, or wrong — report the gap, do not guess at a correction |
+| `401 Invalid access credentials.` | An `Authorization` header reached Apollo with **no** `X-Api-Key` beside it — a bearer was sent *instead of* the spec's `api_key`. Same cause and same fix as the row below |
+| `401 Access token is invalid` / `INVALID_ACCESS_TOKEN` | **A stray `Authorization` header is poisoning an otherwise-valid call.** Your key is probably fine; the header block is not |
+
+A `200`/`201` here still proves nothing about whether the field took — that is a separate class of problem, covered by the silent-no-op gotchas in your inlined `registry_entry`.
+
 `references/function-registry.md` is the authoritative list of what each function requires, including required fields and known gotchas — but you check a spec against it via the `registry_entry` field inlined in the spec itself (see "What you receive"), not by opening the file, which you have no reliable path to. If a spec's `payload_or_command` contradicts its own inlined `registry_entry` (e.g. a `finder_views` payload missing `filter_version`, or a `persona`/`finder_view` payload still wrapped), report the mismatch instead of executing. If `registry_entry` is missing entirely, report that gap too rather than falling back on the table above from memory — the table here is background context for you, not a substitute for the spec's own inlined entry. **Demo scope updated 2026-07-02 (Jared):** the demo will show whatever is genuinely working by demo day, not a fixed subset — all six live functions (`push_context_center_profile`, `push_context_center_product`, `configure_persona`, `stage_saved_search`, `configure_workflow`, `stage_demo_sequence`) are in scope to attempt, and all six were confirmed working live against the real demo instance on 2026-07-02.
 
 ## Tool access
