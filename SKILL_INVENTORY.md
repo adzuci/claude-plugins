@@ -44,6 +44,7 @@ Generated from `plugins/*/skills/*/SKILL.md`. Do not edit this table manually.
 | apollo-eng | `/apollo-eng:product-ship-post` | Generate product ship room posts for Slack announcements. Activate when user asks to write a ship post or feature launch announcement. |
 | apollo-eng | `/apollo-eng:rca-doc-review` | Review an RCA document from Notion or Google Drive against Apollo's RCA standards. Activate when user asks to review an RCA, check an incident report, or provide feedback on a post-mortem document. |
 | apollo-eng | `/apollo-eng:rca-report` | Status report over Apollo's RCA (Post Mortems) database in Notion, with optional surface filter. Run via /apollo-eng:rca-report. |
+| apollo-eng | `/apollo-eng:resolve-review-comments` | Fetch, categorize, and interactively resolve PR review comments. Groups related comments, explains each, and waits for your decision before fixing. |
 | apollo-eng | `/apollo-eng:security-review` | Perform security audit of Ruby controllers for IDOR vulnerabilities. Activate when user asks for security review, IDOR check, or authorization audit. |
 | apollo-eng | `/apollo-eng:self-retro` | Analyze recent Claude Code sessions to surface engineering patterns and a prioritized learning plan. Invoke with /apollo-eng:self-retro. |
 | apollo-eng | `/apollo-eng:status-page-post` | Draft customer-facing incident copy for Apollo's status page (status.apollo.io). Run via /apollo-eng:status-page-post. |
