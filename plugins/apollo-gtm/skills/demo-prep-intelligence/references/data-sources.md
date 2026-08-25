@@ -114,6 +114,23 @@ Apollo SFDC uses emoji-prefixed and `- CI` (Command of the Message) suffixed fie
 | Notes | 🟢 Notes | `Notes__c` |
 | Capabilities | Apollo capabilities flagged for the deal | `Number_of_JTBD_Added__c`, `Number_of_JTBD_Validated__c`, `Submit_JTBD__c`, `Validate_JTBD__c` |
 | Solution Engineer Notes | Solution Engineer Notes | `Solution_Engineer_Notes__c` |
+| Business Impact | Business Impact | `Negative_Consequences__c` |
+| After Scenario | After Scenario | `After_Scenario__c` |
+
+**Force Management's three constructs, and the one whose label hides it — added 2026-08-19, all three labels verified by a live `FieldDefinition` query against the org.** Force Management's before-state / negative-consequences / after-state trio maps onto this org's fields as follows, and two of the three do not read the way their API names suggest:
+
+| Force Management construct | Verified label in this org | API field name |
+|---|---|---|
+| Before state | **🔴 Identified Pain** | `Before_Scenario__c` |
+| Negative consequences | **Business Impact** | `Negative_Consequences__c` |
+| After state | **After Scenario** | `After_Scenario__c` |
+
+Two consequences worth stating, because both have already caused a real error:
+
+- **`Negative_Consequences__c`'s label is "Business Impact," not "Negative Consequences."** Never render the plain reading of the API name as a label — the demo prep guide prototype did exactly that and shipped a field label that does not exist in the org.
+- **`Before_Scenario__c` has no dedicated before-state field; it *is* Identified Pain.** Anyone reasoning about Force Management coverage from API names alone will conclude the before-state is missing when it is in practice the best-populated of the three. It appears twice in this dictionary on purpose — once as Identified Pain (its MEDDPICC role) and once here (its Force Management role) — because it is one field serving both.
+
+**Why these two rows were added at all:** the dictionary is what the skill matches the raw record blob against, so a field missing from it is a field the skill can fail to recognize *even when it is fully populated* — the exact mechanism that once produced "no economic buyer identified" on an opportunity whose field was populated. Both fields are live and both were absent from this table until now, making that false negative latent for two of Force Management's three constructs.
 
 **Economic Buyer is a lookup field, not free text — its value is a Salesforce record ID, never a name by itself.** Confirmed on a real record: `Economic_Buyer__c` held `003UM00000bZayZYAS`, not "Cara Christofi." Two ways to get the actual name, easiest first: (1) check **Economic Buyer Details** — it's free text and normally names the person directly (it did here: "Cara..., the Head of Regional Marketing... at Sokin..."). (2) If Details doesn't name them, use the Salesforce Contact ID to search for the direct Contact record. Never report the raw ID string itself as the answer.
 

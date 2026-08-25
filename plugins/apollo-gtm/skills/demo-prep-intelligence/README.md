@@ -58,7 +58,7 @@ demo-instance-configuration (Layer 2) ──▶ proposes a config plan, gets SC 
 Democles (Layer 2 execute) ──▶ writes the approved config into that sub-account
 ```
 
-The Layer 2 handoff is not optional: rendering a brief, synthesis package, or Context Center payload writes it to `demo-prep-scratchpad.md`, which is the only channel `demo-instance-configuration` has for picking it up.
+The Layer 2 handoff is not optional: rendering a brief, synthesis package, Context Center payload, Apollo AI demo setup prompt set, Qualification Record Block, or `Produced this session:` line writes it to `demo-prep-scratchpad.md`, which is the only channel `demo-instance-configuration` has for picking it up.
 
 ## Maintainer
 
@@ -67,6 +67,32 @@ David Johnson — Senior Solutions Consultant, Apollo.io
 This skill and its underlying consulting frameworks are authored by David Johnson. For feedback, questions, or bug reports, DM @David on Slack.
 
 ## Changelog
+
+### v1.5.0
+
+Three blocks added to the Layer 2 handoff, the SFDC Field Dictionary corrected, and the recommended next action after a brief changed. **The seven-section brief itself is untouched** — its structure, content and confidence tags are unchanged. The one SC-facing change is which option the post-brief menu recommends (item 5).
+
+**1. Handoff Appendix added to `references/output-template.md` — a Qualification Record Block, the Apollo AI demo setup prompts, and a `Produced this session:` line, all scratchpad-only.** `demo-instance-configuration` now ends its run by generating an SC-facing Demo Prep Guide, bound by a hard rule that nothing appears on it which neither skill generated or gathered. Two of that guide's sections had no source: the brief folds qualification data into risk flags, Pain Points and Competitive Landscape without per-pillar state, and the setup prompts never reached Layer 2 at all. Both now travel in `demo-prep-scratchpad.md`. **Neither is rendered to the SC and neither adds a section to the seven-section contract** — the brief is untouched.
+
+The Qualification Record Block's `state` is deliberately mechanical: `EMPTY` when every source field is null, `VERIFIED` / `UNCONFIRMED` from the confidence tag the brief already assigned, `PARTIAL` for a multi-field pillar that is half-filled. `THIN`, `WEAK` and `UNKNOWN` are explicitly forbidden — they describe content quality, which nothing in the handoff grounds, and a generator emitting them would be inventing.
+
+**2. The setup prompts are now a specification, not only talk track.** Where a prompt and Layer 2's own derivation describe the same object, the prompt governs — see `demo-instance-configuration`'s Input Contract. This is why the prompts must be written verbatim: a reworded talk-track hook is no longer something the run generated and cannot be cited, and a truncated prompt now degrades what gets built rather than only what gets written down.
+
+**3. Two Force Management fields added to the SFDC Field Dictionary, all three labels verified by a live `FieldDefinition` query.** `Negative_Consequences__c` and `After_Scenario__c` were live Opportunity fields absent from the dictionary — and the dictionary is what the skill matches the raw record blob against, so a field missing from it is a field the skill can fail to recognize even when populated. That is the same mechanism that once produced "no economic buyer identified" on an opportunity whose field was filled in.
+
+The labels are not what the API names suggest. **`Negative_Consequences__c` is labelled "Business Impact,"** and `Before_Scenario__c` is labelled **"🔴 Identified Pain"** — so Force Management's before-state has no dedicated field in this org; it is folded into Identified Pain, and it now appears twice in the dictionary on purpose, once per role.
+
+**3a. `Produced this session:` (Block 3) names which of this skill's artifacts the session actually produced**, from a fixed thirteen-name vocabulary. `demo-instance-configuration` sorts the Demo Prep Guide's "Also available" section from this line, and that section is the only place the configuration fast path advertises those artifacts at all. Anything absent from the line is reported to the SC as not generated — the safe direction, but it means an artifact produced and not listed gets hidden.
+
+**4. Condition (c)'s artifact enumeration updated in all four places that carry it** — `SKILL.md`, `GOVERNANCE.md`, `SC-GUIDE.md`, and this README. Three of them restated the old three-artifact list. **The count went from three artifacts to six**, which matters for the accumulation rule in `GOVERNANCE.md`: more triggers per session means more opportunities for one write to clobber a sibling block rather than accumulate alongside it.
+
+**5. The post-brief menu now recommends "Context Center payload + Apollo AI prompts" rather than "Configure the demo instance."** Reported from a live run: the brief-only menu was recommending the handoff at the one point in the flow where **neither the Context Center payload nor the setup prompts exist yet**, both of which feed `demo-instance-configuration` directly. It was patched with an instruction to ask whether the SC also wanted the Context Center populated, which is a mitigation on the wrong default.
+
+Item 2 above is what makes this a defect rather than a preference. Now that the setup prompts **govern** Layer 2's derivation where they overlap, a brief-only handoff makes Layer 2 derive its own workflow and saved-search specs when a governing prompt spec could have existed — the exact divergence that precedence rule closes. And since Layer 2's Demo Prep Guide cites the prompts' `Demo talk-track hook` lines, the old default also produced a guide whose every Demo path step read "No talk-track hook generated for this step."
+
+**Configure the demo instance stays on the menu, just not as the default.** The other two menus — after a Context Center payload, and after full synthesis — still recommend it, correctly, because on both the payload and prompts already exist. `SKILL.md`'s Context Center readiness check is unchanged and still fires when an SC picks the handoff anyway; it now just fires less often.
+
+**Untested in this form** — the edits are specification changes verified against the files and against the org for the labels. A live run exercised the handoff blocks and the Field Dictionary (11 of 11 predicted pillar states matched, six artifacts accumulated into one file); the menu change in item 5 has not been run.
 
 ### v1.4.0
 

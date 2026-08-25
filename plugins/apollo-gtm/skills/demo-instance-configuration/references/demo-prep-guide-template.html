@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ACCOUNT_NAME}} — Demo Prep Guide</title>
+<style>
+:root{
+  --midnight:#252521; --deep:#1A1A18; --ink:#4A4A44; --muted:#8F9186; --faint:#696B5E;
+  --offwhite:#F9F9F6; --paper:#EDEEE2; --soft:#BABBAE;
+  --line:rgba(0,0,0,.08); --yellow:#FBF500;
+  --display:Georgia,"Times New Roman",serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:var(--paper);font-family:var(--body);color:var(--midnight);
+  -webkit-font-smoothing:antialiased}
+
+body{padding:28px 20px 40px}
+.sheet{max-width:1020px;margin:0 auto;background:var(--offwhite);
+  border:1px solid rgba(0,0,0,.06);border-radius:16px;
+  box-shadow:0 2px 8px rgba(0,0,0,.10)}
+
+/* ---- level gating: additive ---- */
+body [data-lvl="2"],body [data-lvl="3"]{display:none}
+body[data-view="2"] [data-lvl="2"]{display:revert;animation:revealIn 180ms ease both}
+body[data-view="3"] [data-lvl="2"],
+body[data-view="3"] [data-lvl="3"]{display:revert;animation:revealIn 180ms ease both}
+@keyframes revealIn{from{opacity:0;transform:translateY(-2px)}to{opacity:1;transform:none}}
+
+/* ---- sticky dark header ---- */
+#stickytop{height:1px;margin-bottom:-1px}
+header{position:sticky;top:0;z-index:20;border-radius:16px 16px 0 0;
+  background:var(--midnight);color:var(--offwhite);padding:18px 40px 16px;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:32px;
+  transition:border-radius .18s ease,box-shadow .18s ease}
+body.stuck header{border-radius:0;box-shadow:0 8px 18px -12px rgba(0,0,0,.7)}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--yellow)}
+.eyebrow span{color:var(--muted);font-weight:500;letter-spacing:.06em}
+h1{font-family:var(--display);font-weight:550;font-size:29px;line-height:1.1;
+  letter-spacing:-.02em;margin-top:7px}
+.meta{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:7px;font-size:13px;color:var(--soft)}
+.meta .stage{color:var(--offwhite)}
+.crumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.crumbs a{font-size:12px;font-weight:500;color:var(--offwhite);text-decoration:none;
+  padding:5px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);
+  transition:border-color .15s,color .15s}
+.crumbs a:hover{border-color:rgba(251,245,0,.30);color:var(--yellow)}
+.hgroup{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.cta{background:var(--yellow);color:var(--midnight);font-size:14px;font-weight:700;
+  padding:11px 20px;border-radius:10px;text-decoration:none}
+.cta:hover{opacity:.85}
+.viewbox{text-align:right}
+.viewbox .k{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:6px}
+.track{position:relative;display:inline-flex;padding:3px;gap:2px;background:var(--deep);
+  border:1px solid rgba(251,245,0,.30);border-radius:999px;
+  box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.track button{border:0;background:none;cursor:pointer;font:inherit;font-size:12.5px;
+  font-weight:500;color:var(--muted);padding:6px 16px;border-radius:999px;
+  transition:background .18s,color .18s;white-space:nowrap}
+.track button:hover{color:var(--offwhite)}
+.track button[aria-pressed="true"]{background:var(--yellow);color:var(--midnight);font-weight:700}
+.hint{margin-top:7px;font-size:11px;color:var(--muted)}
+.hint span{display:block;color:var(--soft);margin-top:2px}
+
+/* ---- body ---- */
+main{padding:22px 40px 32px;display:flex;flex-direction:column;gap:18px}
+section{display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:start}
+.label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--faint);padding-top:3px}
+.label small{display:block;font-weight:400;letter-spacing:0;text-transform:none;
+  font-size:12px;color:var(--muted);margin-top:3px}
+
+/* risk callout */
+.riskcard{background:rgba(251,245,0,.18);border:1px solid var(--line);border-radius:12px;
+  padding:16px 20px;display:flex;flex-direction:column;gap:7px}
+.riskcard .lead{font-family:var(--display);font-weight:550;font-size:19px;line-height:1.35;
+  letter-spacing:-.01em}
+.riskcard .sub{font-size:14px;line-height:1.5;color:var(--ink)}
+
+ul.q{list-style:none;display:flex;flex-direction:column;gap:7px}
+ul.q li{font-size:14.5px;line-height:1.5;padding-left:15px;position:relative;color:var(--ink)}
+ul.q li:before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;
+  border-radius:50%;background:var(--soft)}
+
+/* demo path */
+.step{display:grid;grid-template-columns:22px 1fr;gap:13px;padding:10px 0;
+  border-top:1px solid var(--line)}
+.step:first-child{border-top:0;padding-top:0}
+.step .n{font-family:var(--display);font-size:15px;color:var(--muted);line-height:1.5}
+.step .what{font-size:15px;line-height:1.5}
+.step .why{font-size:14px;line-height:1.5;color:var(--ink);margin-top:4px}
+.step .why b{font-weight:700}
+.say{font-size:14px;line-height:1.55;color:var(--ink);margin-top:6px;padding-left:11px;
+  border-left:2px solid var(--yellow);font-style:italic}
+.say.nohook{border-left-color:var(--line);color:var(--muted);font-style:normal}
+
+/* environment — dark card */
+.envcard{background:var(--midnight);border-radius:12px;padding:18px 20px;
+  display:flex;flex-direction:column;gap:14px}
+.envcard .lead{font-size:14px;color:var(--offwhite);line-height:1.5}
+.envcard .note{font-size:14px;color:var(--soft);line-height:1.5}
+.objs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 24px;
+  border-top:1px solid rgba(255,255,255,.08);padding-top:14px}
+.obj{font-size:13px;color:var(--offwhite);line-height:1.45}
+.obj span{color:var(--muted)}
+
+.divider{display:flex;align-items:center;gap:12px}
+.divider .t{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--soft)}
+.divider .r{flex:1;height:1px;background:var(--midnight);opacity:.5}
+
+/* MEDDPICC */
+.row{display:grid;grid-template-columns:150px 108px 1fr;gap:14px;align-items:baseline;
+  padding:9px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.pil{font-size:15px;font-weight:500}
+.pill{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;
+  padding:3px 9px;border-radius:999px}
+.pill.solid{background:var(--midnight);color:var(--offwhite)}
+.pill.flag{background:var(--yellow);color:var(--midnight)}
+.pill.hole{background:transparent;color:var(--midnight);border:1px dashed rgba(0,0,0,.40)}
+.cell{display:flex;flex-direction:column;gap:6px}
+.know{font-size:14px;line-height:1.55;color:var(--ink)}
+.gap{font-size:14px;line-height:1.5}
+.gap b{font-weight:700}
+
+.cf{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;vertical-align:1px;margin-left:6px;padding:1px 5px;
+  border-radius:3px;border:1px solid;white-space:nowrap}
+.cf-v{color:#5A6B4A;border-color:#C6D2B6}
+.cf-i{color:#8A6B2E;border-color:#DDCBA4}
+.cf-n{color:var(--muted);border-color:var(--line)}
+
+.callout{display:flex;gap:12px;background:var(--paper);border:1px solid var(--line);
+  border-radius:10px;padding:15px 17px}
+.callout .cico{font-size:16px;line-height:1.5;flex:none}
+.callout .cbody{min-width:0;flex:1}
+.callout .plead:first-child{margin-top:0}
+.callout .plead{margin-bottom:8px}
+.callout ul.w{gap:7px}
+.callout ul.w li{font-size:14px}
+.callout ul.w+.plead{margin-top:14px}
+.callout .plead:last-child{margin-bottom:0}
+.cogroup+.cogroup{margin-top:16px;padding-top:15px;border-top:1px solid rgba(0,0,0,.09)}
+.cohead{font-size:13.5px;line-height:1.5;color:var(--ink);margin-bottom:9px}
+.cohead .pill{margin-right:8px;vertical-align:1px}
+.cohead b{color:var(--midnight)}
+
+ul.w{list-style:none;display:flex;flex-direction:column;gap:9px}
+ul.w li{font-size:14.5px;line-height:1.5;color:var(--ink)}
+ul.w li b{color:var(--midnight);font-weight:700}
+.plead{font-size:14px;color:var(--ink);margin-bottom:12px}
+.person{display:grid;grid-template-columns:150px 108px 1fr;gap:14px;align-items:baseline;
+  padding:9px 0;border-top:1px solid var(--line)}
+.person:first-of-type{border-top:0}
+.person .nm{font-size:15px;font-weight:500}
+.person .rl{font-size:13px;color:var(--muted)}
+.person .ds{font-size:14px;line-height:1.55;color:var(--ink)}
+.person .ds em{font-style:normal;color:var(--midnight);font-weight:500}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
+  background:var(--paper);color:var(--midnight);padding:1px 5px;border-radius:4px}
+/* the base rule is light-on-light inside the dark card, and invisible on .paper */
+.envcard code{background:rgba(255,255,255,.14);color:var(--offwhite)}
+.callout code{background:rgba(0,0,0,.07)}
+.src{font-size:13.5px;line-height:1.55;color:var(--ink)}
+
+@media print{
+  html,body{background:#fff}
+  body{padding:0}
+  .sheet{max-width:none;border:0;border-radius:0;box-shadow:none}
+  header{position:static;background:#fff;color:#000;border-radius:0;padding:0 0 12px}
+  .eyebrow{color:#666}.meta,.meta .stage{color:#444}
+  .crumbs a{color:#000;border-color:#bbb}
+  .cta{background:#fff;color:#000;border:1px solid #000;padding:6px 12px}
+  .envcard{background:#fff;border:1px solid #bbb}
+  .envcard .lead,.obj{color:#000}.envcard .note,.obj span{color:#555}
+  code,.envcard code,.callout code{background:#f0f0ee;color:#000}
+  .objs{border-top-color:#ddd}
+  main{padding:0}
+  [data-no-print]{display:none!important}
+  @page{margin:12mm}
+}
+@media (max-width:820px){
+  header{flex-direction:column;gap:16px;padding:16px 22px}
+  .hgroup{align-items:flex-start}
+  .viewbox{text-align:left}
+  main{padding:18px 22px 28px}
+  section{grid-template-columns:1fr;gap:8px}
+  .row,.person{grid-template-columns:1fr;gap:4px}
+  .objs{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body data-view="1">
+<div class="sheet">
+  <div id="stickytop" aria-hidden="true"></div>
+
+  <header>
+    <div>
+      <div class="eyebrow">Demo prep guide <span>&middot; generated {{GENERATED_AT}}</span></div>
+      <h1>{{ACCOUNT_NAME}}</h1>
+      <div class="meta">
+        <span>{{META_FACTS}}</span>
+        <span class="stage">{{STAGE}}</span>
+      </div>
+      <div class="crumbs">{{CRUMBS}}</div>
+    </div>
+    <div class="hgroup">
+      <a class="cta" href="https://app.testbox.com/deals" id="env">Log into Test Box Environment</a>
+      <div class="viewbox" data-no-print>
+        <div class="k">View</div>
+        <div class="track" role="group" aria-label="Level of detail">
+          <button type="button" data-v="1" aria-pressed="true">AE view</button>
+          <button type="button" data-v="2" aria-pressed="false">Hybrid</button>
+          <button type="button" data-v="3" aria-pressed="false">SC view</button>
+        </div>
+        <div class="hint">Click a view to add detail<span id="hint">Walk in and run it</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <section>
+      <div class="label">Headline risk</div>
+      <div class="riskcard">{{HEADLINE_RISK}}</div>
+    </section>
+
+    <section>
+      <div class="label">Open with</div>
+      <ul class="q">{{OPEN_WITH}}</ul>
+    </section>
+
+    <section>
+      <div class="label">Demo path</div>
+      <div>{{DEMO_PATH}}</div>
+    </section>
+
+    <section>
+      <div class="label">Environment</div>
+      <div class="envcard">{{ENVIRONMENT}}</div>
+    </section>
+
+    <div class="divider"><span class="t">Below the line</span><span class="r"></span></div>
+
+    <section>
+      <div class="label">Qualification<small>MEDDPICC</small></div>
+      <div>{{QUALIFICATION}}</div>
+    </section>
+
+    <section>
+      <div class="label">Value case<small>Force Management</small></div>
+      <div>{{VALUE_CASE}}</div>
+    </section>
+
+    <section>
+      <div class="label">Watch-outs</div>
+      <ul class="w">{{WATCHOUTS}}</ul>
+    </section>
+
+    <section data-lvl="2">
+      <div class="label">People</div>
+      <div>{{PEOPLE}}</div>
+    </section>
+
+    <section data-lvl="3">
+      <div class="label">Also available<small>not on this run</small></div>
+      <div class="callout">
+        <div class="cico" aria-hidden="true">&#128161;</div>
+        <div class="cbody">{{ALSO_AVAILABLE}}</div>
+      </div>
+    </section>
+
+    <section data-lvl="3">
+      <div class="label">Sources</div>
+      <div class="src">{{SOURCES}}</div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+(function(){
+  var b=document.body,
+      btns=[].slice.call(document.querySelectorAll('.track button')),
+      hint=document.getElementById('hint'),
+      hints={'1':'Walk in and run it','2':'Context and gaps','3':'Everything on record'};
+  function set(v){
+    b.setAttribute('data-view',v);
+    btns.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.v===v)});
+    hint.textContent=hints[v];
+    try{localStorage.setItem('dpgView',v)}catch(e){}
+  }
+  btns.forEach(function(x){x.addEventListener('click',function(){set(x.dataset.v)})});
+  var s;try{s=localStorage.getItem('dpgView')}catch(e){}
+  set(hints[s]?s:'1');
+
+  var sentinel=document.getElementById('stickytop');
+  if(sentinel&&'IntersectionObserver' in window){
+    new IntersectionObserver(function(e){
+      b.classList.toggle('stuck',!e[0].isIntersecting);
+    },{threshold:0}).observe(sentinel);
+  }
+})();
+</script>
+</body>
+</html>

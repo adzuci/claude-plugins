@@ -1,10 +1,10 @@
 ---
 name: demo-instance-configuration
-description: Layer 2 of the tailored-demo automation architecture. Turns a demo-prep-intelligence brief into a reviewable demo setup plan, takes explicit SC approval, provisions a fresh Apollo sub-account, then dispatches Democles to execute the approved plan against it.
-allowed-tools: AskUserQuestion, Bash, Read
+description: Layer 2 of the tailored-demo automation architecture. Turns a demo-prep-intelligence brief into a reviewable demo setup plan, takes explicit SC approval, provisions a fresh Apollo sub-account, dispatches Democles to execute the approved plan against it, then writes a demo prep guide for the call.
+allowed-tools: AskUserQuestion, Bash, Read, Edit(*-demo-prep-guide.html)
 metadata:
   author: Jared (GTM Systems)
-  version: '0.3.6-prototype'
+  version: '0.4.1-prototype'
   layer: configuration-approval
   architecture: standalone
   sibling_to: demo-prep-intelligence
@@ -21,7 +21,12 @@ metadata:
     follow-up plan can configure an account from an earlier run instead of always creating
     a second one. Not yet live-tested in this form — the provisioning endpoint and OAuth
     flow are proven directly, but no plan has yet completed through Step 6 end to end.
-    Prior to this, most recently live-tested end to end 2026-07-10.
+    Prior to this, most recently live-tested end to end 2026-07-10. Extended 2026-08-19 with
+    Workflow Step 10, which writes an SC-facing Demo Prep Guide at the end of a run, and with
+    two new named inputs — Layer 1's Apollo AI demo setup prompts and its Qualification Record
+    Block — the first of which now governs over this skill's own derivation of the same object.
+    Step 10 and the prompt-precedence rule are untested in this form: no live run has exercised
+    either, and the frontmatter file-write grant only takes effect on install.
 ---
 
 # Demo Instance Configuration
@@ -47,7 +52,7 @@ This skill does not configure Apollo itself — it has no CLI access and no dire
 
 ## Input Contract
 
-Layer 1's output for a resolved deal (the Apollo AI Context Center payload, the Recommended Demo Flow section, or the full seven-section brief), which may arrive through three channels, checked in this order of trust:
+Layer 1's output for a resolved deal (the Apollo AI Context Center payload, the Recommended Demo Flow section, the full seven-section brief, **the Apollo AI demo setup prompts, or the Qualification Record Block** — the last two added 2026-08-19), which may arrive through three channels, checked in this order of trust:
 
 1. **Session scratchpad file (preferred, check first).** The handoff file `demo-prep-intelligence` writes under its `GOVERNANCE.md` session-scratchpad exception: `demo-prep-scratchpad.md`, in the runtime's ephemeral working/temporary directory. This is the higher-trust source because it survives mid-session compaction and cross-session gaps that can silently drop conversation history — check for it on every run before relying on anything else.
 1. **Same-session conversation context.** Layer 1's output still present in the current conversation because both skills ran back to back. Check this even when a scratchpad file exists — the conversation may carry an SC-provided correction, clarification, or newer run made after the scratchpad was last written. Treat the scratchpad as the trusted baseline and the conversation as a source of updates on top of it, not a competing copy to silently pick between.
@@ -55,7 +60,21 @@ Layer 1's output for a resolved deal (the Apollo AI Context Center payload, the 
 
 Whichever channel(s) produce content, do not re-derive or re-verify claims that Layer 1 already produced — treat its source labels and confidence tags (`[verified] | [inferred] | [assumed]`) as ground truth. If the Context Center payload wasn't passed and only the brief was, and the SC wants Context Center automation, ask the SC to run demo-prep-intelligence's Context Center flow first rather than inventing a payload from the brief's raw claims.
 
-If none of the three channels yields usable Layer 1 output, say so and stop. This skill has no independent research capability — it configures, it doesn't investigate.
+If none of the three channels yields usable Layer 1 output, say so and stop. This skill has no independent research capability — it configures, it doesn't investigate. **The two 2026-08-19 inputs do not change that**: they arrive through the same three channels or they do not arrive at all. A missing Qualification Record Block is a Demo Prep Guide section left visibly empty (Step 10), never a reason to query Salesforce.
+
+### The Apollo AI demo setup prompts govern where they overlap — added 2026-08-19
+
+**When a prompt from Layer 1 and this skill's own derivation specify the same object, the prompt governs, and this skill's derivation defers to it.** The Step 2 mapping table must show that it did, naming the prompt.
+
+**Why this rule exists, and it is a real defect it closes.** Until now these prompts had no input path at all — a grep of this file and every reference returned zero mentions of them — so a single run emitted two independent specifications of the same objects, and they disagreed. On one live run, a prompt specified a reply-triggered workflow that classified the reply and created a same-day task, which answered the deal's third-ranked pain point directly; this skill independently derived a new-contact-triggered auto-enroll workflow instead, and built the one that did not address the stated pain. On the same run a prompt specified a saved search with a radius, an employee-count band and verified-emails-only, while this skill's plan deliberately omitted the size filter on the reasoning that nothing in the brief grounded a value. Same source data, opposite conclusions, nothing reconciling them.
+
+Three limits on this rule:
+
+1. **It resolves overlaps only.** Where a prompt has no counterpart in the registry's live functions — a live walkthrough, a pre-demo readiness check — nothing changes: it routes to the roadmap and appears in the guide's Also available section. Prompts governing does not mean every prompt becomes a staged object.
+1. **It does not exempt a prompt's spec from the no-placeholder rule (Step 3).** If a prompt implies a field shape `references/function-registry.md` does not document, that action is still **Blocked**, not Proposed. Precedence settles *which* spec to build, never whether an undocumented shape may be guessed.
+1. **It does not bypass the approval gate.** The rendered plan shows what will be built, prompt-sourced or not, and the SC can say something's off exactly as before. If the SC prefers this skill's derivation over the prompt's, that is their call — apply it and note it.
+
+**The prompts are also the only sourced verbatim talk track in the run.** Their `Demo talk-track hook` lines are what Step 10's Demo path cites. Never paraphrase one: a reworded hook is no longer something the run generated, and Step 10 has to drop it rather than cite it.
 
 ## Workflow
 
@@ -74,6 +93,8 @@ If none of the three channels yields usable Layer 1 output, say so and stop. Thi
   |---|---|---|
   | [Recommended Demo Flow item, or Context Center payload] | `function_name` | Proposed below / Blocked — [reason] / Routed to roadmap — [reason] |
   ```
+
+  **Where a setup prompt covers the same object, build the prompt's spec and say so in this table — added 2026-08-19.** See the Input Contract's precedence rule for the full statement and its three limits. In the `Source` phrase, name the prompt that governed (e.g. *"from Apollo AI prompt 4"*), so the SC can see which of two possible specs they are approving rather than discovering the divergence after the fact.
 
   **Standing rule, added 2026-07-09 (Jared's directive) — `configure_persona` must be considered on every run, not just when the Recommended Demo Flow names a persona explicitly.** Apollo Personas are a product capability GTM Systems wants surfaced to prospects on their own merits, independent of whether a given deal's brief happens to use the word "persona." Whenever a Context Center payload exists (i.e. the Company + Business Understanding Gate has passed and a `customer_profile` field is populated), `configure_persona` must appear in the Step 2 mapping table as either:
 
@@ -203,6 +224,18 @@ If none of the three channels yields usable Layer 1 output, say so and stop. Thi
   - **Persona declined, rest of the plan still wanted** → already covered: drop that one action, dispatch the rest (Step 6(e)(4)).
   - **Whole plan scrapped at Touch 2, or any later point after provisioning** → dispatch nothing, and **tell the SC plainly that the sub-account already exists**, naming its Team ID and that it's empty/unconfigured. Ask whether they want it deleted (this project's standing practice for demo accounts that don't lead anywhere) or kept for a later run — and if kept, point out they'll need Mode C to target it again, which means saving its `api_key` now while it's still available (see (c) above). Never leave a provisioned account unmentioned: an orphaned live account carrying a real prospect's name and email is exactly what the provisioning-after-approval ordering exists to avoid, and the one case it can't prevent is this one.
   - This skill cannot delete an account itself — no such function is registered, and its Bash access is scoped to the two provisioning scripts. Deletion is a manual UI action for the SC.
+
+- **Step 10 — Write the Demo Prep Guide, then close. Added 2026-08-19.** After Step 7's relay, generate one self-contained HTML file: a read-only receipt of what was prepped and what was built, for the SC to keep open beside the Claude session during the call. **Load `references/demo-prep-guide.md` and follow it** — it carries the section-to-source mapping, the per-block behaviour when a source is empty, the pill and confidence-chip vocabulary, the row markup, and the level assignment. Mechanically:
+
+  a. `Read` `references/demo-prep-guide-template.html`. It is the file being written, not a file to imitate — it carries the full `<style>` block, the skeleton, and the view-toggle script, with `{{TOKEN}}` placeholders for content only.
+  b. Substitute every token from this run's sources, then `Write` the result. **Reproduce everything outside the tokens byte-for-byte** — never edit, reformat, minify or improve the CSS or the script. The design is settled; a run that restyles it produces an artifact that no longer matches every other SC's.
+  c. Write it as `[account-slug]-demo-prep-guide.html` **into the session's current working directory — the directory the SC launched this Claude session from — and report the absolute path you wrote to** in one line. It opens in any browser with no server. Three things this rule is deliberately precise about, because a vague path is how the Step 6b script-path bug happened: **resolve the directory rather than assuming one**, never write into the installed skill's own directory (`${CLAUDE_SKILL_DIR}` is where the skill lives, not where a deliverable belongs), and **never write it to the session scratchpad** — that is Layer 1's handoff channel and not SC-facing. If the working directory is not writable, say so and ask the SC where to put it rather than picking a fallback silently.
+
+  **Three content rules, restated here because violating them is the failure mode this artifact actually has** (the reference carries them in full): **(1)** nothing appears on the page that Layer 1 or this skill did not generate or gather — "gathered" includes Salesforce record data Layer 1 ingested, and a talk track, headline risk or gap line is never composed to fill a slot; **(2)** cite the Salesforce field label, never the API name, taken from Layer 1's SFDC Field Dictionary rather than read off the API name — two labels in the qualification set do not match theirs; **(3)** an empty source renders as visibly empty and names what was empty, because a dropped row is indistinguishable from a field that does not exist and the empty field is usually the actionable one.
+
+  **This runs on every completed run, including a failed one.** A run whose provisioning failed still produces a guide — it reports the approved configuration and states plainly that nothing was created. The one case that emits nothing is a plan abandoned before Step 6 (Step 8): there is no run to receipt. A guide claiming a staged instance that does not exist is the worst error this artifact can make, because the SC walks into a call trusting it.
+
+  **Never write the `api_key` or the `login_url` into this file.** Both are governed by `Provisioning the Demo Sub-Account`; a file the SC may share is the last place either belongs. The Team ID is fine.
 
 ## Provisioning the Demo Sub-Account (added 2026-07-27)
 
@@ -442,10 +475,11 @@ If the SC picks the second option, follow Workflow Step 5's discussion path (ask
 ## Operating Boundaries
 
 - **Three input channels for Layer 1's output, plus the SC's approval decision, nothing else**: the `demo-prep-scratchpad.md` handoff file (preferred, checked first), same-session conversation context (checked regardless, for updates on top of the scratchpad), and manually pasted output (fallback only). No independent Salesforce, Slack, or Gong research — that's demo-prep-intelligence's job.
-- **Filesystem access is limited to two things: reading the scratchpad, and running the two bundled provisioning scripts (Step 6).** It does not write to the scratchpad and does not write anywhere else. Reading the scratchpad is not execution capability; running the two scripts is, and it's the one scoped exception — see the bullets below.
+- **Filesystem access is limited to three things: reading the scratchpad and this skill's own references, running the two bundled provisioning scripts (Step 6), and writing exactly one Demo Prep Guide file (Step 10).** Reading is not execution capability; running the two scripts is, and it's one scoped exception — see the bullets below.
+- **Second scoped exception, added 2026-08-19: file-write access limited to a single Demo Prep Guide HTML file per run, for Workflow Step 10 only.** One file, one path, at the end of a completed run. **This skill still never writes to `demo-prep-scratchpad.md`** — that is Layer 1's handoff channel and this skill only ever reads it. This is not license to persist plan state, cache a key, log a run, or leave any other file behind: an `api_key` or `login_url` must never reach any file, and no configuration action may be carried out by writing something to disk. Same discipline as the Bash exception — one named purpose, not a general capability. **Why the frontmatter grant reads `Edit(*-demo-prep-guide.html)` and not `Write` — added 2026-08-20 after checking Claude Code's documentation:** file permissions are checked against `Edit(path)` and `Read(path)` rules **only**, so a path rule written against `Write` is accepted but never consulted and warns at startup — it would silently do nothing — whereas `Edit` rules apply to every built-in tool that edits files, this skill's write included. And `allowed-tools` grants pre-approval, it **does not restrict**: every tool stays callable, so the rules in this section are what bound this skill, never the frontmatter. The narrow form buys exactly one thing — a write outside the guide file prompts the SC instead of passing silently. **If the pattern does not resolve at runtime the failure mode is a permission prompt, not a broken run**; take the prompt as the signal and do not work around it by widening the grant.
 - **No execution capability against any registered configuration function, and no exception for reads.** This skill has no way to write or read any of the plan's own actions (Context Center, personas, workflows, saved searches, sequences) — that stays exclusively Democles's job, including read-only checks after an interrupted or ambiguous dispatch (a `verify` dispatch) or the SC's own confirmation, never this skill's own tool call. See Approval Gate Rule 8.
 - **One scoped exception, added 2026-07-27: Bash access limited to `scripts/revops-oauth-login.sh` and `scripts/revops-provision-demo.sh`, for Workflow Step 6 only.** This is the sole thing this skill's `allowed-tools: Bash` grant may be used for — see `Provisioning the Demo Sub-Account` and its Hard Rule. Using Bash for anything else (a direct Apollo API call, a registered function's action, or any command not part of Step 6) is out of bounds, no different from the boundary that existed before this exception was added.
-- **`Read` in `allowed-tools` is not a new capability — added 2026-07-31.** It pre-approves reading this skill's own bundled reference files (`references/function-registry.md`) without prompting the SC mid-run. Per Claude Code's skills documentation, `allowed-tools` is a permission pre-grant for the turn that invokes the skill, not an allowlist — it grants nothing this skill could not already do and removes nothing. It does **not** widen the Bash exception above, and it is not license to read arbitrary local files: this skill reads its own references and the Layer 1 scratchpad handoff, nothing else.
+- **`Read` in `allowed-tools` is not a new capability — added 2026-07-31.** It pre-approves reading this skill's own bundled reference files (`references/function-registry.md`, and from 2026-08-19 `references/demo-prep-guide.md` and `references/demo-prep-guide-template.html`) without prompting the SC mid-run. Per Claude Code's skills documentation, `allowed-tools` is a permission pre-grant for the turn that invokes the skill, not an allowlist — it grants nothing this skill could not already do and removes nothing. It does **not** widen the Bash exception above, and it is not license to read arbitrary local files: this skill reads its own references and the Layer 1 scratchpad handoff, nothing else.
 - **No persistent memory of prior approvals.** Every plan is approved on its own.
 - **Functions not in the registry's live set** are never simulated or faked as if they ran — always route them to the roadmap note instead. (Sub-account creation is no longer in this category — see Workflow Step 6 — but sub-account API-key minting as a standalone action, independent of creating a new account, still is.)
 
@@ -454,6 +488,8 @@ If the SC picks the second option, follow Workflow Step 5's discussion path (ask
 | Reference | When to load |
 |---|---|
 | `references/function-registry.md` | Every run. Defines which functions are live, their endpoints/CLI surface, and which are commented-out pending a feature flag. |
+| `references/demo-prep-guide.md` | Workflow Step 10, every completed run. Section-to-source mapping, empty-source behaviour, pill and chip vocabulary, row markup, and level assignment for the Demo Prep Guide. |
+| `references/demo-prep-guide-template.html` | Workflow Step 10, read immediately before writing the guide. This is the file that gets written — tokens substituted, everything else reproduced byte-for-byte. |
 | `scripts/revops-provision-demo.sh` and `scripts/revops-oauth-login.sh` | Not read — *run*, and only in Workflow Step 6 Mode A, per the Hard Rule in `Provisioning the Demo Sub-Account`. Listed here so their absence is recognized as a broken install rather than a reason to hand-craft an API call. |
 
 ## Non-Goals
