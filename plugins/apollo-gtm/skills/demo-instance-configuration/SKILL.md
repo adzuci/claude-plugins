@@ -4,7 +4,7 @@ description: Layer 2 of the tailored-demo automation architecture. Turns a demo-
 allowed-tools: AskUserQuestion, Bash, Read, Edit(*-demo-prep-guide.html)
 metadata:
   author: Jared (GTM Systems)
-  version: '0.4.1-prototype'
+  version: '0.4.2-prototype'
   layer: configuration-approval
   architecture: standalone
   sibling_to: demo-prep-intelligence

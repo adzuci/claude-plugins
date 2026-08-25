@@ -63,7 +63,6 @@ h1{font-family:var(--display);font-weight:550;font-size:29px;line-height:1.1;
 .track button:hover{color:var(--offwhite)}
 .track button[aria-pressed="true"]{background:var(--yellow);color:var(--midnight);font-weight:700}
 .hint{margin-top:7px;font-size:11px;color:var(--muted)}
-.hint span{display:block;color:var(--soft);margin-top:2px}
 
 /* ---- body ---- */
 main{padding:22px 40px 32px;display:flex;flex-direction:column;gap:18px}
@@ -209,7 +208,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
       <div class="crumbs">{{CRUMBS}}</div>
     </div>
     <div class="hgroup">
-      <a class="cta" href="https://app.testbox.com/deals" id="env">Log into Test Box Environment</a>
+      <a class="cta" href="https://app.testbox.com/deals" id="env" target="_blank" rel="noopener noreferrer">Log into Test Box Environment</a>
       <div class="viewbox" data-no-print>
         <div class="k">View</div>
         <div class="track" role="group" aria-label="Level of detail">
@@ -217,7 +216,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
           <button type="button" data-v="2" aria-pressed="false">Hybrid</button>
           <button type="button" data-v="3" aria-pressed="false">SC view</button>
         </div>
-        <div class="hint">Click a view to add detail<span id="hint">Walk in and run it</span></div>
+        <div class="hint">Click a view to add detail</div>
       </div>
     </div>
   </header>
@@ -286,17 +285,15 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
 (function(){
   var b=document.body,
       btns=[].slice.call(document.querySelectorAll('.track button')),
-      hint=document.getElementById('hint'),
-      hints={'1':'Walk in and run it','2':'Context and gaps','3':'Everything on record'};
+      views=['1','2','3'];
   function set(v){
     b.setAttribute('data-view',v);
     btns.forEach(function(x){x.setAttribute('aria-pressed',x.dataset.v===v)});
-    hint.textContent=hints[v];
     try{localStorage.setItem('dpgView',v)}catch(e){}
   }
   btns.forEach(function(x){x.addEventListener('click',function(){set(x.dataset.v)})});
   var s;try{s=localStorage.getItem('dpgView')}catch(e){}
-  set(hints[s]?s:'1');
+  set(views.indexOf(s)>-1?s:'1');
 
   var sentinel=document.getElementById('stickytop');
   if(sentinel&&'IntersectionObserver' in window){

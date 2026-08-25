@@ -74,6 +74,102 @@ Confirmed live 2026-08-21 against a real demo sub-account, on both hosts and all
 
 If a new function gets added to this registry, confirm its host explicitly before assuming it matches a sibling function — don't extrapolate from this table.
 
+## Filter vocabulary — what each function can actually filter on
+
+This section exists because the vocabulary used to be a two-example `e.g.` on `stage_saved_search`'s `filters_v2` line, and a plan can only propose filters it knows the names of — a thin vocabulary here shows up as a thin demo, not as an error.
+
+**`configure_persona` does not share this vocabulary. It has its own hard allowlist, and it is much smaller.** Read `Persona filters are a restricted allowlist` below before putting any filter on a persona. The tables immediately following apply to `stage_saved_search` and `configure_workflow`.
+
+**Every key below was confirmed live on a provisioned demo sub-account on 2026-08-25**, not read off a source file. Where a key is marked advanced, it works because demo sub-accounts inherit `can_access_advanced_filters` from the parent team (see the note after the tables).
+
+**Company-level keys** — verified against `POST /api/v1/mixed_companies/search`, each echoed back in `breadcrumbs` with a changed result count:
+
+| Key | Shape | Advanced | Note |
+|---|---|---|---|
+| `organization_locations` | `["United Kingdom"]` | | |
+| `organization_num_employees_ranges` | `["51,100","101,200"]` | | Headcount, **not revenue** — do not substitute it for a revenue band |
+| `organization_industry_tag_ids` | `["5567cd47…"]` | | Mongo ID, not a name. Needs an ID lookup |
+| `q_organization_keyword_tags` | `["governance"]` | | Free-text keyword tags |
+| `revenue_range` | `{"min":25000000,"max":750000000}` | ✅ | **Absolute currency units, and USD only** — see the warning below |
+| `organization_founded_year_range` | `{"min":2000,"max":2020}` | ✅ | |
+| `organization_num_jobs_range` | `{"min":1,"max":50}` | ✅ | Active job postings — a hiring-signal demo |
+| `q_organization_job_titles` | `["Company Secretary"]` | ✅ | "Currently hiring for" |
+| `currently_using_any_of_technology_uids` | `["salesforce"]` | ✅ | Technographics. Also `_all_of_` and `currently_not_using_any_of_` variants |
+| `organization_latest_funding_stage_cd` | `["series_a"]` | ✅ | |
+| `latest_funding_amount_range` | `{"min":1000000,"max":100000000}` | ✅ | |
+| `total_funding_range` | `{"min":1000000,"max":500000000}` | ✅ | |
+| `organization_trading_status` | `["private"]` | ✅ | |
+| `organization_retail_location_count_range` | `{"min":1,"max":10}` | ✅ | |
+| `supported_any_languages` | `["English"]` | ✅ | |
+
+**Person-level keys** — verified against `POST /api/v1/mixed_people/api_search`:
+
+| Key | Shape | Advanced | Note |
+|---|---|---|---|
+| `person_titles` | `["Company Secretary"]` | | |
+| `person_seniorities` | `["vp","director"]` | | |
+| `person_department_or_subdepartments` | `["legal"]` | | |
+| `person_past_titles` | `["Company Secretary"]` | | |
+| `person_not_titles` | `["Intern"]` | | Exclusion |
+| `person_locations` | `["United Kingdom"]` | | |
+| `person_total_yoe_range` | `{"min":5,"max":30}` | ✅ | |
+| `person_years_in_current_title_range` | `{"min":1,"max":10}` | ✅ | |
+
+### Persona filters are a restricted allowlist, and a violation is a hard `422`
+
+`configure_persona` validates `filters` against `PERMITTED_PERSONA_FILTERS` (`personas_controller.rb`, a `before_action` on `create`/`update`). **Any key outside that list fails the whole request with `422 {"error":"Invalid filter"}`** — it is not silently dropped, which makes this one of the few places on this API that fails the way you would want.
+
+**The complete permitted set:**
+
+| Group | Keys |
+|---|---|
+| Titles | `person_titles`, `person_not_titles`, `person_past_titles`, `q_person_title`, `include_similar_titles` |
+| Seniority / function | `person_seniorities`, `person_department_or_subdepartments` |
+| Person geography | `person_locations`, `person_not_locations` |
+| Company geography | `organization_locations`, `organization_not_locations` |
+| Company size | `organization_num_employees_ranges`, `organization_department_or_subdepartment_counts` |
+| Industry | `organization_industry_tag_ids`, `organization_not_industry_tag_ids` |
+| Keywords | `q_organization_keyword_tags`, `q_not_organization_keyword_tags`, `q_anded_organization_keyword_tags`, `included_organization_keyword_fields`, `included_anded_organization_keyword_fields`, `excluded_organization_keyword_fields` |
+| Field existence | `exist_fields`, `not_exist_fields` |
+| Custom fields | `typed_custom_field_queries`, `not_typed_custom_field_queries`, `exist_typed_custom_fields`, `not_exist_typed_custom_fields` |
+
+**Nothing advanced is on that list.** No `revenue_range`, no funding, no technographics, no `person_total_yoe_range`, no `organization_founded_year_range`, no job-posting keys. **A persona cannot carry a revenue band at all** — so when a brief scopes a deal by revenue, the persona's company dimension has to be `organization_num_employees_ranges` as a headcount proxy, or omitted. Put the revenue band on the companion `stage_saved_search` instead, which has no such restriction.
+
+Two things worth noting from the list that are easy to miss. **The exclusion variants exist and are persona-legal** — `person_not_titles`, `person_not_locations`, `organization_not_locations`, `organization_not_industry_tag_ids`, `q_not_organization_keyword_tags` — and a "governance buyers, but not interns or recruiters" persona is a sharper demo object than a title list alone. And **`q_person_title` takes a boolean expression**, validated by `valid_bool_expression?`; a malformed one returns its own `422` naming the offending value.
+
+**Company-level keys also work on a people search**, which is what makes a people-modality saved search scoped by company attributes possible — `revenue_range`, `organization_num_employees_ranges`, `organization_locations`, `q_organization_keyword_tags`, `organization_industry_tag_ids`, `currently_using_any_of_technology_uids` and `organization_latest_funding_stage_cd` were all confirmed live on `mixed_people/api_search`.
+
+### `revenue_range` filters in USD, and there is no currency option
+
+**This is the trap most likely to produce a confidently wrong demo.** `revenue_range` takes **absolute** currency units — `{"min":25000000,"max":750000000}` is 25M–750M, not 25K–750K. Source reads the other way and is misleading: `validations.rb` applies `divider = 1000.0` with a comment saying revenue "was indexed in thousands," which describes the **index**, not the request. `organization_revenue_filter.rb` is the whole implementation and does `(min.to_i/1e3).ceil` against `organization_revenue_in_thousands_int`, so an absolute request is correct.
+
+**The values are dollars.** A demo team's `default_currency` is USD and `organization_revenue` is a dollar figure. **There is no currency parameter and no conversion anywhere in the filter path.** Confirmed live: `revenue_currency: "GBP"` and a `currency` key nested inside `revenue_range` are both accepted with a `200` and **silently ignored** — identical result counts. `can_access_multi_currency` is present on demo teams but governs *"manage deals in multiple currencies"* (`depends_on: can_access_opportunities`), which is CRM deal records, not search.
+
+**So when a brief states a band in another currency, that band cannot be expressed directly.** Convert it and say the rate out loud in the plan, or state the filter as dollars. **What is not acceptable is presenting a converted-currency label over a dollar-denominated filter** — a £25M–£750M band entered literally as `25000000–750000000` is really ~£20M–£590M, which is wrong by 15-20% on exactly the kind of number a prospect checks.
+
+### `contact_*` filters are inert in a freshly provisioned instance
+
+`contact_job_changed`, `contact_conversation`, `contact_pushed_to_crm`, `contact_last_conversation_date_range` and the rest of the `contact_*` family filter against **the team's own CRM contacts**. A sub-account provisioned in Workflow Step 6 has **zero contacts**, confirmed live (`prospected_by_current_team: ["yes"]` returns `0`), so every one of these matches nothing.
+
+They fail the worst possible way: **accepted, `200`, no error, result count identical to the unfiltered baseline.** `contact_job_changed` was tried as `true`, `"yes"` and `["yes"]` and returned the exact baseline every time. **Do not propose a `contact_*` filter in a Mode A plan** — it will look like a working filter and silently widen the audience to everything.
+
+### Advanced filters work because the entitlement is inherited
+
+Keys marked advanced live in `ADVANCED_FILTERS_SEARCH_PARAMS` and are gated on `can_access_advanced_filters`. **Demo sub-accounts inherit product features from the parent team**, so this holds for every sub-account provisioned under the same parent rather than needing a per-run check. Confirmed on a real team body: `can_access_advanced_filters: true`, `status: "paying"`, `bulk_record_selection_limit: 10000`, 103 active features.
+
+Two consequences. **First**, the `configure_workflow` entry's open question about whether `prospected_by_current_team` gets force-set has a general answer available — demo teams are `paying` with a 10000 bulk limit, so check `can_run_on_net_new?` against that rather than treating the tier as unknown per run. **Second**, an advanced filter without the entitlement raises `FilterNotAllowedError` — *"Cannot access advanced filters … on free plan"* — so this one fails **loudly**, unlike everything else on this endpoint. If that error ever appears, the parent team's plan changed, and it will have changed for every demo instance at once.
+
+### How to verify a key that is not in the tables above
+
+Do not add a key to this file from source alone — `revenue_range`'s unit is the standing counterexample. Instead: `POST` an unfiltered baseline search, then the same search with only the candidate key added, and compare.
+
+- **Company keys:** `POST /api/v1/mixed_companies/search`. It returns `breadcrumbs`, so a working key echoes back as a `signal_field_name` entry. **Both a changed count and an echo** is the confirmation.
+- **Person keys:** `POST /api/v1/mixed_people/api_search`. Note `POST /api/v1/mixed_people/search` is **deprecated for API callers** and returns an error naming `api_search` as its replacement. `api_search` returns `total_entries` at the top level and **no `breadcrumbs`**, so a changed count is the only available signal there.
+- **A count identical to the baseline means the key was ignored, not that it matched everything.** That is the failure mode this endpoint family keeps producing, and it is now confirmed on five separate parameters: `filters_v2` without `filter_version`, `modality`, `shared`, `revenue_currency`, and the whole `contact_*` family.
+
+Searches are reads and create nothing, so this is safe to run against a live demo instance — unlike a `finder_views` create, which cannot be cleaned up.
+
+
 ______________________________________________________________________
 
 ## Live functions
@@ -178,7 +274,7 @@ seniorities: [string]                  # top-level convenience field
 titles: [string]                       # top-level convenience field
 not_titles: [string]                   # top-level convenience field
 department_or_subdepartments: [string] # top-level convenience field
-filters:                               # must be a subset of PERMITTED_PERSONA_FILTERS
+filters:                               # must be a subset of PERMITTED_PERSONA_FILTERS — the full list is in "Filter vocabulary" above; anything outside it is a hard 422
   person_titles: [string]
   person_not_titles: [string]
   person_seniorities: [string]
@@ -247,7 +343,7 @@ last_accessed_at: datetime
 alert_frequency: string
 finder_table_layout_id: string
 filter_version: "2"   # REQUIRED alongside filters_v2 — see gotcha below
-filters_v2: object    # flat keys (e.g. person_titles, organization_num_employees_ranges)
+filters_v2: object    # flat keys — see "Filter vocabulary" above for the confirmed key set and shapes
                        # are valid "base params"; filter_expression is the nested-boolean-
                        # tree form for complex filters. Not schema-validated — stored as-is.
 # enrichment_mode_enabled: boolean   # conditional, not always permitted
@@ -304,7 +400,7 @@ object_type: string          # "Contact" or "Account". "Opportunity" is also val
                               # packs/plays/app/models/workflow/node.rb.
 active: boolean               # default false — approval-gated before ever setting true
 version: "v2"                 # required to route through the nodes/edges graph builder
-filters: object                # search filters scoping who qualifies
+filters: object                # search filters scoping who qualifies — see "Filter vocabulary" above; note contact_* keys match nothing in a fresh instance
 workflow_triggers:
   - trigger_type: string       # e.g. "contact_created" — no id needed, server generates one
     constraints: object        # shape depends entirely on trigger_type — see "Trigger constraints by type" below; never guess this
