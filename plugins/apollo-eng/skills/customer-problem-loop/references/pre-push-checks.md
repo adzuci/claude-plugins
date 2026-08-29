@@ -1,9 +1,12 @@
-# Pre-push checks
+# Pre-Push Checks
 
-Read this reference before pushing stage 3 code. Use the commands and required checks from the
+Read this reference before pushing code in stage 3. Use the commands and required checks from the
 target repository when they differ from these observed frontend patterns.
 
-## Frontend checks
+First run `git rev-parse --show-toplevel` and confirm it is the approved target repository. Run the
+checks below from that root unless the repository explicitly documents another working directory.
+
+## Frontend Checks
 
 - **Strict ESLint:** `no-nested-ternary` can fail files marked `// eslint-strict` even when the
   ordinary local lint path passes. Prefer explicit `if`/`else` and run the strict path.
@@ -14,7 +17,7 @@ target repository when they differ from these observed frontend patterns.
 - **Coverage:** distinguish advisory `undercover-ci` warnings from enforced frontend coverage jobs.
   Satisfy the enforced checks without treating advisory output as a merge blocker.
 
-## CI and toolchain traps
+## CI and Toolchain Traps
 
 - Set `VOLTA_FEATURE_PNPM=1` when the repository's Volta configuration requires pnpm.
 - Use the repository's documented heap size for large TypeScript or ESLint runs.
