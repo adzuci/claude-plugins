@@ -1,9 +1,13 @@
 # Harnessbench Example: A/B Testing /auto-pr
 
-Copy-ready [apolloio/harnessbench](https://github.com/apolloio/harnessbench) experiment that
-runs the `/auto-pr` skill against a no-skill baseline on a real LeadGenie task, scored by
-deterministic oracles + an LLM judge, and reported as a leaderboard. Criteria come from
+Copy-ready [apolloio/harnessbench](https://github.com/apolloio/harnessbench) calibration that
+runs the `/auto-pr` skill against a no-skill baseline on four fixed LeadGenie tasks, scored by
+semantic outcome oracles + a Stage 0–7 transcript auditor + an LLM judge. Criteria come from
 [`auto-pr-eval-rubric.md`](auto-pr-eval-rubric.md).
+
+This is a **calibration smoke**, not an end-to-end `/auto-pr` gate: remote PR, bot, Codex, and
+browser stages are constrained in every task. Do not use its leaderboard alone to approve a skill
+revision.
 
 ## Local Run
 
@@ -36,6 +40,19 @@ npm run harnessbench -- run leadgenie/auto-pr-smoke --dry-run
 #    Node >= 24). Consider repetitions: 1 in experiment.yaml for a first smoke run.
 npm run harnessbench -- run leadgenie/auto-pr-smoke
 npm run harnessbench -- report leadgenie/auto-pr-smoke/latest
+# Score stage adherence separately from outcome oracles and the generic judge.
+RUN_DIR=$(find runs/leadgenie/auto-pr-smoke -mindepth 1 -maxdepth 1 -type d | sort | tail -1)
+python "$EXAMPLE_DIR/scripts/audit_stage_adherence.py" "$RUN_DIR" \
+  --contract "$EXAMPLE_DIR/stage-contract.json" \
+  --output "$RUN_DIR/stage-adherence.json"
+# Required stage/safety failures make the candidate fail. Wording-dependent skip reports and the
+# exact Stage 0-7 ledger remain visible diagnostics and do not independently fail a cell.
+
+# Validate the next checkpoint/repair contract and sanitized multi-turn calibration package.
+# READY_FOR_GOLD_REVIEW is expected until the product owner approves the scenario labels.
+python "$EXAMPLE_DIR/scripts/validate_checkpoint_flow.py" \
+  --contract "$EXAMPLE_DIR/checkpoint-flow-contract.json" \
+  --scenarios "$EXAMPLE_DIR/stateful-scenarios.json"
 ```
 
 A dry-run is valid only when the command exits zero and every matrix row reports
@@ -63,7 +80,8 @@ and the leaderboard shows Δ vs. baseline per variant.
 
 `.github/workflows/harnessbench.yml` is the implementation source for triggers, secrets, and
 runner setup. PR changes get free schema/patch validation. Paid scored runs remain manual and
-upload `report.md`, `aggregate.json`, the manifest, and per-cell transcripts/diffs.
+upload `report.md`, `aggregate.json`, the manifest, per-cell transcripts/diffs,
+`stage-adherence.json`, and `runtime-provenance.json` with 30-day retention.
 
 Cross-repo access: both jobs need the optional `APOLLOIO_TOKEN` secret (org secret with read access
 to `apolloio/harnessbench` and `apolloio/leadgenie`); the default `github.token` can only read
@@ -76,16 +94,24 @@ a notice (green, not red). The full run additionally uses the org-level `APOLLO_
   which newer models (opus-4-7/4-8/5, sonnet-5, fable-5, mythos-5) reject.
   [apolloio/harnessbench#7](https://github.com/apolloio/harnessbench/pull/7) made it
   model-conditional — those judges only work when the pinned HarnessBench SHA includes that fix.
-- **Interactivity**: /auto-pr has four human touchpoints; harnessbench runs unattended. The
-  task prompt pre-answers them (plan pre-approved, Codex skipped, no browser evidence) and the
-  judge checks the skill *asked/reported correctly*. A scripted-user responder in harnessbench
-  would remove this compromise.
+- **Interactivity**: /auto-pr normally has four human touchpoints, with additional questions only
+  for material changes or true ambiguity; harnessbench runs unattended. The task
+  prompt authorizes local work after the plan and constrains browser/Codex/remote stages. The
+  transcript auditor checks that the plan still precedes writes and constrained stages are
+  reported. A helper now normalizes scripted responses and binds natural-language approvals, but a
+  responder that resumes the same agent session is still required to inject checkpoint failures,
+  test repair routing, and test real approval state transitions. The
+  checkpoint contract and scenarios are validated in CI, but they are not yet run against skill
+  variants.
 - **Side effects**: the task prompt forbids pushing/PR-creation/bot-polling, so the bot-loop
   rubric items (P6) aren't covered here — they need a fixture PR outside harnessbench.
 - **Heavy service deps**: docker/browser deps per cell are heavy; long-lived service boot is on
-  the harnessbench roadmap but not landed. Start with the backend-only golden task.
+  the harnessbench roadmap but not landed. The current four-task calibration remains backend-only.
 - **baseCommit drift**: the pinned SHA must match what the variant patch applies to; refresh
   both together (the dry-run catches mismatches).
+- **Provider revision identity**: the workflow pins the HarnessBench and Claude Code revisions and
+  hashes tasks, variants, experiment, and stage contract. The configured agent/judge model IDs are
+  retained, but immutable provider-side model revisions are not currently exposed.
 
 ## Triggering the eval
 
@@ -93,8 +119,9 @@ a notice (green, not red). The full run additionally uses the org-level `APOLLO_
   path (or the workflow itself). Result lands as a sub-50-word summary comment on the PR and the
   full matrix in the job log.
 - **Scored run** (spends tokens): manually use GitHub → Actions → `harnessbench` → *Run
-  workflow*, choose the PR branch, check `full_run`, and provide the PR number for the sticky
-  result comment. The leaderboard and full evidence upload as `harnessbench-report`.
+  workflow*, choose the PR branch, check `full_run`, and provide the PR number for an append-only
+  run summary. Four tasks × three variants × three repetitions = 36 paid cells. The summary leads
+  with validity and stage adherence; full evidence uploads as `harnessbench-report`.
 - **Locally**: see "Local Run" above.
 
 ## Adding evals for a new skill

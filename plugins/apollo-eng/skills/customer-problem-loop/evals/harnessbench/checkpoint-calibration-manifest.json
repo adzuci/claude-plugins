@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "status": "ready-for-gold-review",
+  "project_id": "customer-problem-loop-checkpoint-repair",
+  "objective": "Increase implementation and human-handoff quality by detecting and repairing failed problem, approach, implementation, verification, review, and final-claim checkpoints before progression.",
+  "authority_refs": [
+    "repo:customer-problem-loop/SKILL.md@working-tree",
+    "repo:customer-problem-loop/references/checkpoint-flow.md@working-tree",
+    "repo:customer-problem-loop/evals/harnessbench/stage-contract.json@working-tree",
+    "decision:checkpointed-flow-2026-08-27"
+  ],
+  "requirements": [
+    "problem-understanding-before-solution",
+    "two-materially-distinct-approaches-by-default",
+    "up-to-four-useful-approaches-and-independent-sufficiency-review-for-high-complexity",
+    "explicit-human-plan-approval-before-write",
+    "failed-checkpoint-blocks-progression",
+    "bounded-same-session-repair",
+    "code-quality-oracles-before-final-output",
+    "independent-solution-review",
+    "truthful-final-handoff"
+  ],
+  "coverage": {
+    "calibration_scenarios": 8,
+    "holdout_scenarios": 0,
+    "required_failure_injection_per_scenario": 1,
+    "source_mode": "synthetic-or-sanitized",
+    "covered_risks": [
+      "opaque-reference",
+      "unsafe-premise",
+      "multiple-system-boundaries",
+      "hidden-downstream-constraint",
+      "empty-value-edge",
+      "human-scope-change",
+      "incorrect-review-feedback",
+      "unsupported-completion-claim"
+    ]
+  },
+  "execution": {
+    "native_harness": "apolloio/harnessbench",
+    "current_mode": "structural-contract-and-normalized-trace-validation",
+    "target_mode": "scripted-multi-turn-resume-same-session",
+    "paid_run_authorized": false,
+    "external_side_effects_allowed": false
+  },
+  "source_gaps": [
+    {
+      "id": "runner-checkpoint-adapter",
+      "impact": "behavioral-evaluation-blocking",
+      "description": "HarnessBench does not yet inject checkpoint verdicts or scripted human replies while resuming the same agent session."
+    },
+    {
+      "id": "gold-review",
+      "impact": "scoring-blocking",
+      "description": "The eight scenario labels and expected repair routes require product-owner approval."
+    },
+    {
+      "id": "remote-stage-fixtures",
+      "impact": "coverage-gap",
+      "description": "Browser, PR creation, Codex, and review-bot repair remain constrained and need controlled fixture infrastructure."
+    }
+  ],
+  "approval": {
+    "status": "pending",
+    "reviewer_ref": "product-owner:customer-problem-loop",
+    "evidence_ref": "review:checkpoint-calibration-v1"
+  }
+}

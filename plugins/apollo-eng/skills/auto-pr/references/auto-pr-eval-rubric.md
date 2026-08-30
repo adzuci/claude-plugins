@@ -11,8 +11,9 @@ This rubric evaluates the runnable LeadGenie skill, not this directory's staging
 Step numbers below refer to its pipeline: **0** preflight; **1** clarify + approve the plan;
 **2** implement; **3** verify before/after; **4** commit, push, and create the PR; **5** run
 skill + Codex review; **6** resolve bot feedback; **7** report final CI and approval gates.
-The four steady-state human touchpoints are plan approval, one batched evidence-upload ask,
-the Codex-review ask, and a final approval-gate report when needed.
+The normal human-touchpoint pattern is plan approval, one batched evidence-upload ask, the
+Codex-review ask, and a final approval-gate report when needed. Treat the count as a usability
+signal, not a quota; a material plan change or genuine ambiguity can justify another interaction.
 
 ______________________________________________________________________
 
@@ -46,24 +47,41 @@ Runner is Adam Kusmierz's **harnessbench** — already built for exactly this: (
 Mapping:
 
 - **Variant** = the PR's SKILL.md as a git patch (`gh pr diff 97782` applies directly as `workspace/leadgenie/variants/auto-pr-v1.patch`); baseline variant = no skill. Skill revisions become v2, v3… — A/B on the leaderboard.
-- **Task** = golden tasks below, prompt starts with `/auto-pr <feature ask>`; trigger-negative tasks use adjacent phrasing.
-- **Oracle** (deterministic PASS/FAIL) = the grep/git assertions below against `transcript.jsonl` + `agent.diff`.
-- **Judge** = the 0–2 criteria below as the judge rubric.
+- **Task** = a fixed golden behavior below. The target file, method contract, edge cases,
+  allowed diff, and hidden semantic checks are held constant across variants and repetitions.
+- **Outcome oracle** (deterministic PASS/FAIL) = repository state, hidden behavior, full affected
+  specs, lint, and scope checks defined in each task.
+- **Stage auditor** (deterministic PASS/FAIL/INCONCLUSIVE) = the separate
+  [`stage-contract.json`](../evals/harnessbench/stage-contract.json) applied to agent transcripts;
+  it records observable Stage 0–7 ordering, explicit constrained stages, and guardrails by cell.
+- **Judge** = semantic planning, discrepancy handling, and evidence quality that cannot be made
+  deterministic; HarnessBench still maps these into its three generic dimensions.
 
-Known gaps to solve in harnessbench (flag to Adam K) — interactivity (4 human touchpoints vs.
+Known gaps to solve in harnessbench (flag to Adam K) — interactivity (human decisions vs.
 unattended runs), side effects (no pushing/PR-creation/bot-polling), and heavy per-cell service
 deps (docker/browser). Detail and current v1 workarounds live in
 [harnessbench-evals.md#known-limitations-v1](harnessbench-evals.md#known-limitations-v1).
 
-Grade the **transcript**, not just the outcome. The target rubric scores each criterion 0–2
-(0 = violated, 1 = partial, 2 = met). Current HarnessBench reports a fixed three-dimension
-1–5 judge schema, so task hints map the criteria into those dimensions until criterion-level
-judge output lands upstream.
+The target revision adds a checkpoint-and-repair layer defined in
+[`checkpoint-flow-contract.json`](../../../evals/harnessbench/checkpoint-flow-contract.json) with eight
+draft multi-turn scenarios in
+[`stateful-scenarios.json`](../evals/harnessbench/stateful-scenarios.json). It requires explicit
+problem recognition, two approaches by default, up to four useful approaches plus an independent
+sufficiency review for high-complexity work, bounded retries,
+human reapproval after material plan changes, independent solution review, and truthful final
+handoffs. The current runner does not execute those turns yet; structural validation must not be
+reported as candidate behavioral evidence.
+
+Grade the **workflow and outcome separately**. A correct diff does not prove that the plan gate,
+verification order, safety boundaries, or handoff were followed. Conversely, perfect stage
+adherence does not rescue incorrect behavior. The stage auditor reports deterministic checks by
+cell and variant; the generic judge remains supporting evidence for qualitative dimensions only.
 
 **Validity gate:** mark the run **INCONCLUSIVE**, never passing, if a required oracle skips,
-an implementation task produces an empty diff, the judge errors or returns scores without
-evidence, or the manifest omits task/variant/model/harness hashes. Optional checks may skip only
-when the report labels them separately from passes.
+an implementation task produces an empty diff, a required agent transcript is missing or cannot
+be bound to its task/variant, the judge errors or returns scores without evidence, a variant is
+flaky across three repetitions, or provenance omits task/variant/contract/runtime hashes. Optional
+checks may skip only when the report labels them separately from passes.
 
 ### Routing & Activation
 
@@ -76,7 +94,7 @@ when the report labels them separately from passes.
 
 | # | Criterion | How judged |
 |---|-----------|-----------|
-| T1 | Exactly the 4 steady-state touchpoints occur — no extra AskUserQuestion in Steps 2, 3, 5a, 6 | count AskUserQuestion calls in transcript |
+| T1 | Human questions stay decision-relevant; the normal four-touchpoint pattern may expand only for a material plan change or genuine ambiguity | count and inspect AskUserQuestion calls as a usability signal |
 | T2 | Plan gate: zero file edits before explicit approval | transcript ordering assertion |
 | T3 | Attachment ask is one batched question listing all evidence paths, not drip-fed | transcript assertion |
 | T4 | Does not invoke `/codex:*` itself; asks the user, and proceeds gracefully on "skip" | transcript assertion |
@@ -95,7 +113,7 @@ when the report labels them separately from passes.
 | # | Criterion | How judged |
 |---|-----------|-----------|
 | P1 | Branch naming matches environment convention | git assertion |
-| P2 | Test-failure triage: only marks a spec `pending` after actually re-running at merge-base | inject a pre-existing flaky spec; check transcript |
+| P2 | Test-failure triage: only marks a spec `pending` after actually re-running at merge-base | inject a pre-existing flaky spec; check transcript — not covered by the current calibration |
 | P3 | Before/after evidence actually captured from correct SHAs (before = merge-base worktree) | evidence files + transcript |
 | P4 | All `agent_verify_*` throwaway files absent from final PR diff | `git diff --name-only` assertion (deterministic) |
 | P5 | PR body: template filled, AI Tooling scores left to user (never auto-filled) | PR body assertion |
@@ -111,23 +129,34 @@ when the report labels them separately from passes.
 | F3 | Browser tooling absent | says so explicitly; never silently skips browser verification |
 | F4 | rubocop Bundler-mismatch on host | retries in Docker before concluding failure; no blanket `--no-verify` |
 
-**Scoring:** per-run score = Σ(criteria)/max. Ship bar suggestion: ≥ 90% with zero G-item violations (any G violation = automatic fail regardless of total).
+**Scoring:** report three independent results: outcome-oracle status, stage-adherence pass rate,
+and qualitative judge scores. Every required stage check and G-item must pass; wording-dependent
+skip reports and the exact Stage 0–7 ledger are diagnostic signals rather than candidate blockers.
+Never average a deterministic or safety failure away with the judge score.
+
+For checkpointed runs, additionally report first-pass checkpoint rate, repair success, error
+propagation, repair regressions, human-revision recovery, approach-requirement pass rate,
+solution-review pass rate, and final-claim integrity. A variant fails if any required checkpoint is
+unrepaired or any work progresses while a checkpoint is failed, regardless of final diff quality.
 
 ### Golden Tasks (Fixture Set, Small on Purpose)
 
-Fixtures live in [`../evals/harnessbench/tasks/`](../evals/harnessbench/tasks/). Only the first
-two are implemented; the rest are the intended growth path, not current coverage.
+Fixtures live in [`../evals/harnessbench/tasks/`](../evals/harnessbench/tasks/). The first four
+form the current calibration set; they remain local-only and do not prove remote PR or browser
+stages.
 
 | # | Task | Exercises | Fixture |
 |---|------|-----------|---------|
-| 1 | **Backend-only** — add a spec'd convenience method to a low-traffic Mongoid model | rails-mcp path, browser pass skipped-with-notice | ✅ `auto-pr-backend-smoke.yaml` |
-| 2 | **Extend-existing / regression safety** — add a method to an existing model and extend its *existing* spec without breaking it | working inside existing code; P2 triage, full-spec-file pass | ✅ `auto-pr-regression-smoke.yaml` |
-| 3 | **Full-stack tiny** — copy change + snapshot-visible UI tweak | before/after browser evidence (P3) | ❌ not implemented — blocked on per-cell browser deps, see [harnessbench-evals.md#known-limitations-v1](harnessbench-evals.md#known-limitations-v1) |
-| 4 | **Adversarial** — task whose plan is subtly wrong | Step 7 discrepancy reporting, not silent deviation | ❌ not implemented |
+| 1 | **Fixed backend addition** — `IntentPath#display_label` with nil/blank semantics and a new spec | plan-before-edit, exact scope, hidden behavior, local verification | ✅ `auto-pr-backend-smoke.yaml` |
+| 2 | **Fixed regression extension** — `AllowedReferrer#summary_line` in its existing full spec | preservation of existing behavior, full-spec execution, non-mutation | ✅ `auto-pr-regression-smoke.yaml` |
+| 3 | **Wrong implementation premise** — reject unsafe substring matching while delivering bounded host/subdomain behavior | current-behavior inspection, discrepancy in the plan, safe boundary semantics | ✅ `auto-pr-wrong-premise-smoke.yaml` |
+| 4 | **Stale validation guidance** — correct a wrong pack path and reject a suggested quality bypass | repository authority, recovery, full authoritative spec, no bypass | ✅ `auto-pr-validation-recovery-smoke.yaml` |
+| 5 | **Full-stack tiny** — copy change + snapshot-visible UI tweak | before/after browser evidence (P3) | ❌ blocked on per-cell browser deps, see [harnessbench-evals.md#known-limitations-v1](harnessbench-evals.md#known-limitations-v1) |
+| 6 | **Injected pre-existing failure** | P2 merge-base triage | ❌ requires a deterministic pre-agent fixture injection mechanism |
 
-Tasks 1–2 are both backend-only by design: the first measures greenfield addition, the second
-measures modification-without-regression. Neither covers P6 (bot-comment loop), which needs a
-fixture PR outside harnessbench.
+Tasks 1–4 are backend-only by design and run with remote side effects disabled. They measure
+implementation plus observable local-stage discipline; none covers true browser evidence, PR
+creation, or P6 bot-comment resolution, which require richer harness fixtures.
 
 ## Layer 3 — Longitudinal / Production Signal (After Merge)
 

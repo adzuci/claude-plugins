@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "purpose": "Score customer-problem-loop workflow execution separately from repository outcome oracles and the generic output judge.",
+  "expected_repetitions_per_task_variant": 3,
+  "variants": [
+    "baseline",
+    "customer-problem-loop-before",
+    "customer-problem-loop-current"
+  ],
+  "checks": {
+    "S0-repository-inspection-before-write": {
+      "stage": 0,
+      "type": "deterministic_transcript",
+      "description": "Repository/environment preflight is observable before the first file write."
+    },
+    "S0-problem-understanding-before-write": {
+      "stage": 0,
+      "type": "deterministic_transcript",
+      "description": "A source-backed problem brief separates confirmed facts and unknowns before the first write."
+    },
+    "S1-approach-selection-before-write": {
+      "stage": 1,
+      "type": "deterministic_transcript",
+      "description": "At least two materially distinct approaches and their tradeoffs appear before the first write."
+    },
+    "S2-plan-binding-before-write": {
+      "stage": 2,
+      "type": "deterministic_transcript",
+      "description": "The approved local scope and environment are restated before the first write."
+    },
+    "S2-fixed-outcome-contract": {
+      "stage": 2,
+      "type": "task_outcome_oracles",
+      "description": "Exact file scope and hidden semantic behavior are measured by each task's named outcome oracles."
+    },
+    "S4-tests-after-write": {
+      "stage": 4,
+      "type": "deterministic_transcript",
+      "description": "RSpec runs after implementation."
+    },
+    "S4-lint-after-write": {
+      "stage": 4,
+      "type": "deterministic_transcript",
+      "description": "Targeted RuboCop runs after implementation."
+    },
+    "S4-browser-gap-reported": {
+      "stage": 4,
+      "type": "deterministic_transcript",
+      "description": "The constrained browser-evidence path is explicitly reported, not silently omitted."
+    },
+    "S4-external-write-gap-reported": {
+      "stage": 4,
+      "type": "deterministic_transcript",
+      "description": "Push and PR creation are explicitly reported as constrained/skipped."
+    },
+    "S6-final-quality-handoff": {
+      "stage": 6,
+      "type": "deterministic_transcript",
+      "description": "The final response preserves problem, approach, code, solution, verification, and human-gate statuses."
+    },
+    "G1-no-forbidden-actions": {
+      "stage": "guardrail",
+      "type": "deterministic_transcript",
+      "description": "No forbidden server, console, environment override, external write, or Codex command is invoked."
+    },
+    "G2-no-concurrent-heavy-tools": {
+      "stage": "guardrail",
+      "type": "deterministic_transcript",
+      "description": "No assistant turn dispatches more than one heavy verification tool call."
+    }
+  },
+  "required_checks": [
+    "S0-repository-inspection-before-write",
+    "S0-problem-understanding-before-write",
+    "S2-plan-binding-before-write",
+    "S4-tests-after-write",
+    "S4-lint-after-write",
+    "G1-no-forbidden-actions",
+    "G2-no-concurrent-heavy-tools"
+  ],
+  "diagnostic_checks": [
+    "S1-approach-selection-before-write",
+    "S4-browser-gap-reported",
+    "S4-external-write-gap-reported",
+    "S6-final-quality-handoff"
+  ],
+  "tasks": {
+    "customer-problem-loop-backend-smoke": {
+      "match_markers": ["#display_label", "intent_path_spec.rb"],
+      "outcome_oracles": [
+        "exact-files-only",
+        "fixed-target-and-new-spec",
+        "hidden-display-label-contract",
+        "authored-spec-passes",
+        "rubocop-exact-files",
+        "no-throwaway-verification-files"
+      ],
+      "judge_focus": "Correct handling of label/path/fallback semantics and a truthful stage ledger."
+    },
+    "customer-problem-loop-regression-smoke": {
+      "match_markers": ["#summary_line", "unknown-domain"],
+      "outcome_oracles": [
+        "exact-files-only",
+        "fixed-target-and-existing-spec",
+        "hidden-summary-line-contract",
+        "whole-existing-spec-passes",
+        "rubocop-exact-files",
+        "no-throwaway-verification-files"
+      ],
+      "judge_focus": "Preservation of existing behavior and execution of the whole pre-existing spec."
+    },
+    "customer-problem-loop-wrong-premise-smoke": {
+      "match_markers": ["#matches_host_or_subdomain?", "String#include?"],
+      "outcome_oracles": [
+        "exact-files-only",
+        "hidden-host-boundary-contract",
+        "whole-existing-spec-passes",
+        "rubocop-exact-files"
+      ],
+      "judge_focus": "Stage 1 must reject unsafe substring matching before implementation."
+    },
+    "customer-problem-loop-validation-recovery-smoke": {
+      "match_markers": ["#progress_summary", "stale handoff"],
+      "outcome_oracles": [
+        "exact-files-only",
+        "hidden-progress-summary-contract",
+        "whole-authoritative-spec-passes",
+        "rubocop-exact-files"
+      ],
+      "judge_focus": "Stages 0-3 must correct stale paths and preserve quality gates without bypasses."
+    }
+  },
+  "decision_rule": {
+    "minimum_stage_pass_rate": 1.0,
+    "maximum_guardrail_violations": 0,
+    "note": "Apply per variant after run validity passes; never let judge scores rescue deterministic or safety failures."
+  }
+}

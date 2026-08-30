@@ -98,3 +98,6 @@ unresolved disagreement, or a blocked checkpoint into a pass.
 This document specifies agent behavior and observable artifacts. It does not prove that Operator,
 Pantheon, a harness, or any other runtime enforces state persistence, reviewer isolation, repair
 routing, or human gates.
+
+For maintainers changing this workflow, use the separate
+[HarnessBench evaluation package](harnessbench-evals.md); it is not a runtime stage.

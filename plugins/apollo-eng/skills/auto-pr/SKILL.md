@@ -23,6 +23,8 @@ What ships from this directory today:
   lint → scenario compliance → production signal).
 - `references/eval-tooling-and-methodology.md` — the eval methodology guardrails, judge guidance,
   and CI tooling decision behind that rubric.
+- `references/checkpointed-flow.md` — the target stateful problem-recognition → approach comparison
+  → human approval → bounded repair → solution-review contract for the next revision.
 - `evals/harnessbench/` — machine-executed [apolloio/harnessbench](https://github.com/apolloio/harnessbench)
   experiment that A/B tests skill versions against a no-skill baseline on real LeadGenie tasks.
   See `references/harnessbench-evals.md` for local and GitHub Actions usage.

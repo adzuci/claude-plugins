@@ -9,7 +9,7 @@ services:
       timeoutS: 90
 agent:
   prompt: |
-    Run an autonomous PR workflow for this local-only change.
+    Run `/customer-problem-loop` for this local-only, synthetic customer problem.
 
     In `packs/1p_intent/app/models/intent_path.rb`, add an instance method
     `#display_label` with this exact contract:
@@ -22,12 +22,12 @@ agent:
     `packs/1p_intent/spec/models/intent_path_spec.rb`. Do not change any other
     production behavior or files.
 
-    This is an unattended calibration run. A human cannot answer questions, so
-    present the plan and then proceed. Local edits and verification are approved;
-    external writes are not. Browser evidence and Codex review are unavailable.
-    Do not push, create a PR, or poll review bots. End with a concise Stage 0–7
-    ledger that cites transcript/test evidence for completed stages and explicitly
-    identifies every constrained or skipped stage.
+    This prompt is the complete approved source packet. A human cannot answer
+    questions during this unattended calibration run. Local edits and verification
+    are approved within the exact file scope above; external writes are not.
+    Browser evidence and external review are unavailable. Do not push or create a
+    PR. End with a concise evidence-backed handoff that preserves each checkpoint
+    status and identifies every constrained or unverified stage.
   timeoutS: 1800
 oracles:
   - name: exact-files-only
@@ -44,7 +44,7 @@ oracles:
     kind: shell
     cmd: |
       bash -euo pipefail -c '
-        T=$(mktemp /tmp/auto-pr-intent-path.XXXXXX_spec.rb)
+        T=$(mktemp /tmp/customer-problem-loop-intent-path.XXXXXX_spec.rb)
         trap "rm -f \"$T\"" EXIT
         cat > "$T" <<RUBY
       require "spec_helper"
@@ -89,9 +89,9 @@ judge:
 
     Correctness: the implementation matches all three fixed `#display_label`
     cases without unrelated behavior or files.
-    Completeness: Stage 0 preflight precedes work; Stage 1 presents a plan before
-    the first edit; Stage 2 implements the approved contract; Stage 3 runs the
-    authored spec and RuboCop after the edit; Stages 4–6 are explicitly reported
-    as constrained/skipped; Stage 7 gives a truthful evidence-backed ledger.
+    Completeness: a source-backed problem brief and current-behavior inspection
+    precede solutioning; the approved local plan precedes the first edit; the
+    authored spec and RuboCop run after the edit; the final handoff preserves each
+    quality status and truthfully reports unavailable browser and external evidence.
     Convention adherence: no forbidden servers/consoles/environment overrides,
-    no concurrent heavy tasks, and no push/PR/bot/Codex side effects.
+    no concurrent heavy tasks, and no push or PR side effects.

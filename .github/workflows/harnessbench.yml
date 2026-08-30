@@ -1,4 +1,4 @@
-# HarnessBench fixtures per skill (see harnessbench-evals-guide.md): PRs dry-run both fixtures for free, manual dispatch scores exactly one paid experiment.
+# HarnessBench fixtures per skill: PRs dry-run every configured task for free; manual dispatch scores one paid experiment.
 name: harnessbench
 
 permissions:
@@ -8,18 +8,22 @@ permissions:
 env:
   # Pinned, not floated: an upstream harness merge would move scores mid-INFRA-2087-pilot. Bump deliberately.
   HARNESSBENCH_REF: 260894dca73c8c71fed123b0e06379a4dc108f5e
+  # Pin the evaluated client stack too; floating CLIs make cross-run deltas uninterpretable.
+  CLAUDE_CODE_VERSION: 2.1.246
+  PNPM_VERSION: 11.24.0
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - "plugins/apollo-eng/skills/auto-pr/evals/harnessbench/**"
+      - "plugins/apollo-eng/skills/auto-pr/**"
+      - "plugins/apollo-eng/skills/customer-problem-loop/**"
       - "plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/**"
       - ".github/workflows/harnessbench.yml"
   workflow_dispatch:
     inputs:
       full_run:
-        description: "Execute the full experiment (spends Anthropic tokens; ~hours)"
+        description: "Execute one full experiment (36 paid cells; ~hours)"
         type: boolean
         default: false
       experiment:
@@ -27,10 +31,11 @@ on:
         type: choice
         options:
           - leadgenie/auto-pr-smoke
+          - leadgenie/customer-problem-loop-smoke
           - claude-plugins/wtf-smoke
         default: leadgenie/auto-pr-smoke
       pr_number:
-        description: "PR whose sticky eval summary should be updated"
+        description: "PR that should receive the append-only scored-run summary"
         type: string
         required: true
 
@@ -50,7 +55,18 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          fetch-depth: 0
           persist-credentials: false
+      - name: Validate checkpoint and repair packages
+        run: |
+          python3 \
+            plugins/apollo-eng/evals/harnessbench/scripts/validate_checkpoint_flow.py \
+            --contract plugins/apollo-eng/evals/harnessbench/checkpoint-flow-contract.json \
+            --scenarios plugins/apollo-eng/skills/auto-pr/evals/harnessbench/stateful-scenarios.json
+          python3 \
+            plugins/apollo-eng/evals/harnessbench/scripts/validate_checkpoint_flow.py \
+            --contract plugins/apollo-eng/evals/harnessbench/checkpoint-flow-contract.json \
+            --scenarios plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/stateful-scenarios.json
       - name: Check cross-repo access
         id: access
         run: |
@@ -98,6 +114,10 @@ jobs:
             harnessbench/workspace/leadgenie/tasks/
           cp -r plugins/apollo-eng/skills/auto-pr/evals/harnessbench/experiments/auto-pr-smoke \
             harnessbench/workspace/leadgenie/experiments/
+          cp plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/tasks/*.yaml \
+            harnessbench/workspace/leadgenie/tasks/
+          cp -r plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/experiments/customer-problem-loop-smoke \
+            harnessbench/workspace/leadgenie/experiments/
           mkdir -p harnessbench/workspace/claude-plugins/{tasks,experiments,variants}
           cp plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/tasks/*.yaml \
             harnessbench/workspace/claude-plugins/tasks/
@@ -121,6 +141,23 @@ jobs:
             -H "Accept: application/vnd.github.v3.diff" \
             "https://api.github.com/repos/apolloio/leadgenie/compare/master...$V2_HEAD" \
             > harnessbench/workspace/leadgenie/variants/auto-pr-v2.patch
+      - name: Generate customer-problem-loop variant patches
+        if: steps.access.outputs.available == 'true'
+        run: |
+          BASELINE_SKILL_SHA=f133434baa44c341c2d5d873a5fe0add7a3d6d6e
+          BEFORE_DIR="$RUNNER_TEMP/customer-problem-loop-before"
+          mkdir -p "$BEFORE_DIR"
+          git archive "$BASELINE_SKILL_SHA" plugins/apollo-eng/skills/customer-problem-loop | \
+            tar -x -C "$BEFORE_DIR"
+          BUILDER=plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/scripts/build_skill_variant_patch.py
+          python3 "$BUILDER" \
+            --skill-dir "$BEFORE_DIR/plugins/apollo-eng/skills/customer-problem-loop" \
+            --target-root .claude/skills/customer-problem-loop \
+            --output harnessbench/workspace/leadgenie/variants/customer-problem-loop-before.patch
+          python3 "$BUILDER" \
+            --skill-dir plugins/apollo-eng/skills/customer-problem-loop \
+            --target-root .claude/skills/customer-problem-loop \
+            --output harnessbench/workspace/leadgenie/variants/customer-problem-loop-current.patch
       - name: Generate wtf-does-this-do variant patch
         if: steps.access.outputs.available == 'true'
         working-directory: harnessbench/.harness/repositories/claude-plugins
@@ -149,6 +186,7 @@ jobs:
         run: |
           set -o pipefail
           npm run harnessbench -- run leadgenie/auto-pr-smoke --dry-run | tee dryrun-autopr.out
+          npm run harnessbench -- run leadgenie/customer-problem-loop-smoke --dry-run | tee dryrun-loopbot.out
           npm run harnessbench -- run claude-plugins/wtf-smoke --dry-run | tee dryrun-wtf.out
       - name: Post one-line summary comment
         if: always() && github.event_name == 'pull_request' && steps.dryrun.outcome != 'cancelled'
@@ -173,8 +211,9 @@ jobs:
             BODY="$MARKER"$'\n'"**harnessbench dry-run:** skipped — cross-repo token not configured; validation did not run."
           elif [ "$DRYRUN_OUTCOME" = "success" ]; then
             AUTOPR_LINE=$(summarize_experiment "leadgenie/auto-pr-smoke" harnessbench/dryrun-autopr.out "plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml")
+            LOOPBOT_LINE=$(summarize_experiment "leadgenie/customer-problem-loop-smoke" harnessbench/dryrun-loopbot.out "plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/tasks/*.yaml")
             WTF_LINE=$(summarize_experiment "claude-plugins/wtf-smoke" harnessbench/dryrun-wtf.out "plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/tasks/*.yaml")
-            BODY="$MARKER"$'\n'"**harnessbench dry-run: schema + patch-apply validation**"$'\n\n'"$AUTOPR_LINE"$'\n'"$WTF_LINE"$'\n\n'"- **Checked:** experiment/task schemas parse; every variant patch applies cleanly at its pinned baseCommit"$'\n'"- **Cost:** 0 tokens — dry-run never starts agents or the judge"$'\n'"- **Scored A/B:** manually dispatch \`harnessbench\` with \`full_run\`, the target \`experiment\`, and this PR number after the dry-run is green."$'\n'"- Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            BODY="$MARKER"$'\n'"**harnessbench dry-run: schema + patch-apply validation**"$'\n\n'"$AUTOPR_LINE"$'\n'"$LOOPBOT_LINE"$'\n'"$WTF_LINE"$'\n\n'"- **Checked:** experiment/task schemas parse; every variant patch applies cleanly at its pinned baseCommit"$'\n'"- **Cost:** 0 tokens — dry-run never starts agents or the judge"$'\n'"- **Scored A/B:** manually dispatch \`harnessbench\` with \`full_run\`, the target \`experiment\`, and this PR number after the dry-run is green."$'\n'"- Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           else
             BODY="$MARKER"$'\n'"**harnessbench dry-run:** FAILED (schema or patch-apply error) — see the dry-run step log."
           fi
@@ -206,7 +245,22 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
+          fetch-depth: 0
           persist-credentials: false
+      - name: Validate checkpoint and repair package before paid execution
+        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
+        run: |
+          python3 \
+            plugins/apollo-eng/evals/harnessbench/scripts/validate_checkpoint_flow.py \
+            --contract plugins/apollo-eng/evals/harnessbench/checkpoint-flow-contract.json \
+            --scenarios plugins/apollo-eng/skills/auto-pr/evals/harnessbench/stateful-scenarios.json
+      - name: Validate Loopbot checkpoint package before paid execution
+        if: inputs.experiment == 'leadgenie/customer-problem-loop-smoke'
+        run: |
+          python3 \
+            plugins/apollo-eng/evals/harnessbench/scripts/validate_checkpoint_flow.py \
+            --contract plugins/apollo-eng/evals/harnessbench/checkpoint-flow-contract.json \
+            --scenarios plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/stateful-scenarios.json
       - name: Require cross-repo token and Anthropic key
         env:
           REPO_TOKEN: ${{ secrets.APOLLOIO_TOKEN }}
@@ -228,7 +282,7 @@ jobs:
           path: harnessbench
           persist-credentials: false
       - uses: actions/checkout@v6
-        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
+        if: startsWith(inputs.experiment, 'leadgenie/')
         with:
           repository: apolloio/leadgenie
           token: ${{ secrets.APOLLOIO_TOKEN }}
@@ -249,23 +303,25 @@ jobs:
         working-directory: harnessbench
         run: |
           npm ci
-          npm install -g @anthropic-ai/claude-code pnpm
+          npm install -g \
+            "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}" \
+            "pnpm@${PNPM_VERSION}"
       - name: Set up Ruby for leadgenie oracles
-        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
+        if: startsWith(inputs.experiment, 'leadgenie/')
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.4.9" # leadgenie .ruby-version at the pinned baseCommit
           bundler-cache: false
       - name: Install leadgenie gems (shared path for all worktree cells)
         # Absolute BUNDLE_PATH so every harnessbench worktree resolves the same gems, and gem failures land here rather than mid paid cell.
-        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
+        if: startsWith(inputs.experiment, 'leadgenie/')
         working-directory: harnessbench/.harness/repositories/leadgenie
         env:
           BUNDLE_PATH: /home/runner/.leadgenie-bundle
         run: bundle install --jobs 4 --retry 2
       - name: Adapt LeadGenie setup and pinned base
         # harnessbench's repo.yaml predates leadgenie's npm -> pnpm move: no package-lock.json at our base, so npm ci fails in every cell.
-        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
+        if: startsWith(inputs.experiment, 'leadgenie/')
         run: |
           BASE_COMMIT=$(grep -h '^baseCommit:' plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml | head -1 | cut -d'"' -f2)
           test -n "$BASE_COMMIT"
@@ -299,6 +355,30 @@ jobs:
             -H "Accept: application/vnd.github.v3.diff" \
             "https://api.github.com/repos/apolloio/leadgenie/compare/master...$V2_HEAD" \
             > harnessbench/workspace/leadgenie/variants/auto-pr-v2.patch
+      - name: Copy customer-problem-loop experiment into workspace
+        if: inputs.experiment == 'leadgenie/customer-problem-loop-smoke'
+        run: |
+          cp plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/tasks/*.yaml \
+            harnessbench/workspace/leadgenie/tasks/
+          cp -r plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/experiments/customer-problem-loop-smoke \
+            harnessbench/workspace/leadgenie/experiments/
+      - name: Generate customer-problem-loop variant patches for paid execution
+        if: inputs.experiment == 'leadgenie/customer-problem-loop-smoke'
+        run: |
+          BASELINE_SKILL_SHA=f133434baa44c341c2d5d873a5fe0add7a3d6d6e
+          BEFORE_DIR="$RUNNER_TEMP/customer-problem-loop-before"
+          mkdir -p "$BEFORE_DIR"
+          git archive "$BASELINE_SKILL_SHA" plugins/apollo-eng/skills/customer-problem-loop | \
+            tar -x -C "$BEFORE_DIR"
+          BUILDER=plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/scripts/build_skill_variant_patch.py
+          python3 "$BUILDER" \
+            --skill-dir "$BEFORE_DIR/plugins/apollo-eng/skills/customer-problem-loop" \
+            --target-root .claude/skills/customer-problem-loop \
+            --output harnessbench/workspace/leadgenie/variants/customer-problem-loop-before.patch
+          python3 "$BUILDER" \
+            --skill-dir plugins/apollo-eng/skills/customer-problem-loop \
+            --target-root .claude/skills/customer-problem-loop \
+            --output harnessbench/workspace/leadgenie/variants/customer-problem-loop-current.patch
       - name: Copy wtf-does-this-do experiment into workspace
         if: inputs.experiment == 'claude-plugins/wtf-smoke'
         run: |
@@ -325,6 +405,97 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.APOLLO_REVIEW_BOT_ANTHROPIC_KEY }}
         run: npm run harnessbench -- run "${{ inputs.experiment }}"
+      - name: Record evaluated runtime provenance
+        if: always() && startsWith(inputs.experiment, 'leadgenie/') && steps.experiment.outcome == 'success'
+        env:
+          EXPERIMENT: ${{ inputs.experiment }}
+        run: |
+          RUN_DIR=$(find "harnessbench/runs/$EXPERIMENT" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1)
+          test -n "$RUN_DIR"
+          if [ "$EXPERIMENT" = "leadgenie/auto-pr-smoke" ]; then
+            SKILL_SLUG=auto-pr
+            EXPERIMENT_SLUG=auto-pr-smoke
+            RUBRIC=plugins/apollo-eng/skills/auto-pr/references/auto-pr-eval-rubric.md
+          else
+            SKILL_SLUG=customer-problem-loop
+            EXPERIMENT_SLUG=customer-problem-loop-smoke
+            RUBRIC=plugins/apollo-eng/skills/customer-problem-loop/references/harnessbench-evals.md
+          fi
+          export RUN_DIR SKILL_SLUG EXPERIMENT_SLUG RUBRIC
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          import platform
+          import subprocess
+          from pathlib import Path
+
+          def digest(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+
+          root = Path.cwd()
+          run_dir = Path(os.environ["RUN_DIR"])
+          skill_root = root / "plugins/apollo-eng/skills" / os.environ["SKILL_SLUG"]
+          task_root = skill_root / "evals/harnessbench/tasks"
+          experiment = skill_root / "evals/harnessbench/experiments" / os.environ["EXPERIMENT_SLUG"] / "experiment.yaml"
+          contract = skill_root / "evals/harnessbench/stage-contract.json"
+          auditor = skill_root / "evals/harnessbench/scripts/audit_stage_adherence.py"
+          shared_evals = root / "plugins/apollo-eng/evals/harnessbench"
+          checkpoint_contract = shared_evals / "checkpoint-flow-contract.json"
+          checkpoint_manifest = skill_root / "evals/harnessbench/checkpoint-calibration-manifest.json"
+          checkpoint_scenarios = skill_root / "evals/harnessbench/stateful-scenarios.json"
+          checkpoint_validator = shared_evals / "scripts/validate_checkpoint_flow.py"
+          rubric = root / os.environ["RUBRIC"]
+          variant_root = root / "harnessbench/workspace/leadgenie/variants"
+
+          def version(*command):
+              return subprocess.check_output(command, text=True).strip()
+
+          provenance = {
+              "schema_version": 1,
+              "experiment": os.environ["EXPERIMENT"],
+              "harnessbench_ref": os.environ["HARNESSBENCH_REF"],
+              "claude_code": version("claude", "--version"),
+              "pnpm": version("pnpm", "--version"),
+              "node": version("node", "--version"),
+              "ruby": version("ruby", "--version"),
+              "runner": platform.platform(),
+              "experiment_sha256": digest(experiment),
+              "stage_contract_sha256": digest(contract),
+              "stage_auditor_sha256": digest(auditor),
+              "checkpoint_contract_sha256": digest(checkpoint_contract),
+              "checkpoint_manifest_sha256": digest(checkpoint_manifest),
+              "checkpoint_scenarios_sha256": digest(checkpoint_scenarios),
+              "checkpoint_validator_sha256": digest(checkpoint_validator),
+              "rubric_sha256": digest(rubric),
+              "task_sha256": {path.stem: digest(path) for path in sorted(task_root.glob("*.yaml"))},
+              "variant_sha256": {path.stem: digest(path) for path in sorted(variant_root.glob(f"{os.environ['SKILL_SLUG']}-*.patch"))},
+              "model_revision_gap": "Configured model IDs are recorded by HarnessBench; provider-side immutable model revisions remain unavailable.",
+          }
+          (run_dir / "runtime-provenance.json").write_text(
+              json.dumps(provenance, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+      - name: Audit workflow stage adherence
+        id: stage_audit
+        if: always() && startsWith(inputs.experiment, 'leadgenie/') && steps.experiment.outcome == 'success'
+        continue-on-error: true
+        env:
+          EXPERIMENT: ${{ inputs.experiment }}
+        run: |
+          RUN_DIR=$(find "harnessbench/runs/$EXPERIMENT" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1)
+          test -n "$RUN_DIR"
+          if [ "$EXPERIMENT" = "leadgenie/auto-pr-smoke" ]; then
+            EVAL_ROOT=plugins/apollo-eng/skills/auto-pr/evals/harnessbench
+          else
+            EVAL_ROOT=plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench
+          fi
+          python3 \
+            "$EVAL_ROOT/scripts/audit_stage_adherence.py" \
+            "$RUN_DIR" \
+            --contract "$EVAL_ROOT/stage-contract.json" \
+            --output "$RUN_DIR/stage-adherence.json"
       - name: Upload report
         id: artifact
         if: always()
@@ -332,7 +503,8 @@ jobs:
         with:
           name: harnessbench-report
           path: harnessbench/runs/${{ inputs.experiment }}/
-      - name: Update sticky PR eval summary
+          retention-days: 30
+      - name: Post append-only PR eval summary
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
@@ -341,7 +513,7 @@ jobs:
           EXPERIMENT_OUTCOME: ${{ steps.experiment.outcome }}
           ARTIFACT_URL: ${{ steps.artifact.outputs.artifact-url }}
         run: |
-          MARKER="<!-- harnessbench-autopr-summary -->"
+          MARKER="<!-- harnessbench-run-${GITHUB_RUN_ID} -->"
           RUN_DIR=$(find "harnessbench/runs/$EXPERIMENT" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1 || true)
           if [ "$EXPERIMENT_OUTCOME" = "success" ] && [ -f "$RUN_DIR/aggregate.json" ] && [ -f "$RUN_DIR/manifest.json" ]; then
             AGG="$RUN_DIR/aggregate.json"
@@ -353,24 +525,66 @@ jobs:
             EMPTY_DIFFS=$(jq '[.cells[] | select((.diffShape.filesChanged // 0) == 0)] | length' "$AGG")
             INVALID_JUDGES=$(jq '[.cells[] | select((((.judge.outcome.scores // {}) | length) == 0) or ([.judge.outcome.scores[]?.justification // ""] | any(length == 0)))] | length' "$AGG")
             FLAKY=$(jq '[.perTask[].flakyVariants[]] | unique | length' "$AGG")
-            WINNERS=$(jq -r '.perTask[] | "\(.taskId)=\(.winnerVariantId)"' "$AGG" | paste -sd ', ' -)
+            STAGE_VALIDITY="NOT_APPLICABLE"
+            STAGE_SUMMARY="not measured for this experiment"
+            STAGE_FAILS=0
+            SAFETY_FAILS=0
+            STAGE_GATE_FAILS=0
+            if [[ "$EXPERIMENT" == leadgenie/* ]]; then
+              STAGE_FILE="$RUN_DIR/stage-adherence.json"
+              if [ -f "$STAGE_FILE" ]; then
+                STAGE_VALIDITY=$(jq -r '.validity' "$STAGE_FILE")
+                STAGE_FAILS=$(jq '[.cells[] | select(.status == "FAIL")] | length' "$STAGE_FILE")
+                SAFETY_FAILS=$(jq '[.cells[].checks | to_entries[] | select((.key | startswith("G")) and .value.status == "FAIL")] | length' "$STAGE_FILE")
+                STAGE_GATE_FAILS=$(jq '[.by_variant[] | select(.meets_stage_gate != true)] | length' "$STAGE_FILE")
+                STAGE_SUMMARY=$(jq -r '[.by_variant | to_entries[] | "\(.key)=\(.value.passed_cells)/\(.value.cells) cells (\((.value.stage_pass_rate * 100) | round)%); gate=\(.value.meets_stage_gate)"] | join(", ")' "$STAGE_FILE")
+              else
+                STAGE_VALIDITY="INCONCLUSIVE"
+                STAGE_SUMMARY="stage-adherence.json missing"
+              fi
+            fi
             MANIFEST="$RUN_DIR/manifest.json"
             WALL_MIN=$(jq -nr --slurpfile m "$MANIFEST" '($m[0].startedAt | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) as $start | ($m[0].finishedAt | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) as $finish | (($finish - $start) / 60 | floor)')
-            STATUS="VALID"
-            if [ "$ERRORS" -ne 0 ] || [ "$ORACLE_FAIL" -ne 0 ] || [ "$INCONCLUSIVE" -ne 0 ] || [ "$EMPTY_DIFFS" -ne 0 ] || [ "$INVALID_JUDGES" -ne 0 ]; then
-              STATUS="INCONCLUSIVE"
+            CLASSIFIER=plugins/apollo-eng/evals/harnessbench/scripts/classify_calibration_status.py
+            STATUS_JSON=$(python3 "$CLASSIFIER" \
+              --infrastructure-errors "$ERRORS" \
+              --inconclusive-checks "$INCONCLUSIVE" \
+              --empty-diffs "$EMPTY_DIFFS" \
+              --invalid-judges "$INVALID_JUDGES" \
+              --flaky-variants "$FLAKY" \
+              --stage-validity "$STAGE_VALIDITY" \
+              --oracle-failures "$ORACLE_FAIL" \
+              --required-stage-failures "$STAGE_FAILS" \
+              --safety-failures "$SAFETY_FAILS" \
+              --stage-gate-failures "$STAGE_GATE_FAILS")
+            STATUS=$(jq -r '.status' <<<"$STATUS_JSON")
+            if [ "$(jq -r '.winners_allowed' <<<"$STATUS_JSON")" = "true" ]; then
+              WINNERS=$(jq -r '.perTask[] | "\(.taskId)=\(.winnerVariantId)"' "$AGG" | paste -sd ', ' -)
+            else
+              WINNERS="withheld because run validity or a deterministic candidate gate failed"
             fi
-            BODY="$MARKER"$'\n'"## HarnessBench scored eval: $STATUS"$'\n\n'"- **Matrix:** $CELLS cells; $ERRORS infrastructure errors; $ORACLE_FAIL oracle failures"$'\n'"- **Validity:** $INCONCLUSIVE skipped/inconclusive checks; $EMPTY_DIFFS empty diffs; $INVALID_JUDGES invalid judge outputs; $FLAKY flaky variants"$'\n'"- **Per-task winners:** $WINNERS"$'\n'"- **Cost/time:** \$$COST; ${WALL_MIN}m wall time"$'\n'"- **Run:** ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"$'\n'"- **Artifact:** ${ARTIFACT_URL:-unavailable}"
+            BODY=$(printf '%s\n' \
+              "$MARKER" \
+              "" \
+              "## HarnessBench calibration: $STATUS" \
+              "" \
+              "- **Run validity:** $INCONCLUSIVE skipped/inconclusive checks; $EMPTY_DIFFS empty diffs; $INVALID_JUDGES invalid judge outputs; $FLAKY flaky variants" \
+              "- **Stage adherence:** $STAGE_SUMMARY; $STAGE_FAILS failed cells; $SAFETY_FAILS guardrail failures; $STAGE_GATE_FAILS failed variant gates; trace validity=$STAGE_VALIDITY" \
+              "- **Outcome oracles:** $ORACLE_FAIL failures across $CELLS cells; $ERRORS infrastructure errors" \
+              "- **Paired comparison (descriptive, not a launch decision):** $WINNERS" \
+              "- **Cost/time:** \$$COST; ${WALL_MIN}m wall time" \
+              "- **Run:** ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+              "- **30-day artifact:** ${ARTIFACT_URL:-unavailable}")
           else
-            BODY="$MARKER"$'\n'"## HarnessBench scored eval: FAILED"$'\n\n'"The paid experiment did not complete. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
+            BODY=$(printf '%s\n' \
+              "$MARKER" \
+              "" \
+              "## HarnessBench scored eval: FAILED" \
+              "" \
+              "The paid experiment did not complete. See ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}.")
           fi
           export BODY
           API="https://api.github.com/repos/$GITHUB_REPOSITORY"
           AUTH="Authorization: Bearer $GH_TOKEN"
-          CID=$(curl -sf -H "$AUTH" "$API/issues/$PR/comments?per_page=100" | python3 -c "import sys,json;m=[c['id'] for c in json.load(sys.stdin) if c['body'].startswith('<!-- harnessbench-autopr-summary -->')];print(m[0] if m else '')")
           PAYLOAD=$(python3 -c "import json,os;print(json.dumps({'body':os.environ['BODY']}))")
-          if [ -n "$CID" ]; then
-            curl -sf -X PATCH -H "$AUTH" -d "$PAYLOAD" "$API/issues/comments/$CID" >/dev/null
-          else
-            curl -sf -X POST -H "$AUTH" -d "$PAYLOAD" "$API/issues/$PR/comments" >/dev/null
-          fi
+          curl -sf -X POST -H "$AUTH" -d "$PAYLOAD" "$API/issues/$PR/comments" >/dev/null

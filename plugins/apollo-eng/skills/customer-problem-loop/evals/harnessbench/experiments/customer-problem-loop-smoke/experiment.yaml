@@ -1,0 +1,26 @@
+# Calibration experiment for the original and revised /customer-problem-loop skill. This is not an end-to-end launch gate.
+tasks:
+  - customer-problem-loop-backend-smoke
+  - customer-problem-loop-regression-smoke
+  - customer-problem-loop-wrong-premise-smoke
+  - customer-problem-loop-validation-recovery-smoke
+variants:
+  # CI generates both patches from pinned claude-plugins revisions; never compare unpinned skill text.
+  - customer-problem-loop-before
+  - customer-problem-loop-current
+baselineVariant: baseline
+compare: variant
+agents:
+  # Keep the agent on the coding model this skill targets; re-baseline before comparing results across models.
+  - id: claudecode-sonnet
+    model: claude-sonnet-5
+    env: {}
+oracle:
+  env:
+    # Shared gem path installed by the workflow so bin/rspec and rubocop run in any worktree cell; harmless locally.
+    BUNDLE_PATH: /home/runner/.leadgenie-bundle
+judge:
+  # Deliberately differs from the agent model; re-run calibration before changing it.
+  model: anthropic:claude-sonnet-4-6
+  env: {}
+repetitions: 3 # report uncertainty when ranks or stage adherence disagree; do not name a winner from one repetition

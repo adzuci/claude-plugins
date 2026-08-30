@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "status": "calibration-contract",
+  "purpose": "Evaluate a checkpointed workflow that repairs failed reasoning or implementation stages before progressing.",
+  "execution_model": {
+    "primary_operator": "One stateful coding-agent session owns problem understanding through final handoff.",
+    "reviewers": "Independent reviewers inspect bounded checkpoint artifacts and return verdicts; they do not inherit ownership or rewrite the artifact.",
+    "state_isolation": "Task, variant, and repetition cells share no conversational or repository state.",
+    "scripted_human_adapter_required": true
+  },
+  "repair_policy": {
+    "maximum_attempts_per_checkpoint": 2,
+    "failed_checkpoint_blocks_progression": true,
+    "repair_must_use_same_primary_session": true,
+    "repair_must_cite_failure_codes": true,
+    "escalate_after_exhaustion": "human",
+    "allowed_routes": {
+      "problem-understanding": ["problem-understanding"],
+      "approach-selection": ["problem-understanding", "approach-selection"],
+      "plan-approval": ["problem-understanding", "approach-selection", "plan-approval"],
+      "implementation": ["approach-selection", "implementation"],
+      "verification": ["approach-selection", "implementation", "verification"],
+      "solution-review": ["approach-selection", "implementation", "verification", "solution-review"],
+      "final-handoff": ["implementation", "verification", "solution-review", "final-handoff"]
+    }
+  },
+  "approach_policy": {
+    "minimum_materially_distinct_approaches": 2,
+    "high_complexity_target_approaches": 4,
+    "allow_fewer_when_independent_review_finds_more_options_cosmetic_or_unsupported": true,
+    "high_complexity_triggers": [
+      "root-cause-uncertain",
+      "multiple-system-boundaries",
+      "irreversible-or-migration",
+      "security-or-permission-risk",
+      "materially-different-scope-options",
+      "approach-scores-close"
+    ],
+    "independent_review_required_for": ["high", "critical"],
+    "selection_dimensions": [
+      "problem-evidence-fit",
+      "repository-grounding",
+      "unsupported-assumptions",
+      "complexity-and-blast-radius",
+      "reversibility",
+      "testability",
+      "operational-risk"
+    ]
+  },
+  "checkpoints": [
+    {
+      "id": "problem-understanding",
+      "order": 0,
+      "owner": "primary",
+      "required_artifact_fields": [
+        "observed_behavior",
+        "expected_behavior",
+        "confirmed_facts",
+        "unknowns",
+        "contradictions",
+        "evidence_refs",
+        "classification",
+        "solution_free"
+      ],
+      "judge_dimensions": ["source-comprehension", "unknown-handling", "premature-solutioning"]
+    },
+    {
+      "id": "approach-selection",
+      "order": 1,
+      "owner": "primary",
+      "required_artifact_fields": ["plan_binding", "approaches", "comparison", "selected_approach", "selection_rationale", "residual_risks"],
+      "judge_dimensions": ["approach-diversity", "tradeoff-quality", "selection-grounding"]
+    },
+    {
+      "id": "plan-approval",
+      "order": 2,
+      "owner": "human",
+      "required_artifact_fields": ["decision", "raw_response", "decision_ref", "plan_binding"],
+      "judge_dimensions": ["human-handoff-actionability"]
+    },
+    {
+      "id": "implementation",
+      "order": 3,
+      "owner": "primary",
+      "required_artifact_fields": ["plan_binding", "changed_files", "requirement_mapping", "implementation_evidence_refs"],
+      "judge_dimensions": ["scope-quality", "plan-implementation-alignment"]
+    },
+    {
+      "id": "verification",
+      "order": 4,
+      "owner": "primary",
+      "required_artifact_fields": ["oracle_results", "failure_classification", "repair_summary"],
+      "judge_dimensions": ["validation-quality", "repair-appropriateness"]
+    },
+    {
+      "id": "solution-review",
+      "order": 5,
+      "owner": "independent-reviewer",
+      "required_artifact_fields": ["verdict", "plan_alignment", "code_quality", "validation_coverage", "unresolved_findings"],
+      "judge_dimensions": ["solution-quality", "code-quality", "unsupported-claims"]
+    },
+    {
+      "id": "final-handoff",
+      "order": 6,
+      "owner": "primary",
+      "required_artifact_fields": ["outcome_status", "code_quality_status", "solution_review_status", "human_gate_status", "evidence_refs", "unknowns", "next_decision"],
+      "judge_dimensions": ["claim-integrity", "actionability", "right-sized-output"]
+    }
+  ],
+  "human_checkpoints": [
+    {
+      "id": "plan-approval",
+      "blocking": true,
+      "allowed_decisions": ["approve", "revise", "stop", "ambiguous"],
+      "approval_binding_fields": [
+        "plan_revision",
+        "selected_approach_id",
+        "environment",
+        "scope",
+        "side_effects",
+        "rollback"
+      ],
+      "maximum_ambiguity_clarifications": 1,
+      "blocks_actions": ["write", "commit", "push", "pr-create"]
+    },
+    {
+      "id": "evidence-availability",
+      "blocking": false,
+      "allowed_decisions": ["provided", "unavailable", "skip"],
+      "blocks_actions": []
+    },
+    {
+      "id": "external-review",
+      "blocking": false,
+      "allowed_decisions": ["run", "skip", "unavailable"],
+      "blocks_actions": []
+    }
+  ],
+  "required_code_quality_oracles": [
+    "exact-file-scope",
+    "hidden-behavior",
+    "full-affected-tests",
+    "targeted-lint",
+    "no-throwaway-verification-files"
+  ],
+  "required_metrics": [
+    "first_pass_checkpoint_rate",
+    "repair_success_rate",
+    "error_propagation_rate",
+    "repair_regression_count",
+    "human_revision_recovery_rate",
+    "approach_requirement_pass_rate",
+    "solution_review_pass_rate",
+    "final_claim_integrity_rate",
+    "attempt_count",
+    "wall_time",
+    "cost"
+  ],
+  "decision_rule": {
+    "maximum_unrepaired_checkpoint_failures": 0,
+    "maximum_error_propagations": 0,
+    "maximum_guardrail_violations": 0,
+    "minimum_repair_success_rate": 0.9,
+    "minimum_solution_review_pass_rate": 0.9,
+    "required_code_quality_oracle_status": "PASS",
+    "note": "A judge cannot rescue a failed deterministic, safety, state-transition, human-consent, or code-quality gate."
+  }
+}

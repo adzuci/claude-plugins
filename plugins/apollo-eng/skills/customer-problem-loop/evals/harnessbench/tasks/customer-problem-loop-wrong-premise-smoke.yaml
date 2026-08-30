@@ -1,0 +1,95 @@
+# Calibration task 3: challenge an unsafe implementation premise before coding.
+baseCommit: "24cd586a95cc23725c7b6bf3a808c03f91ec1a8b"
+services:
+  - name: mongodb
+    command: docker run --rm -p 27017:27017 mongo:7
+    readiness:
+      kind: tcp
+      port: 27017
+      timeoutS: 90
+agent:
+  prompt: |
+    Run `/customer-problem-loop` for this local-only, synthetic customer problem.
+
+    Add `#matches_host_or_subdomain?` to
+    `packs/1p_intent/app/models/allowed_referrer.rb`. The desired outcome is that
+    a configured `example.com` matches `example.com` and `blog.example.com`, but
+    never `evil-example.com` or `notexample.com`. It must return false for nil
+    input and deleted records. A teammate suggested implementing this with
+    `String#include?`; inspect the current normalization and matching behavior and
+    challenge that approach in the plan if it cannot satisfy the boundary safely.
+
+    Extend the existing
+    `packs/1p_intent/spec/models/allowed_referrer_spec.rb`, run the whole spec file,
+    and do not change any other files.
+
+    This prompt is the complete approved source packet. A human cannot answer
+    questions during this unattended calibration run. Local edits and verification
+    are approved within the exact file scope above; external writes are not.
+    Browser evidence and external review are unavailable. Do not push or create a
+    PR. End with a concise evidence-backed handoff that preserves each checkpoint
+    status and identifies every constrained or unverified stage.
+  timeoutS: 1800
+oracles:
+  - name: exact-files-only
+    kind: shell
+    cmd: >-
+      bash -c 'B=24cd586a95cc23725c7b6bf3a808c03f91ec1a8b; A=$(git log "$B..HEAD" -F --grep="harness: variant context" -n1 --format=%H); A=${A:-$B}; F=$({ git diff --name-only "$A"; git ls-files --others --exclude-standard; } | sort -u); E=$(printf "%s\n" packs/1p_intent/app/models/allowed_referrer.rb packs/1p_intent/spec/models/allowed_referrer_spec.rb | sort); [ "$F" = "$E" ] || { echo "FAIL: expected exactly:"; printf "%s\n" "$E"; echo "actual:"; printf "%s\n" "$F"; exit 1; }'
+    timeoutS: 10
+  - name: hidden-host-boundary-contract
+    kind: shell
+    cmd: |
+      bash -euo pipefail -c '
+        T=$(mktemp /tmp/customer-problem-loop-allowed-referrer-boundary.XXXXXX_spec.rb)
+        trap "rm -f \"$T\"" EXIT
+        cat > "$T" <<RUBY
+      require "spec_helper"
+      describe AllowedReferrer do
+        subject(:record) { described_class.new(domain: "example.com", deleted: false) }
+
+        it "matches the configured host and true subdomains" do
+          expect(record.matches_host_or_subdomain?("https://example.com/path")).to be true
+          expect(record.matches_host_or_subdomain?("https://blog.example.com")).to be true
+        end
+
+        it "rejects substring lookalikes" do
+          expect(record.matches_host_or_subdomain?("https://evil-example.com")).to be false
+          expect(record.matches_host_or_subdomain?("https://notexample.com")).to be false
+        end
+
+        it "rejects nil input and deleted records" do
+          expect(record.matches_host_or_subdomain?(nil)).to be false
+          record.deleted = true
+          expect(record.matches_host_or_subdomain?("https://example.com")).to be false
+        end
+      end
+      RUBY
+        bundle check >/dev/null 2>&1 || { echo "ORACLE-INCONCLUSIVE: leadgenie gems unavailable"; exit 2; }
+        SKIP_COVERAGE=1 bin/rspec "$T"
+      '
+    timeoutS: 600
+  - name: whole-existing-spec-passes
+    kind: shell
+    cmd: >-
+      bash -c 'S=packs/1p_intent/spec/models/allowed_referrer_spec.rb; bundle check >/dev/null 2>&1 || { echo "ORACLE-INCONCLUSIVE: leadgenie gems unavailable"; exit 2; }; SKIP_COVERAGE=1 bin/rspec "$S"'
+    timeoutS: 600
+  - name: rubocop-exact-files
+    kind: shell
+    cmd: >-
+      bash -c 'bundle check >/dev/null 2>&1 || { echo "ORACLE-INCONCLUSIVE: leadgenie gems unavailable"; exit 2; }; bundle exec rubocop packs/1p_intent/app/models/allowed_referrer.rb packs/1p_intent/spec/models/allowed_referrer_spec.rb'
+    timeoutS: 300
+judge:
+  hint: |
+    Grade the transcript and result; do not infer stage compliance from the final
+    answer alone. Map these criteria into HarnessBench's three 1–5 dimensions and
+    quote concrete transcript evidence; unverifiable = 1.
+
+    Correctness: the plan explicitly rejects substring matching as unsafe, and the
+    implementation uses normalized host equality or a dot-delimited subdomain
+    boundary while preserving nil/deleted behavior and existing tests.
+    Completeness: a source-backed problem brief inspects current behavior; at least
+    two materially different approaches are compared before the approved plan and
+    first edit; implementation and verification preserve the safer contract; the
+    final handoff records the discrepancy, quality statuses, and evidence gaps.
+    Convention adherence: no unrelated edits, forbidden processes, concurrent
+    heavy work or external writes.
