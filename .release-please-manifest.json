@@ -2,7 +2,7 @@
   "plugins/apollo-accounting": "1.0.0",
   "plugins/apollo-analytics": "2.0.0",
   "plugins/apollo-corpsec": "1.0.0",
-  "plugins/apollo-eng": "1.5.0",
+  "plugins/apollo-eng": "1.5.1",
   "plugins/apollo-eng-devops": "1.3.0",
   "plugins/apollo-eng-fabric-surfaces": "1.0.0",
   "plugins/apollo-eng-leadership": "1.5.0",

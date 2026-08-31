@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.0...apollo-eng-v1.5.1) (2026-08-31)
+
+
+### Bug Fixes
+
+* **apollo-eng:** scope digest PagerDuty queries ([#254](https://github.com/apolloio/claude-plugins/issues/254)) ([8fcc39b](https://github.com/apolloio/claude-plugins/commit/8fcc39bfc8b9960ab85c33b3f769c6b4461bcf94))
+
 ## [1.5.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.4.0...apollo-eng-v1.5.0) (2026-08-31)
 
 
