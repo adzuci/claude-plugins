@@ -49,27 +49,49 @@ Before collecting data, identify tools by capability rather than requiring one f
 
 - **Atlassian/Jira MCP (required):** a tool ending in `__searchJiraIssuesUsingJql`. Use read-only JQL searches only.
 - **Slack MCP or Claude.ai Slack connector (required):** channel/thread search and read, message permalinks, reaction data, user and user-group lookup, and `slack_send_message`. A dry run does not need send permission.
-- **PagerDuty MCP or Claude.ai PagerDuty connector (required):** service/schedule discovery, `list_oncalls`, and `list_incidents` with a server-side `service_ids` filter.
+- **PagerDuty MCP or Claude.ai PagerDuty connector (required):** service/schedule discovery, `list_oncalls`, and `list_incidents`. Prefer a server-side `service_ids` filter, but support the managed connector's bounded fallback below when that parameter is absent.
 - **GitHub repository read access (required outside a `leadgenie` checkout):** use the runtime's GitHub API/tool, a GitHub MCP file-reading tool, or authenticated `gh api` access to read `apolloio/leadgenie/apollo-dev-teams.yml` from the default branch.
 - **GitHub PR review access (optional):** authenticated `gh pr view` improves Slack-thread classification for PR review asks. Skip that signal if it is unavailable.
 
 Do not silently omit a required source. If a required connector is missing or unauthorized, report it and stop before posting. Do not repeatedly retry `401` or `403` responses.
 
+The managed runtime rejects package installation. Never run `pip install`, `npm install`, `apt`, `brew`, or another dependency installer. Do not use Python's third-party `yaml` module. Use the dependency-free extraction command below for the team configuration. Validate PagerDuty access with a narrow service lookup; do not call `get_user_data` or `/users/me`, which returns `400` for the runtime's valid account-level token.
+
 ## Resolve Team Configuration
 
 1. Resolve the canonical team configuration without assuming the current workspace is `leadgenie`:
-   - If the current workspace contains `apollo-dev-teams.yml`, read it locally.
+   - If the current workspace contains `apollo-dev-teams.yml`, set `team_config_path` to that file.
 
-   - Otherwise, use the runtime's GitHub API/tool to request `GET /repos/apolloio/leadgenie/contents/apollo-dev-teams.yml`. Parse a raw response as YAML; if the API returns JSON, base64-decode its `content` field first.
-
-   - If no suitable GitHub API tool is available, run this read-only command and parse its YAML output in memory:
+   - Otherwise, use authenticated `gh api` to write the current raw file to per-run scratch space, then set `team_config_path` to that file:
 
      ```bash
      gh api repos/apolloio/leadgenie/contents/apollo-dev-teams.yml \
-       -H 'Accept: application/vnd.github.raw+json'
+       -H 'Accept: application/vnd.github.raw+json' \
+       > /tmp/apollo-dev-teams.yml
+     team_config_path=/tmp/apollo-dev-teams.yml
      ```
 
-   - Never cache or copy the file into this plugin; each run should use the current canonical configuration. If local and remote reads both fail, report that GitHub access to `apolloio/leadgenie` is required and stop before posting.
+     If `gh api` fails, report that GitHub access to `apolloio/leadgenie` is required and stop before posting. Do not install or import a YAML parser as a fallback.
+
+   - Extract only the exact team block from `team_config_path` with tools already present in the managed runtime:
+
+     ```bash
+     awk -v target="$team_key" '
+       /^  - name: / {
+         name = $0
+         sub(/^  - name: /, "", name)
+         gsub(/^[[:space:]\047\042]+|[[:space:]\047\042]+$/, "", name)
+         if (printing && name != target) exit
+         if (name == target) { printing = 1; matched = 1 }
+       }
+       printing { print }
+       END { if (!matched) exit 2 }
+     ' "$team_config_path"
+     ```
+
+     Set `team_key` from the required `<team-key>` argument without interpolating it into the awk program. Treat exit code `2` as an exact-match failure and stop; do not retry with a partial match.
+
+   - Never cache or copy the file into this plugin; `/tmp/apollo-dev-teams.yml` is per-run scratch data. Each run should use the current canonical configuration. If local and remote reads both fail, report that GitHub access to `apolloio/leadgenie` is required and stop before posting.
 1. Select the exact `teams[].name == <team-key>` entry. Never guess between partial matches.
 1. Build the roster from `members[]`, using `name`, `email`, and normalized `github` handles.
 1. Resolve defaults, with explicit flags taking precedence:
@@ -133,7 +155,9 @@ Split results into `Past due` and `Due within <due-days> days` under one section
 
 ### PagerDuty
 
-Query each resolved service ID independently with a bounded, server-side-filtered request equivalent to:
+Inspect the available `list_incidents` input schema before calling it. Do not probe the schema by making an unscoped request.
+
+When the tool exposes both `service_ids` and `limit`, query each resolved service ID independently with a bounded, server-side-filtered request equivalent to:
 
 ```json
 {
@@ -143,11 +167,28 @@ Query each resolved service ID independently with a bounded, server-side-filtere
 }
 ```
 
-Do not supply `since` or `until`. `triggered` is the current unacknowledged state; exclude `acknowledged` and `resolved` incidents. Follow pagination only for that same service while the response says more records exist, retaining a page size of 25.
+For service-filtered requests, do not supply `since` or `until`. `triggered` is the current unacknowledged state; exclude `acknowledged` and `resolved` incidents. Follow pagination only for that same service while the response says more records exist, retaining a page size of 25.
 
-Never call `list_incidents` without `service_ids`, never query every PagerDuty incident and filter it locally, and never increase the limit to compensate for missing service matches. After every response, verify that each incident's `service.id` equals the requested ID. If the connector rejects the service filter, ignores it, or returns another service, report that PagerDuty cannot be scoped safely and stop before posting.
+After every service-filtered response, verify that each incident's `service.id` equals the requested ID. If the connector accepts `service_ids` but ignores it or returns another service, treat it as the limited connector fallback below.
 
-Render high-priority service incidents first. Link every incident and include incident number, title, creation time, and assignee or `unassigned`. Omit empty PagerDuty sections.
+The managed Claude.ai PagerDuty connector currently omits `service_ids` but exposes both `limit` and `request_scope` values `all`, `assigned`, or `teams`. The `teams` scope means all PagerDuty teams accessible to the connector; it does not mean the selected Apollo team and does not filter to the resolved service IDs. In that environment, make exactly one bounded request:
+
+```json
+{
+  "request_scope": "teams",
+  "statuses": ["triggered"],
+  "since": "<now minus 24 hours, RFC 3339 UTC>",
+  "limit": 25
+}
+```
+
+Calculate `since` from the current runtime clock. Never increase this limit, widen the 24-hour window, retry with `request_scope: "all"`, or paginate this response. Verify that the response contains no more than 25 incidents. Retain only incidents whose `service.id` exactly matches a resolved service ID. If the response contains 25 incidents, treat the window as potentially truncated. Never interpret zero retained matches as an all-time clear PagerDuty queue because older triggered incidents are outside this fallback window.
+
+If `list_incidents` lacks `limit`, lacks `request_scope`, or returns more than 25 incidents despite the cap, do not make or retry another incident request and discard an oversized response. Continue with this note: `PagerDuty coverage unavailable — the connector cannot guarantee a bounded incident query.`
+
+After a valid bounded fallback, continue the digest. Render retained matches under a `Recent PagerDuty incidents (last 24 hours)` heading, then add: `PagerDuty coverage limited to the last 24 hours — the connector checked one page (25 maximum) across its accessible PagerDuty teams and filtered matching services locally.` If the response hit the limit, append `The connector window may be truncated.` When no matches are retained, omit incident bullets and render only the coverage note. This is an explicit degraded result, not a missing required source and not a reason to stop Jira or Slack collection.
+
+For complete service-filtered results, render high-priority service incidents first. Link every incident and include incident number, title, creation time, and assignee or `unassigned`. Omit empty complete PagerDuty sections.
 
 ### Slack
 
@@ -180,6 +221,8 @@ Use this shape, omitting conditional sections when empty:
 
 <other PagerDuty section>
 
+<optional incomplete PagerDuty coverage note>
+
 <pending XFN threads section>
 
 <optional unresolved-DRI note>
@@ -195,4 +238,4 @@ Unless `--dry-run` is present, send directly to the resolved delivery channel wi
 - Post exactly one new Slack message; do not reply, edit, or react elsewhere.
 - Never guess unresolved channel, user-group, schedule, service, or team identifiers.
 - Do not apply backend/frontend exclusions globally. Use only evidence that the request belongs to another team.
-- Treat PagerDuty as all-time current state; apply the lookback only to Slack.
+- Treat service-filtered PagerDuty results as all-time current state. Treat the connector fallback as incomplete current-state coverage, state that limitation in the digest, and never infer that an absent incident means the queue is clear. Apply the lookback only to Slack.
