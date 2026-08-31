@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.1...apollo-eng-v1.5.2) (2026-08-31)
+
+
+### Bug Fixes
+
+* **apollo-eng:** avoid digest runtime installs ([#256](https://github.com/apolloio/claude-plugins/issues/256)) ([2fb1605](https://github.com/apolloio/claude-plugins/commit/2fb160573addcc4bc2e28d20457f8734c0d636d3))
+
 ## [1.5.1](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.0...apollo-eng-v1.5.1) (2026-08-31)
 
 
