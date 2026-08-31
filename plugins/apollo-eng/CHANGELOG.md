@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.5.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.4.0...apollo-eng-v1.5.0) (2026-08-31)
+
+
+### Features
+
+* add customer-problem-loop skill (loopbot) ([#195](https://github.com/apolloio/claude-plugins/issues/195)) ([0205e95](https://github.com/apolloio/claude-plugins/commit/0205e95c505f8701e2209a8370d09842d5274ba5))
+* add team-agnostic on-call digest skill ([#241](https://github.com/apolloio/claude-plugins/issues/241)) ([668862a](https://github.com/apolloio/claude-plugins/commit/668862a26dc823a138ca426e89ac3622a6c8959a))
+* **apollo-eng:** add resolve-review-comments skill ([#242](https://github.com/apolloio/claude-plugins/issues/242)) ([04572f0](https://github.com/apolloio/claude-plugins/commit/04572f063845b3887b60f083eb422fcba9c27c92))
+* **apollo-eng:** expand the on-call pending digest ([#248](https://github.com/apolloio/claude-plugins/issues/248)) ([3599e61](https://github.com/apolloio/claude-plugins/commit/3599e61cd85b1ac3fb69f8ccadd43670b335336e))
+* **apollo-eng:** upgrade customer problem loop ([#245](https://github.com/apolloio/claude-plugins/issues/245)) ([d3a3170](https://github.com/apolloio/claude-plugins/commit/d3a3170c5a6a220ccf82221bbc5fa531f2ecb9d1))
+
 ## [1.4.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.3.0...apollo-eng-v1.4.0) (2026-08-20)
 
 

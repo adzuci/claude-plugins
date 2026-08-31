@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.2.0...apollo-eng-devops-v1.3.0) (2026-08-31)
+
+
+### Features
+
+* add glean-cli bridge to devops skill ([#230](https://github.com/apolloio/claude-plugins/issues/230)) ([968805e](https://github.com/apolloio/claude-plugins/commit/968805e6ad9cbe148403a65cb130b226de6bca10))
+* **apollo-eng-devops:** add k8s-safe-exec — advisory-by-default safety gate for cluster one-offs ([#234](https://github.com/apolloio/claude-plugins/issues/234)) ([f31a412](https://github.com/apolloio/claude-plugins/commit/f31a412cb0734b77250e65f4d21462fb3fccb39c))
+
+
+### Bug Fixes
+
+* **oncall-handoff:** resolve daily shift to most recently completed one ([#237](https://github.com/apolloio/claude-plugins/issues/237)) ([e014df3](https://github.com/apolloio/claude-plugins/commit/e014df3c0494f0818959debcf29b120aeccec6a8))
+
 ## [1.2.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.1.0...apollo-eng-devops-v1.2.0) (2026-08-20)
 
 
