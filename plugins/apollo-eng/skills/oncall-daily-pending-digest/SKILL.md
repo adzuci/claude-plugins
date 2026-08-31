@@ -49,7 +49,7 @@ Before collecting data, identify tools by capability rather than requiring one f
 
 - **Atlassian/Jira MCP (required):** a tool ending in `__searchJiraIssuesUsingJql`. Use read-only JQL searches only.
 - **Slack MCP or Claude.ai Slack connector (required):** channel/thread search and read, message permalinks, reaction data, user and user-group lookup, and `slack_send_message`. A dry run does not need send permission.
-- **PagerDuty MCP or Claude.ai PagerDuty connector (required):** service/schedule discovery, `list_oncalls`, and `list_incidents`.
+- **PagerDuty MCP or Claude.ai PagerDuty connector (required):** service/schedule discovery, `list_oncalls`, and `list_incidents` with a server-side `service_ids` filter.
 - **GitHub repository read access (required outside a `leadgenie` checkout):** use the runtime's GitHub API/tool, a GitHub MCP file-reading tool, or authenticated `gh api` access to read `apolloio/leadgenie/apollo-dev-teams.yml` from the default branch.
 - **GitHub PR review access (optional):** authenticated `gh pr view` improves Slack-thread classification for PR review asks. Skip that signal if it is unavailable.
 
@@ -133,7 +133,19 @@ Split results into `Past due` and `Due within <due-days> days` under one section
 
 ### PagerDuty
 
-List incidents for all resolved service IDs with `status: ["triggered"]` and no `since` or `until`. `triggered` is the current unacknowledged state; exclude `acknowledged` and `resolved` incidents.
+Query each resolved service ID independently with a bounded, server-side-filtered request equivalent to:
+
+```json
+{
+  "service_ids": ["<resolved-service-id>"],
+  "statuses": ["triggered"],
+  "limit": 25
+}
+```
+
+Do not supply `since` or `until`. `triggered` is the current unacknowledged state; exclude `acknowledged` and `resolved` incidents. Follow pagination only for that same service while the response says more records exist, retaining a page size of 25.
+
+Never call `list_incidents` without `service_ids`, never query every PagerDuty incident and filter it locally, and never increase the limit to compensate for missing service matches. After every response, verify that each incident's `service.id` equals the requested ID. If the connector rejects the service filter, ignores it, or returns another service, report that PagerDuty cannot be scoped safely and stop before posting.
 
 Render high-priority service incidents first. Link every incident and include incident number, title, creation time, and assignee or `unassigned`. Omit empty PagerDuty sections.
 
