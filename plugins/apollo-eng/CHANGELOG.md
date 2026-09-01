@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.3](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.2...apollo-eng-v1.5.3) (2026-09-01)
+
+
+### Bug Fixes
+
+* **apollo-eng:** keep digest running without PagerDuty ([#258](https://github.com/apolloio/claude-plugins/issues/258)) ([6eec277](https://github.com/apolloio/claude-plugins/commit/6eec2779baaa584fdf786c8e8e121e5ea3f908ad))
+
 ## [1.5.2](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.1...apollo-eng-v1.5.2) (2026-08-31)
 
 
