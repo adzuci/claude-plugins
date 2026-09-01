@@ -49,11 +49,11 @@ Before collecting data, identify tools by capability rather than requiring one f
 
 - **Atlassian/Jira MCP (required):** a tool ending in `__searchJiraIssuesUsingJql`. Use read-only JQL searches only.
 - **Slack MCP or Claude.ai Slack connector (required):** channel/thread search and read, message permalinks, reaction data, user and user-group lookup, and `slack_send_message`. A dry run does not need send permission.
-- **PagerDuty MCP or Claude.ai PagerDuty connector (required):** service/schedule discovery, `list_oncalls`, and `list_incidents`. Prefer a server-side `service_ids` filter, but support the managed connector's bounded fallback below when that parameter is absent.
+- **PagerDuty MCP or Claude.ai PagerDuty connector (optional enrichment):** service/schedule discovery, `list_oncalls`, and `list_incidents`. Prefer a server-side `service_ids` filter, but support the managed connector's bounded fallback below when that parameter is absent. PagerDuty unavailability must not block the Jira/Slack digest.
 - **GitHub repository read access (required outside a `leadgenie` checkout):** use the runtime's GitHub API/tool, a GitHub MCP file-reading tool, or authenticated `gh api` access to read `apolloio/leadgenie/apollo-dev-teams.yml` from the default branch.
 - **GitHub PR review access (optional):** authenticated `gh pr view` improves Slack-thread classification for PR review asks. Skip that signal if it is unavailable.
 
-Do not silently omit a required source. If a required connector is missing or unauthorized, report it and stop before posting. Do not repeatedly retry `401` or `403` responses.
+Do not silently omit a required source. If Jira, Slack, or GitHub configuration access is missing or unauthorized, report it and stop before posting. Treat any PagerDuty absence, authorization failure, unsupported filter, timeout, or tool error as a non-fatal coverage gap: record one concise note, make no retry, and continue the digest. Do not repeatedly retry `400`, `401`, or `403` responses.
 
 The managed runtime rejects package installation. Never run `pip install`, `npm install`, `apt`, `brew`, or another dependency installer. Do not use Python's third-party `yaml` module. Use the dependency-free extraction command below for the team configuration. Validate PagerDuty access with a narrow service lookup; do not call `get_user_data` or `/users/me`, which returns `400` for the runtime's valid account-level token.
 
@@ -99,15 +99,15 @@ The managed runtime rejects package installation. Never run `pip install`, `npm 
    - Delivery channel: `pr_review_channel_id`, then `team_slack_channel_id`.
    - On-call user group: prefer `--on-call-usergroup-id`, with `--team-usergroup-id` accepted as a legacy alias. If both are present, require them to match. Otherwise, when `on_call_usergroup_name` is configured, resolve it to a Slack user-group ID by exact handle or name match. If the field is absent or the lookup has no exact match or is ambiguous, omit the group mention and report why. Never use `team_slack_usergroup_id`; that identifies the general engineering team, not its on-call rotation.
    - Jira Impacted Team: `jira_impacted_team`.
-   - PagerDuty services: `pagerduty.service_name`, `pagerduty.pagerduty_high_priority.service_name`, and `pagerduty.pagerduty_low_priority.service_name`, deduplicated and resolved to service IDs through PagerDuty. Ignore missing names.
-1. Resolve the primary PagerDuty schedule. Prefer `--pd-schedule-id`. Otherwise search schedules using the team name, description, PagerDuty service names, and `on_call_usergroup_name`; accept only one clearly matching primary schedule. If none or multiple remain, report the candidates and require an override. Never post after an ambiguous schedule match.
-1. Resolve the current on-call segment at `now`, then map the DRI to a Slack user by roster email or name. Fall back to plain text if Slack user resolution fails.
+   - PagerDuty services: `pagerduty.service_name`, `pagerduty.pagerduty_high_priority.service_name`, and `pagerduty.pagerduty_low_priority.service_name`, deduplicated and resolved to service IDs through PagerDuty when available. Ignore missing names. If resolution fails, record the short error and continue without PagerDuty incidents.
+1. Resolve the primary PagerDuty schedule when PagerDuty is available. Prefer `--pd-schedule-id`. Otherwise search schedules using the team name, description, PagerDuty service names, and `on_call_usergroup_name`; accept only one clearly matching primary schedule. If none or multiple remain, do not guess: record the unresolved reason and continue without a PagerDuty DRI.
+1. When a schedule is resolved, resolve the current on-call segment at `now`, then map the DRI to a Slack user by roster email or name. Fall back to plain text if Slack user resolution fails. If the PagerDuty call fails, record the short error and continue with the on-call user-group mention only.
 
 Print a compact resolution summary before data collection when running interactively. Include the team key, delivery/XFN channel IDs, on-call user-group ID or unresolved reason, Jira Impacted Team, PagerDuty schedule ID, and service IDs so the user can spot a bad match.
 
 ## Collect Outstanding Items
 
-Run independent read-only queries concurrently when the tool surface permits.
+Run independent read-only queries concurrently when the tool surface permits. Start Jira and Slack collection independently of PagerDuty so a PagerDuty error cannot prevent required-source collection.
 
 ### Jira
 
@@ -155,6 +155,8 @@ Split results into `Past due` and `Due within <due-days> days` under one section
 
 ### PagerDuty
 
+PagerDuty is best-effort enrichment. If service, schedule, on-call, or incident collection has already failed, do not retry it. Continue Jira and Slack collection and render one concise note: `PagerDuty coverage unavailable — <short reason>.`
+
 Inspect the available `list_incidents` input schema before calling it. Do not probe the schema by making an unscoped request.
 
 When the tool exposes both `service_ids` and `limit`, query each resolved service ID independently with a bounded, server-side-filtered request equivalent to:
@@ -186,6 +188,8 @@ Calculate `since` from the current runtime clock. Never increase this limit, wid
 
 If `list_incidents` lacks `limit`, lacks `request_scope`, or returns more than 25 incidents despite the cap, do not make or retry another incident request and discard an oversized response. Continue with this note: `PagerDuty coverage unavailable — the connector cannot guarantee a bounded incident query.`
 
+If either a service-filtered or fallback `list_incidents` call returns any tool error—including the managed connector rejecting `request_scope: "teams"` for account-level authentication—make no second incident call. Convert the error to `PagerDuty coverage unavailable — the connector could not query team incidents.` and continue composing and posting the Jira/Slack digest. A PagerDuty tool error is never a reason to end the run.
+
 After a valid bounded fallback, continue the digest. Render retained matches under a `Recent PagerDuty incidents (last 24 hours)` heading, then add: `PagerDuty coverage limited to the last 24 hours — the connector checked one page (25 maximum) across its accessible PagerDuty teams and filtered matching services locally.` If the response hit the limit, append `The connector window may be truncated.` When no matches are retained, omit incident bullets and render only the coverage note. This is an explicit degraded result, not a missing required source and not a reason to stop Jira or Slack collection.
 
 For complete service-filtered results, render high-priority service incidents first. Link every incident and include incident number, title, creation time, and assignee or `unassigned`. Omit empty complete PagerDuty sections.
@@ -207,7 +211,7 @@ Only threads with none of those signals are pending. Link every pending thread a
 Use this shape, omitting conditional sections when empty:
 
 ```text
-:wave: *Daily on-call check-in* — <@DRI_SLACK_ID or DRI_NAME> (Primary, TEAM_DESCRIPTION) [ / <!subteam^ON_CALL_USERGROUP_ID>]
+:wave: *Daily on-call check-in* — <@DRI_SLACK_ID or DRI_NAME, or "DRI unavailable"> (Primary, TEAM_DESCRIPTION) [ / <!subteam^ON_CALL_USERGROUP_ID>]
 
 <high-priority PagerDuty section>
 
