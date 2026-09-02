@@ -113,24 +113,26 @@ Run independent read-only queries concurrently when the tool surface permits. St
 
 Search the `INCIDENT` project for the selected Impacted Team. Escape the configured value as a JQL string.
 
-New incidents from the last 24 hours:
+Actionable recent incidents:
 
 ```text
 project = INCIDENT
 AND "Impacted Team[Dropdown]" = "<jira-impacted-team>"
 AND created >= -24h
+AND statusCategory != Done
 ORDER BY created DESC
 ```
 
-For each result, determine the Pantheon incident-diagnosis Slack channel entirely from the `apollo-dev-teams.yml` data already loaded above, then find the announcement there:
+For each result, find the Pantheon announcement by its content. Treat `alerts_slack` values from the `apollo-dev-teams.yml` data already loaded above as search hints, not as an allowlist:
 
 1. Match the issue's exact Impacted Team value case-insensitively against both `teams[].name` and `teams[].jira_impacted_team`. If needed, retry while ignoring punctuation and hyphen-versus-space differences. Do not guess among unrelated matches.
-1. Use the shared non-empty `alerts_slack` when every match has the same value. Otherwise use `#agentic-engineering-incident-response-catch-all`. Strip an optional leading `#`, then resolve an exact channel-name match to a Slack channel ID; never treat a channel name as an ID.
-1. Search that channel's top-level messages from the last 48 hours for the exact issue key. The Pantheon announcement contains the linked issue key and ends with `Pantheon will post updates in this thread.` Accept only one clearly matching announcement and use its permalink as the thread link. Do not link a reply or a similarly numbered incident.
+1. Collect every distinct non-empty `alerts_slack` value from those matches. Strip an optional leading `#` and resolve exact channel-name matches when possible. Disagreement, missing values, or failed channel resolution must not force a catch-all channel or stop discovery.
+1. Search Slack's accessible workspace messages from the last 48 hours for the exact issue key. Configured alert channels may be searched first as an optimization, but if they do not produce one valid announcement, continue across all accessible channels, including XFN channels. Do not require the result's channel to appear in `apollo-dev-teams.yml`.
+1. Accept a top-level message only when it links the exact issue key or Jira issue URL and ends with `Pantheon will post updates in this thread.` Deduplicate repeated search results for the same message. When exactly one valid announcement remains, use its permalink as the thread link. Do not link a reply, an arbitrary incident mention, or a similarly numbered incident; if multiple distinct valid announcements remain, report the thread as unavailable rather than choosing one.
 
-Always render a `:jira-ticketed: *New Jira incidents in the last 24 hours (N):*` section. List every result newest first as `<JIRA_URL|ISSUE_KEY — SHORT_SUMMARY> · <SLACK_PERMALINK|Pantheon thread>`, truncating the one-line summary to 100 characters. If the Pantheon channel or announcement cannot be resolved unambiguously, still link the Jira issue and write `Pantheon thread unavailable`; do not guess or omit the incident. If no incidents exist, render `None.`.
+Keep a recent incident only when exactly one valid Pantheon announcement exists. That announcement and the Jira issue's non-Done status constitute an open Pantheon run that requires action. Do not include completed incidents or recent incidents whose Pantheon announcement is missing or ambiguous.
 
-Untriaged snapshot:
+Untriaged incidents:
 
 ```text
 project = INCIDENT
@@ -139,7 +141,7 @@ AND status = Reported
 ORDER BY created ASC
 ```
 
-Always render this section. List the oldest 10 with linked issue key, summary, and priority. If more exist, add an overflow count and a link to the encoded JQL search. If none exist, render `None — backlog clear. :white_check_mark:`.
+Combine these results with the actionable recent incidents into one deduplicated section. The 24-hour limit applies only to the open-Pantheon-run criterion; count every untriaged result regardless of age or Pantheon availability. Render `:jira-ticketed: *Jira requiring action (N):*`, listing up to the 3 oldest untriaged incidents first, followed by every remaining actionable recent incident newest first. If additional untriaged incidents are hidden, add an overflow count and a link to the encoded untriaged JQL search. Link each displayed issue, truncate its one-line summary to 100 characters, include priority, and label the reason as `untriaged` or link it as `<SLACK_PERMALINK|open Pantheon run>`. When an issue meets both criteria, list it once as `untriaged` and include the Pantheon link when available. If the union is empty, render `None — backlog clear. :white_check_mark:`.
 
 Past-due and due-soon snapshot:
 
@@ -151,7 +153,7 @@ AND duedate <= <due-days>d
 ORDER BY duedate ASC
 ```
 
-Split results into `Past due` and `Due within <due-days> days` under one section. Link every issue and include summary, due date, assignee or `unassigned`, and priority. Omit this section when empty.
+Split results into `Past due` and `Due within <due-days> days` under one section. Show at most the first three issues in each bucket, ordered by due date ascending. Preserve each bucket's full count in its heading; when more than three exist, add `+ N more` with a link to the corresponding encoded JQL search. Link each displayed issue and include summary, due date, assignee or `unassigned`, and priority. Omit this section when empty.
 
 ### PagerDuty
 
@@ -213,21 +215,18 @@ Use this shape, omitting conditional sections when empty:
 ```text
 :wave: *Daily on-call check-in* — <@DRI_SLACK_ID or DRI_NAME, or "DRI unavailable"> (Primary, TEAM_DESCRIPTION) [ / <!subteam^ON_CALL_USERGROUP_ID>]
 
+:jira-ticketed: *Jira requiring action (N):*
+<deduplicated untriaged and actionable recent Jira bullets or clear line>
+
+<pending XFN threads section>
+
+<past-due / due-soon Jira section, at most three tickets per bucket>
+
 <high-priority PagerDuty section>
-
-:jira-ticketed: *New Jira incidents in the last 24 hours (N):*
-<linked Jira issue and Pantheon thread bullets or clear line>
-
-:jira-ticketed: *Untriaged Jira (N):*
-<bullets or clear line>
-
-<past-due / due-soon Jira section>
 
 <other PagerDuty section>
 
 <optional incomplete PagerDuty coverage note>
-
-<pending XFN threads section>
 
 <optional unresolved-DRI note>
 ```
@@ -240,6 +239,6 @@ Unless `--dry-run` is present, send directly to the resolved delivery channel wi
 
 - Perform only read operations in Jira and PagerDuty.
 - Post exactly one new Slack message; do not reply, edit, or react elsewhere.
-- Never guess unresolved channel, user-group, schedule, service, or team identifiers.
+- Never guess unresolved destination or XFN channel, user-group, schedule, service, or team identifiers. A Pantheon announcement channel may be discovered from an exact content match as described above.
 - Do not apply backend/frontend exclusions globally. Use only evidence that the request belongs to another team.
 - Treat service-filtered PagerDuty results as all-time current state. Treat the connector fallback as incomplete current-state coverage, state that limitation in the digest, and never infer that an absent incident means the queue is clear. Apply the lookback only to Slack.
