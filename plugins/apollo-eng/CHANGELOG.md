@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.4](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.3...apollo-eng-v1.5.4) (2026-09-02)
+
+
+### Bug Fixes
+
+* **apollo-eng:** focus daily on-call digest on actionable Jira work ([#262](https://github.com/apolloio/claude-plugins/issues/262)) ([59e36ac](https://github.com/apolloio/claude-plugins/commit/59e36ac8cb517fdb06b8734d95cbde1df97b060e))
+
 ## [1.5.3](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.2...apollo-eng-v1.5.3) (2026-09-01)
 
 
