@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.5](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.4...apollo-eng-v1.5.5) (2026-09-03)
+
+
+### Bug Fixes
+
+* keep on-call digest output concise ([#264](https://github.com/apolloio/claude-plugins/issues/264)) ([6146d7a](https://github.com/apolloio/claude-plugins/commit/6146d7aec3b2e922eb958a54bcd302376f85b223))
+
 ## [1.5.4](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.3...apollo-eng-v1.5.4) (2026-09-02)
 
 
