@@ -269,6 +269,18 @@
       "category": "Engineering"
     },
     {
+      "name": "apollo-eng-experimentation",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-eng-experimentation"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Engineering"
+    },
+    {
       "name": "ai-overage-admins",
       "source": {
         "source": "local",

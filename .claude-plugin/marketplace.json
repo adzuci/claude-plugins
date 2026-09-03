@@ -160,6 +160,13 @@
       "tags": ["claude-code", "engineering", "agentic-engineering"]
     },
     {
+      "name": "apollo-eng-experimentation",
+      "source": "./plugins/apollo-eng-experimentation",
+      "description": "Amplitude experiment lifecycle skills for the leadgenie codebase: create, measure, and clean up A/B experiments",
+      "category": "engineering",
+      "tags": ["claude-code", "engineering", "experimentation", "amplitude"]
+    },
+    {
       "name": "ai-overage-admins",
       "source": "./plugins/ai-overage-admins",
       "description": "Skills for admins managing engineers' Claude and Codex monthly spend limits",

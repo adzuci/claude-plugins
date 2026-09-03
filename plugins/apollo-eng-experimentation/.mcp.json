@@ -1,0 +1,9 @@
+{
+  "_notes": "Amplitude is enterprise-provisioned for most Claude users via Apollo's Claude deployment; this entry exists so Codex users get the same tools. If you already have the Amplitude connector, disable this server to avoid duplicate tools.",
+  "mcpServers": {
+    "amplitude": {
+      "type": "http",
+      "url": "https://mcp.amplitude.com/mcp"
+    }
+  }
+}

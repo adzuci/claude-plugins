@@ -1,0 +1,6 @@
+{
+  "name": "apollo-eng-experimentation",
+  "displayName": "Apollo Engineering Experimentation",
+  "description": "Amplitude experiment lifecycle skills for the leadgenie codebase: create, measure, and clean up A/B experiments",
+  "version": "1.0.0"
+}

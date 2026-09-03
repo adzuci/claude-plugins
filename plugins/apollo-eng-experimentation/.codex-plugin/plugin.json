@@ -1,0 +1,16 @@
+{
+  "name": "apollo-eng-experimentation",
+  "version": "1.0.0",
+  "description": "Amplitude experiment lifecycle skills for the leadgenie codebase: create, measure, and clean up A/B experiments",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Apollo Engineering Experimentation",
+    "shortDescription": "Create, measure, and clean up Amplitude A/B experiments in leadgenie",
+    "developerName": "Apollo",
+    "category": "Engineering",
+    "brandColor": "#1F2937"
+  }
+}

@@ -83,6 +83,22 @@
         }
       ]
     },
+    "plugins/apollo-eng-experimentation": {
+      "release-type": "simple",
+      "component": "apollo-eng-experimentation",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": ".codex-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
     "plugins/apollo-eng-fabric-surfaces": {
       "release-type": "simple",
       "component": "apollo-eng-fabric-surfaces",
