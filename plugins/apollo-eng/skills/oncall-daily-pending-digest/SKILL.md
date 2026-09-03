@@ -141,7 +141,7 @@ AND status = Reported
 ORDER BY created ASC
 ```
 
-Combine these results with the actionable recent incidents into one deduplicated section. The 24-hour limit applies only to the open-Pantheon-run criterion; count every untriaged result regardless of age or Pantheon availability. Render `:jira-ticketed: *Jira requiring action (N):*`, listing up to the 3 oldest untriaged incidents first, followed by every remaining actionable recent incident newest first. If additional untriaged incidents are hidden, add an overflow count and a link to the encoded untriaged JQL search. Link each displayed issue, truncate its one-line summary to 100 characters, include priority, and label the reason as `untriaged` or link it as `<SLACK_PERMALINK|open Pantheon run>`. When an issue meets both criteria, list it once as `untriaged` and include the Pantheon link when available. If the union is empty, render `None — backlog clear. :white_check_mark:`.
+Combine these results with the actionable recent incidents into one deduplicated section. The 24-hour limit applies only to the open-Pantheon-run criterion; count every untriaged result regardless of age or Pantheon availability. Render `:jira-ticketed: *Jira requiring action (N):*`, preserving the full union count in the heading but showing at most three incidents total. List the oldest untriaged incidents first, then fill any remaining display slots with actionable recent incidents newest first. Do not add an overflow row or `view all` link. Link each displayed issue, truncate its one-line summary to 100 characters, include priority, and label the reason as `untriaged` or link it as `<SLACK_PERMALINK|open Pantheon run>`. When an issue meets both criteria, list it once as `untriaged` and include the Pantheon link when available. If the union is empty, render `None — backlog clear. :white_check_mark:`.
 
 Past-due and due-soon snapshot:
 
@@ -153,7 +153,7 @@ AND duedate <= <due-days>d
 ORDER BY duedate ASC
 ```
 
-Split results into `Past due` and `Due within <due-days> days` under one section. Show at most the first three issues in each bucket, ordered by due date ascending. Preserve each bucket's full count in its heading; when more than three exist, add `+ N more` with a link to the corresponding encoded JQL search. Link each displayed issue and include summary, due date, assignee or `unassigned`, and priority. Omit this section when empty.
+Split results into `Past due` and `Due within <due-days> days` under one section. Show at most the first three issues in each bucket, ordered by due date ascending. Preserve each bucket's full count in its heading, but do not add overflow rows or `view all` links. Link each displayed issue and include summary, due date, assignee or `unassigned`, and priority. Omit this section when empty.
 
 ### PagerDuty
 
@@ -192,9 +192,9 @@ If `list_incidents` lacks `limit`, lacks `request_scope`, or returns more than 2
 
 If either a service-filtered or fallback `list_incidents` call returns any tool error—including the managed connector rejecting `request_scope: "teams"` for account-level authentication—make no second incident call. Convert the error to `PagerDuty coverage unavailable — the connector could not query team incidents.` and continue composing and posting the Jira/Slack digest. A PagerDuty tool error is never a reason to end the run.
 
-After a valid bounded fallback, continue the digest. Render retained matches under a `Recent PagerDuty incidents (last 24 hours)` heading, then add: `PagerDuty coverage limited to the last 24 hours — the connector checked one page (25 maximum) across its accessible PagerDuty teams and filtered matching services locally.` If the response hit the limit, append `The connector window may be truncated.` When no matches are retained, omit incident bullets and render only the coverage note. This is an explicit degraded result, not a missing required source and not a reason to stop Jira or Slack collection.
+After a valid bounded fallback, continue the digest. Render at most three retained matches under a `Recent PagerDuty incidents (N, last 24 hours)` heading, preserving the full retained count in the heading, then add: `PagerDuty coverage limited to the last 24 hours — the connector checked one page (25 maximum) across its accessible PagerDuty teams and filtered matching services locally.` Do not add an overflow row or `view all` link. If the response hit the limit, append `The connector window may be truncated.` When no matches are retained, omit incident bullets and render only the coverage note. This is an explicit degraded result, not a missing required source and not a reason to stop Jira or Slack collection.
 
-For complete service-filtered results, render high-priority service incidents first. Link every incident and include incident number, title, creation time, and assignee or `unassigned`. Omit empty complete PagerDuty sections.
+For complete service-filtered results, render high-priority service incidents first. Preserve each PagerDuty section's full incident count in its heading, but show at most three incidents per section and do not add overflow rows or `view all` links. Link each displayed incident and include incident number, title, creation time, and assignee or `unassigned`. Omit empty complete PagerDuty sections.
 
 ### Slack
 
@@ -206,28 +206,52 @@ Treat a request as handled when any selected-team roster member:
 - adds a checkmark-style reaction to the parent or a reply (`white_check_mark`, `heavy_check_mark`, or a reaction name containing `check` or `approved`); or
 - approves a linked `github.com/apolloio/<repo>/pull/<number>` PR, when authenticated `gh` access is available.
 
-Only threads with none of those signals are pending. Link every pending thread and include a short summary, author, and date. Omit this section when empty. Favor precision over recall because false-positive daily pings train teams to ignore the digest.
+Only threads with none of those signals are pending. Preserve the full pending count in the heading, but show at most three threads and do not add an overflow row or `view all` link. Link each displayed thread and include a short summary, author, and date. Omit this section when empty. Favor precision over recall because false-positive daily pings train teams to ignore the digest.
 
 ## Compose And Send
 
-Use this shape, omitting conditional sections when empty:
+Formatting is part of the output contract:
+
+- Put each heading on its own line and exactly one blank line between rendered sections.
+- Put every Jira incident, pending XFN thread, and PagerDuty incident on its own physical line beginning with `• `. Never join multiple items on one line.
+- Show at most three items in every list while preserving the full count in its heading.
+- Do not put blank lines between items in the same list.
+- Under `Jira due dates`, put each bucket heading on its own line, followed immediately by that bucket's incident lines. Put one blank line between the `Past due` and `Due within <due-days> days` buckets.
+- Never render a `+ N more` overflow row or `view all` link. The full count in the section or bucket heading is sufficient.
+- Put an empty-state or coverage note on its own line below its heading.
+
+Use this literal Slack mrkdwn shape, omitting conditional sections when empty:
 
 ```text
 :wave: *Daily on-call check-in* — <@DRI_SLACK_ID or DRI_NAME, or "DRI unavailable"> (Primary, TEAM_DESCRIPTION) [ / <!subteam^ON_CALL_USERGROUP_ID>]
 
 :jira-ticketed: *Jira requiring action (N):*
-<deduplicated untriaged and actionable recent Jira bullets or clear line>
+• <one deduplicated untriaged or actionable recent Jira incident>
+• <one deduplicated untriaged or actionable recent Jira incident>
+<one clear line instead when empty>
 
-<pending XFN threads section>
+:speech_balloon: *Pending XFN threads (N):*
+• <one pending XFN thread>
+• <one pending XFN thread>
 
-<past-due / due-soon Jira section, at most three tickets per bucket>
+:calendar: *Jira due dates*
+*Past due (N):*
+• <one past-due Jira incident>
+• <one past-due Jira incident>
 
-<high-priority PagerDuty section>
+*Due within <due-days> days (N):*
+• <one due-soon Jira incident>
+• <one due-soon Jira incident>
 
-<other PagerDuty section>
+<high-priority PagerDuty heading>
+• <one high-priority PagerDuty incident>
+• <one high-priority PagerDuty incident>
+
+<other PagerDuty heading>
+• <one other PagerDuty incident>
+• <one other PagerDuty incident>
 
 <optional incomplete PagerDuty coverage note>
-
 <optional unresolved-DRI note>
 ```
 
