@@ -10,6 +10,7 @@ allowed-tools:
   - AskUserQuestion
   - mcp__grafana__query_prometheus
   - mcp__grafana__get_dashboard_panel_queries
+  - mcp__grafana__list_prometheus_label_values
 ---
 
 # Watch Deploy And Page
@@ -38,7 +39,7 @@ rolls anything back.
 | Argument | Default | Meaning |
 | --- | --- | --- |
 | `<pr-number>` / `<sha>` / `--branch` | required | What to watch: a leadgenie PR number, an explicit commit SHA, or the current branch's PR |
-| `--transaction <name>` | required | New Relic / spanmetrics transaction to judge the outcome by |
+| `--transaction <name>` | required | Transaction to judge the outcome by. Resolved against spanmetrics in Step 3; a New Relic-style `Controller/...` name is accepted and normalized |
 | `--deployment <name>` | `rails-api` | Which prod deployment carries the change |
 | `--page <recipient>` | the invoking user | Who a confirmed regression pages |
 | `--no-page` | off | Report only; never page, even on `REGRESSION` |
@@ -110,10 +111,11 @@ checks the metric is not this skill.
 
 **Deployment** — any leadgenie workload whose container image is tagged with the commit SHA.
 `rails-api` is the default and covers most backend/Ruby changes; `app` carries frontend bundles,
-and the other Rails surfaces have their own deployments. Do not trust a name from memory — the
-`Production deployment` workflow deploys what is under `kubernetes/production/` in the leadgenie
-checkout, so read the values filenames there (or `kubectl get deploy -n leadgenie`) and confirm
-the exact name in the preflight read. State which one you picked.
+`mcp-api-rails` and `events-api-rails` carry their own API surfaces, and the sidekiq workloads are
+separate again. Pick the one that actually serves the transaction being judged. Do not trust a name
+from memory — the `Production deployment` workflow deploys what is under `kubernetes/production/`
+in the leadgenie checkout, so read the values filenames there (or `kubectl get deploy -n leadgenie`)
+and confirm the exact name in the preflight read. State which one you picked.
 
 If the change does not land in a SHA-tagged leadgenie deployment at all — ingress, proxy, or
 infra config deployed from another repo — this skill cannot verify it. Say so and stop rather
@@ -205,15 +207,52 @@ Only once Step 2 says live. Use the deploy's completion time as `T`.
 Grafana is the primary source. Datasource UID `eeloo3k56g9vkd` (self-hosted Mimir, spanmetrics),
 dashboard `plat-1365-apdex`. Fetch the panel queries once with
 `mcp__grafana__get_dashboard_panel_queries` and **reuse the dashboard's own expressions**,
-substituting only environment, transaction, and window — its Apdex definition (satisfied ≤300ms,
-tolerating ≤1000ms, excluding HTTP 429/500) is the definition Apollo's Apdex alerting already
-uses, and an invented metric name produces a number nobody can reconcile. Then two
-`mcp__grafana__query_prometheus` calls, one per window.
+substituting only environment, transaction, and window — its Apdex definition (satisfied ≤250ms,
+tolerating ≤1000ms, `span_kind="SPAN_KIND_SERVER"`, excluding HTTP 429/500) is the definition
+Apollo's Apdex alerting already uses, and an invented metric name produces a number nobody can
+reconcile. `environment` is `prod`.
 
-Budget: **four Grafana calls total.** If Grafana is unreachable, New Relic (Apdex or median
-response time for the same transaction) is an acceptable substitute if that MCP is authorized in
-the session. If neither is reachable, report "live, performance unverified" — that is a legitimate
-outcome. Never page on an unverified metric.
+**Resolve the transaction name against spanmetrics before querying.** New Relic and spanmetrics do
+not agree: New Relic writes `Controller/api/v1/mcp/server/handle`, spanmetrics stores the bare path
+`api/v1/mcp/server/handle`. Strip a leading `Controller/`, then confirm the label value actually
+exists — do not query a name you have not confirmed:
+
+```text
+mcp__grafana__list_prometheus_label_values  labelName: transaction  matches: transaction=~".*<fragment>.*"
+```
+
+**Use range queries, not instant queries at `now`.** Mimir ingestion lags real time by tens of
+minutes, so an instant query at `now` over a short rate window returns empty even for a busy
+transaction — which reads as "no data" when the real answer is "not ingested yet". Query one range
+spanning `T-2h` → `now` with a step of 30m and read the before and after halves off it.
+
+Budget: **about six Grafana calls** — one panel fetch, one name resolution, one Apdex range, one
+throughput range, and headroom for one round of diagnosis. If Grafana is unreachable, New Relic
+(Apdex or median response time for the same transaction) is an acceptable substitute if that MCP is
+authorized in the session. If neither is reachable, report "live, performance unverified" — that is
+a legitimate outcome. Never page on an unverified metric.
+
+### When The Transaction Has No Apdex
+
+An empty Grafana result is **never** by itself a regression, and it is not the same as Grafana being
+down. Before reporting, establish which of these it is — the diagnosis is three cheap checks against
+the raw `spanmetrics_duration_milliseconds_count` series with the dashboard's filters removed:
+
+1. Does the transaction label exist at all? If not, the name is wrong — re-resolve it.
+1. What `span_kind` does it carry? The dashboard counts only `SPAN_KIND_SERVER`. A transaction that
+   emits `SPAN_KIND_CLIENT` spans is **absent from Apollo's Apdex by construction**, however much
+   traffic it serves.
+1. Does the `le="250"` bucket exist for it? The Apdex numerator requires it. Some series carry only
+   coarser boundaries, and the whole expression evaluates to empty when the bucket is missing.
+
+Any of these means the transaction is **`UNMEASURABLE`**: report `live, no Apdex available for <transaction>` plus which of the three checks failed, and **never page**. Do not substitute a
+different transaction, do not fall back to an aggregate that happens to return a number, and do not
+report `NOISE` — a verdict computed over a series the dashboard never included is not a
+measurement. If the caller needs this endpoint covered, the fix is instrumentation, not a
+workaround here.
+
+Real example: `api/v1/mcp/server/handle` serves ~450 rps in prod yet has no dashboard Apdex — its
+spans are `SPAN_KIND_CLIENT` and it has no `le="250"` bucket.
 
 For a deeper Apdex triage after this skill returns a verdict, hand off to
 `/apollo-eng-devops:check-apdex`. Do not re-derive its triage here.
@@ -226,6 +265,7 @@ For a deeper Apdex triage after this skill returns a verdict, hand off to
 | Metric moves within those bounds, either direction | **NOISE** |
 | Metric improves beyond them | **IMPROVED** |
 | Throughput on the transaction changed by more than ~2x | **INCONCLUSIVE** |
+| Transaction has no dashboard Apdex (wrong name, `SPAN_KIND_CLIENT`, or missing `le="250"`) | **UNMEASURABLE** |
 
 The throughput row matters and is the easiest to skip: an Apdex number computed over a tenth of
 the traffic is measuring a different population, not a regression. Say `INCONCLUSIVE` rather than
@@ -238,7 +278,7 @@ caused, and the distinction changes who needs to look at it.
 ## Step 4 — Decide whether to page
 
 **Page only on `REGRESSION`.** Not on a failed deploy run (later runs routinely carry the change),
-not on `INCONCLUSIVE`, not on `NOISE`, not on a deploy that is merely slow. This is a wake-up, and
+not on `INCONCLUSIVE`, not on `UNMEASURABLE`, not on `NOISE`, not on a deploy that is merely slow. This is a wake-up, and
 the credibility of the whole watch depends on it never firing for something the recipient would
 rather have read over coffee. `--no-page` suppresses the send entirely; still report the verdict.
 
@@ -307,6 +347,8 @@ that, do not keep polling for a day.
 - Do not give up on the first failed run for the target commit.
 - Do not compare SHAs with `==` instead of `git merge-base --is-ancestor`.
 - Do not page on a failed deploy run, an inconclusive metric, or an unverified one.
+- Do not read an empty Grafana result as a verdict. It is a wrong transaction name, ingestion lag,
+  or a transaction the dashboard's Apdex never covered — diagnose which, then report `UNMEASURABLE`.
 - Do not judge a deploy on under 30 minutes of post-deploy data.
 - Do not run any non-read-only `kubectl` verb. Diagnosis only; remediation is a human decision.
 - Do not assume a checkout path or a paging recipient. Resolve both, or ask.
