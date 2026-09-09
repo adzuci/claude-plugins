@@ -131,10 +131,11 @@ helps them find and win more of their own market:
 Turn these findings into **concrete, usable output** (not theory): put the
 ICP/signal/target-list play into the "Where can we create value" section.
 Then use it directly inside the **AM → customer** sample outbound messages
-in the "How will we start the conversation" section (see Step 4, item 6) —
-those messages should give concrete examples of how Apollo would help the
-customer prospect *their own* market (e.g. "surface [their ICP persona] at
-[their target segment] the moment [signal] fires"), not literal snippets the
+in the "Sample Outbound Messages" section, below the Stakeholder Map (see
+Step 4, item 6) — those messages should give concrete examples of how Apollo
+would help the customer prospect *their own* market (e.g. "surface [their
+ICP persona] at [their target segment] the moment [signal] fires"), not
+literal snippets the
 customer's own reps would send to their own prospects. The message direction
 is always the Apollo AM writing to the customer; showing the customer Apollo
 working on *their* go-to-market (as an illustration inside an AM message) is
@@ -143,13 +144,56 @@ ready-to-send customer→prospect copy.
 
 ## Step 4 — Output document structure
 
-The canonical structure to produce is the six-section Notion page format in
+The canonical structure to produce is the Notion page format in
 `references/notion-output.md` ("Content template") — use that when delivering
 to the MM AM Account Plans database, which is the default output. The six
 questions below describe the underlying content model (what each section must
 establish); `references/notion-output.md` shows how those map onto the actual
-page sections (Current State, What's Happening in Their Business, Value
-Hypothesis, Stakeholder Map, Key Actions, 30–60 Day Milestone Plan).
+page sections, in this order: Account Goal & Strategy, Executive Summary,
+Action Plan, Current State, What's Happening in Their Business, Value
+Hypothesis, Stakeholder Map, Sample Outbound Messages.
+
+### Account Goal & Strategy (opens the page)
+
+The very first thing on the page, before the Executive Summary, is a small
+two-row table:
+
+| | |
+|---|---|
+| **Account Goal** | *(one or two sentences: the top-line commercial goal for this account — e.g. retain and expand past the Jan 2027 renewal, or land a specific expansion product)* |
+| **Our Strategy** | *(one or two sentences: the AM/GTME's high-level approach to get there — e.g. "fix adoption first to de-risk the renewal, then open the Inbound expansion conversation with marketing")* |
+
+Derive both rows from the plan's own findings (renewal risk, adoption state,
+biggest opportunity) rather than inventing generic language — this is the
+one-line frame the reader should carry into everything below it. If a
+confident goal or strategy can't be derived from the evidence gathered, say so
+plainly in the cell rather than filling it with boilerplate.
+
+### Executive Summary (opens the body, above Current State)
+
+Right after Account Goal & Strategy, give a busy reader the state of the
+account at a glance in **3–5 bullet points**. Cover, in whatever order makes
+sense for the account:
+
+- **Current adoption** — the headline usage/health read (growing / flat /
+  declining, and the standout feature(s)).
+- **Known risks or opportunities** — the single biggest risk and/or the
+  single biggest whitespace/expansion opportunity, named plainly.
+- **Recent engagements** — the most relevant recent call/meeting/touchpoint
+  (transcripts, Salesforce activity), dated.
+- **Recent Slack context** — the most relevant recent update from the
+  account's internal Slack channel (see `references/data-sources.md` §5 for
+  how to find it), dated.
+
+Each bullet should be groundable to a source named elsewhere in the plan —
+this section is a summary of what follows, not new analysis. If a category
+above has no confident signal, say so briefly rather than omitting the bullet
+silently (e.g. "No recent Slack activity found in the account channel").
+
+### Action Plan (comes right after the Executive Summary)
+
+See "'Action Plan' is always blank" below for the spec — it sits third on the
+page, before Current State, not inside it.
 
 If you're instead producing a Google Doc (Notion unavailable, or the user asked
 for both), use `assets/account-plan-template.md`, which follows the
@@ -171,19 +215,41 @@ section must be backed by cited evidence with dates where available.
 3. **Who cares most?** — the stakeholder map (see spec below).
 4. **Why now?** — the trigger or event that makes this timely rather than in six
    months.
-5. **What is our value hypothesis?** — For Notion output (the default), this is
-   the 2–3 pillar table described in `references/notion-output.md` ("Value
-   Hypothesis"): each pillar names a value theme and grounds it in a specific
-   business signal from section 1/2 plus an Apollo capability. Within each
-   pillar's write-up, you may still use the classic single-sentence framing as
-   a useful internal check —
+5. **What is our value hypothesis?** — This section's job is to focus
+   entirely on **the business impact Apollo can make for the customer's own
+   business** — not on Apollo's renewal or expansion motives. For Notion
+   output (the default), deliver the 2–3 pillar table described in
+   `references/notion-output.md` ("Value Hypothesis"), built on the **Force
+   Management "Command of the Message"** framework: one row per pillar, with
+   columns for **Current State**, **Negative Consequences**, **Future
+   State**, and **Positive Business Outcomes**. Populate every row using only
+   what the plan has already established in the **Current State** and
+   **What's Happening in Their Business** sections above — don't introduce
+   new claims here. Specifically draw on:
+   - **Key Apollo capabilities they're not using** — pull straight from the
+     Feature Usage table's 🟡/🔴 rows; each underused capability is raw
+     material for a "Current State" cell (what's not happening today) and a
+     "Future State" cell (what using it well would look like).
+   - **Whitespace opportunities for teams not yet using Apollo** — pull from
+     Seat Whitespace and the Stakeholder Map's coverage gaps (e.g. a function
+     or team with no Apollo footprint yet); frame as a pillar in its own
+     right when a specific team/whitespace opportunity is concrete enough.
+   - **Ways Apollo can help drive more pipeline, meetings, and revenue for
+     the customer's own business** — pull from the ICP/prospecting play and
+     the dated business developments in "What's Happening in Their
+     Business"; the Future State and Positive Business Outcomes cells should
+     name a concrete customer-facing impact (more pipeline in a named
+     market/segment, faster time-to-meeting, etc.), not an Apollo-internal
+     outcome like renewal or seat expansion.
+   Within each pillar's write-up, you may still use the classic
+   single-sentence framing as a useful internal check —
    > We believe that because [business priority/event], your team is likely
    > trying to [desired outcome]. We think we can help by [Apollo solution] so
    > you can [business impact].
-   — but the delivered artifact is the pillar table, not a single quoted
-   sentence. **Only** when producing the Google Doc fallback
-   (`assets/account-plan-template.md`) is the single-sentence quote format the
-   delivered artifact itself, per that template.
+   — but the delivered artifact is always the Current State/Negative
+   Consequences/Future State/Positive Business Outcomes table, never a single
+   quoted sentence. This applies equally to the Google Doc fallback
+   (`assets/account-plan-template.md`), which uses the same table.
 6. **How will we start the conversation?** — the outreach: an insight or question
    an exec would respond to, the most relevant proof point/story, and a single
    clear call to action. **Include 1–2 sample outbound messages that the Apollo
@@ -191,37 +257,42 @@ section must be backed by cited evidence with dates where available.
    exec — to inspire action and give them a reason to engage with Apollo. These
    are the AM's messages TO the customer, not the customer's messages to their
    own prospects. **Draw directly on the "who they sell to → Apollo prospecting
-   play" from section 2**: give concrete examples of how Apollo would help this
-   customer sell into *their own* core customer segments — name a real segment/
-   persona they target and a relevant intent signal, and show the resulting play
-   (e.g. "surface [their ICP persona] at [their target segment] the moment
-   [relevant signal] fires, then auto-build a personalized sequence"). Anchor it
-   with their own usage wins and renewal timing so the message is both credible
-   and timely. **Mark the specific segment/signal plays as illustrative** — the
-   ICP is grounded in the account's public positioning, but the exact signals
-   (e.g. a compliance deadline or cloud-migration trigger) are hypotheses. Note
-   that the rep should validate them against what the customer's team actually
-   prioritizes (e.g. with a power user or at the onsite) before treating them as
-   the committed plan.
+   play"** from the "Where can we create value" question above: give concrete
+   examples of how Apollo would help this customer sell into *their own* core
+   customer segments — name a real segment/persona they target and a relevant
+   intent signal, and show the resulting play (e.g. "surface [their ICP
+   persona] at [their target segment] the moment [relevant signal] fires, then
+   auto-build a personalized sequence"). Anchor it with their own usage wins
+   and renewal timing so the message is both credible and timely. **Mark the
+   specific segment/signal plays as illustrative** — the ICP is grounded in the
+   account's public positioning, but the exact signals (e.g. a compliance
+   deadline or cloud-migration trigger) are hypotheses. Note that the rep
+   should validate them against what the customer's team actually prioritizes
+   (e.g. with a power user or at the onsite) before treating them as the
+   committed plan. **This content is delivered in the "Sample Outbound
+   Messages" section, placed directly below the Stakeholder Map** (see
+   `references/notion-output.md`), since it's naturally paired with knowing
+   who to reach out to.
 
 **If you cannot find anything you're confident in for a question, say so
 explicitly** in that section (e.g. "No confident signal found for X") rather
 than inventing an answer.
 
-## "Key Actions We Want To Take" is always blank
+## "Action Plan" is always blank
 
-The "Key Actions We Want To Take" section (see `references/notion-output.md`
-for its exact placement) is **always delivered as an empty table** — headers
-only (Action / Owner / Target Date), no rows filled in, with a
-`*[To be completed by the account manager.]*` note above it. This is
-deliberate: it's the account manager's own space to commit to next steps in
-their own words, not a place for the skill to inject its own recommendations.
-**Never pre-fill this section**, even with reasonable-looking suggestions —
-those belong in the 30–60 Day Milestone Plan instead (which the skill *does*
-populate, since it's framed as a proposed plan rather than the AM's personal
-commitments). There is no separate "Next Immediate Actions" callout — the
-Milestone Plan table is the only place forward-looking actions get written by
-the skill.
+The **Action Plan** section (renamed from "Key Actions We Want To Take"; see
+`references/notion-output.md` for its exact placement — third on the page,
+right after Account Goal & Strategy and the Executive Summary, before
+Current State) is **always delivered as an empty table** — headers only
+(Workstream / Action / Owner / Deliver by / Status / Notes), no rows filled
+in. This is deliberate: it's the account manager's own space to commit to
+next steps in their own words, not a place for the skill to inject its own
+recommendations. **Never pre-fill this section**, even with reasonable-
+looking suggestions and even though it now sits near the top of the plan —
+its position changed, but its purpose (and its emptiness) didn't. There is no
+separate "Next Immediate Actions" or milestone-plan table elsewhere in the
+skill's output; the Action Plan table is the only forward-looking-actions
+table, and the skill never populates it.
 
 ## Stakeholder map spec (question 3)
 

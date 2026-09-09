@@ -56,7 +56,7 @@ See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill comman
 
 | Plugin | Description | Skills |
 | --- | --- | ---: |
-| `apollo-eng` | Shared engineering skills for Apollo repos | 28 |
+| `apollo-eng` | Shared engineering skills for Apollo repos | 29 |
 | `apollo-eng-devops` | DevOps, SRE, and production reliability skills for Apollo engineers | 25 |
 | `apollo-analytics` | Apollo Analytics Copilot — answers data questions using governed Snowflake metrics, runs product debriefs, generates account profiles, and surfaces weekly strategic insights. | 12 |
 | `apollo-eng-leadership` | Cowork skills for engineering leadership and customer-care rotation support | 9 |
@@ -252,6 +252,8 @@ This repo uses [Release Please](https://github.com/googleapis/release-please-act
 1. Creates tags and GitHub Releases when release PRs are merged
 
 Do not edit `plugin.json` versions by hand. Commit with a plugin scope (for example, `feat(apollo-people): ...`) and touch that plugin's files so Release Please can attribute the change.
+
+**Give the pull request a Conventional Commit title as well.** Pull requests are squash-merged, so a PR with more than one commit lands on `main` under its PR title. A title like `Update-skill.md` gives Release Please nothing to parse and the plugin version is never bumped.
 
 The README plugin inventory and `SKILL_INVENTORY.md` are auto-updated by CI on merge — do not edit them manually.
 
