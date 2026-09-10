@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.3.0...apollo-gtm-v0.4.0) (2026-09-09)
+
+
+### Features
+
+* **apollo-gtm:** restructure account plan around exec summary and action plan ([#270](https://github.com/apolloio/claude-plugins/issues/270)) ([af51335](https://github.com/apolloio/claude-plugins/commit/af5133507b553ec196aca5072ba1c6eeb0c7c2a2))
+
 ## [0.3.0](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.2.0...apollo-gtm-v0.3.0) (2026-08-31)
 
 

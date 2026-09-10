@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.5...apollo-eng-v1.6.0) (2026-09-09)
+
+
+### Features
+
+* add Pantheon actions to on-call digest ([#267](https://github.com/apolloio/claude-plugins/issues/267)) ([a743149](https://github.com/apolloio/claude-plugins/commit/a743149e15a5aac4f57434f6af6ba6597ac90d04))
+* add product gap measurement skill ([#158](https://github.com/apolloio/claude-plugins/issues/158)) ([0c64417](https://github.com/apolloio/claude-plugins/commit/0c64417c528c81407330f1362f2660d0305b0a67))
+
 ## [1.5.5](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.4...apollo-eng-v1.5.5) (2026-09-03)
 
 
