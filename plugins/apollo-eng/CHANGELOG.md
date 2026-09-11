@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.6.0...apollo-eng-v1.7.0) (2026-09-11)
+
+
+### Features
+
+* improve Pantheon coverage in on-call digest ([#272](https://github.com/apolloio/claude-plugins/issues/272)) ([852593f](https://github.com/apolloio/claude-plugins/commit/852593f5f757907a05186a7235cbe4d30166e544))
+
 ## [1.6.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.5.5...apollo-eng-v1.6.0) (2026-09-09)
 
 
