@@ -138,13 +138,22 @@ AND duedate <= <due-days>d
 ORDER BY duedate ASC
 ```
 
-Split results into `Past due` and `Due within <due-days> days` under one section. Show at most the first three issues in each non-empty bucket, ordered by due date ascending. Preserve each bucket's full count in its heading, but do not add overflow rows or `view all` links. Link each displayed issue and include summary, due date, assignee or `unassigned`, and priority. Omit an empty bucket and omit the whole section when both buckets are empty.
+Split results into `Past due` and `Due soon` under one section. Show at most the first three issues in each non-empty bucket, ordered by due date ascending. Preserve each bucket's full count in its heading, but do not add overflow rows or `view all` links. Link each displayed issue and include its summary and priority only. Omit an empty bucket and omit the whole section when both buckets are empty.
 
-Build a deduplicated set of every Jira incident rendered in the untriaged, due-date, and Pantheon PR sections. For each one, search Slack's accessible workspace messages over the configured lookback for the exact issue key or Jira URL, once per issue. Accept a top-level completed incident-diagnosis action that links the exact incident; also accept a legacy top-level announcement ending with `Pantheon will post updates in this thread.` Deduplicate repeated results for the same parent. When one or more valid parents remain, select the most recently active parent (latest reply timestamp, or parent timestamp when it has no replies) and append its permalink as `<SLACK_PERMALINK|Pantheon thread>` wherever the Jira incident is rendered. Render `Pantheon thread not found` only when no valid parent remains. Never discard matching threads merely because more than one exists.
+Build a deduplicated set of every Jira incident rendered in the untriaged, due-date, and Pantheon PR sections. Find Pantheon threads as follows:
+
+1. Prefer Slack workspace search over the configured lookback. For each incident, search for its exact issue key or Jira URL; do not limit this search to the XFN or delivery channel. This is the primary method because Pantheon threads may be in a different team channel.
+1. Use the connector's default relevance ranking for this search; do not sort it by recency. A high-volume channel (a GitHub activity feed, an incident-alerts feed) can otherwise flood a timestamp-sorted result set with weakly-matching noise and push the exact-key match past the pages actually read, even though the same key search under relevance ranking returns it in the first page. This applies regardless of whether the incident has a matched Pantheon PR.
+1. If relevance-ranked results still find no valid parent and the incident has a matched Pantheon PR from GitHub PR discovery, repeat the search once using that PR's number (e.g. `103795`) as a secondary check before concluding no thread exists. Do not repeat this fallback more than once per incident, and do not invent other secondary identifiers to search.
+1. Accept a top-level completed incident-diagnosis action that links the exact incident, or a legacy top-level announcement ending with `Pantheon will post updates in this thread.` Deduplicate repeated results for the same parent. When more than one valid parent remains, select the most recently active parent (latest reply timestamp, or parent timestamp when it has no replies).
+1. Record the channel of each validated parent. If workspace search is unavailable or incomplete, use those validated channels as the Pantheon announcement channels for the selected team, then search or read only those channels for the remaining exact issue keys. Do not infer a Pantheon channel from its name, a bot message without the exact incident, or an unrelated team's thread.
+1. Append `<SLACK_PERMALINK|Pantheon thread>` only when a valid parent is found. Omit any Pantheon-thread text when none is found. If the connector cannot perform either workspace search or a verified-channel lookup, record one concise Pantheon lookup coverage gap and do not treat a missing link as evidence that no run exists.
+
+Never discard matching threads merely because more than one exists. Do not search only `#xfn-v-rep-deliverability` or another configured XFN channel for Pantheon threads; it is not the Pantheon announcement source.
 
 After completing Pantheon PR discovery and the Pantheon-thread lookup, build a deduplicated candidate list from every displayed untriaged and due-date Jira incident, in message order. Exclude any incident linked to an open Pantheon PR. If Pantheon PR discovery failed, do not start a run because the digest cannot establish that a candidate lacks an open Pantheon PR; continue to render the digest and report the coverage gap. Read Jira comments for every remaining candidate. Unless `--dry-run` is present, start an incident-diagnosis run for up to the first three candidates that have neither a Pantheon-run Jira comment nor Pantheon-link evidence. Read [references/pantheon-trigger.md](references/pantheon-trigger.md) before the first trigger. Never retry a failed trigger in the same digest, but continue with other eligible displayed tickets and render one concise kickoff-coverage note. Do not wait for a triggered diagnosis to complete or poll it. In a dry run, do not call Pantheon and report the number of runs that would start.
 
-Link each rendered Jira issue, truncate its one-line summary to 100 characters, and include its required fields. Append its Pantheon-thread result. Do not add an overflow row or `view all` link.
+Link each rendered Jira issue, truncate its one-line summary to 100 characters, and include its required fields. Append the Pantheon-thread link only when found. Do not add an overflow row or `view all` link.
 
 ### PagerDuty
 
@@ -185,7 +194,7 @@ If either a service-filtered or fallback `list_incidents` call returns any tool 
 
 After a valid bounded fallback, continue the digest. Render at most three retained matches under a `Recent PagerDuty incidents (N, last 24 hours)` heading, preserving the full retained count in the heading, then add: `PagerDuty coverage limited to the last 24 hours — the connector checked one page (25 maximum) across its accessible PagerDuty teams and filtered matching services locally.` Do not add an overflow row or `view all` link. If the response hit the limit, append `The connector window may be truncated.` When no matches are retained, omit incident bullets and render only the coverage note. This is an explicit degraded result, not a missing required source and not a reason to stop Jira or Slack collection.
 
-For complete service-filtered results, render high-priority service incidents first. Preserve each PagerDuty section's full incident count in its heading, but show at most three incidents per section and do not add overflow rows or `view all` links. Link each displayed incident and include incident number, title, creation time, and assignee or `unassigned`. Omit empty complete PagerDuty sections.
+For complete service-filtered results, render high-priority service incidents first. Preserve each PagerDuty section's full incident count in its heading, but show at most three incidents per section and do not add overflow rows or `view all` links. Link each displayed incident and include its number and title only. Omit empty complete PagerDuty sections.
 
 ### Slack
 
@@ -197,7 +206,7 @@ Treat a request as handled when any selected-team roster member:
 - adds a checkmark-style reaction to the parent or a reply (`white_check_mark`, `heavy_check_mark`, or a reaction name containing `check` or `approved`); or
 - approves a linked `github.com/apolloio/<repo>/pull/<number>` PR, when authenticated `gh` access is available.
 
-Only threads with none of those signals are pending. Preserve the full pending count in the heading, but show at most three threads and do not add an overflow row or `view all` link. Link each displayed thread and include a short summary, author, and date. Omit this section when empty. Favor precision over recall because false-positive daily pings train teams to ignore the digest.
+Only threads with none of those signals are pending. Preserve the full pending count in the heading, but show at most three threads and do not add an overflow row or `view all` link. Link each displayed thread and include a short summary and author. Omit this section when empty. Favor precision over recall because false-positive daily pings train teams to ignore the digest.
 
 ### GitHub
 
@@ -213,7 +222,7 @@ per_page=50
 
 For each result, extract exactly one `INCIDENT-<number>` key from its title; skip a PR with no key or multiple distinct keys. Batch-query Jira for those keys and retain only PRs whose Jira issue has the selected exact Impacted Team value. Complete this discovery before building the Pantheon-thread lookup set so the matched PR incidents are searched too. Continue with the next page only when fewer than three team-matching PRs have been found, stopping at three matches or after 100 GitHub results. Ordering newest first keeps the section focused on the latest agent work waiting for action.
 
-Render this as the final section under `:robot_face: *Pantheon PRs waiting for your action:*`. For each PR, render `<PR_URL|OWNER/REPO#NUMBER>`, its related `<JIRA_URL|INCIDENT-NUMBER>`, the title truncated to 100 characters, the opened date, and that incident's Pantheon-thread result. These links let the on-call DRI take the appropriate action, such as merging or closing the PR, canceling its Pantheon run, or reviewing the underlying incident. Omit the section when no matching PRs exist. If the GitHub or Jira match search fails, do not retry or block the digest; render the final section with one line: `Pantheon PR coverage unavailable — <short reason>.`
+Render this as the final section under `:robot_face: *Pantheon PRs waiting for your action:*`. For each PR, render `<PR_URL|OWNER/REPO#NUMBER>`, its related `<JIRA_URL|INCIDENT-NUMBER>`, the title truncated to 100 characters, and that incident's Pantheon-thread link only when found. These links let the on-call DRI take the appropriate action, such as merging or closing the PR, canceling its Pantheon run, or reviewing the underlying incident. Omit the section when no matching PRs exist. If the GitHub or Jira match search fails, do not retry or block the digest; render the final section with one line: `Pantheon PR coverage unavailable — <short reason>.`
 
 ## Compose And Send
 
@@ -221,10 +230,14 @@ Formatting is part of the output contract:
 
 - Put each heading on its own line and exactly one blank line between rendered sections.
 - Put every Jira incident, pending XFN thread, PagerDuty incident, and Pantheon PR on its own physical line beginning with `• `. Never join multiple items on one line.
+- Render Jira incidents as `<JIRA_URL|INCIDENT-NUMBER> — <summary> — <priority> [— <SLACK_PERMALINK|Pantheon thread>]`. Do not include created date, due date, assignee, or `Pantheon thread not found`.
+- Render pending XFN threads as `<SLACK_PERMALINK|summary> — <author>`. Do not include a date.
+- Render PagerDuty incidents as `<PAGERDUTY_URL|#NUMBER> — <title>`. Do not include a creation date or assignee.
+- Render Pantheon PRs as `<PR_URL|OWNER/REPO#NUMBER> — <JIRA_URL|INCIDENT-NUMBER> — <PR title> [— <SLACK_PERMALINK|Pantheon thread>]`. Do not include an opened date.
 - Show at most three items in every list while preserving the full count in its heading.
 - Omit every zero-count section and bucket. A source-coverage or unresolved-configuration note may remain when there is no item count.
 - Do not put blank lines between items in the same list.
-- Under `Jira due dates`, put each bucket heading on its own line, followed immediately by that bucket's incident lines. Put one blank line between the `Past due` and `Due within <due-days> days` buckets.
+- Under `Jira deadlines`, put each bucket heading on its own line, followed immediately by that bucket's incident lines. Put one blank line between the `Past due` and `Due soon` buckets.
 - Never render a `+ N more` overflow row or `view all` link. The full count in the section or bucket heading is sufficient.
 - Put an empty-state or coverage note on its own line below its heading.
 
@@ -234,21 +247,21 @@ Use this literal Slack mrkdwn shape, omitting conditional sections when empty:
 :wave: *Daily on-call check-in* — <@DRI_SLACK_ID or DRI_NAME, or "DRI unavailable"> (Primary, TEAM_DESCRIPTION) [ / <!subteam^ON_CALL_USERGROUP_ID>]
 
 :jira-ticketed: *Untriaged tickets (N):*
-• <one untriaged Jira incident> — <Pantheon thread result>
-• <one untriaged Jira incident> — <Pantheon thread result>
+• <JIRA_URL|INCIDENT-NUMBER> — <summary> — <priority> [— <SLACK_PERMALINK|Pantheon thread>]
+• <JIRA_URL|INCIDENT-NUMBER> — <summary> — <priority> [— <SLACK_PERMALINK|Pantheon thread>]
 
 :speech_balloon: *Pending XFN threads (N):*
 • <one pending XFN thread>
 • <one pending XFN thread>
 
-:calendar: *Jira due dates*
+:calendar: *Jira deadlines*
 *Past due (N):*
-• <one past-due Jira incident> — <Pantheon thread result>
-• <one past-due Jira incident> — <Pantheon thread result>
+• <JIRA_URL|INCIDENT-NUMBER> — <summary> — <priority> [— <SLACK_PERMALINK|Pantheon thread>]
+• <JIRA_URL|INCIDENT-NUMBER> — <summary> — <priority> [— <SLACK_PERMALINK|Pantheon thread>]
 
-*Due within <due-days> days (N):*
-• <one due-soon Jira incident> — <Pantheon thread result>
-• <one due-soon Jira incident> — <Pantheon thread result>
+*Due soon (N):*
+• <JIRA_URL|INCIDENT-NUMBER> — <summary> — <priority> [— <SLACK_PERMALINK|Pantheon thread>]
+• <JIRA_URL|INCIDENT-NUMBER> — <summary> — <priority> [— <SLACK_PERMALINK|Pantheon thread>]
 
 <high-priority PagerDuty heading>
 • <one high-priority PagerDuty incident>
@@ -262,8 +275,8 @@ Use this literal Slack mrkdwn shape, omitting conditional sections when empty:
 <optional unresolved-DRI note>
 
 :robot_face: *Pantheon PRs waiting for your action:*
-• <PR_URL|OWNER/REPO#NUMBER> — <JIRA_URL|INCIDENT-NUMBER> — <PR title> — opened <YYYY-MM-DD> — <Pantheon thread result>
-• <PR_URL|OWNER/REPO#NUMBER> — <JIRA_URL|INCIDENT-NUMBER> — <PR title> — opened <YYYY-MM-DD> — <Pantheon thread result>
+• <PR_URL|OWNER/REPO#NUMBER> — <JIRA_URL|INCIDENT-NUMBER> — <PR title> [— <SLACK_PERMALINK|Pantheon thread>]
+• <PR_URL|OWNER/REPO#NUMBER> — <JIRA_URL|INCIDENT-NUMBER> — <PR title> [— <SLACK_PERMALINK|Pantheon thread>]
 ```
 
 Use Slack-compatible links and emoji. Keep the message terse and do not explain the methodology. Make the DRI mention and on-call-usergroup mention conditional so unresolved IDs never render as broken mentions. When present, the Pantheon PR section must be last.
