@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.4.0...apollo-gtm-v0.5.0) (2026-09-15)
+
+
+### Features
+
+* **apollo-gtm:** add gtm-strategist skill ([#277](https://github.com/apolloio/claude-plugins/issues/277)) ([2148a4b](https://github.com/apolloio/claude-plugins/commit/2148a4b38adb03d034d27338c1a06da9c2909002))
+
 ## [0.4.0](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.3.0...apollo-gtm-v0.4.0) (2026-09-09)
 
 

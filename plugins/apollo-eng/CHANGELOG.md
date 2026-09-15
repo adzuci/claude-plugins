@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.7.0...apollo-eng-v1.8.0) (2026-09-15)
+
+
+### Features
+
+* **apollo-eng:** split on-call pending digests ([#283](https://github.com/apolloio/claude-plugins/issues/283)) ([dab48a3](https://github.com/apolloio/claude-plugins/commit/dab48a33f699fe189fa29dca4cff5f7eaf852dd2))
+
 ## [1.7.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.6.0...apollo-eng-v1.7.0) (2026-09-11)
 
 
