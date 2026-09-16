@@ -55,7 +55,9 @@ Use the shared source rules, but apply these daily filters:
 - **PagerDuty:** only triggered incidents whose trigger/creation timestamp is at or after
   `daily_cutoff`. Retain the shared bounded-query and coverage rules.
 - **Pantheon PRs:** include all matching open Pantheon incident PRs regardless of age.
-  Render at most five, newest first, and preserve the full count in the heading.
+  Resolve every associated incident's due date, then render at most five ordered by earliest
+  due date. Overdue incidents appear first; incidents without a due date appear after all
+  dated incidents, ordered newest first. Preserve the full count in the heading.
 
 Do not query or render Jira Past due or Due soon sections in this daily digest. Build
 Pantheon trigger candidates only from displayed daily untriaged Jira incidents; retain the
