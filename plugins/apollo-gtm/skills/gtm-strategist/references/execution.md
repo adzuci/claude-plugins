@@ -32,7 +32,7 @@ Use existing Apollo capabilities that actually exist in the runtime. Relevant ex
 
 Use the smallest action that advances the user's goal. Don't invent Apollo tools, parameters, return fields, or action behavior.
 
-Some Apollo actions, including enrichment, carry a real cost or resource impact even when they don't change live outreach state. Surface that plainly when the tool itself discloses it, rather than treating cost disclosure as optional.
+Cost or resource impact varies by the specific Apollo tool or action selected, not by action class. When the actual tool being used discloses a cost or resource impact, such as an enrichment call, surface it plainly rather than treating disclosure as optional. Don't generalize that all search, enrichment, or related actions consume credits.
 
 ## Approval Discipline
 

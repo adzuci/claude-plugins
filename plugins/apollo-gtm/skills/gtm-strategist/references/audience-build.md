@@ -38,6 +38,8 @@ Signals may help identify or validate the audience, including evidence such as f
 
 These are examples of evidence, not mandatory filters and not deterministic mappings.
 
+Prefer one primary evidence path that most directly supports the hypothesis. Treat other signals as corroboration rather than presenting a menu of equally weighted possibilities.
+
 Never reason "signal X equals play Y." Instead reason:
 
 signal X → possible operating consequence → evidence supporting or weakening the hypothesis → audience inclusion or exclusion decision
@@ -49,6 +51,8 @@ Prefer the least expensive and least consequential read-only discovery path that
 Use People Search and Company Search once the strategy has produced a structured filter set: titles, seniorities, industries, keywords, and other supported search criteria the Strategist infers and expands from the hypothesis. Don't defer that judgment just because the user didn't spell out every filter themselves.
 
 Don't invent unsupported search criteria. If Apollo can't directly represent an important strategic condition as a filter, use the closest supported discovery criteria and validate the condition through research or enrichment rather than pretending a precise filter exists.
+
+Never silently weaken or replace a strategically important condition just because Apollo can't filter it directly. Either find another valid evidence or verification path, or state plainly what remains unverified.
 
 ## Evidence Ladder
 
