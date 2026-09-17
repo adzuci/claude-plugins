@@ -9,6 +9,10 @@ disable-model-invocation: true
 
 [OOMKilled runbook](https://app.notion.com/p/apolloio/Runbook-for-Resolving-OOM-Killed-Event-29aab2b3b496807d8522c932dd928c15) · [INFRA-2077](https://apollopde.atlassian.net/browse/INFRA-2077) · covers `cron-*` jobs in `kubernetes/production/cron/values.yaml`
 
+Argus (`apolloio/argus`, `runbooks/oom-killed.md`) triages the alert first and hands off here already
+scoped: workload name, confirmed real, current limit, recurrence. Arriving cold from Slack/PagerDuty
+instead, gather those four yourself before step 1.
+
 Every cron OOM is one fork: **raise the limit, or change the code.** Neither obvious signal
 decides it. The killed run's peak always reads ~100% of the limit — it is censored, and 14 of 19
 historically-fixed crons sat at 0.96–1.00 across *both* answers. Grepping for `.to_a` doesn't
