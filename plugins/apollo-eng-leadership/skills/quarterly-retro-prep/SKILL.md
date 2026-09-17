@@ -12,18 +12,27 @@ Gather data from Jira, Slack, GitHub, and past retro notes to produce a structur
 Ask the user for:
 
 - **Team name** (required) -- e.g. "AI Tooling", "Platform", "Growth"
-- **Date range** (optional) -- defaults to the previous calendar quarter. If today is in Q2, the default range is Q1 (Jan 1 -- Mar 31). Use ISO `YYYY-MM-DD` dates internally.
+- **Date range** (optional) -- defaults to the previous *fiscal* quarter. Apollo's fiscal year starts Feb 1, so if today is in Q2 (May -- Jul), the default range is Q1 (Feb 1 -- Apr 30). Use ISO `YYYY-MM-DD` dates internally.
 - **GitHub org/repos** (optional) -- defaults to `apolloio` org; ask which repos to include if unclear.
 - **Jira project key(s)** (optional) -- ask if not obvious from the team name.
 
-Resolve the date range before proceeding:
+Resolve the date range before proceeding. **Apollo's fiscal year starts Feb 1**, so fiscal
+quarters run one month ahead of calendar quarters. Do not use calendar quarters here:
 
 ```
-Q1: Jan 1 -- Mar 31
-Q2: Apr 1 -- Jun 30
-Q3: Jul 1 -- Sep 30
-Q4: Oct 1 -- Dec 31
+Q1: Feb 1 -- Apr 30
+Q2: May 1 -- Jul 31
+Q3: Aug 1 -- Oct 31
+Q4: Nov 1 -- Jan 31   (crosses the calendar year boundary)
 ```
+
+A fiscal year is named for the calendar year it *ends* in: FY'27 runs Feb 1 2026 -- Jan 31 2027,
+so Q2 FY'27 is May 1 -- Jul 31 2026. Two things to get right when building queries:
+
+- Q4 starts and ends in different calendar years. Set the year on the start and end date
+  separately instead of reusing one year.
+- Label every output with the fiscal quarter and fiscal year (e.g. `Q2 FY'27`), never a bare
+  `Q2 2026`, so readers cannot re-derive calendar dates from it.
 
 ## Steps
 
@@ -78,7 +87,7 @@ Use the `gh` CLI to pull PR and CI metrics for the team's repositories.
 
 ```bash
 # PRs merged in date range
-# $START and $END must use ISO `YYYY-MM-DD` format like 2026-01-01
+# $START and $END must use ISO `YYYY-MM-DD` format like 2026-02-01 (Q1 FY'27 start)
 gh pr list --repo <org>/<repo> --state merged --search "merged:>=$START merged:<=$END" --limit 200 --json number,title,author,createdAt,mergedAt,additions,deletions,changedFiles
 
 # CI workflow runs on default branch
@@ -131,7 +140,11 @@ If the Slack MCP does not support `after:` / `before:` filters, broaden the sear
 
 **If Slack MCP is unavailable:** Note that Slack data was skipped and suggest the user manually review their team channel for themes. Continue to the next step.
 
-### 4. Look Up Previous Retro Notes (Optional)
+### 4. Follow Up on Previous Retro Commitments
+
+Always attempt this step. Unactioned commitments are the thing a retro most often fails to
+surface -- an item with no owner can sit at "Not started" for several quarters before anyone
+notices it never moved.
 
 Use Glean MCP or Notion MCP to search for the team's previous retrospective notes.
 
@@ -145,11 +158,22 @@ Use Glean MCP or Notion MCP to search for the team's previous retrospective note
 Search for pages titled "retro" or "retrospective" in the team's workspace
 ```
 
-**Extract from previous retros:**
+**For every commitment in the previous retro, record:**
 
-- Action items that were committed to
-- Owners assigned to each action item
-- Any themes that recurred across multiple retros
+- The commitment as written
+- The owner -- record `unowned` explicitly when the field is blank
+- Current status, backed by evidence gathered in Steps 1-3 (a Jira ticket, a merged PR, a Slack
+  thread) rather than the status text left in the old doc
+- How many consecutive quarters it has carried without moving
+
+Go back two retros, not one, so stalled items are visible as a streak.
+
+**Flag these into Suggested Discussion Topics:**
+
+- Any commitment that is unowned
+- Any commitment at "Not started" or "In progress" for 2+ consecutive quarters -- propose either
+  an owner and a date, or an explicit decision to drop it
+- Any theme that recurred across multiple retros
 
 **If neither Glean nor Notion MCP is available:** Note that previous retro data was skipped. Suggest the user paste in prior action items manually if they have them.
 
@@ -169,7 +193,9 @@ Output a structured Markdown document with the following sections. Use actual da
 
 ```markdown
 # Quarterly Retrospective Prep: <Team Name>
-## <Quarter> <Year> (<start date> -- <end date>)
+## <Fiscal Quarter> <Fiscal Year> (<start date> -- <end date>)
+
+> e.g. `Q2 FY'27 (2026-05-01 -- 2026-07-31)`
 
 > Generated on <today's date> using data from: <list sources that were available>
 
@@ -210,10 +236,13 @@ Output a structured Markdown document with the following sections. Use actual da
 
 ## Follow-Up on Last Quarter
 
-| Action Item | Owner | Status |
-|------------|-------|--------|
-| <item from previous retro> | <name> | Done / In Progress / Not Started |
+| Action Item | Owner | Status | Evidence | Quarters Carried |
+|------------|-------|--------|----------|-----------------|
+| <item from previous retro> | <name or `unowned`> | Done / In Progress / Not Started | <ticket, PR, or thread> | N |
 
+> Call out unowned items and anything carried 2+ quarters directly under this table -- do not
+> leave them to be spotted in the row.
+>
 > If previous retro notes were unavailable, note that here and ask the team to review manually.
 
 ---
@@ -259,5 +288,5 @@ If the user wants to export to Notion, use the Notion MCP to create a page in th
 - Run this skill 2-3 days before the actual retro so there is time to review and adjust
 - If the team spans multiple Jira projects, pass all project keys for a complete picture
 - For large teams with many repos, focus on the 3-5 most active repositories to keep the output manageable
-- Quarter-over-quarter trends are most valuable -- suggest running for the prior quarter too if comparison data is needed
+- Quarter-over-quarter trends are most valuable -- suggest running for the prior fiscal quarter too if comparison data is needed
 - The document is a conversation starter, not a final verdict -- frame findings as discussion prompts, not conclusions
