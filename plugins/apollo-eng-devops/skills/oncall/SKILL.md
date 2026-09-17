@@ -181,8 +181,11 @@ The scripts shell out to the PagerDuty CLI (`pd`). Install and authenticate once
 ```bash
 npm install -g @pagerduty/cli
 pd login            # or set a token: pd config:set token <PD_API_TOKEN>
-pd whoami           # verify
+pd rest:get -e /users/me   # verify — returns the calling user
 ```
+
+> `pd whoami` does not exist in `@pagerduty/cli`; use the `rest:get` call above to verify
+> authentication.
 
 If `pd` is missing or unauthenticated, the scripts exit with an actionable message rather
 than guessing. **Schedule IDs are resolved dynamically by name — you do not need to
