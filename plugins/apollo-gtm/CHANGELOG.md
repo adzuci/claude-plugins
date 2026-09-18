@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.5.0...apollo-gtm-v0.5.1) (2026-09-18)
+
+
+### Bug Fixes
+
+* **apollo-gtm:** refine gtm-strategist behavioral calibration (V0.1) ([#282](https://github.com/apolloio/claude-plugins/issues/282)) ([8a025d5](https://github.com/apolloio/claude-plugins/commit/8a025d584276e96d93228efe9f239e316d573c27))
+
 ## [0.5.0](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.4.0...apollo-gtm-v0.5.0) (2026-09-15)
 
 

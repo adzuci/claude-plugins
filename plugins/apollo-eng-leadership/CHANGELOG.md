@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/apolloio/claude-plugins/compare/apollo-eng-leadership-v1.5.0...apollo-eng-leadership-v1.5.1) (2026-09-18)
+
+
+### Bug Fixes
+
+* **apollo-eng-leadership:** use Apollo fiscal quarters in retro prep ([#289](https://github.com/apolloio/claude-plugins/issues/289)) ([56a15bd](https://github.com/apolloio/claude-plugins/commit/56a15bdde00b77424713a26c34a5cbc4dc9049dc))
+
 ## [1.5.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-leadership-v1.4.0...apollo-eng-leadership-v1.5.0) (2026-08-05)
 
 

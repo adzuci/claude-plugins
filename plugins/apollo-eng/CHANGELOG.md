@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.9.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.8.0...apollo-eng-v1.9.0) (2026-09-18)
+
+
+### Features
+
+* **apollo-eng:** add bruh and bruh-mode skills ([#290](https://github.com/apolloio/claude-plugins/issues/290)) ([7bb1332](https://github.com/apolloio/claude-plugins/commit/7bb1332a13464495d956c023c18bc5e81e8b9fc4))
+
+
+### Bug Fixes
+
+* **apollo-eng:** prioritize Pantheon PRs by due date ([#286](https://github.com/apolloio/claude-plugins/issues/286)) ([a3a8164](https://github.com/apolloio/claude-plugins/commit/a3a8164b71a77dc23a3bd3edea4159684913bf0f))
+
 ## [1.8.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.7.0...apollo-eng-v1.8.0) (2026-09-15)
 
 
