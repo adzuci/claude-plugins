@@ -1,6 +1,7 @@
 ---
 name: bruh-mode
-description: Turn on a persistent mode where every response from here on is written in plain, simple language, not just the last one. Same fix as /bruh ("Claudisms": dense jargon, invented terms) but applied to all future output instead of a one-time rewrite. Activate when the user says "/bruh-mode", "bruh mode", "stay in bruh mode", "keep it simple from now on", "talk like this for the rest of the session", or asks for all output (not just the last message) to be simplified.
+description: Turn on a persistent mode for the rest of the session where every response is written in plain, simple language, not just the last one.
+disable-model-invocation: true
 ---
 
 # Bruh Mode
@@ -39,9 +40,3 @@ continuously.
 
 If the user says "bruh mode off", "stop bruh mode", "back to normal", or similar, drop
 this behavior and go back to your default style.
-
-## When to activate
-
-- User says "/bruh-mode", "bruh mode", "stay in bruh mode"
-- User says "keep it simple from now on", "talk like this for the rest of the chat"
-- User asks for all future output (not just the last message) to be simplified

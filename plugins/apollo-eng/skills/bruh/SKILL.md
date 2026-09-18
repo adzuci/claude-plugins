@@ -1,6 +1,7 @@
 ---
 name: bruh
-description: Rewrite the assistant's last response in plain, simple language. Fixes dense, jargon-heavy, made-up-terminology output ("Claudisms"). Activate when the user says "/bruh", "bruh it", "bruh-ify", "talk like a bro", "make that make sense", or asks you to simplify your last message.
+description: Rewrite the assistant's last response in plain, simple language, removing jargon and invented terms.
+disable-model-invocation: true
 ---
 
 # Bruh
@@ -25,9 +26,3 @@ It does not add slang or a persona. It removes jargon.
 3. Keep all facts exactly as they were: file paths, line numbers, command output, error
    text, and code. Only the surrounding prose changes.
 4. Output only the rewritten version.
-
-## When to activate
-
-- User says "/bruh", "bruh it", "bruh-ify", "make that make sense", "in English please"
-- User says your last response was confusing or hard to follow
-- You suspect your last response was too dense or jargon-heavy
