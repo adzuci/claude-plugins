@@ -104,7 +104,7 @@ The payload's role is routing, not display. The visible output is the copyable m
 
 ### Output Template (standalone markdown — not for assigned-opp router flow)
 
-The markdown template below is preserved for **standalone, non-router** draft requests (e.g. the SC asks "draft a message to the AE about [account]" later in the deal, or in a non-assigned-opp intent). Do not use this markdown template as the first artifact for assigned-opportunity intent — follow the visible copyable-message-first flow described above instead. **To be explicit, since the earlier wording here said "use the YAML payload above instead" and read as an instruction to render it:** the router YAML is never a visible artifact. It stays internal (see "The payload's role is routing, not display" above, and `SKILL.md`'s SC-Facing Output Rule 1 plus the Terminal Output Assertion's output-leak strip).
+The markdown template below is preserved for **standalone, non-router** draft requests (e.g. the SC asks "draft a message to the AE about [account]" later in the deal, or in a non-assigned-opp intent). Do not use this markdown template as the first artifact for assigned-opportunity intent — follow the visible copyable-message-first flow described above instead. **To be explicit, since the earlier wording here said "use the YAML payload above instead" and read as an instruction to render it:** the router YAML is never a visible artifact. It stays internal (see "The payload's role is routing, not display" above, and `SKILL.md`'s User-Facing Output Rule 1 plus the Terminal Output Assertion's output-leak strip).
 
 ```markdown
 ## Internal Coordination Draft: [Account Name]

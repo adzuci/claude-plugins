@@ -12,7 +12,7 @@ A Claude Skill that turns scattered pre-demo intel — discovery notes, CRM data
 
 ## When to use
 
-Load this skill when an SC needs to:
+Load this skill when the SC or the AE on a deal needs to:
 
 - Prep for a discovery or technical demo
 - Synthesize call notes + research into a single working brief
@@ -22,8 +22,8 @@ Load this skill when an SC needs to:
 ## Repo contents
 
 - `SKILL.md` — the skill definition (frontmatter + orchestration logic)
-- `SC-GUIDE.md` — the human-readable SC operator guide
-- `GOVERNANCE.md` — non-negotiable output, messaging, and read-only rules; canonical source for the SC-Facing Output Rules, Outbound Messaging Pipeline, and Operating Boundaries. Load unconditionally, every session.
+- `SC-GUIDE.md` — the human-readable operator guide (the filename is historical; since v1.6.0 it routes for SCs and AEs alike)
+- `GOVERNANCE.md` — non-negotiable output, messaging, and read-only rules; canonical source for the User-Facing Output Rules, Role Intake and Recipient Boundary, Outbound Messaging Pipeline, and Operating Boundaries. Load unconditionally, every session.
 - `references/` — modular reference files the skill loads on demand:
   - `apollo-ai-prompt-patterns.md`
   - `canvas-generation.md`
@@ -67,6 +67,26 @@ David Johnson — Senior Solutions Consultant, Apollo.io
 This skill and its underlying consulting frameworks are authored by David Johnson. For feedback, questions, or bug reports, DM @David on Slack.
 
 ## Changelog
+
+### v1.6.0
+
+The skill now establishes who is running it before routing anything, and stops assuming that person is an SC. **The SC path is unchanged.** Ticket: RVOSYS-6274.
+
+**1. Step Zero — Role Intake added to `SKILL.md`, ahead of the Configuration Fast Path.** On 2026-09-08 an SMB AE ran the skill on an inbound self-serve lead. The assigned-opportunity flow is built around "coordinate with the AE," and since the user *was* the AE, the skill improvised and drafted a message asking a BDR with no involvement in the deal for context. Root cause: nothing in any instruction file gave the skill a notion of who its user was. Role Intake derives it, in order: the signed-in email when the host has already placed it in context (no tool call), one Glean employee lookup for the title, the Slack connector's self-profile read when Slack is connected, and only then a one-line `AskUserQuestion`. Titles are clean discriminators in this org ("Solutions Consultant" vs "Account Executive", verified against User records), and a name match against the record's Opportunity Owner or Solution Engineer field outranks the title. Result is one of `sc`, `ae_owner`, `other`, stated as the first line of every intake summary so a wrong derivation is visible.
+
+**2. Routing on the role.** `sc` gets every existing path, byte for byte. `ae_owner` and `other` get the intake summary and a bounded Pick Your Path menu — no Copyable Message to AE / Dealroom, no Recommended AE Sync Questions, and the fast path's "prep for an AE sync or skip to config?" question is not asked. All gates apply unchanged.
+
+**3. Recipient Boundary added to `GOVERNANCE.md`, which governs on conflict.** A coordination draft may address only a person the resolved opportunity record names as Opportunity Owner or Solution Engineer. When the user is the Owner and no Solution Engineer is named, no draft is produced. A BDR or SDR is never substituted. Inbound and self-serve records (`Lead Source Bucket`, `Sales Source`) are surfaced in the intake summary as a reason to produce nothing, not to widen the recipient list.
+
+**4. "The SC" became "the user" across `SKILL.md`, `SC-GUIDE.md` and `GOVERNANCE.md`** (Jared's call over a defined-term shortcut). Role-specific uses stay: "shadow SC", the SC assignment, "AE / SC" in intake summaries, the SC walkthrough artifact, the canvas tier names, and the named SCs in the test cases. `SC-Facing Output Rules` is now `User-Facing Output Rules` in all three files; `SC-GUIDE.md` keeps its filename because other files and Layer 2 reference it. The `references/` files were not renamed in this pass.
+
+**5. `SKILL.md`'s Slack Canvas Deal Room section cut from 57 lines to a pointer.** It was a copy of `references/canvas-generation.md`, which already carries the delegate-only banner, the action table, the distribution steps and the refresh flow. Moved so Role Intake could land without adding net length: `SKILL.md` went from 908 lines to fewer than before, against the repo's roughly-500-line guidance.
+
+**6. Field Dictionary gains the people and source rows Role Intake matches against**, plus a new §7 in `references/data-sources.md` with the identity steps. Observed live: the Glean blob keys on field labels and renders the owner as a **name** under `Owner ID`; `Solution Engineer` and `Latest Solutions Engineer` are present when populated; `Owner Is Self Serve` renders as a user ID and is not read.
+
+**Tested with `claude plugin eval`, 2026-09-23 — classification and routing, not live derivation.** A five-case matrix (an AE who is the Opportunity Owner, an AE who is not, an SC the record names, an SC it does not, and a user who is neither), three runs each, fed identity through the eval's system prompt and the Salesforce record as pasted fields, since personal MCP servers do not load in eval runs. All fifteen runs produced the correct `Running as:` label. Both SC cases rendered the unchanged SC surface on every run; the AE and "neither" cases produced no Copyable Message and no AE Sync Questions on every run, and every one of their final messages stated it would not draft to the BDR on the record. The suite is local (not in the repo). Six runs were first marked failed by a judge grader that misread those "will not draft to the BDR" sentences; the check was replaced with a pattern match.
+
+**Still untested in this form:** the live derivation through Glean and Slack (each tool was exercised by hand from a RevOps seat and returns what the spec expects, but no skill run has driven them); the fallback question, which no case reached; and a real run by an AE on a real inbound lead, which is the ticket's acceptance test. The email-in-context step is observed behavior, not documented behavior, which is why steps 3 and 4 exist.
 
 ### v1.5.0
 

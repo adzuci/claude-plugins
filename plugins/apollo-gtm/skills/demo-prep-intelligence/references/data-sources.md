@@ -80,7 +80,7 @@ Glean can return a massive SFDC JSON blob containing the opportunity, account, c
 
 Canonical SFDC extraction order:
 
-1. Opportunity metadata: account name, opportunity name, stage, ARR, close date, AE, SC, segment, company size, industry.
+1. Opportunity metadata: account name, opportunity name, stage, ARR, close date, AE (Opportunity Owner), SC (Solution Engineer), Lead Source Bucket, Sales Source, segment, company size, industry. The two people fields and the two source fields feed `SKILL.md`'s Step Zero — Role Intake.
 1. MEDDPICC and deal strategy fields listed in the SFDC Field Dictionary.
 1. Notes, Solution Engineer Notes, Next Step, Next Step History, Capabilities, and any Data Duel or evaluation fields.
 1. Stakeholders: name, title, role in deal, email/domain only when useful for disambiguation, source field, and any deal-relevant notes.
@@ -116,6 +116,13 @@ Apollo SFDC uses emoji-prefixed and `- CI` (Command of the Message) suffixed fie
 | Solution Engineer Notes | Solution Engineer Notes | `Solution_Engineer_Notes__c` |
 | Business Impact | Business Impact | `Negative_Consequences__c` |
 | After Scenario | After Scenario | `After_Scenario__c` |
+| Opportunity Owner (the AE) | Opportunity Owner — **renders in the Glean blob under the key `Owner ID` with the owner's name as the value**, not an ID (observed live 2026-09-22) | `OwnerId` |
+| Solution Engineer (the SC) | Solution Engineer; Latest Solutions Engineer (an account-level field surfaced in the same blob; its API name was not verified) | `Solution_Engineer__c` |
+| Lead Source | Lead Source Bucket (e.g. `Inbound`); Lead Source; Lead Source Detail (e.g. `Demo Request`) | `Lead_Source_Bucket__c`, `LeadSource`, `Lead_Source_Detail__c` |
+| Sales Source | Sales Source — formula, e.g. `B. RepDriven` (`Owner Is Self Serve` also exists but renders as a user ID, so do not read it) | `Sales_Source__c` |
+| BDR / SDR | BDR; SDR — lookups. Listed so the skill recognizes them; **never a coordination-draft recipient** (`GOVERNANCE.md` Recipient Boundary) | `BDR__c`, `SDR__c` |
+
+**People and source rows added 2026-09-23 for Role Intake.** The Owner, Solution Engineer and source fields are what `SKILL.md`'s Step Zero matches the running user against and what the intake summary's `Running as:` line cites. Null lookups drop out of the blob entirely, so an absent `Solution Engineer` key means no SC is assigned, not a parsing failure.
 
 **Force Management's three constructs, and the one whose label hides it — added 2026-08-19, all three labels verified by a live `FieldDefinition` query against the org.** Force Management's before-state / negative-consequences / after-state trio maps onto this org's fields as follows, and two of the three do not read the way their API names suggest:
 
@@ -422,6 +429,17 @@ Confidence rules for Context Center company-profile fields:
 - `[assumed]` — **not allowed** in the company-profile fields. If the only available evidence is `[assumed]`, omit the field and surface it in the Missing Business Context checklist.
 
 If research cannot close a required field, do not invent. Render the Missing Business Context checklist defined in `SKILL.md` instead of a payload. Public research never overrides internal deal context, but it is required when the internal context is missing for the company-profile fields.
+
+## 7. Running User Identity (Role Intake)
+
+Used once per session by `SKILL.md`'s Step Zero — Role Intake. Read-only. Stop at the first step that yields a title.
+
+1. **Context.** Claude Code sessions with claude.ai connectors attached usually carry the signed-in user's email in the conversation context. It is not documented as guaranteed — use it when present, never assume it. If the context also states a name or title (some hosts and the plugin's eval harness do), take them and skip step 2.
+1. **Glean employee lookup.** `employee_search` with the email (or name) returns the title and department from the HR mirror. **The search is fuzzy** — querying `jared@apollo.io` returned five people named Jared, with the right one first (observed 2026-09-23). Take the entity whose `email` field equals the identity you searched for, never the top hit; if no entity's email matches, treat the lookup as failed and move to the next step. Apollo titles are clean discriminators: SCs carry "Solutions Consultant" (any level; UserRole `Sales Engineer`, Department `Success: Solutions Consultant`), AEs carry "Account Executive", BDRs carry "Business Development Representative". Glean also exposes a `memory` read (`ProfileSummary`) that describes the caller's role in prose; use it only if `employee_search` returns nothing.
+1. **Slack self-profile.** The Slack connector's user-profile read, called with no user ID, returns the caller's own name, email and title in one call. Skip when Slack is not connected; do not treat its absence as a failure.
+1. **Ask.** `SKILL.md` Step Zero's bounded `AskUserQuestion`.
+
+Then compare the user's **name** against the resolved opportunity's `Owner ID` (a name, see §1's dictionary) and `Solution Engineer` / `Latest Solutions Engineer` values. Names, not emails, so tag the match `[inferred]`. Never shell out for identity (`git config`, `whoami`): this skill has no `Bash` and `GOVERNANCE.md` forbids it.
 
 ## Context Budget Priority
 
