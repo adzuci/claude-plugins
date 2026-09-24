@@ -157,6 +157,29 @@ the deal stalls at signature:
 - **EOR and contractor structures.** Entity of record and PEPM definitions drive cost on
   headcount-based deals.
 
+## If the Vendor Asks Who Signs
+
+Vendors ask "who signs for you?" late in a deal, and some will use the answer to route an
+order form straight to that person for signature — bypassing you and the process. Naming
+the signer is fine; naming the signer without guardrails is how deals get signed before
+they are approved.
+
+- You may state the signer by name. Do not treat it as secret — vendors can find it anyway.
+- If Apollo is not ready to sign, say so explicitly in the same message: "That will be
+  <name>, but we are not at signature yet — we're still in internal review, and any order
+  form needs to route through our procurement process first."
+- If you have given the signer's name and we are not ready to sign, proactively tell the
+  signer, right then, not to sign anything the vendor sends directly. Do not wait for the
+  vendor to make the first move — a signature request landing cold in the signer's inbox
+  looks routine and can get executed.
+- All process must be complete in Zip — intake, approvals, and legal review — before
+  anything is signed. A vendor-sent order form that has not routed through Zip is not
+  signable, no matter who it is addressed to.
+- If the vendor sends paper directly to the signer or escalates around you to an executive,
+  flag it to Procurement/Legal immediately and ask the vendor to withdraw the signature
+  request until the process completes. If something was signed off-process, escalate the
+  same day — do not sit on it.
+
 ## Red Flags
 
 - Proposed commit is built from vendor-modeled usage rather than measured usage.
