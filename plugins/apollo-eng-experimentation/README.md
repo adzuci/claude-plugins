@@ -1,7 +1,8 @@
 # apollo-eng-experimentation
 
-Amplitude experiment lifecycle skills: create an experiment, build the dashboard that
-measures it, and clean it up once it ships.
+Amplitude experiment lifecycle skills: create an experiment, keep its exposure
+instrumentation correct, build the dashboard that measures it, and clean it up once it
+ships.
 
 ## Scope: `apolloio/leadgenie` Only
 
@@ -20,14 +21,22 @@ have before — `.claude/skills/` is Claude-only.
 | Invoke command | Purpose |
 |---|---|
 | `/apollo-eng-experimentation:create-amplitude-experiment` | Create an experiment with Apollo's required bucketing and targeting, then scaffold the registry and ownership YAML |
+| `/apollo-eng-experimentation:experiment-exposure-order` | Check that exposure is recorded before the metric event it explains, for both arms and on every path |
 | `/apollo-eng-experimentation:experiment-metrics-dashboard` | Build an Amplitude dashboard that complements the standard Analysis View, from an experiment name, branch, or PR |
 | `/apollo-eng-experimentation:experiment-cleanup` | Remove a shipped experiment, keep the winning code path, open the cleanup PR |
 
-## Invocation Is Manual Only
+## Invocation
 
-All three skills set `disable-model-invocation: true`. They never enter routing context,
-and the model will not pick them up from a phrase like "clean up experiment FooBar". Run
-them as slash commands and pass the experiment reference as an argument.
+The three lifecycle skills (`create-amplitude-experiment`, `experiment-metrics-dashboard`,
+`experiment-cleanup`) set `disable-model-invocation: true`. They never enter routing
+context, and the model will not pick them up from a phrase like "clean up experiment
+FooBar". Run them as slash commands and pass the experiment reference as an argument.
+
+`experiment-exposure-order` is the one exception and is natural-language activated. It is
+a correctness check on code an engineer is already writing, and the bug it prevents throws
+no error, fails no test, and fires no alert, so an engineer who knew to invoke it would
+not have written the bug. It can still be run directly as a slash command when reviewing
+a diff.
 
 ## Migrating From The LeadGenie Repo Skills
 
@@ -73,6 +82,8 @@ operate on the same LeadGenie files. `experiment-cleanup` still labels its PR
 ## Typical Flow
 
 1. `create-amplitude-experiment` — create on staging (`168367`), scaffold the code.
+1. Write the exposure and metric calls. `experiment-exposure-order` activates on its own
+   here, and is worth running by hand over the diff before the PR.
 1. Ship and test on staging, then create the prod experiment.
 1. `experiment-metrics-dashboard` — build the prod (`241072`) dashboard from the PR.
 1. Read out, pick a winner.
