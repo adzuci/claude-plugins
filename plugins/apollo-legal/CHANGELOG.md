@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/apolloio/claude-plugins/compare/apollo-legal-v1.2.0...apollo-legal-v1.3.0) (2026-09-25)
+
+
+### Features
+
+* **apollo-legal:** add privacy-questionnaire-bot skill (ITSD-38169) ([#298](https://github.com/apolloio/claude-plugins/issues/298)) ([eceed08](https://github.com/apolloio/claude-plugins/commit/eceed082926059001c43cdbb1e6dd9eb452d1fc1))
+
 ## [1.2.0](https://github.com/apolloio/claude-plugins/compare/apollo-legal-v1.1.0...apollo-legal-v1.2.0) (2026-07-30)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-experimentation-v1.1.0...apollo-eng-experimentation-v1.2.0) (2026-09-25)
+
+
+### Features
+
+* **apollo-eng-experimentation:** check exposure is recorded before the metric event ([#301](https://github.com/apolloio/claude-plugins/issues/301)) ([f7d4d68](https://github.com/apolloio/claude-plugins/commit/f7d4d68895c2ac3dfb62a9e4536beb3c78bd9b1b))
+
 ## [1.1.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-experimentation-v1.0.0...apollo-eng-experimentation-v1.1.0) (2026-09-03)
 
 
