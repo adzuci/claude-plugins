@@ -8,7 +8,9 @@ Shared engineering skills for Apollo engineers — PR descriptions, security rev
 |---|---|
 | `/apollo-eng:pr-description` | Generate a PR title and description from the current branch's changes |
 | `/apollo-eng:security-review` | Security audit of Ruby controllers for IDOR vulnerabilities |
-| `/apollo-eng:bug-bash-generator` | Generate bug bash test cases from a Notion bug bash page |
+| `/apollo-eng:end-to-end-bug-bash` | Generate a bug-bash plan, execute existing cases, or run the complete campaign based on the request |
+| `/apollo-eng:bug-bash-generator` | Compatibility command that delegates generation-only requests to `end-to-end-bug-bash` |
+| `/apollo-eng:manual-test-execution` | Execute standalone manual scenarios and record evidence |
 | `/apollo-eng:product-ship-post` | Generate product ship room posts for Slack announcements |
 | `/apollo-eng:learn-from-chat` | Save user corrections and preferences to Claude Code memory |
 

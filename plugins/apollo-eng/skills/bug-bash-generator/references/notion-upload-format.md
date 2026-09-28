@@ -1,6 +1,6 @@
-# Notion Upload Format (Step 5A)
+# Notion Test Case Upload Format
 
-Use only after Step 4 approval with **`UPLOAD TO NOTION`**.
+Use after the user approves the draft and chooses Notion delivery.
 
 ## MCP method
 
@@ -22,7 +22,7 @@ MUST use `mcp__Notion__notion-create-pages` ONLY — no other Notion write metho
       "Test Case Type": "[REPLACE: EXACTLY ONE OF: Functional, Performance, Security, Usability, Cross-browser, Accessibility, Migration, business case]",
       "Test Suite": "[REPLACE: EXACTLY ONE OF: Sanity, Regression, Smoke]",
       "Status": "Not started",
-      "Feature": "[REPLACE: EXACT Bug Bash Notion URL - NO VARIATIONS ALLOWED]",
+      "Feature": "[REPLACE: canonical Test Plan page URL]",
       "Group": "[REPLACE: Feature name for logical grouping - MANDATORY]",
       "AI-Generated?": "__YES__"
     },
@@ -42,7 +42,7 @@ MUST use `mcp__Notion__notion-create-pages` ONLY — no other Notion write metho
 | **5** | **DATABASE URL** | https://www.notion.so/apolloio/c65ce600697842f793a56f8fa3f72113?v=111a80a0a1414ce0a2a7eb19e45d2bb0 |
 | **6** | **PLACEHOLDER REPLACEMENT** | ALL `[REPLACE: ...]` placeholders replaced — no bracketed text in final JSON |
 | **7** | **FIELD VALUE VALIDATION** | ONLY approved values from lists below |
-| **8** | **URL INTEGRITY** | Feature field = EXACT Bug Bash URL from Step 1 |
+| **8** | **URL INTEGRITY** | Feature field = canonical Test Plan page URL |
 
 ## Required fields & values
 
@@ -53,16 +53,14 @@ MUST use `mcp__Notion__notion-create-pages` ONLY — no other Notion write metho
 | **Test Case Type** | Single value | Functional, Performance, Security, Usability, Cross-browser, Accessibility, Migration, business case | |
 | **Test Suite** | Priority-based | Sanity (P0), Regression (P1), Smoke (P2+) | |
 | **Status** | Fixed | `"Not started"` | |
-| **Feature** | Exact URL | EXACT Bug Bash Notion URL | Mandatory |
+| **Feature** | Exact URL | Canonical Test Plan page URL | Mandatory |
 | **Group** | Feature identifier | Feature/component name | Mandatory |
 | **AI-Generated?** | Fixed | `"__YES__"` | |
 
-## Sample-then-bulk workflow
+## Approval gate
 
-1. Create **one** P0/P1 sample case via `notion-create-pages`
-1. Present Name, Priority, Test Case Type, Group, Feature URL + database link to user
-1. Wait for **`APPROVED - PROCEED`**, `MODIFY [...]`, or `CANCEL`
-1. Only after **`APPROVED - PROCEED`**, create all remaining cases with the same JSON structure
+The Phase 2 chat review is the write approval. After that approval, create all approved cases in one
+or more bounded calls. Do not add a second sample-case confirmation unless the user requests a sample.
 
 ## Content quality standards
 

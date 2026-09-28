@@ -1,6 +1,6 @@
 # ERD Proposed Delta Pass
 
-Use during **Step 3 → ERD analysis** after reading the full ERD (existing + proposed models).
+Use during **Phase 1 → ERD analysis** after reading the full ERD (existing + proposed models).
 
 ## Scope — schema & configuration (not runtime)
 

@@ -1,23 +1,18 @@
 ---
 name: manual-test-execution
 description: >-
-  Execute manual test scenarios against a running web app by driving the UI with
-  playwright-cli, producing an auditable report.md + failed-step screenshots + video under
-  playwright/reports/ai_manual/[run_id]/, and (when scenarios come from Notion) writing the
-  run summary and AI Status back to each Test case page (never the human-owned Status) via the Notion MCP.
-  Use whenever the user asks to "run manual tests", "execute manual test scenarios",
-  "manual test execution", "run the test plan", "run test cases from Notion",
-  "AI-execute these test cases", "test this scenario in the browser", or pastes a Notion
-  test-plan/test-case URL and asks to execute/verify it against an environment. Also
-  trigger on "run P0s from this page", "verify this flow manually", or any request to
-  drive a manual QA scenario end-to-end in a real browser and produce a test report.
-  Do NOT use for writing automated Playwright test code (use playwright-testing) or for
-  merely reading/listing bugs and test cases from Notion (use notion-bugs-and-tests).
+  Execute standalone manual web test scenarios with playwright-cli and produce an auditable report,
+  screenshots, video, and Notion AI Status/evidence write-back for Notion-sourced cases. Use for
+  manual test execution, browser verification, retesting selected cases, or running an existing
+  test plan. Do not use for automated Playwright code or for merely listing test cases.
 ---
 
 # Manual Test Execution — AI-Driven Manual QA Runs
 
 You execute **manual test scenarios** by driving the UI with **`playwright-cli` only** (see the `playwright-cli` skill for command reference). Follow this checklist precisely for consistent, secure, and reportable runs.
+
+Before execution, read `references/execution-reliability.md`. It defines the exact-path, fixture,
+side-effect, downstream-assertion, and evidence rules that prevent false-green or unsafe runs.
 
 Migrated from `.cursor/commands/manual-test-execution.md`. Canonical usage doc:
 [Manual Test Execution – Usage Documentation](https://www.notion.so/apolloio/30bab2b3b496813cb43fe736302f9158).
@@ -29,6 +24,8 @@ Migrated from `.cursor/commands/manual-test-execution.md`. Canonical usage doc:
 - [ ] **Execution authorization:** An explicit request to run/execute/test against an Apollo-owned test environment, together with the exact URL and usable authentication, authorizes browser execution. Do not ask for a redundant "start" confirmation. Keep an explicit confirmation gate for third-party authentication, ambiguous ownership, or when the user has not actually asked to execute.
 - [ ] **VPN gate:** If base URL contains `preview` (case-insensitive), `curl -s -o /dev/null -w '%{http_code}'` it. If not 200, ask the user to enable VPN and wait for "ready".
 - [ ] **Execute:** `playwright-cli` only (open → goto → snapshot → click/fill/type → wait → assert via snapshot). Start video recording first. No other browser/automation tools.
+- [ ] **Path fidelity:** Match the scenario's real persona, entry point, persisted state, and
+  interactive/background context; verify final downstream outcomes rather than only acceptance.
 - [ ] **Artifacts:** Failed-step screenshots → `playwright/reports/ai_manual/[run_id]/screenshots/`; video → `.../video/`; full run → `.../report.md`.
 - [ ] **Notion evidence capability (Notion source only):** Before app execution, verify native Notion
   local-file upload tools are callable or preflight an authenticated Notion browser fallback. Do not
@@ -113,7 +110,11 @@ ______________________________________________________________________
   1. `playwright-cli goto <base-url>` and log in (fill login/password using snapshot refs).
   1. Per step: **snapshot → interact (click/fill/type/select/press) using exact refs → wait → assert** by re-reading the snapshot (and screenshots at key points).
   1. After actions that change the page (submit, navigation), take a fresh snapshot before the next interaction.
-  1. At the end: `playwright-cli video-stop --filename=playwright/reports/ai_manual/[run_id]/video/run.webm` then `playwright-cli close`. **Gotcha:** `video-stop` takes the path via the `--filename=` flag, NOT as a positional argument (a positional path errors with "too many arguments" and the recording is lost). Stop the video **before** `close`, and confirm the `.webm` exists; if it is missing, say so rather than implying a video was captured.
+  1. Before recording, check `playwright-cli video-start --help` and `video-stop --help` once for the
+     installed version. Supply the output filename using the supported form; versions differ between
+     a start-time filename, `video-stop --filename=<path>`, a positional stop path, or no stop
+     argument. Stop video **before** `close`, and confirm the `.webm` exists; if it is missing, say so
+     rather than implying a video was captured.
 - **Best practices:** prefer semantic, stable targets (roles, labels, test ids) exposed by the snapshot; prefer waiting for content over fixed sleeps.
 - **Recovery — do not give up early (required):**
   - Do **not** stop on the first missing element or empty state if the UI offers a path forward (e.g. "No AI sheet found", "Create…", empty lists with **Add**/**New** buttons).

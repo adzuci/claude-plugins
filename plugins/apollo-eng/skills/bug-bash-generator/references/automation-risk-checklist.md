@@ -8,7 +8,7 @@ Do **not** duplicate ERD pass cases for the same topic at **config/schema** leve
 
 ## When to apply
 
-Use during **Step 3** when the feature involves any of:
+Use during **Phase 1 research** when the feature involves any of:
 
 - Schedules or cron-like execution
 - Background runs, workers, or async pipelines

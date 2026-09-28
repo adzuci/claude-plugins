@@ -1,4 +1,4 @@
-# Test Case Status Write-Back (Phase 4.0, mandatory every run)
+# Test Case Status Write-Back (Phase 4.0, mandatory for Notion-sourced cases)
 
 Test Case DB: `collection://a6e0a264-6253-4f7c-999e-d450b47d68bd`.
 

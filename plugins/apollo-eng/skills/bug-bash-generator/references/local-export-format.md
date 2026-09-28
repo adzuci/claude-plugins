@@ -1,6 +1,6 @@
-# Local Export Format (Step 5B)
+# Local Export Format
 
-Use only after Step 4 approval with **`EXPORT TO LOCAL`**.
+Use after the user approves the draft and chooses local delivery.
 
 ## Do not use Notion MCP
 
@@ -19,7 +19,7 @@ This path writes a markdown file only — skip all Notion MCP steps and the samp
 ```markdown
 # [Feature Name] — Bug Bash Test Cases
 
-**Feature (Bug Bash URL):** [EXACT URL from Step 1]
+**Canonical source:** [supplied Bug Bash/Test Plan URL, other source URL, or "User-provided description"]
 **Generated:** [YYYY-MM-DD]
 **Source docs:** [ERD, PRD, Jira, etc.]
 **AI-Generated:** Yes
@@ -44,7 +44,7 @@ Each case MUST include:
 
 ## Section layout
 
-Preserve Step 4 review structure:
+Preserve the Phase 2 review structure:
 
 1. **Journey / E2E test cases** (grouped)
 1. **Atomic risk test cases** (grouped)
