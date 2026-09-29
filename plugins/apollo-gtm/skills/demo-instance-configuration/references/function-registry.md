@@ -252,12 +252,12 @@ product:
 - **Possible (Proposed):** a Context Center payload exists (Business Understanding Gate passed, `customer_profile` populated) and either maps directly to `PERMITTED_PERSONA_FILTERS` or maps via `generate_personas_fallback`.
 - **Not possible (Blocked / Routed to roadmap):** no Context Center payload exists yet this run, **or** `customer_profile` is populated but too sparse to map even through the fallback (e.g. one vague sentence with no segment/title/industry signal to structure). There is no third state — if neither condition holds, this function is Proposed, full stop.
 
-**Every `configure_persona` payload should be built via the Hybrid Persona Construction Procedure in `SKILL.md`, not assembled solely from Context Center prose.** A persona with populated `person_seniorities`/`organization_industry_tag_ids`/etc. that has no provenance tag on those fields is a process violation, not a stylistic gap — those fields have no non-AI source and must show where they came from.
+**Every `configure_persona` payload should be built via the Hybrid Persona Construction Procedure (`references/persona-construction.md`), not assembled solely from Context Center prose.** A persona with populated `person_seniorities`/`organization_industry_tag_ids`/etc. that has no provenance tag on those fields is a process violation, not a stylistic gap — those fields have no non-AI source and must show where they came from.
 
 | Field | Value |
 |---|---|
 | Endpoint | `POST /api/v1/personas` |
-| Proposed by | demo-instance-configuration — builds the filter payload from demo-prep-intelligence's Context Center `customer_profile` field for deal-specific facts (titles, geography, company size), reconciled against `generate_personas_fallback`'s harvested taxonomy values for fields the brief can't populate (seniority, industry tags, department codes). See the Hybrid Persona Construction Procedure in `SKILL.md`. |
+| Proposed by | demo-instance-configuration — builds the filter payload from demo-prep-intelligence's Context Center `customer_profile` field for deal-specific facts (titles, geography, company size), reconciled against `generate_personas_fallback`'s harvested taxonomy values for fields the brief can't populate (seniority, industry tags, department codes). See the Hybrid Persona Construction Procedure (`references/persona-construction.md`). |
 | Executed by | Democles (agent) |
 | Execution surface | `direct_api` — no CLI or MCP coverage exists for personas |
 | Status | active — live-verified (real personas created and persisted) |
@@ -299,7 +299,7 @@ filters:                               # must be a subset of PERMITTED_PERSONA_F
 | Field | Value |
 |---|---|
 | Endpoint | `POST /api/v1/ai_setup/generate_personas` |
-| Proposed by | demo-instance-configuration — called as a standard step for every `configure_persona` build, not a fallback reserved for unmappable prose. See the Hybrid Persona Construction Procedure in `SKILL.md`. |
+| Proposed by | demo-instance-configuration — called as a standard step for every `configure_persona` build, not a fallback reserved for unmappable prose. See the Hybrid Persona Construction Procedure (`references/persona-construction.md`). |
 | Executed by | Democles (agent) |
 | Execution surface | `direct_api` |
 | Status | active — live-verified. Does **not** persist anything itself; it only returns structured suggestions. `configure_persona` (`POST /api/v1/personas`) is the separate, required persistence step. |
