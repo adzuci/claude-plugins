@@ -1,0 +1,70 @@
+{
+  "version": 1,
+  "repository": "claude-plugins",
+  "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "sources": [
+    {
+      "path": "synthetic-prompt.md",
+      "sha256": "213d1cfe7c7f8423b64339bcbbfc0f372c5934f34de906e900a9fed5451063f6",
+      "content": "# STEP 1\nLook up the record.\n```tool-call\n{\"name\":\"lookup\",\"arguments\":{\"id\":42}}\n```\nFinish using STEP 9.\n"
+    }
+  ],
+  "changed_paths": [
+    "synthetic-prompt.md"
+  ],
+  "prompts": [
+    {
+      "id": "example",
+      "source_path": "synthetic-prompt.md",
+      "dependencies": [
+        "synthetic-prompt.md"
+      ],
+      "variants": [
+        {
+          "id": "default",
+          "messages": [
+            {
+              "role": "system",
+              "content": "# STEP 1\nLook up the record.\n```tool-call\n{\"name\":\"lookup\",\"arguments\":{\"id\":42}}\n```\nFinish using STEP 9.\n"
+            }
+          ],
+          "tools": [
+            {
+              "name": "lookup",
+              "input_schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          ],
+          "tools_complete": true,
+          "output_schema": null,
+          "output_examples": [],
+          "call_examples": [
+            {
+              "name": "lookup",
+              "arguments": {
+                "id": 42
+              },
+              "source_quote": "```tool-call\n{\"name\":\"lookup\",\"arguments\":{\"id\":42}}\n```"
+            }
+          ],
+          "required_variables": [],
+          "provided_variables": [],
+          "deferred_variables": []
+        }
+      ]
+    }
+  ],
+  "coverage_gaps": [],
+  "discovery_complete": true
+}

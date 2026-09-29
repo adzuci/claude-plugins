@@ -47,6 +47,7 @@ Generated from `plugins/*/skills/*/SKILL.md`. Do not edit this table manually.
 | apollo-eng | `/apollo-eng:pr-metrics` | Use when someone asks for PR lead time, velocity, cycle time, or PR health metrics for any engineering team. Pulls data from Snowflake and applies Apollo engineering health thresholds. |
 | apollo-eng | `/apollo-eng:product-gap-measurement` | Plans and reviews measurement for product gap work across ticket analysis, PR review, and post-merge impact tracking. |
 | apollo-eng | `/apollo-eng:product-ship-post` | Generate product ship room posts for Slack announcements. Activate when user asks to write a ship post or feature launch announcement. |
+| apollo-eng | `/apollo-eng:prompt-review` | Review new or modified Apollo prompts for inconsistent instructions, examples, and tool usage, with evidence and minimal fixes. |
 | apollo-eng | `/apollo-eng:rca-doc-review` | Review an RCA document from Notion or Google Drive against Apollo's RCA standards. Activate when user asks to review an RCA, check an incident report, or provide feedback on a post-mortem document. |
 | apollo-eng | `/apollo-eng:rca-report` | Status report over Apollo's RCA (Post Mortems) database in Notion, with optional surface filter. Run via /apollo-eng:rca-report. |
 | apollo-eng | `/apollo-eng:resolve-review-comments` | Fetch, categorize, and interactively resolve PR review comments. Groups related comments, explains each, and waits for your decision before fixing. |

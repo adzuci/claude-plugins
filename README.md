@@ -56,7 +56,7 @@ See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill comman
 
 | Plugin | Description | Skills |
 | --- | --- | ---: |
-| `apollo-eng` | Shared engineering skills for Apollo repos | 32 |
+| `apollo-eng` | Shared engineering skills for Apollo repos | 33 |
 | `apollo-eng-devops` | DevOps, SRE, and production reliability skills for Apollo engineers | 25 |
 | `apollo-analytics` | Apollo Analytics Copilot — answers data questions using governed Snowflake metrics, runs product debriefs, generates account profiles, and surfaces weekly strategic insights. | 12 |
 | `apollo-eng-leadership` | Cowork skills for engineering leadership and customer-care rotation support | 9 |
@@ -131,6 +131,11 @@ You can also create or edit skills manually:
   ```
 
   If Codex is installed and exposes plugin validation, also run `codex plugin validate .`; otherwise note that Codex validation was unavailable.
+
+### Reviewing Prompts
+
+Run `/apollo-eng:prompt-review path/to/prompt.md` for a local advisory review.
+See the [skill and runnable example](plugins/apollo-eng/skills/prompt-review/SKILL.md).
 
 ### Testing Skill Scripts
 
