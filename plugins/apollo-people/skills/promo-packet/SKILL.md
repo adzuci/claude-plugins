@@ -48,6 +48,7 @@ Apply these rules to every section draft and to the style self-check in Step 6.
 - Data-first: lead with the evidence, then the interpretation.
 - No filler introductions ("In her role as…", "Over the past year…"). Start with the strongest fact.
 - Sentence fragments are permitted only as deliberate rhetorical emphasis (rare, one per section max).
+- Compact numerals. Default to compact notation (%, /5 ratios, decimals) over spelled-out units, since every section is space-constrained by design. Write "40%" not "40 percent", "4.6/5" not "4.6 out of five".
 
 **Length:** ~100 words per section. Stay close to this limit — sections are constrained by the Slides template text box and longer drafts will overflow when pasted.
 
@@ -158,6 +159,8 @@ After searching, present a brief evidence summary to the manager before drafting
 
 Wait for explicit confirmation before moving to Step 5. This gate exists because fabricated or premature evidence surfaced after drafting requires rewriting full sections.
 
+**The gate is not one-and-done.** Managers revise for many rounds after the first draft, and new evidence can enter at any point, including evidence reused from a different skill session. Any time new evidence enters the draft after this gate, confirm it with the manager as already-demonstrated (not in-progress or aspirational) before adding it to any section. Do not carry an unverified fact into a revision on the assumption the original gate already covered it. Step 6 re-checks this on every revision.
+
 ______________________________________________________________________
 
 ## Step 5: Draft Each Section
@@ -172,7 +175,9 @@ Apply the Writing Rules (active voice, no em dashes, no colon-led fragments, no 
 
 The Level Question for [target level] is: **[insert from framework]**
 
-Draft a direct answer to that question, making the case that the nominee is consistently operating at the target level. This is the manager's voice — first-person plural ("We see…", "In my assessment…") is fine. Ground it in the strongest 2–3 examples from the evidence. This is the headline; the other four sections provide the proof.
+Draft a direct answer to that question, making the case that the nominee is consistently operating at the target level. This is the manager's voice — first-person plural ("We see…", "In my assessment…") is fine. Draw on the strongest 2–3 examples from the evidence, but cite only one or two of them as headline proof points in the text itself. This is the headline; the other four sections provide the proof.
+
+The Level Question should cite at most one or two headline proof points as illustration and read as a synthesized thesis about scope and autonomy, not a metrics recap. The four sections below carry the numbers. If this section restates Impact's exact metrics, it is doing their job instead of its own; abstract it up to the claim those metrics support.
 
 ### Section 2: Impact
 
@@ -235,6 +240,13 @@ ______________________________________________________________________
 - [ ] No `[needs verification]` flags remain unfilled
 
 Fix any violations before producing the output. If a `[needs verification]` flag remains because the manager couldn't provide an example, leave it in — do not fill it with generated content.
+
+**Revision self-check. Run every time a section is revised, not only at first draft.** Manager revision rounds trim framework-specific phrasing first (it reads more abstract than concrete evidence), pull the Level Question toward a metrics recap, and quietly introduce new or duplicated evidence. Re-run these on any section you touch:
+
+- **Framework alignment.** The section still reflects the target level's relevant framework dimension. Impact ← Scope of Delivery/Influence, Ownership ← Autonomy/Complexity, Mastery ← Craft/Leadership Craft. If a revision has stripped that grounding out, tell the manager: "This version reads well but has drifted from the [target level] framework language for [dimension], want me to work it back in, or is the current version intentional?"
+- **Level Question altitude.** Does the Level Question restate sentences from Impact/Ownership/Mastery near-verbatim? If so, abstract it up a level so it reads as a thesis about scope and autonomy, not a metrics recap.
+- **New evidence verified.** Any evidence added after the Step 4 fact-check gate, including evidence reused from a different skill session, has been confirmed with the manager as already-demonstrated, not in-progress or aspirational.
+- **No duplicated evidence.** Scan for the same statistic or example appearing in more than one section. If found, either differentiate the framing (make clear what it proves in each context) or consolidate it to the single section where it lands hardest.
 
 After all sections pass the self-check, produce the final output inline — no preamble, no extra commentary. Tell the manager:
 
