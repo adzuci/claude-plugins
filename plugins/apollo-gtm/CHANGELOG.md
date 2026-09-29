@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.5.1...apollo-gtm-v0.6.0) (2026-09-29)
+
+
+### Features
+
+* **apollo-gtm:** RVOSYS-6289 stop demo-instance-configuration outside Claude Code with a Step Zero preflight ([#308](https://github.com/apolloio/claude-plugins/issues/308)) ([1dc9142](https://github.com/apolloio/claude-plugins/commit/1dc9142cb68d12c5722fed2c6fc44f47854866fd))
+
 ## [0.5.1](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.5.0...apollo-gtm-v0.5.1) (2026-09-18)
 
 

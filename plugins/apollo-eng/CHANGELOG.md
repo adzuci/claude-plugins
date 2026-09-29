@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.9.0...apollo-eng-v1.10.0) (2026-09-29)
+
+
+### Features
+
+* **apollo-eng:** unify bug bash workflows ([#303](https://github.com/apolloio/claude-plugins/issues/303)) ([0a8d32d](https://github.com/apolloio/claude-plugins/commit/0a8d32dc64c6939acfabda634be9b6dddd316e3b))
+
 ## [1.9.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.8.0...apollo-eng-v1.9.0) (2026-09-18)
 
 
