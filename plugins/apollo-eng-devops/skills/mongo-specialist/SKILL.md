@@ -45,6 +45,16 @@ database and cluster before making recommendations.
    health pass on top. If `apollo-eng` isn't enabled, it stops and tells the user how to
    enable it rather than silently running only the WARN-only half. Experimental and
    non-blocking.
+1. For first-pass health triage of a prod cluster, run
+   `/apollo-eng-devops:check-mongo <cluster>` (read-only, does not auto-invoke). On
+   ESCALATE it prints the reasons and the exact `mongo-specialist <cluster> incident: ...`
+   command to run next. Runbook:
+   [Mongo Alerts Runbook](https://www.notion.so/1ceab2b3b496800a9c1eea5d8d3f67d6).
+   For router restarts: check **all** routers (not just the alerting one), and classify each
+   as kernel OOM kill (`status=9/KILL`) versus self-exit (`status=N`, plus mongos `HEALTH`
+   log lines) using the human-run commands in
+   [`references/host-restart-triage.md`](references/host-restart-triage.md). Agents cannot
+   `ssh`; state root causes only when verified.
 1. Load only the other reference files that are relevant:
    - `references/read-only-commands.md` for safe inspection commands.
    - `references/mongo-clusters.md` for current known client/cluster mapping, the prod
@@ -68,6 +78,8 @@ database and cluster before making recommendations.
 
 Prefer the narrower skill when the task matches one:
 
+- Use `/apollo-eng-devops:check-mongo` for a first-pass cluster health check before
+  digging in.
 - Use `/apollo-eng-devops:create-mongo-index` for Mongo index creation planning.
 - Use `/apollo-eng-devops:gameday` for Mongo incident tabletop drills (rehearsal, not a
   real page).
@@ -86,6 +98,8 @@ Prefer the narrower skill when the task matches one:
 
 - [`references/live-incident-mode.md`](references/live-incident-mode.md) — live incident
   technical diagnostic playbook
+- [`references/host-restart-triage.md`](references/host-restart-triage.md) — "MongoDB Host
+  has restarted" alert triage
 - [`references/pr-review-mode.md`](references/pr-review-mode.md) — experimental general
   Mongo query/schema health review for PRs; delegates incident patterns to
   `mongo-pr-guard`

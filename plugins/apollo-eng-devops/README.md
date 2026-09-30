@@ -14,6 +14,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 |---|---|
 | `/apollo-eng-devops:check-apdex` | Snowflake-first Apdex dip investigation with Grafana deep triage |
 | `/apollo-eng-devops:check-cloudflare` | Cloudflare edge, bot/challenge, throughput/error, and tunnel health checks |
+| `/apollo-eng-devops:check-mongo` | First-pass read-only health check for one prod Mongo cluster; human table or headless Argus report |
 | `/apollo-eng-devops:cron-oom-remediation` | Diagnose a cron OOMKilled alert and ship the right fix — limit bump vs streaming/projection/chunking |
 | `/apollo-eng-devops:create-mongo-index` | Safe read-only planning and DevOps handoff for Apollo MongoDB index creation |
 | `/apollo-eng-devops:devops` | SRE devops — applies reliability engineering to any production task |
@@ -75,6 +76,7 @@ the actual prompt, so a differently-worded question may route elsewhere.
 | "Who is on DevOps on-call next week?" | — | `/apollo-eng-devops:oncall` |
 | "Run a MongoDB failover tabletop" | — | `/apollo-eng-devops:gameday` |
 | "I'm paged for Mongo::Error::NoServerAvailable right now" | incident-response and/or systematic-debugging | `/apollo-eng-devops:mongo-specialist` (live-incident-mode) |
+| "Is the main Mongo cluster healthy? A Mongo host restarted" | — | `/apollo-eng-devops:check-mongo main` |
 | "Plan creating a Mongo index on LoginAttempt" | — | `/apollo-eng-devops:create-mongo-index` |
 | "Who should I ask about a Mongo balancer issue?" | — | `/apollo-eng-devops:mongo-specialist` |
 | "Postmortem for Feb 14 incident" | incident-response postmortem template | — |
@@ -116,6 +118,8 @@ the actual prompt, so a differently-worded question may route elsewhere.
 **`wtf-does-this-do`** — Auto-activates when you paste an unfamiliar skill, plugin, repo, script, or artifact and ask what it does or whether to install it. Also available directly as `/apollo-eng-devops:wtf-does-this-do`.
 
 **`mongo-specialist`** - Invoke directly for shared Apollo MongoDB context: cluster/client lookup, escalation channels, TapData/Mason guidance, consult targets, and read-only inspection commands. Other Mongo skills should reference this instead of duplicating stale-prone Mongo facts. Also carries the live-incident-mode playbook (PagerDuty/Grafana/Tempo triage, watcher subagents, known traps) for an active Mongo page — pair with `incident-response` for SEV/comms.
+
+**`check-mongo`** - Invoke directly for a read-only first-pass health check of one prod Mongo cluster (restarts, routers, replication lag, oplog window, balancer). It scores Grafana metrics with a tested script and, on ESCALATE, prints the exact `mongo-specialist` command to run next. Use it first when a Mongo alert fires, such as "MongoDB Host has restarted".
 
 **`create-mongo-index`** - Invoke directly when planning a Mongo index creation. It performs read-only triage, applies size/timing gates, drafts `#xfn-h-devops` handoff text, and routes execution to approved human operators. It relies on `mongo-specialist` for shared Mongo context.
 

@@ -60,7 +60,7 @@ is stripping labels you need before trusting a "flat" panel.
 | Edge 5xx by status | `cloudflared_tunnel_response_by_code` (or the edge-5xx panel) broken out **by tunnel**, not summed |
 | Deployment correlation | Overlay deploy/rollout markers on the same window before crediting a version |
 | Per-mongos connection health | `sum by (instance) (mongodb_connections{cluster="<cluster>", role="mongos", state="current"})` — compare instances, don't sum them |
-| Restart detection | `mongodb_instance_uptime_seconds` — a low value on one instance means it recently restarted |
+| Restart detection | `mongodb_instance_uptime_seconds` — a low value on one instance means it recently restarted; for the "MongoDB Host has restarted" alert see [`host-restart-triage.md`](host-restart-triage.md) |
 | Server-side call volume (ground truth) | `mongodb_op_counters_total` — verify any client-side APM burst claim against this before believing it |
 
 ## 3. Tempo trace forensics
