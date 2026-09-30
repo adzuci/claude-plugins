@@ -50,6 +50,7 @@ Current support note: the setup flow has been tested on macOS. Linux and Windows
 | `/productivity:productivity-setup` | Install managed local copies of the core skills for each detected Claude Code and Codex client, record the vault in `~/.config/adzuci-productivity/config.json`, and schedule the Friday AI Coach. |
 | `/productivity:todo` | Capture durable tasks in the vault's Kanban `backlog.md` — idempotent, with explicit urgent promotion. |
 | `/productivity:ai-coach` | Weekly report-only review of curated session notes for repeated friction and reusable workflows. |
+| `/productivity:slack-response-monitor` | Find unresolved Slack asks using an authenticated MCP connector or capable CLI, verify full thread context, and draft a concise link-backed digest without replying. |
 | `/productivity:wrapup` | Pre-`/clear` hygiene check: uncommitted work, unpushed commits, open loose ends. |
 | `/productivity:daily-wrapup` | End-of-day review, tomorrow preview, and goal capture into the vault session note. |
 | `/productivity:budgetclaw-setup` | Claude Code spend monitoring with local macOS notifications. |
@@ -142,7 +143,7 @@ plugins/
     .claude-plugin/plugin.json
     README.md
     skills/
-      productivity-setup/  todo/  ai-coach/
+      productivity-setup/  todo/  ai-coach/  slack-response-monitor/
       wrapup/  daily-wrapup/  budgetclaw-setup/  setup-ccflare/
       create-agent/  agent-ops-setup/  agent-ops-report/
   learning/

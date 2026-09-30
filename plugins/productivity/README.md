@@ -18,6 +18,10 @@ Reviews recent curated AI-work session notes for repeated friction, missed reusa
 
 Drafts daily, weekly, or custom-range personal standups from Jira, an Obsidian backlog, and daily wrapup/session reports. The paste-ready block stays under 90 words and eight bullets; private notes identify evidence-backed tasks that should take under five minutes to close.
 
+### `/productivity:slack-response-monitor`
+
+Finds direct messages, mentions, thread replies, and clear unresolved Slack asks that likely need your response. It verifies full thread context, deduplicates against a privacy-minimal checkpoint, and produces a concise link-backed digest without replying on your behalf. It works with an authenticated Slack MCP connector or a capable workspace search CLI.
+
 ### `/productivity:todo`
 
 Captures one or more durable action items in an Obsidian Kanban backlog. It asks a concise question only when the task is materially ambiguous, preserves links and proper nouns, supports explicit urgent items, and writes idempotently to `backlog.md` under `## Inbox`.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Slack Response Monitor"
+  short_description: "Find unresolved Slack asks that need your reply"
+  default_prompt: "Use $slack-response-monitor to find unresolved Slack messages that need my response and draft a concise link-backed digest."
