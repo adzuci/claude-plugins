@@ -55,6 +55,10 @@ database and cluster before making recommendations.
    log lines) using the human-run commands in
    [`references/host-restart-triage.md`](references/host-restart-triage.md). Agents cannot
    `ssh`; state root causes only when verified.
+1. For a router restart, follow
+   [`references/router-rolling-restart.md`](references/router-rolling-restart.md). This skill
+   never executes restarts: it prints the exact commands and requires explicit user approval
+   per router. Run `/apollo-eng-devops:check-mongo <cluster>` before and after.
 1. Load only the other reference files that are relevant:
    - `references/read-only-commands.md` for safe inspection commands.
    - `references/mongo-clusters.md` for current known client/cluster mapping, the prod
@@ -100,6 +104,11 @@ Prefer the narrower skill when the task matches one:
   technical diagnostic playbook
 - [`references/host-restart-triage.md`](references/host-restart-triage.md) — "MongoDB Host
   has restarted" alert triage
+- [`references/router-rolling-restart.md`](references/router-rolling-restart.md) —
+  human-run, one-router-at-a-time mongos restart runbook for any subset of a cluster
+  (e.g. accounts 3,4,5). Helper: `scripts/rolling_restart.py --cluster <c> --hosts <n,...>`
+  (dry run first; `--execute` is human-only). Restarts are human-run: the skill prints
+  commands and never executes them itself
 - [`references/pr-review-mode.md`](references/pr-review-mode.md) — experimental general
   Mongo query/schema health review for PRs; delegates incident patterns to
   `mongo-pr-guard`

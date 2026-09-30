@@ -141,3 +141,6 @@ format, and postmortem requirements — don't duplicate that structure here.
 Resolution criteria should still require a stability window at baseline before declaring
 done, and any workflow disabled during mitigation (e.g. a deploy gate) must be explicitly
 re-enabled at closeout.
+
+If a router restart is being considered as mitigation, follow
+[`router-rolling-restart.md`](router-rolling-restart.md) (human-run, one router at a time).

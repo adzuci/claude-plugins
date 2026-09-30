@@ -14,6 +14,7 @@ Use this file to avoid rebuilding the wrong workflow inside `mongo-specialist`.
 | `/apollo-eng:mongo-pr-guard` | `plugins/apollo-eng/skills/mongo-pr-guard` | PR safety review for Mongo query, sharding, routing, and bulk-write risks — proven-incident patterns only. |
 | `mongo-specialist` host-restart triage | `plugins/apollo-eng-devops/skills/mongo-specialist/references/host-restart-triage.md` | Triage for the "MongoDB Host has restarted" alert. |
 | `mongo-specialist` review mode | `plugins/apollo-eng-devops/skills/mongo-specialist/references/pr-review-mode.md` | One-stop PR review: delegates to `mongo-pr-guard` for incident patterns, adds an experimental WARN-only general query/schema health pass. |
+| `mongo-specialist` router restart | `plugins/apollo-eng-devops/skills/mongo-specialist/references/router-rolling-restart.md` | Human-run rolling mongos restart runbook (memory retained by tcmalloc). |
 | `mongo-index-discrepancies` | `leadgenie/.claude/skills/mongo-index-discrepancies` | Checks prod indexes not declared in source and looks for incoming PRs. |
 | `mongo-unused-indexes` | `leadgenie/.claude/skills/mongo-unused-indexes` | Processes unused-index emails, `$indexStats`, hide/drop planning. |
 | `mongo-shard-collection` | `leadgenie/.claude/skills/mongo-shard-collection` | Shard-key recommendation for new or existing collections. |
