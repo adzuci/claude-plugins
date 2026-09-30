@@ -25,6 +25,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 | `/apollo-eng-devops:kubernetes-specialist` | Kubernetes debugging and rollout specialist — **invoke explicitly** (not auto-routed) |
 | `/apollo-eng-devops:logs-ingestion-rate` | Investigate Apollo's Grafana Cloud logs ingestion rate alert and alert quality |
 | `/apollo-eng-devops:mongo-specialist` | Shared Apollo MongoDB operations context: clusters, channels, TapData, consult targets, and read-only commands |
+| `/apollo-eng-devops:mute-alert` | Create, verify, and expire time-boxed Grafana alert silences for planned maintenance |
 | `/apollo-eng-devops:news-feed` | Weekly vendor announcement triage for DevOps-relevant AI, security, observability, platform, and infrastructure changes |
 | `/apollo-eng-devops:oncall` | DevOps + Platform PagerDuty schedule, review, swap, and override companion |
 | `/apollo-eng-devops:oncall-handoff` | Daily or weekly DevOps PD handoff focused on the outgoing caller's on-call shift |
