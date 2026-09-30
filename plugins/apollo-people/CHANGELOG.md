@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/apolloio/claude-plugins/compare/apollo-people-v0.3.1...apollo-people-v0.4.0) (2026-09-29)
+
+
+### Features
+
+* add revision-round safeguards to promo-packet skill ([#225](https://github.com/apolloio/claude-plugins/issues/225)) ([9dd0e38](https://github.com/apolloio/claude-plugins/commit/9dd0e3822ba191b178cc6f820dd1d57b7cedbfe1))
+
 ## [0.3.1](https://github.com/apolloio/claude-plugins/compare/apollo-people-v0.3.0...apollo-people-v0.3.1) (2026-08-20)
 
 

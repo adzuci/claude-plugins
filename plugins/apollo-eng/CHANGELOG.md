@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.10.0...apollo-eng-v1.11.0) (2026-09-29)
+
+
+### Features
+
+* **apollo-eng:** add local prompt review skill ([#294](https://github.com/apolloio/claude-plugins/issues/294)) ([40ece5d](https://github.com/apolloio/claude-plugins/commit/40ece5dc6d5883f7826ab5b6cae6ca07195faf5c))
+
 ## [1.10.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.9.0...apollo-eng-v1.10.0) (2026-09-29)
 
 
