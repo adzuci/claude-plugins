@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.4.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.3.0...apollo-eng-devops-v1.4.0) (2026-09-30)
+
+
+### Features
+
+* **apollo-eng-devops:** add check-mongo health check, host-restart triage, and headless Argus spec ([#307](https://github.com/apolloio/claude-plugins/issues/307)) ([d0b8ec6](https://github.com/apolloio/claude-plugins/commit/d0b8ec6881cf3d9c2be55bfc7b68e41c8a690ff3))
+* **apollo-eng-devops:** add cookie-header alert investigation skill ([#300](https://github.com/apolloio/claude-plugins/issues/300)) ([bdb76d0](https://github.com/apolloio/claude-plugins/commit/bdb76d0cb5c1cf38c7aeae8c66d1e515487ca8d1))
+* **apollo-eng-devops:** add mute-alert skill for time-boxed Grafana silences ([#311](https://github.com/apolloio/claude-plugins/issues/311)) ([04d78c9](https://github.com/apolloio/claude-plugins/commit/04d78c9540aba464a5aa511ede2e7a1ba4b17c55))
+
 ## [1.3.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.2.0...apollo-eng-devops-v1.3.0) (2026-08-31)
 
 
