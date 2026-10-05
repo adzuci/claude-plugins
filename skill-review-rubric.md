@@ -13,7 +13,9 @@ Frontmatter
 - Require YAML frontmatter with `name` and `description`. Expect `disable-model-invocation: true` for skills that should only activate by explicit command, and flag omissions as context bloat unless natural-language activation is clearly intentional.
 - Check that `name` matches the skill directory name and uses lowercase letters, digits, and hyphens.
 - Check that new skill names are unique across all plugins and repo-local `.claude/skills`. Flag cross-plugin duplicates even when the duplicate skills live in different plugins.
+- Guard against duplicated skills as a soft `warning` — never an `error`, so duplication alone does not block the merge. Flag the same skill `name` appearing in more than one plugin, and near-identical skills defined in multiple places (a new skill whose `description` or purpose closely matches an existing skill elsewhere in the repo). Surface the overlapping skills by path so a human can decide whether to consolidate them.
 - Check that `description` concisely explains what the skill does. Do not reward long trigger lists by default.
+- Skill `description` frontmatter must be 400 characters or fewer. Flag any `SKILL.md` whose `description` exceeds 400 characters as a `warning` and ask the author to tighten it to a concise trigger-condition sentence that preserves the original meaning.
 - For skills with `disable-model-invocation: true`, prefer short command/catalog descriptions.
 - Only ask for activation examples when natural-language activation is intentionally enabled.
 - Do not ask authors to add unsupported `arguments` frontmatter. For documenting inputs on a direct-invoked skill, `argument-hint` in frontmatter is the preferred approach (e.g. `argument-hint: "[surface] [--flag]"`); a body `Usage` or `Inputs` section is also acceptable. Do not flag `argument-hint` as unsupported — it is a valid display hint.
