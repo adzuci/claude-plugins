@@ -127,9 +127,9 @@
     {
       "name": "apollo-infosec",
       "source": "./plugins/apollo-infosec",
-      "description": "Information security skills for Apollo's InfoSec team — security incident response, data exposure investigation, and verifying whether leaked or claimed-stolen data is real.",
+      "description": "Information security skills for Apollo's InfoSec team — security incident response, data exposure investigation, and verifying whether leaked or claimed-stolen data is real, plus secure-coding guidance for all Apollo engineers and builders.",
       "category": "security",
-      "tags": ["cowork", "security", "incident-response", "data-protection"]
+      "tags": ["cowork", "security", "incident-response", "data-protection", "secure-coding"]
     },
     {
       "name": "apollo-talent",
