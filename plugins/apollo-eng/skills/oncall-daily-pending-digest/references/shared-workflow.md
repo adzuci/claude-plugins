@@ -38,8 +38,8 @@ permits. The managed runtime must never install dependencies or use third-party 
   choosing the most recently active valid parent when several exist.
 - Search the full open `pantheon-apollo` incident PR set across `apolloio`; match each PR's
   single extracted `INCIDENT-<number>` to the exact selected Impacted Team. Retain the
-  associated Jira due date for each match. Do not block on a failed PR search; log the
-  coverage gap.
+  associated Jira due date and the PR's creation timestamp for each match. Do not block on a
+  failed PR search; log the coverage gap.
 - Before triggering, read [Pantheon trigger safeguards](pantheon-trigger.md). Outside a dry
   run, start at most three eligible displayed Jira incidents that have no qualifying Jira
   comment, Pantheon thread, or open Pantheon PR. Do not poll or retry failed starts.
