@@ -41,6 +41,8 @@ class Env:
             return cp(self.deploy)
         if cmd[0] == "gcx":
             expr = joined
+            if "mongodb_connections" in expr:
+                return cp(prom({n: 10000 for n in range(6)}))
             if "uptime" in expr:
                 return cp(prom(self.uptime))
             return cp(prom(self.up))
@@ -58,6 +60,7 @@ def env(monkeypatch):
     monkeypatch.setattr(rr, "run_cmd", e)
     sleeps = []
     monkeypatch.setattr(rr, "_sleep", lambda s: sleeps.append(s))
+    monkeypatch.setattr(rr, "_have", lambda tool: False)
     e.sleeps = sleeps
     return e
 
@@ -101,6 +104,7 @@ def test_dry_run_runs_nothing_and_prints_commands(env, capsys):
     out = capsys.readouterr().out
     assert "DRY RUN" in out
     assert "gh run list --repo apolloio/leadgenie --workflow production.yml" in out
+    assert "would check" in out and "GATE" in out
     assert "gcloud compute ssh mongos-accounts-3 --project indigo-lotus-415 --zone us-central1-c --internal-ip" in out
     assert "sudo systemctl restart mongos-accounts.service" in out
     assert 'up{cluster="accounts",role="mongos"' in out
@@ -110,7 +114,16 @@ def test_dry_run_runs_nothing_and_prints_commands(env, capsys):
 
 def test_dry_run_mute_reminder(env, capsys):
     rr.main(["--cluster", "accounts", "--hosts", "3", "--mute-id", "abc123"])
-    assert "mute-alert expire abc123" in capsys.readouterr().out
+    out = capsys.readouterr().out
+    assert "mute-alert expire abc123" in out
+    assert "10 min after the last restart" in out
+
+
+def test_execute_end_reminder_mentions_10_minute_rule(env, monkeypatch, capsys):
+    typed(monkeypatch, "mongos-accounts-3")
+    rr.main(["--cluster", "accounts", "--hosts", "3", "--execute", "--mute-id", "abc123"])
+    out = capsys.readouterr().out
+    assert "10 min after the last restart" in out and "mute-alert expire abc123" in out
 
 
 # execute
@@ -122,16 +135,19 @@ def test_execute_happy_path_single_restart_per_host(env, monkeypatch):
     assert sum(1 for s in env.sleeps if s == 60) == 20  # 10 min soak x 2 hosts
 
 
-def test_refuses_when_deploy_in_progress(env, monkeypatch):
-    env.deploy = json.dumps([{"status": "in_progress", "conclusion": None}])
-    typed(monkeypatch, "mongos-accounts-3")
+def test_refuses_when_gate_waits(env, monkeypatch, capsys):
+    env.deploy = json.dumps([{"databaseId": 7, "status": "queued", "conclusion": None,
+                              "createdAt": "2026-09-30T11:59:00Z"}])
+    monkeypatch.setattr(rr, "_now", lambda: rr.datetime(2026, 9, 30, 12, 0, tzinfo=rr.timezone.utc))
     assert rr.main(["--cluster", "accounts", "--hosts", "3", "--execute"]) == 1
     assert env.restarts() == []
+    assert "GATE:" in capsys.readouterr().out
 
 
-def test_refuses_when_deploy_queued(env, monkeypatch):
-    env.deploy = json.dumps([{"status": "queued", "conclusion": None}])
-    assert rr.main(["--cluster", "accounts", "--hosts", "3", "--execute"]) == 1
+def test_dry_run_previews_live_gate_when_tools_present(env, monkeypatch, capsys):
+    monkeypatch.setattr(rr, "_have", lambda tool: True)
+    assert rr.main(["--cluster", "accounts", "--hosts", "3"]) == 0
+    assert "GATE: GO" in capsys.readouterr().out
     assert env.restarts() == []
 
 

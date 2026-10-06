@@ -107,7 +107,8 @@ Prefer the narrower skill when the task matches one:
 - [`references/router-rolling-restart.md`](references/router-rolling-restart.md) —
   human-run, one-router-at-a-time mongos restart runbook for any subset of a cluster
   (e.g. accounts 3,4,5). Helper: `scripts/rolling_restart.py --cluster <c> --hosts <n,...>`
-  (dry run first; `--execute` is human-only). Restarts are human-run: the skill prints
+  (dry run first; `--execute` is human-only and proceeds only on an evidence-based
+  `GATE: GO` from peer connections vs ceiling and deploy-stage ETA, else WAIT/STOP). Restarts are human-run: the skill prints
   commands and never executes them itself
 - [`references/pr-review-mode.md`](references/pr-review-mode.md) — experimental general
   Mongo query/schema health review for PRs; delegates incident patterns to

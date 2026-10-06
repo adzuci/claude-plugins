@@ -24,13 +24,38 @@ approval. The agent prints commands; the human runs them. Run
 
 ## Preconditions (all must hold)
 
-- No production deploy running or queued (any merge to master triggers a leadgenie
-  deploy): `gh run list --repo apolloio/leadgenie --workflow production.yml --limit 3`
+- The helper's gate says `GATE: GO` (it runs before each host; `WAIT`/`STOP` never proceed):
+  - Deploy: a `deploy /` job in the TARGET's router group that is running blocks (`WAIT`
+    until its ETA); a job of the OTHER group is ignored (printed) and only the connection
+    check applies; an unknown job name blocks. A queued run with no deploy job yet must be
+    far enough from its deploy stage to fit restart + soak + 15 min recovery +
+    `--deploy-margin-min`.
+  - Connections: each group-mate's current connections plus its share of the target's must
+    stay under the ceiling. Default (judgment call from 2026-09-30): web 22,000, worker
+    16,000; `--max-conns` overrides.
+  - Unreadable `gh`/`gcx` output is `STOP`.
 - All cluster routers `up==1` ([routers dashboard](https://apolloio.grafana.net/d/haqcwjo/mongodb-routers)).
 - Prod VPN on; no freeze; window 03:00-11:00 UTC (outside 4am-8pm PT).
 - Never more than ONE router of a cluster down (the helper script enforces this).
 - Never run the Ansible `restart mongos router` handler without `--limit <one host>`
   (prod playbooks have no `serial:`).
+
+### Which deploy jobs touch which routers
+
+Verified in leadgenie `config/application.rb` (`get_mongos_distribution`: pods with `-api` in
+the hostname take the first half of a cluster's routers, all others the second half). With 6
+routers: web = 0-2, worker = 3-5.
+
+| `deploy /` job | Group | Routers (6-router cluster) |
+|---|---|---|
+| `rails-api`, `events-api`, `tracking-api`, `mcp-api` | web | 0-2 |
+| `sidekiq-workers`, `sidekiq-workers-nowait`, `sidekiq-metrics`, `leadgenie-cron` | worker | 3-5 |
+| `karafka` | worker (code-derived; pod hostname not confirmed live) | 3-5 |
+| anything else | unknown: blocks | n/a |
+
+Reference load (2026-09-30): routers 0-2 steady ~14.5k, peak ~19.5k in a web rollout;
+routers 3-5 steady ~9.5-10.2k, peak ~11.8k in a sidekiq rollout; one restart shifts about
+half its load (~4.9k for 3-5) to each group-mate.
 
 ## Steps
 
@@ -39,7 +64,15 @@ Never print credential values in chat; show commands only in fenced blocks.
 1. Approval: the user confirms cluster, routers, and window in chat.
 
 1. Optional: mute the page first (depends on [#311](https://github.com/apolloio/claude-plugins/pull/311) merging). Skill, user-invoked: `/apollo-eng-devops:mute-alert create --matcher alertname="MongoDB Host has restarted" --matcher cluster=<cluster> --duration 90m --comment "planned router restarts" --ticket <INFRA-key>`,
-   then `/apollo-eng-devops:mute-alert expire <id>` at the end. Fallback only: `plugins/apollo-eng-devops/skills/mute-alert/scripts/mute_alert.py`.
+   then `/apollo-eng-devops:mute-alert expire <id>` at the end. Create the silence right before
+   the restart. Fallback only: `plugins/apollo-eng-devops/skills/mute-alert/scripts/mute_alert.py`.
+   **Silence timing:** the "MongoDB Host has restarted" alert (rule uid `cf32twnieez9ca`,
+   uptime < 120s for 1m) fires about 4 minutes after the restart (uptime metric lags ~1 min,
+   plus the 1m pending period and evaluation interval). Keep the silence until at least 10
+   minutes after the restart completes (script: after the soak, not before; manual: wait 10
+   minutes). On 2026-09-30 it was expired at +3 min, the alert fired 4 s later and paged
+   PagerDuty (Q1J6V4FMGWNKSY). A 30m window created just before the restart covers restart +
+   10 min; if a silence would lapse first, expire and recreate rather than widen.
    A silence stops PAGES only (Argus posts and INCIDENT tickets still happen) and hides
    real failures, so all verification below stays mandatory.
 
@@ -93,8 +126,8 @@ exact commands, runs nothing):
 python plugins/apollo-eng-devops/skills/mongo-specialist/scripts/rolling_restart.py --cluster accounts --hosts 3,4,5
 ```
 
-`--execute` (human terminal only) runs one host at a time: refuses during a deploy or if
-a peer is not `up==1` (`--skip-up-check` overrides, loudly), needs the typed hostname,
+`--execute` (human terminal only) runs one host at a time: proceeds only on `GATE: GO`
+(dry run previews the gate read-only), refuses if a peer is not `up==1` (`--skip-up-check` overrides, loudly), needs the typed hostname,
 verifies `is-active`, `up==1`, uptime under 300 s, soaks (`--soak-min`), stops on first failure.
 
 ## Stop conditions
@@ -110,9 +143,30 @@ None needed. If a router will not start, run `sudo systemctl start mongos-<clust
 ## After
 
 1. `unset MONGO_USER MONGO_PASS MONGO_AUTHDB`
+
 1. Close any stale GCP memory incident; record in the ticket.
+
 1. Follow-up: evaluate tcmalloc `tcmallocAggressiveMemoryDecommit` / `tcmallocReleaseRate`
-   instead of repeated restarts. **Unverified:** router support; test on staging first.
+   on a staging router instead of repeated restarts. **Unverified** that it helps. The test
+   is only meaningful if:
+
+   - Same version and allocator as prod. Prod accounts routers are MongoDB 6.x moving to 7
+     (gperftools). On 8.0 `tcmallocReleaseRate` changes meaning (bytes/s, default 0), so
+     results do not transfer.
+   - Runtime `setParameter` works on mongos. **Unverified**; `getParameter` works on prod
+     routers and reads `tcmallocReleaseRate=1`, `tcmallocAggressiveMemoryDecommit=0` (stock defaults).
+   - Staging reproduces the burst: scatter-gather queries across all shards, large `getMore`
+     batches, many open multiTarget cursors (the 2026-08-28 accounts storm).
+   - You measure the DRAIN SPEED of `pageheap_free`, not just direction (the default rate
+     left ~48 GiB retained for 33 days).
+   - You also measure CPU and page-fault cost: routers 3-5 carry ~15k ops/s and ~10k
+     connections, which staging load will not show.
+
+   Read-only pre-checks, human terminal, on a staging router: `db.version()` and
+   `db.serverStatus({tcmalloc:1})` (a `tcmalloc` section means gperftools);
+   `db.adminCommand({getParameter:1, tcmallocReleaseRate:1, tcmallocAggressiveMemoryDecommit:1})`;
+   shard count and data volume. A prod canary needs explicit human approval and is not
+   recommended first.
 
 ## Links
 
