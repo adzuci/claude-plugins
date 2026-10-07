@@ -1,0 +1,9 @@
+{
+  "name": "local-ai",
+  "displayName": "Local AI",
+  "version": "0.1.0",
+  "description": "Set up NVIDIA PAIR, choose local Ollama models, and scaffold LiteLLM routing for personal local-inference workflows.",
+  "author": {
+    "name": "Adam Blackwell"
+  }
+}

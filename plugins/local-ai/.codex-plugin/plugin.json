@@ -1,0 +1,15 @@
+{
+  "name": "local-ai",
+  "version": "0.1.0",
+  "description": "Set up NVIDIA PAIR, choose local Ollama models, and scaffold LiteLLM routing for personal local-inference workflows.",
+  "repository": "https://github.com/adzuci/claude-plugins",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Local AI",
+    "shortDescription": "Personal local-inference setup and routing",
+    "developerName": "Adzuci",
+    "category": "Productivity",
+    "brandColor": "#0F766E"
+  }
+}

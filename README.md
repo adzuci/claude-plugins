@@ -5,9 +5,9 @@
 
 Public Claude Code and Codex plugins for local-first AI workflows.
 
-The flagship plugin is **`memory`**: a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions. The **`productivity`** plugin builds on that vault with task capture, session hygiene, daily planning, and a weekly AI coach; **`learning`** adds a weekly engineering self-retro that reflects your own work back as a ranked learning plan; **`career`** adds a job-market intelligence sweep.
+The flagship plugin is **`memory`**: a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions. The **`productivity`** plugin builds on that vault with task capture, session hygiene, daily planning, and a weekly AI coach; **`learning`** adds a weekly engineering self-retro that reflects your own work back as a ranked learning plan; **`career`** adds a job-market intelligence sweep; and **`local-ai`** helps experiment with local models across hardware you control.
 
-The [companion site](https://adzuci.github.io/claude-plugins/) has a post per plugin: [Memory as reliability practice](https://adzuci.github.io/claude-plugins/memory.html) · [An operating loop for AI-assisted work](https://adzuci.github.io/claude-plugins/productivity.html) · [Reflecting your own work back as a learning plan](https://adzuci.github.io/claude-plugins/learning.html)
+The [companion site](https://adzuci.github.io/claude-plugins/) has a post per plugin: [Memory as reliability practice](https://adzuci.github.io/claude-plugins/memory.html) · [An operating loop for AI-assisted work](https://adzuci.github.io/claude-plugins/productivity.html) · [Reflecting your own work back as a learning plan](https://adzuci.github.io/claude-plugins/learning.html) · [Two Macs, one local model pool](https://adzuci.github.io/claude-plugins/local-ai.html)
 
 ![Memory setup architecture](docs/assets/memory-system-diagram.svg)
 
@@ -67,6 +67,16 @@ It also ships `create-agent` and the `agent-ops-setup`/`agent-ops-report` pair f
 
 The self-retro idea is [Harshit Pandey's](https://www.linkedin.com/in/harshit-pandey-84779114a/): keep the retro focused on where you actually spend your time and end in concrete next steps. Reports are report-only and cite specific session or PR evidence for every claim. See `plugins/learning/README.md` and `plugins/learning/skills/self-retro/references/web-routine.md` for the cloud-routine prompt.
 
+## What the `local-ai` Plugin Does
+
+| Skill | Purpose |
+| --- | --- |
+| `/local-ai:pair-setup` | Install, pair, verify, diagnose, or remove NVIDIA PAIR on two Apple Silicon Macs. |
+| `/local-ai:local-model-pick` | Recommend an Ollama model from the host's memory budget and optionally pull it. |
+| `/local-ai:litellm-setup` | Create a secret-free local LiteLLM route and optionally install a pinned version in an isolated environment. |
+
+The plugin is intentionally experimental. PAIR's current OpenAI-compatible proxy does not preserve structured tool calls, so the setup is suitable for plain completion experiments rather than agent workloads until the upstream issue is fixed. See `plugins/local-ai/README.md` and the [companion post](https://adzuci.github.io/claude-plugins/local-ai.html) for the trust boundary and verification ladder.
+
 ## Install
 
 Claude Code marketplace metadata lives in `.claude-plugin/marketplace.json`.
@@ -93,7 +103,7 @@ Then invoke the setup skill:
 /memory:memory-setup
 ```
 
-The other plugins install the same way (`claude plugin install productivity@adzuci-plugins`, `claude plugin install learning@adzuci-plugins`, `claude plugin install career@adzuci-plugins`).
+The other plugins install the same way (`claude plugin install productivity@adzuci-plugins`, `claude plugin install learning@adzuci-plugins`, `claude plugin install career@adzuci-plugins`, `claude plugin install local-ai@adzuci-plugins`).
 
 ## Safety Model
 
@@ -146,6 +156,12 @@ plugins/
       productivity-setup/  todo/  ai-coach/  slack-response-monitor/
       wrapup/  daily-wrapup/  budgetclaw-setup/  setup-ccflare/
       create-agent/  agent-ops-setup/  agent-ops-report/
+  local-ai/
+    .claude-plugin/plugin.json
+    .codex-plugin/plugin.json
+    README.md
+    skills/
+      pair-setup/  local-model-pick/  litellm-setup/
   learning/
     .claude-plugin/plugin.json
     README.md
@@ -165,6 +181,7 @@ Run the skill tests:
 ```bash
 python3 -m pytest plugins/memory/skills/memory-setup/tests -q
 python3 -m pytest plugins/productivity/skills/todo/tests plugins/productivity/skills/productivity-setup/tests -q
+python3 -m pytest plugins/local-ai/skills/*/tests -q
 ```
 
 Validate the plugin metadata with the CLI available in your environment:
