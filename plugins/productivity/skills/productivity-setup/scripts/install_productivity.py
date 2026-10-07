@@ -12,7 +12,15 @@ from pathlib import Path
 from typing import Callable
 
 
-CORE_SKILLS = ("productivity-setup", "todo", "wrapup", "daily-wrapup", "ai-coach", "standup")
+CORE_SKILLS = (
+    "productivity-setup",
+    "todo",
+    "wrapup",
+    "daily-wrapup",
+    "ai-coach",
+    "standup",
+    "slack-response-monitor",
+)
 CLIENT_DIRS = {"claude": Path(".claude/skills"), "codex": Path(".codex/skills")}
 MARKER = ".productivity-managed.json"
 
