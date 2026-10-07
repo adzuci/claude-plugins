@@ -1,0 +1,1128 @@
+{
+  "meta": {
+    "source": "reconstructed fixture",
+    "notes": "Rebuilt from the documented 2026-08-13 production incident because Sentry, PagerDuty, New Relic and Mongo are egress-blocked from this session. Incident-level values (IDs, 465 events, 14:18:08Z-15:26:58Z, 71.6s, shards contacts-16/19/27/28, plan summary, kill flags, account id) are the real recorded values. Per-event timestamps and opids are reconstructed to that shape; deploy records are illustrative.",
+    "fetched_at": "2026-08-16T00:00:00Z"
+  },
+  "pagerduty": {
+    "id": "Q25ND367948EA8",
+    "incident_number": 889201,
+    "title": "MongoQueryKiller slow query - contacts",
+    "urgency": "low",
+    "service": "be-platform-low-priority",
+    "created_at": "2026-08-13T14:19:02Z",
+    "status": "resolved",
+    "html_url": "https://apolloio.pagerduty.com/incidents/Q25ND367948EA8"
+  },
+  "sentry_issue": {
+    "id": "7670017484",
+    "shortId": "RAILS-BACKEND-4FA7",
+    "title": "MongoQueryKiller: slow query on contacts",
+    "count": 465,
+    "firstSeen": "2026-08-13T14:18:08Z",
+    "lastSeen": "2026-08-13T15:26:58Z",
+    "permalink": "https://apolloio.sentry.io/issues/7670017484/",
+    "firstRelease": {
+      "version": "leadgenie@2026.08.11-a1b2c3d"
+    }
+  },
+  "sentry_events": [
+    {
+      "id": "evt0036",
+      "dateCreated": "2026-08-13T15:26:57Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 71.61684,
+        "opid": "contacts-16:-819470572",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0037",
+      "dateCreated": "2026-08-13T15:26:54Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 68.91684,
+        "opid": "contacts-19:-819462653",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0038",
+      "dateCreated": "2026-08-13T15:26:52Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 66.21684,
+        "opid": "contacts-27:-819454734",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0039",
+      "dateCreated": "2026-08-13T15:26:49Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 63.51684,
+        "opid": "contacts-28:-819446815",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0032",
+      "dateCreated": "2026-08-13T15:19:07Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 52.81684,
+        "opid": "contacts-16:-819502248",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0033",
+      "dateCreated": "2026-08-13T15:19:05Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 50.11684,
+        "opid": "contacts-19:-819494329",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0034",
+      "dateCreated": "2026-08-13T15:19:02Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 47.41684,
+        "opid": "contacts-27:-819486410",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0035",
+      "dateCreated": "2026-08-13T15:18:59Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 44.71684,
+        "opid": "contacts-28:-819478491",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0028",
+      "dateCreated": "2026-08-13T15:11:47Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 62.21684,
+        "opid": "contacts-16:-819533924",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0029",
+      "dateCreated": "2026-08-13T15:11:44Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 59.51684,
+        "opid": "contacts-19:-819526005",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0030",
+      "dateCreated": "2026-08-13T15:11:41Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 56.81684,
+        "opid": "contacts-27:-819518086",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0031",
+      "dateCreated": "2026-08-13T15:11:39Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 54.11684,
+        "opid": "contacts-28:-819510167",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0024",
+      "dateCreated": "2026-08-13T15:04:25Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 71.61684,
+        "opid": "contacts-16:-819565600",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0025",
+      "dateCreated": "2026-08-13T15:04:22Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 68.91684,
+        "opid": "contacts-19:-819557681",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0026",
+      "dateCreated": "2026-08-13T15:04:20Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 66.21684,
+        "opid": "contacts-27:-819549762",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0027",
+      "dateCreated": "2026-08-13T15:04:17Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 63.51684,
+        "opid": "contacts-28:-819541843",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0020",
+      "dateCreated": "2026-08-13T14:56:35Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 52.81684,
+        "opid": "contacts-16:-819597276",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0021",
+      "dateCreated": "2026-08-13T14:56:33Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 50.11684,
+        "opid": "contacts-19:-819589357",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0022",
+      "dateCreated": "2026-08-13T14:56:30Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 47.41684,
+        "opid": "contacts-27:-819581438",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0023",
+      "dateCreated": "2026-08-13T14:56:27Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 44.71684,
+        "opid": "contacts-28:-819573519",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0016",
+      "dateCreated": "2026-08-13T14:49:14Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 62.21684,
+        "opid": "contacts-16:-819628952",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0017",
+      "dateCreated": "2026-08-13T14:49:11Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 59.51684,
+        "opid": "contacts-19:-819621033",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0018",
+      "dateCreated": "2026-08-13T14:49:08Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 56.81684,
+        "opid": "contacts-27:-819613114",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0019",
+      "dateCreated": "2026-08-13T14:49:06Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 54.11684,
+        "opid": "contacts-28:-819605195",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0012",
+      "dateCreated": "2026-08-13T14:41:52Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 71.61684,
+        "opid": "contacts-16:-819660628",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0013",
+      "dateCreated": "2026-08-13T14:41:49Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 68.91684,
+        "opid": "contacts-19:-819652709",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0014",
+      "dateCreated": "2026-08-13T14:41:47Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 66.21684,
+        "opid": "contacts-27:-819644790",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0015",
+      "dateCreated": "2026-08-13T14:41:44Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 63.51684,
+        "opid": "contacts-28:-819636871",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0008",
+      "dateCreated": "2026-08-13T14:34:02Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 52.81684,
+        "opid": "contacts-16:-819692304",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0009",
+      "dateCreated": "2026-08-13T14:34:00Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 50.11684,
+        "opid": "contacts-19:-819684385",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0010",
+      "dateCreated": "2026-08-13T14:33:57Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 47.41684,
+        "opid": "contacts-27:-819676466",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0011",
+      "dateCreated": "2026-08-13T14:33:54Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 44.71684,
+        "opid": "contacts-28:-819668547",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0004",
+      "dateCreated": "2026-08-13T14:26:41Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 62.21684,
+        "opid": "contacts-16:-819723980",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0005",
+      "dateCreated": "2026-08-13T14:26:38Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 59.51684,
+        "opid": "contacts-19:-819716061",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0006",
+      "dateCreated": "2026-08-13T14:26:35Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 56.81684,
+        "opid": "contacts-27:-819708142",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0007",
+      "dateCreated": "2026-08-13T14:26:33Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 54.11684,
+        "opid": "contacts-28:-819700223",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0000",
+      "dateCreated": "2026-08-13T14:19:19Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 71.61684,
+        "opid": "contacts-16:-819755656",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0001",
+      "dateCreated": "2026-08-13T14:19:16Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 68.91684,
+        "opid": "contacts-19:-819747737",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0002",
+      "dateCreated": "2026-08-13T14:19:14Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 66.21684,
+        "opid": "contacts-27:-819739818",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    },
+    {
+      "id": "evt0003",
+      "dateCreated": "2026-08-13T14:19:11Z",
+      "transaction": "Api::V1::AccountsController#show",
+      "tags": {
+        "environment": "production",
+        "server_name": "web-prod-rails-7c9f",
+        "area": "mongo"
+      },
+      "context": {
+        "source": "Api::V1::AccountsController/show",
+        "collection": "contacts",
+        "filter": {
+          "account_id": {
+            "$in": [
+              "60c3755581a12e00019664bf"
+            ]
+          }
+        },
+        "signature": "query:contacts:account_id",
+        "secs_running": 63.51684,
+        "opid": "contacts-28:-819731899",
+        "plan_summary": "IXSCAN { account_id: 1 }",
+        "kill_attempted": false,
+        "kill_succeeded": false
+      }
+    }
+  ],
+  "deploys": [
+    {
+      "version": "leadgenie@2026.08.13-9f2e1c4",
+      "environment": "production",
+      "dateFinished": "2026-08-13T10:05:00Z"
+    },
+    {
+      "version": "leadgenie@2026.08.11-a1b2c3d",
+      "environment": "production",
+      "dateFinished": "2026-08-11T16:40:00Z"
+    }
+  ],
+  "shard_key": {
+    "collection": "contacts",
+    "key": [],
+    "source": "unconfirmed"
+  }
+}
