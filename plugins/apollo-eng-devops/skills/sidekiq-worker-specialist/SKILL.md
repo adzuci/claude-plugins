@@ -36,7 +36,7 @@ workers.<name>  →  Deployment sidekiq-<name>  +  HPA  +  ConfigMap (concurrenc
 | `max_workers` | **Total Sidekiq thread budget** (concurrent jobs), **not** pod count |
 | `min_workers` | Floor thread budget while HPA scales up (optional; default in chart `defaults:`) |
 | `threads_per_pod` | Threads per pod; default `defaults.concurrency` in [`values.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/values.yaml) |
-| `resources` | **Per-pod** CPU/memory; omitted fields inherit chart defaults |
+| `resources` | **Per-pod** memory / `ephemeralStorage`; omitted fields inherit chart defaults. **CPU is not configurable** — see below |
 | `preemptive: true` | Schedule on spot/preemptible node pools (prod only) |
 | `queues` | Present only on **shared** clusters; dedicated clusters use the key name as queue |
 
@@ -44,7 +44,9 @@ workers.<name>  →  Deployment sidekiq-<name>  +  HPA  +  ConfigMap (concurrenc
 
 **Read [`hpa.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/hpa.yaml)** — do not hardcode replica math. That template maps `max_workers`, `min_workers`, and `threads_per_pod` (plus chart `defaults:`) to HPA `minReplicas` / `maxReplicas` and effective Sidekiq concurrency.
 
-Omitted `resources` fields inherit [`defaults.workerResources`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/values.yaml) from the chart — read at activation, do not assume values here.
+Omitted `resources` memory fields inherit [`defaults.workerResources`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/values.yaml) from the chart — read at activation, do not assume values here.
+
+**CPU is fixed fleet-wide** at a 2-core limit / 1-core request, hardcoded in [`templates/deployment.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/deployment.yaml) since leadgenie #105056. A `resources.*.cpu` key on a worker is **silently ignored** (no error, no warning). `threads_per_pod` is the remaining per-worker CPU-adjacent knob.
 
 See [`references/field-reference.md`](references/field-reference.md) for field tables, cluster-type recipes, and YAML sources for sizing.
 
@@ -66,7 +68,8 @@ Always follow this sequence. Do not edit values before understanding current fle
 | New queue, user-facing latency SLA | New **dedicated** worker key matching queue name |
 | New queue, general app work | Shared `processor` cluster `queues:` list |
 | Tune throughput / cost of existing fleet | Existing dedicated worker entry |
-| OOM or CPU pressure | `resources` and/or `threads_per_pod` on that worker |
+| OOM | memory `resources` and/or `threads_per_pod` on that worker |
+| CPU pressure | `threads_per_pod` on that worker (CPU limit is fixed) |
 | Queue backlog, HPA pinned at max replicas | Raise `max_workers` (horizontal ceiling) |
 
 **Choosing preemptive cluster:** Use `preemptive-high` for higher-priority batch work that tolerates spot eviction; use `preemptive` for lowest-priority background or crawler queues. Match the cluster that already hosts similar workloads in production values.
@@ -80,9 +83,9 @@ Confirm the bottleneck — do not guess. **High CPU or queue latency does not al
 - **Slow jobs / high per-job runtime** (flat CPU but growing latency, or CPU scales linearly with job count) → optimize worker code or queries before scaling fleet
 - **HPA pinned at max replicas** + high CPU + growing backlog **and** jobs are already efficient → raise `max_workers`
 - **OOMKilled** (exit 137) → raise memory limit or lower `threads_per_pod`
-- **CPU throttling** impacting throughput → raise CPU limit or lower `threads_per_pod`
+- **CPU throttling** impacting throughput → lower `threads_per_pod` (CPU limit is fixed; a `cpu:` override does nothing)
 - **Per-pod saturated but low replica count** → raise `max_workers` first, not threads (after code check)
-- **Per-pod saturated at max replicas** → lower `threads_per_pod` or raise per-pod resources
+- **Per-pod saturated at max replicas** → lower `threads_per_pod` or raise per-pod memory
 
 Use GKE MCP or kubectl on deployment `sidekiq-<worker-name>`: `kubectl describe hpa`, `kubectl top pods`, pod events for OOMKill.
 
@@ -107,13 +110,13 @@ Fill this table for the worker entry being changed:
 | `max_workers` (thread budget) | | |
 | `threads_per_pod` | | |
 | `max_replicas` (pods) | | |
-| Per-pod CPU request / limit | | |
+| Per-pod CPU request / limit | 1 / 2 cores (fixed) | 1 / 2 cores (fixed) |
 | Per-pod memory request / limit | | |
 | Fleet CPU request at max scale | | |
 | Fleet memory request at max scale | | |
 | `preemptive` | | |
 
-Resolve effective per-pod resources: merge worker `resources` with chart defaults for any omitted field. Derive `max_replicas` (HPA `maxReplicas`) from [`hpa.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/hpa.yaml) — do not duplicate that logic here.
+Resolve effective per-pod resources: merge worker `resources` with chart defaults for any omitted memory / `ephemeralStorage` field; CPU is always the fixed 1 / 2 cores. Derive `max_replicas` (HPA `maxReplicas`) from [`hpa.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/hpa.yaml) — do not duplicate that logic here.
 
 ### Step 4: Edit values
 
@@ -162,7 +165,7 @@ ______________________________________________________________________
 1. Optimize worker code — N+1 queries, slow DB calls, memory bloat, blocking I/O, redundant serialization. Scaling a slow job multiplies cost without fixing latency.
 1. Raise `max_workers` if horizontally capped with backlog **and** per-job cost is acceptable
 1. Adjust `threads_per_pod` when per-pod resources are saturated but replica count is low
-1. Raise CPU only on confirmed throttling
+1. On confirmed CPU throttling, lower `threads_per_pod` — CPU itself is fixed
 1. Raise memory only on OOMKilled
 
 ______________________________________________________________________
@@ -173,6 +176,7 @@ ______________________________________________________________________
 |---------|---------|
 | `max_workers: 15` = 15 pods | = 15 **threads**; derive max pods from [`hpa.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/hpa.yaml) using current `defaults.concurrency` |
 | Omitted `memory` = no memory | Inherits chart `defaults.workerResources` — read at activation |
+| Add `resources.*.cpu` to a worker | Silently ignored — CPU is hardcoded (2 limit / 1 request) in [`templates/deployment.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/deployment.yaml) since #105056 |
 | Raise threads to fix OOM | More threads per pod **increases** per-pod memory pressure |
 | Add queue to two workers | Duplicate queue → pods crash (CI catches this) |
 | Skip `cluster-owners.yaml` | Ownership audit fails on PR |

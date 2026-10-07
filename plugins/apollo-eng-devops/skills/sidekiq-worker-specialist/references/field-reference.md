@@ -10,12 +10,12 @@
 | `min_workers` | Floor thread budget when worker omits `min_workers` |
 | `max_workers` | Thread ceiling when worker omits `max_workers` (prod workers must set `max_workers` explicitly per CI) |
 | `targetCPUUtilizationPercentage` | HPA CPU target when worker omits `autoscaling.targetCPUUtilizationPercentage` |
-| `workerResources.requests` / `limits` | Per-pod CPU/memory when worker `resources` omits fields |
+| `workerResources.requests` / `limits` | Per-pod memory when worker `resources` omits fields (no CPU keys — CPU is hardcoded, see below) |
 | `maxUnavailable` / `maxUnavailablePreemptive` | Rolling-update disruption % (preemptive workers use the latter) |
 | `terminationGracePeriodSeconds` | Pod termination grace |
 | `env` | Extra env vars applied to all workers unless overridden |
 
-Partial `resources` overrides merge with `defaults.workerResources` in [`templates/deployment.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/deployment.yaml).
+Partial `resources` overrides merge with `defaults.workerResources` in [`templates/deployment.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/deployment.yaml) for memory only. **CPU is hardcoded there** (2-core limit / 1-core request, since leadgenie #105056); a worker's `resources.*.cpu` is silently ignored.
 
 ## HPA replica bounds
 
@@ -84,7 +84,7 @@ kube_horizontalpodautoscaler_spec_max_replicas{horizontalpodautoscaler="sidekiq-
 | `autoscaling.targetLatency` | No | Seconds; dedicated single-queue worker |
 | `autoscaling.targetCPUUtilizationPercentage` | No | Override `defaults.targetCPUUtilizationPercentage` |
 | `autoscaling.targetQueueLatencies` | No | Per-queue latency map (seconds, positive integers) |
-| `resources.requests/limits` | No | Per-pod; partial override OK |
+| `resources.requests/limits` | No | Per-pod memory; partial override OK. `cpu` is ignored (fixed 1 / 2 cores) |
 | `resources.*.ephemeralStorage` | No | Opt-in only; workers that spool large `/tmp` |
 | `env` | No | Extra container env vars |
 | `terminationGracePeriodSeconds` | No | Inherits `defaults.terminationGracePeriodSeconds` |
@@ -132,7 +132,7 @@ For a worker change, pick a **similar peer** in production values (same cluster 
 
 ## Fleet totals at max scale
 
-After resolving `minReplicas`, `maxReplicas`, and effective concurrency from [`hpa.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/hpa.yaml), merge per-pod resources from the worker entry and chart [`defaults.workerResources`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/values.yaml) (see [`deployment.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/deployment.yaml) for merge rules). Report fleet CPU/memory at `maxReplicas`.
+After resolving `minReplicas`, `maxReplicas`, and effective concurrency from [`hpa.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/hpa.yaml), merge per-pod memory from the worker entry and chart [`defaults.workerResources`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/values.yaml) (see [`deployment.yaml`](https://github.com/apolloio/leadgenie/blob/master/kubernetes/charts/sidekiq-workers/templates/deployment.yaml) for merge rules). CPU per pod is the fixed 1 / 2 cores. Report fleet CPU/memory at `maxReplicas`.
 
 ## CI constraints
 
