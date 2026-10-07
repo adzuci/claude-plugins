@@ -10,6 +10,11 @@ Skills for admins managing engineers' Claude and Codex monthly spend limits.
 
 ## Access requirement (limitation)
 
+Run `/ai-overage-admins:ai-limit-manager setup` for a step-by-step walkthrough of the
+CLI tools, 1Password configuration, credential item names, and how to obtain the
+keys (or who to ask). Tier thresholds come from the
+[AI Token Strategy](https://app.notion.com/p/apolloio/AI-Token-Strategy-37eab2b3b496817ab42ee977a22503fc?source=copy_link) doc.
+
 `ai-limit-manager` fetches org-wide admin credentials from 1Password at runtime:
 the Anthropic Admin API key and the ChatGPT (Codex) Admin API token, both stored
 in the `Employee` vault. These are powerful, org-wide credentials — they grant
