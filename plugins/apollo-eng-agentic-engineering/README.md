@@ -7,6 +7,7 @@ Agentic Engineering team skills.
 | Invoke command | Purpose |
 | --- | --- |
 | `/apollo-eng-agentic-engineering:weekly-agentic-summary` | Generate a weekly per-project accomplishment summary for the Agentic Engineering team from the team Slack channel |
+| `/apollo-eng-agentic-engineering:claude-plugins-pr-triage` | Read-only triage of open claude-plugins PRs into easy approvals, stale candidates, and high-ROI work, with optional `--html` report |
 
 ## What belongs in apollo-eng-agentic-engineering
 
