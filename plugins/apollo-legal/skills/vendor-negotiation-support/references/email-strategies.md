@@ -2,6 +2,12 @@
 
 Use one of these when drafting vendor negotiation email responses.
 
+Never tell the vendor what you personally can or cannot approve or sign (e.g. "I can recommend
+but not sign"). It is often true, but saying it hands the vendor a reason to discount the ask —
+they now know the real decision sits elsewhere. Keep personal authority ambiguous in
+vendor-facing text. Apollo's actual signature process (see `references/procurement-handoff.md`)
+is a process fact worth disclosing when relevant; your personal approval limits are not.
+
 ## Hardline Close
 
 When to use: Apollo has credible alternatives, the vendor is pushing an artificial deadline,
@@ -51,9 +57,10 @@ Best,
 <sender>
 ```
 
-Risk to avoid: Do not promise signature or approval; promise only that the revised offer is
-easier to route unless the user explicitly says they control the approval path and wants a more
-committed close.
+Risk to avoid: Do not promise signature or approval, and do not frame the limit as something you
+personally lack — "I can help route it" is fine, "I can recommend but not sign" is not. Promise
+only that the revised offer is easier to route, unless the user explicitly says they control the
+approval path and wants a more committed close.
 
 More committed close, when the user controls the path:
 

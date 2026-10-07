@@ -19,6 +19,9 @@ Infer the mode from the user's words. If multiple apply, run them in this order:
 1. `renewals` - discover vendor renewal dates, owners, spend, and next actions.
 1. `tldr` - produce a concise manager/Slack-ready deal read.
 1. `negotiate` - produce negotiation options, walk-away points, and vendor-facing language.
+1. `enrich` - build the deal's who's-who on both sides and verify the vendor-side contacts with
+   Apollo data. Discovery/prep step: run before `email` or `handoff` so drafts and packets can
+   use the verified contacts.
 1. `email` - draft a vendor email response with concise ask math underneath.
 1. `handoff` - package evidence and open questions for Procurement, Legal, Security, Finance,
    or the business owner.
@@ -180,6 +183,33 @@ The goal is to reduce Procurement/Legal workload by doing manager prep:
 Do not create, update, approve, or submit procurement records unless the user explicitly asks
 and the relevant connector/tool is available.
 
+## Mode: Enrich
+
+Read `references/enrich-mode.md` before building a who's-who. Use this mode for requests like
+"who is on this deal", "who do I call at the vendor", `enrich`, or `--mode enrich`.
+
+```text
+/apollo-legal:vendor-negotiation-support enrich <vendor-domain>
+```
+
+Optionally add pasted names or a deal/channel reference.
+
+The mode answers who is in the deal on both sides and who routes what:
+
+1. Discover participants from the deal's Slack channels, the Apollo CRM account/opportunity, and
+   any pasted names.
+1. Verify and enrich the vendor-side people through the Apollo MCP server's
+   prospecting/enrichment tools. Prefer matching by LinkedIn URL over name plus domain — stale
+   records make name search miss real people.
+1. Surface the exact credit cost and get user approval before unlocking any email or phone. Never
+   re-run an unlock for data already revealed.
+1. Report who was not found, which records look stale, and which phone numbers are DNC-registered.
+   Never claim blanket coverage.
+
+Output a two-table who's-who — vendor side and Apollo side — with role blurbs under ten words, so
+it pastes into a brief or Slack. If the Apollo MCP tools are unavailable, say so, deliver the
+Slack/CRM roster anyway, and point the user to the setup steps in `references/enrich-mode.md`.
+
 ## Output Defaults
 
 For a normal manager-facing request, use:
@@ -229,6 +259,10 @@ For email mode, use:
 - Use Apollo data as directional negotiation context, not proof of vendor finances.
 - On two-way deals, never put signature contingency in writing and keep both deals in their own
   formal approval paths (see `references/360-deals.md`).
-- Ask before using enrichment or other Apollo CLI operations that may consume credits.
+- In vendor-facing email or Slack text, never disclose your personal signing/approval limits
+  (e.g. "I can recommend but not sign") — true statements like this still concede leverage. Save
+  that framing for internal notes (see `references/email-strategies.md`).
+- Ask before using enrichment or other Apollo CLI/MCP operations that may consume credits, and
+  surface the exact credit cost when one is quoted.
 - Use exact dates, not "soon" or "next month", when renewal or signature deadlines matter.
 - Keep manager-facing messages short enough to paste into Slack.
