@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.5.0...apollo-eng-devops-v1.6.0) (2026-10-07)
+
+
+### Features
+
+* **apollo-eng-devops:** add gcp-cost-optimization-review with workload arg and bq preflight ([#275](https://github.com/apolloio/claude-plugins/issues/275)) ([a180e7f](https://github.com/apolloio/claude-plugins/commit/a180e7fd848c5eeeab3a61cabaa8f6656d96aa19))
+* **apollo-eng-devops:** add slow-query-triage skill ([#227](https://github.com/apolloio/claude-plugins/issues/227)) ([beccb69](https://github.com/apolloio/claude-plugins/commit/beccb69e4caf57d41ec8eb4f8fe7f246106ee8c3))
+
 ## [1.5.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.4.0...apollo-eng-devops-v1.5.0) (2026-10-07)
 
 
