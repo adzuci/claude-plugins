@@ -7,6 +7,16 @@ description: Check that an experiment records exposure before the metric event i
 
 Exposure must precede the measured event.
 
+Scope: this skill checks **ordering** — that the exposure is recorded before the
+metric event it explains. If the question is *where* exposure should fire, *who*
+reaches it, or whether the eligibility/targeting design is right, that is
+`/apollo-eng-experimentation:experiment-exposure-design-beta`. The
+two complement each other: it owns placement; this owns the race. (Its "expose at
+the first visible divergence" and this skill's "start the exposure at the
+eligibility point" are not in conflict — one picks *which user moment counts*,
+the other says *when to initiate the call* inside that flow so the round trip
+overlaps the action.)
+
 This skill is natural-language activated on purpose, unlike the other skills in this
 plugin. The bug it catches is silent, is introduced while writing ordinary feature code,
 and nobody thinks to run a slash command for it. See "Why This One Auto-Activates".

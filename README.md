@@ -80,7 +80,7 @@ Weekly OKR update: `/apollo-eng-leadership:okr-report --weekly <team>` (for exam
 | `apollo-procurement` | Procurement & Finance Operations assistant — answers questions about travel & expense (Navan), procurement intake (Zip), accounts payable, corporate cards (Ramp/Brex), and contracts (IronClad) by grounding every answer in the canonical FAQ. | 1 |
 | `apollo-accounting` | Accounting and finance skills for Apollo's Finance team — contract clause analysis, ASC 606 revenue recognition assessment, and Ironclad contract review workflows. | 1 |
 | `apollo-eng-agentic-engineering` | Agentic Engineering team skills | 2 |
-| `apollo-eng-experimentation` | Amplitude experiment lifecycle skills for the leadgenie codebase: create, measure, and clean up A/B experiments | 5 |
+| `apollo-eng-experimentation` | Amplitude experiment lifecycle skills for the leadgenie codebase: create, measure, and clean up A/B experiments | 6 |
 | `ai-overage-admins` | Skills for admins managing engineers' Claude and Codex monthly spend limits | 1 |
 
 <!-- PLUGIN-INVENTORY-END -->
