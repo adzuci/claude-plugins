@@ -75,6 +75,33 @@ python3 scripts/check_dependencies.py --json
 | CSAT, reopen count, ticket volume | Snowflake | Pasted, Unverified |
 | Recent conversation context | Intercom MCP | Pasted, Unverified |
 
+## Record What You Reached
+
+Every run must record its coverage in the payload's `sources` list, whether or
+not anything failed:
+
+```json
+"sources": [
+  {"name": "Salesforce", "status": "ok"},
+  {"name": "Snowflake", "status": "unavailable", "impact": "ticket counts, age, CSAT are unverified"},
+  {"name": "Intercom", "status": "partial", "impact": "20 most recent conversations only"}
+]
+```
+
+The renderer turns this into a coverage block at the top of every format. Two
+reasons it has to be explicit:
+
+- A missing source is the single most important thing about a degraded brief.
+  An AM who reads "renewal risk: unknown / needs checking" without knowing
+  Salesforce was down may read it as a data-entry gap rather than an outage.
+- Silence is not neutral. A brief with no `sources` list reads as full coverage,
+  so the renderer states that coverage was not recorded instead.
+
+Add a `caveats` entry for anything a status cannot carry, especially freshness:
+name when a lagging source was pulled and what a later arrival would change. If
+newer data lands after the run, render a fresh brief that supersedes the old
+one rather than restating its numbers.
+
 Whatever the source, keep the read-only discipline from
 `references/account-brief-mode.md`: query, do not mutate, and never fabricate a
 value you did not retrieve.

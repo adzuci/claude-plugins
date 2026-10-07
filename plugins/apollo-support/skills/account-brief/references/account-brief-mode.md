@@ -40,13 +40,21 @@ AM).
 1. Assemble a single JSON payload with the fields you actually retrieved. Leave
    out anything you did not verify; the renderer fills gaps with
    `unknown / needs checking` rather than inventing values.
+1. Record coverage in the same payload: a `sources` entry for every source you
+   consulted (clean ones included), `caveats` for freshness or scope notes, and
+   `data_window` for the period covered. These render above the numbers they
+   qualify, so a reader who stops early still sees them.
 1. Score red-flag signals against `references/red-flag-signals.md`. Only raise a
    flag when a concrete source value crosses its documented threshold.
 1. Render the brief:
    ```bash
-   python3 scripts/render_account_brief.py --json <payload.json>          # Markdown
-   python3 scripts/render_account_brief.py --json <payload.json> --html   # HTML
+   python3 scripts/render_account_brief.py --json <payload.json> --bundle ./out  # all artifacts (Slack default)
+   python3 scripts/render_account_brief.py --json <payload.json>                 # Markdown
+   python3 scripts/render_account_brief.py --json <payload.json> --html          # HTML
    ```
+   When answering into Slack, use `--bundle` and follow
+   `references/slack-delivery.md`: post the summary as the message, attach the
+   PNG and HTML, and never paste raw HTML into a thread.
 
 ## Payload Shape
 

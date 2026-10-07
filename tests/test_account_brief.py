@@ -43,8 +43,20 @@ def test_skill_frontmatter_and_usage():
         "references/red-flag-signals.md",
         "references/data-sources.md",
         "references/output-shapes.md",
+        "references/slack-delivery.md",
     ):
         assert ref in skill
+
+
+def test_skill_documents_slack_as_default_delivery():
+    skill = read_skill_file("SKILL.md")
+
+    # Slack delivery must be stated in SKILL.md itself, not only in a reference,
+    # so the agent sees it without loading anything extra.
+    assert "Slack Is The Default Delivery" in skill
+    assert "--bundle" in skill
+    # The exact failure this change exists to prevent.
+    assert "Never paste raw HTML" in skill
 
 
 # ---------------------------------------------------------------------------
@@ -162,6 +174,175 @@ def test_render_html_minimal_payload_is_self_contained():
     assert "http://" not in out and "https://" not in out
 
 
+# ---------------------------------------------------------------------------
+# Slack summary — mrkdwn correctness, caveat placement, standalone fallback
+# ---------------------------------------------------------------------------
+
+
+SLACK_PAYLOAD = {
+    "account": {"name": "Acme", "domain": "acme.com"},
+    "data_window": "last 24h from 2026-08-19 09:00 PT",
+    "sources": [
+        {"name": "Snowflake", "status": "ok"},
+        {"name": "Salesforce", "status": "unavailable", "impact": "plan and ARR are unverified"},
+    ],
+    "caveats": ["Intercom pulled at 09:00 PT. Later conversations not included."],
+    "health": {"status": "at risk", "csat": "3.2"},
+    "open_tickets": [
+        {"id": "T-1", "subject": "Login broken", "severity": "P1", "status": "open", "age_days": 5, "owner": "Sam"}
+    ],
+    "red_flags": [
+        {"tier": "P2", "signal": "Usage decline", "detail": "down 30%", "source": "Snowflake"},
+        {"tier": "P0", "signal": "At-risk renewal", "detail": "renewal_risk=at-risk", "source": "Salesforce"},
+    ],
+}
+
+
+def test_render_slack_uses_mrkdwn_not_markdown():
+    render = load_script("render_account_brief.py")
+
+    out = render.render_slack(SLACK_PAYLOAD)
+
+    # Slack mrkdwn: *bold*, never **bold**, no # headers, no pipe tables.
+    assert "**" not in out
+    assert not any(line.startswith("#") for line in out.splitlines())
+    assert not any(line.startswith("|") for line in out.splitlines())
+    assert "*Account Brief: Acme*" in out
+    assert "—" not in out
+
+
+def test_render_slack_puts_caveats_above_the_numbers():
+    render = load_script("render_account_brief.py")
+
+    out = render.render_slack(SLACK_PAYLOAD)
+
+    # The whole point: a reader who stops early still sees the gaps.
+    assert ":warning:" in out
+    assert "Salesforce unavailable: plan and ARR are unverified" in out
+    assert "Intercom pulled at 09:00 PT. Later conversations not included." in out
+    assert out.index("Data coverage:") < out.index("*Health*")
+    assert out.index("Data coverage:") < out.index("*Red flags")
+
+
+def test_render_slack_reports_clean_coverage_and_flags_unrecorded_coverage():
+    render = load_script("render_account_brief.py")
+
+    clean = render.render_slack({"account": {"name": "Acme"}, "sources": [{"name": "Snowflake", "status": "ok"}]})
+    assert "No coverage gaps recorded" in clean
+    assert ":warning:" not in clean
+
+    # Omitting sources must not read as full coverage.
+    silent = render.render_slack({"account": {"name": "Acme"}})
+    assert "Source coverage not recorded" in silent
+
+
+def test_render_slack_stands_alone_and_names_attachments():
+    render = load_script("render_account_brief.py")
+
+    with_files = render.render_slack(SLACK_PAYLOAD, ["account-brief.png", "account-brief.html"])
+    assert "Full brief attached: account-brief.png, account-brief.html." in with_files
+
+    # If attachments fail, the summary must still say what the reader has.
+    without = render.render_slack(SLACK_PAYLOAD)
+    assert "No attachment rendered" in without
+    # Both carry the actionable content regardless.
+    for out in (with_files, without):
+        assert "At-risk renewal" in out
+        assert "Login broken" in out
+
+
+def test_render_slack_sorts_p0_first_and_truncates_long_lists():
+    render = load_script("render_account_brief.py")
+
+    payload = dict(SLACK_PAYLOAD)
+    payload["open_tickets"] = [
+        {"id": f"T-{n}", "subject": f"Issue {n}", "severity": "P2", "status": "open", "age_days": n, "owner": "Sam"}
+        for n in range(12)
+    ]
+    out = render.render_slack(payload)
+
+    assert out.index("At-risk renewal") < out.index("Usage decline")
+    assert "*Open tickets (12)*" in out
+    # Capped, and honest about what was cut rather than silently dropping rows.
+    assert f"+{12 - render.SLACK_MAX_TICKETS} more tickets in the attached brief." in out
+    assert len(out) <= render.SLACK_CHAR_BUDGET
+
+
+def test_markdown_and_html_also_lead_with_caveats():
+    render = load_script("render_account_brief.py")
+
+    md = render.render_markdown(SLACK_PAYLOAD)
+    assert md.index("Data Coverage And Caveats") < md.index("## Health Summary")
+    assert "Salesforce unavailable" in md
+
+    out = render.render_html(SLACK_PAYLOAD)
+    assert out.index("Data Coverage And Caveats") < out.index("Health Summary")
+    assert "caveats-warn" in out
+    assert "http://" not in out and "https://" not in out
+
+
+# ---------------------------------------------------------------------------
+# Bundle + PNG — first-class artifact, degrades instead of failing
+# ---------------------------------------------------------------------------
+
+
+def test_render_bundle_writes_every_artifact_and_degrades_without_png(tmp_path, monkeypatch):
+    render = load_script("render_account_brief.py")
+    png = load_script("render_png.py")
+
+    # Simulate a machine with no PNG renderer installed.
+    monkeypatch.setattr(png, "render_png", lambda *a, **k: (False, "no PNG renderer available"))
+    monkeypatch.setitem(sys.modules, "render_png", png)
+
+    manifest = render.render_bundle(SLACK_PAYLOAD, tmp_path)
+
+    assert Path(manifest["markdown"]).exists()
+    assert Path(manifest["html"]).exists()
+    assert Path(manifest["slack_file"]).exists()
+    # PNG failure degrades the bundle; it never fails it.
+    assert manifest["png"] is None
+    assert manifest["attachments"] == ["account-brief.html"]
+    assert "At-risk renewal" in manifest["slack_text"]
+
+
+def test_render_png_reports_actionable_reason_when_no_renderer(tmp_path, monkeypatch):
+    png = load_script("render_png.py")
+
+    html_path = tmp_path / "brief.html"
+    html_path.write_text("<!doctype html><html><body>hi</body></html>")
+    monkeypatch.setattr(png, "render_with_playwright", lambda *a: (_ for _ in ()).throw(ImportError("no playwright")))
+    monkeypatch.setattr(png, "CHROME_BINARIES", ("definitely-not-a-browser",))
+
+    ok, detail = png.render_png(html_path, tmp_path / "brief.png")
+
+    assert ok is False
+    # The caller needs the fix and the fallback, not just "failed".
+    assert "playwright" in detail.lower()
+    assert "Attach the HTML file instead" in detail
+
+
+def test_output_formats_are_mutually_exclusive():
+    render = load_script("render_account_brief.py")
+
+    # Each format alone parses fine.
+    assert render.parse_args(["--slack"]).slack is True
+    assert render.parse_args(["--bundle", "out"]).bundle == "out"
+
+    # Combining them errors instead of silently picking one.
+    for combo in (["--slack", "--html"], ["--bundle", "out", "--slack"], ["--html", "--bundle", "out"]):
+        with pytest.raises(SystemExit):
+            render.parse_args(combo)
+
+
+def test_render_png_missing_html_does_not_raise(tmp_path):
+    png = load_script("render_png.py")
+
+    ok, detail = png.render_png(tmp_path / "absent.html", tmp_path / "out.png")
+
+    assert ok is False
+    assert "not found" in detail
+
+
 def test_load_payload_rejects_non_object(tmp_path):
     render = load_script("render_account_brief.py")
 
@@ -208,6 +389,17 @@ def test_references_have_read_only_and_no_fabrication_discipline():
     assert "OPTIONAL" in sources
 
 
+def test_slack_delivery_reference_states_the_contract():
+    slack = read_skill_file("references/slack-delivery.md")
+
+    assert "Never paste the full HTML document" in slack
+    # Attachments are best-effort; the summary is the deliverable.
+    assert "When Attachments Fail" in slack
+    assert "Caveats Go Above The Numbers" in slack
+    assert "Freshness And Superseding" in slack
+    assert "--bundle" in slack
+
+
 def test_reference_files_have_no_em_dashes():
     for name in (
         "references/account-brief-mode.md",
@@ -215,5 +407,6 @@ def test_reference_files_have_no_em_dashes():
         "references/red-flag-signals.md",
         "references/data-sources.md",
         "references/output-shapes.md",
+        "references/slack-delivery.md",
     ):
         assert "—" not in read_skill_file(name), f"Em dash found in {name}"

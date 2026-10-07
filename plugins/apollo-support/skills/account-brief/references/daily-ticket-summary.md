@@ -29,11 +29,15 @@ account id, scope to that one account.
    - by status (new, open, pending, resolved-in-window).
 1. Separate net-new tickets from carried-over open tickets, and flag any aging
    past SLA against `references/red-flag-signals.md`.
-1. Assemble the payload with `"mode": "daily"` and render:
+1. Assemble the payload with `"mode": "daily"`, set `data_window` to the exact
+   window you used, record every source in `sources`, and render:
    ```bash
-   python3 scripts/render_account_brief.py --json <payload.json>          # Markdown
-   python3 scripts/render_account_brief.py --json <payload.json> --html   # HTML
+   python3 scripts/render_account_brief.py --json <payload.json> --bundle ./out  # all artifacts (Slack default)
+   python3 scripts/render_account_brief.py --json <payload.json>                 # Markdown
+   python3 scripts/render_account_brief.py --json <payload.json> --html          # HTML
    ```
+   When answering into Slack, use `--bundle` and follow
+   `references/slack-delivery.md`.
 
 ## What To Surface
 
