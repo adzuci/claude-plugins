@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Two Macs, One Local Model Pool</title>
+  <meta name="description" content="A cautious guide to sharing local inference across two Macs with NVIDIA PAIR, choosing a model, and adding a local LiteLLM route.">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body class="memory-page">
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">Adam Blackwell</div>
+      <nav aria-label="Article links">
+        <a href="index.html">All posts</a>
+        <a href="https://github.com/adzuci/claude-plugins">GitHub repo</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#limits">Limits</a>
+        <a href="#install">Install</a>
+      </nav>
+    </div>
+
+    <header class="hero hero-compact">
+      <section class="hero-copy">
+        <p class="eyebrow">Local inference · reused hardware · explicit trust boundaries</p>
+        <h1>Two Macs, one local model pool</h1>
+        <p class="dek">NVIDIA PAIR can let an older Mac hold the model while a newer one keeps the editor, browser, and build tools. The useful part is not raw speed. It is separating two workloads that fight over the same memory.</p>
+        <div class="meta-grid" aria-label="Article metadata">
+          <div class="meta-card"><strong>Client</strong>Apps talk only to localhost</div>
+          <div class="meta-card"><strong>Host</strong>Engine and model weights</div>
+          <div class="meta-card"><strong>Status</strong>Experimental, plain completions only</div>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <article>
+        <p class="lead">An old laptop can be more useful as a quiet model host than as a second complete development machine.</p>
+
+        <p>The client sends an Ollama-compatible or OpenAI-compatible request to its own loopback interface. PAIR can forward that request over the LAN to a paired host, where an inference engine owns the model weights. The application still sees one local endpoint; the expensive memory footprint lives elsewhere.</p>
+
+        <div class="pullquote">The point is resource separation: keep the model on the machine that has spare memory, and keep interactive work on the machine in front of you.</div>
+
+        <h2 id="architecture">The request path</h2>
+        <div class="hook-flow" aria-label="PAIR request path between two Macs">
+          <div class="hook-path">
+            <strong>Client app</strong>
+            <span>OpenAI request to <code>127.0.0.1:11434</code></span>
+            <span class="hook-arrow" aria-hidden="true">→</span>
+            <span>PAIR proxy + mTLS over the LAN</span>
+            <span class="hook-arrow" aria-hidden="true">→</span>
+            <strong>Host proxy</strong>
+          </div>
+          <div class="hook-path">
+            <strong>Host proxy</strong>
+            <span>Loopback request to the engine</span>
+            <span class="hook-arrow" aria-hidden="true">→</span>
+            <span>Ollama loads the selected model</span>
+            <span class="hook-arrow" aria-hidden="true">→</span>
+            <strong>Response</strong>
+          </div>
+        </div>
+
+        <p>Discovery uses mDNS, so both machines need to be on the same trusted network without guest-network or access-point isolation. The client should not run its own engine unless local serving is intentional; otherwise a request that looks healthy may never leave that machine.</p>
+
+        <h2>Three jobs, three skills</h2>
+        <div class="hook-grid">
+          <section class="hook-card">
+            <p class="hook-label">1 · Cluster lifecycle</p>
+            <h3><code>/local-ai:pair-setup</code></h3>
+            <p>Preflight, pinned installation, pairing guidance, read-only diagnosis, routing verification, and complete removal.</p>
+          </section>
+          <section class="hook-card">
+            <p class="hook-label">2 · Model fit</p>
+            <h3><code>/local-ai:local-model-pick</code></h3>
+            <p>Choose a conservative Ollama model from total and currently available memory before downloading weights.</p>
+          </section>
+          <section class="hook-card">
+            <p class="hook-label">3 · Client routing</p>
+            <h3><code>/local-ai:litellm-setup</code></h3>
+            <p>Create an authenticated loopback gateway that names the local route and can translate client protocols.</p>
+          </section>
+        </div>
+
+        <h2 id="limits">The limits matter more than the happy path</h2>
+        <p><strong>Structured tool calls are currently broken through PAIR.</strong> The upstream proxy can return an intended tool invocation as ordinary text instead of a structured <code>tool_calls</code> object. That makes plain completions useful, but blocks the agent workflow most people are tempted to try first. Check <a href="https://github.com/NVIDIA/Personal-AI-Router/issues/94">issue #94</a> before installing for an agent use case.</p>
+
+        <p><strong>A healthy endpoint is not routing proof.</strong> Bare Ollama can answer <code>/v1/models</code> on the same port. The authoritative evidence is a real request followed by a PAIR Jobs card that says <code>Ran on</code> and names the other machine.</p>
+
+        <p><strong>PAIR changes the machine.</strong> The desktop application installs a persistent privileged helper for firewall management. Pairing begins with a six-digit PIN. PAIR's own security documentation treats the LAN as a meaningful trust boundary and warns against exposing local inference endpoints to untrusted interfaces.</p>
+
+        <div class="note">
+          <p><strong>Safe pilot shape:</strong> use two machines you own or are authorized to administer, a trusted private LAN, public or synthetic prompts, and an explicit uninstall test. Do not forward the ports or put a public reverse proxy in front of them.</p>
+        </div>
+
+        <h2>Why put LiteLLM in front?</h2>
+        <p>PAIR chooses which machine serves a request. It does not choose between models or translate every client protocol. LiteLLM is a separate layer: it exposes a named route such as <code>local-pair</code>, keeps credentials in environment variables, and can present OpenAI-compatible or Anthropic-shaped endpoints to local clients.</p>
+
+        <p>The plugin writes a secret-free starter configuration and can install a pinned LiteLLM version inside a dedicated virtual environment. It binds to loopback and requires a master key. That translation layer is useful, but it cannot repair PAIR's structured-tool-call defect.</p>
+
+        <section class="install-block" id="install">
+          <h2>Install the plugin</h2>
+          <p>Add the marketplace, install <code>local-ai</code>, and begin with the read-only PAIR verification.</p>
+          <div class="install-grid">
+            <section class="install-card">
+              <h3>Claude Code</h3>
+              <pre><code>claude plugin marketplace add adzuci/claude-plugins
+claude plugin install local-ai@adzuci-plugins
+/local-ai:pair-setup host verify</code></pre>
+            </section>
+            <section class="install-card">
+              <h3>Codex</h3>
+              <pre><code>codex plugin marketplace add adzuci/claude-plugins
+codex plugin add local-ai@adzuci-plugins
+/local-ai:pair-setup host verify</code></pre>
+            </section>
+          </div>
+          <p class="install-footnote">The PAIR installer currently targets Apple Silicon macOS. Model names, releases, and upstream limitations are checked again before mutation.</p>
+        </section>
+      </article>
+
+      <aside>
+        <section class="side-panel">
+          <h3>Project</h3>
+          <p><strong>Repo:</strong> <a href="https://github.com/adzuci/claude-plugins">adzuci/claude-plugins</a></p>
+          <p><strong>Plugin:</strong> <code>local-ai</code></p>
+          <p><strong>Skills:</strong> PAIR setup, model selection, LiteLLM setup</p>
+          <p><strong>Principle:</strong> verify the route, not just the endpoint.</p>
+        </section>
+
+        <section class="side-panel" id="references">
+          <h3>Primary references</h3>
+          <div class="link-list">
+            <a href="https://github.com/NVIDIA/Personal-AI-Router">NVIDIA Personal AI Router</a>
+            <a href="https://github.com/NVIDIA/Personal-AI-Router/blob/develop/SECURITY.md">PAIR security model</a>
+            <a href="https://github.com/NVIDIA/Personal-AI-Router/releases/tag/v0.1.1">PAIR v0.1.1 release</a>
+            <a href="https://github.com/NVIDIA/Personal-AI-Router/issues/94">PAIR tool-call issue</a>
+            <a href="https://ollama.com/library">Ollama model library</a>
+            <a href="https://docs.litellm.ai/docs/">LiteLLM documentation</a>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer>
+      Companion article for the experimental <code>local-ai</code> plugin.
+    </footer>
+  </div>
+</body>
+</html>

@@ -15,6 +15,13 @@
       "tags": ["claude-code", "codex", "memory", "obsidian"]
     },
     {
+      "name": "local-ai",
+      "source": "./plugins/local-ai",
+      "description": "Set up NVIDIA PAIR, choose local Ollama models, and scaffold LiteLLM routing for personal local-inference workflows.",
+      "category": "productivity",
+      "tags": ["claude-code", "codex", "local-ai", "ollama", "nvidia-pair", "litellm"]
+    },
+    {
       "name": "career",
       "source": "./plugins/career",
       "description": "Job market intelligence sweep for senior technical candidates. Produces a tier-ranked report in your vault, runs an automated recruiter review, and offers weekly scheduling.",

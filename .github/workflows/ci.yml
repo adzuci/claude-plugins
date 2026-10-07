@@ -45,10 +45,13 @@ jobs:
               plugins/productivity/skills/productivity-setup/tests \
               plugins/productivity/skills/standup/scripts \
               plugins/productivity/skills/standup/tests \
+              plugins/local-ai/skills/pair-setup/tests \
+              plugins/local-ai/skills/local-model-pick/tests \
+              plugins/local-ai/skills/litellm-setup/tests \
               plugins/learning/skills/self-retro \
               plugins/learning/skills/self-retro/tests
 
-      - name: Run memory setup tests
+      - name: Run plugin tests
         run: |
           PYTHONDONTWRITEBYTECODE=1 \
             python -m pytest plugins/memory/skills/memory-setup/tests -q -p no:cacheprovider
@@ -65,6 +68,15 @@ jobs:
             python -m pytest plugins/productivity/skills/standup/tests -q -p no:cacheprovider
           PYTHONDONTWRITEBYTECODE=1 \
             python -m pytest plugins/learning/skills/self-retro/tests -q -p no:cacheprovider
+          PYTHONDONTWRITEBYTECODE=1 \
+            python -m pytest \
+              plugins/local-ai/skills/pair-setup/tests \
+              plugins/local-ai/skills/local-model-pick/tests \
+              plugins/local-ai/skills/litellm-setup/tests \
+              -q -p no:cacheprovider
+
+      - name: Validate Local AI shell scripts
+        run: bash -n plugins/local-ai/skills/*/scripts/*.sh
 
       - name: Validate JSON manifests
         run: |
@@ -72,6 +84,8 @@ jobs:
           python -m json.tool .claude-plugin/marketplace.json >/dev/null
           python -m json.tool plugins/memory/.claude-plugin/plugin.json >/dev/null
           python -m json.tool plugins/memory/.codex-plugin/plugin.json >/dev/null
+          python -m json.tool plugins/local-ai/.claude-plugin/plugin.json >/dev/null
+          python -m json.tool plugins/local-ai/.codex-plugin/plugin.json >/dev/null
           python -m json.tool plugins/productivity/.claude-plugin/plugin.json >/dev/null
           python -m json.tool plugins/learning/.claude-plugin/plugin.json >/dev/null
 
@@ -127,4 +141,8 @@ jobs:
           memory.feed(Path("docs/memory.html").read_text())
           if "Memory as reliability practice" not in " ".join(memory.h1):
               raise SystemExit("Expected memory post H1 was not found")
+          local_ai = SiteParser()
+          local_ai.feed(Path("docs/local-ai.html").read_text())
+          if "Two Macs, one local model pool" not in " ".join(local_ai.h1):
+              raise SystemExit("Expected Local AI post H1 was not found")
           PY
