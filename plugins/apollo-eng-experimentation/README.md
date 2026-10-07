@@ -24,6 +24,7 @@ have before — `.claude/skills/` is Claude-only.
 | `/apollo-eng-experimentation:experiment-exposure-order` | Check that exposure is recorded before the metric event it explains, for both arms and on every path |
 | `/apollo-eng-experimentation:experiment-metrics-dashboard` | Build an Amplitude dashboard that complements the standard Analysis View, from an experiment name, branch, or PR |
 | `/apollo-eng-experimentation:experiment-cleanup` | Remove a shipped experiment, keep the winning code path, open the cleanup PR |
+| `/apollo-eng-experimentation:experiment-pre-analysis-beta` | **Beta** — plan an experiment before launch: metrics, fresh baselines, effect to detect, confidence and power, sample size and runtime, as a chat summary, a plan file, and an offered Experiments DB entry update. Hands off to jarvis `experiment-setup` for independent warehouse verification |
 
 ## Experiment Lifecycle Skills (Beta)
 
