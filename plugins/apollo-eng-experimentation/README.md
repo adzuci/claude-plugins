@@ -25,10 +25,34 @@ have before — `.claude/skills/` is Claude-only.
 | `/apollo-eng-experimentation:experiment-metrics-dashboard` | Build an Amplitude dashboard that complements the standard Analysis View, from an experiment name, branch, or PR |
 | `/apollo-eng-experimentation:experiment-cleanup` | Remove a shipped experiment, keep the winning code path, open the cleanup PR |
 
+## Experiment Lifecycle Skills (Beta)
+
+Skills that help walk an experiment from idea to a trustworthy launch. Each one is tied to a
+lifecycle stage, declared in its frontmatter as `metadata.lifecycle-stage`, and each follows
+the same working agreement in
+[`references/experiment-lifecycle-conventions.md`](references/experiment-lifecycle-conventions.md):
+confirm the skill is the right one, check tools first, collect inputs until the picture is
+complete, teach while working, hand over in a fixed shape, review before delivering, and offer
+to capture what was learned.
+
+| Skill | Stage | What it hands over |
+|---|---|---|
+| `experiment-pre-analysis-beta` | Discovery | Metrics, baselines, effect to detect, sample size and runtime, as a plan file plus an offered update to the Experiments DB entry |
+| `experiment-analytics-audit-beta` | Discovery, Execution | Before build: which events the experiment needs, which exist, what must be built, and which are at risk of meaning different things per arm. After build: whether the code matches that audit, with gaps fixed on approval and the audit brought up to date |
+| `experiment-exposure-design-beta` | Execution | Where exposure fires and who reaches it, planned or reviewed, with setup or fixes offered as a draft PR |
+| `experiment-aa-run-verification-beta` | Execution | Whether a running A/A dry run looks healthy: volume, split, and source agreement, as a verdict and a file |
+
+The skills are team-agnostic; the pre-analysis skill
+reads per-team standards from its `teams/` folder when one exists.
+
+**How they improve.** At the end of a run a skill may draft an anonymized learning card and,
+with the user's approval, open a draft PR that adds it under
+[`learnings/`](learnings/README.md). Maintainers fold recurring patterns into the skill. The
+skills never edit themselves.
+
 ## Invocation
 
-The three lifecycle skills (`create-amplitude-experiment`, `experiment-metrics-dashboard`,
-`experiment-cleanup`) set `disable-model-invocation: true`. They never enter routing
+All skills set `disable-model-invocation: true`. They never enter routing
 context, and the model will not pick them up from a phrase like "clean up experiment
 FooBar". Run them as slash commands and pass the experiment reference as an argument.
 
