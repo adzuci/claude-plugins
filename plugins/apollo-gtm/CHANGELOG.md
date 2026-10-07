@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.6.0...apollo-gtm-v0.7.0) (2026-10-07)
+
+
+### Features
+
+* **apollo-gtm:** add direct-response-mode skill ([#304](https://github.com/apolloio/claude-plugins/issues/304)) ([a0eb55d](https://github.com/apolloio/claude-plugins/commit/a0eb55d2a0cd4c9b11a1907bc6b30a8ae1ee351a))
+
 ## [0.6.0](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.5.1...apollo-gtm-v0.6.0) (2026-09-29)
 
 

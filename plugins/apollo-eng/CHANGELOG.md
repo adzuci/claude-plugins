@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.1](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.11.0...apollo-eng-v1.11.1) (2026-10-07)
+
+
+### Bug Fixes
+
+* **apollo-eng:** limit daily digest Pantheon PRs to the last 24 hours ([#327](https://github.com/apolloio/claude-plugins/issues/327)) ([68b7155](https://github.com/apolloio/claude-plugins/commit/68b7155037523ad78d5a85c02a2255441324e4a1))
+
 ## [1.11.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.10.0...apollo-eng-v1.11.0) (2026-09-29)
 
 

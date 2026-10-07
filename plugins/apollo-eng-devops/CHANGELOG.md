@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.5.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.4.0...apollo-eng-devops-v1.5.0) (2026-10-07)
+
+
+### Features
+
+* **apollo-eng-devops:** preflight Grafana MCP, gcloud and gcx in Mongo triage skills ([#315](https://github.com/apolloio/claude-plugins/issues/315)) ([15a4d23](https://github.com/apolloio/claude-plugins/commit/15a4d23676206735fec52a814886fd5e10b5e590))
+* **mongo-specialist:** deploy-aware gate for router restarts ([#313](https://github.com/apolloio/claude-plugins/issues/313)) ([c524f35](https://github.com/apolloio/claude-plugins/commit/c524f354d1571819618c81de85b01d1a81f7e93f))
+
+
+### Bug Fixes
+
+* **sidekiq-worker-specialist:** CPU is no longer per-worker configurable ([#329](https://github.com/apolloio/claude-plugins/issues/329)) ([c39a44d](https://github.com/apolloio/claude-plugins/commit/c39a44dc9841ca99ecddb762943fb1e1c79a81c8))
+
 ## [1.4.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.3.0...apollo-eng-devops-v1.4.0) (2026-09-30)
 
 
