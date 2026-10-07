@@ -1,0 +1,41 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    name: pytest (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.11"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install requirements
+        run: |
+          shopt -s nullglob globstar
+          for req in tests/requirements.txt plugins/**/scripts/requirements.txt plugins/**/tests/requirements.txt; do
+            echo "Installing $req"
+            python -m pip install -r "$req"
+          done
+
+      - name: Run pytest
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python -m pytest -q -p no:cacheprovider

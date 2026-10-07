@@ -9,13 +9,9 @@ permissions:
   contents: read
 
 jobs:
-  python-and-manifests:
-    name: Python scripts and plugin metadata
+  metadata:
+    name: Plugin metadata
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.9", "3.12"]
 
     steps:
       - name: Check out repository
@@ -24,56 +20,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install test dependencies
-        run: python -m pip install --upgrade pip pytest
+          python-version: "3.11"
 
       - name: Compile bundled Python scripts
         run: |
           PYTHONPYCACHEPREFIX="$RUNNER_TEMP/pycache" \
-            python -m compileall -q \
-              plugins/memory/skills/memory-setup/scripts \
-              plugins/memory/skills/memory-setup/tests \
-              plugins/productivity/skills/agent-ops-setup/scripts \
-              plugins/productivity/skills/agent-ops-setup/tests \
-              plugins/productivity/skills/agent-ops-report/scripts \
-              plugins/productivity/skills/agent-ops-report/tests \
-              plugins/productivity/skills/todo/scripts \
-              plugins/productivity/skills/todo/tests \
-              plugins/productivity/skills/productivity-setup/scripts \
-              plugins/productivity/skills/productivity-setup/tests \
-              plugins/productivity/skills/standup/scripts \
-              plugins/productivity/skills/standup/tests \
-              plugins/local-ai/skills/pair-setup/tests \
-              plugins/local-ai/skills/local-model-pick/tests \
-              plugins/local-ai/skills/litellm-setup/tests \
-              plugins/learning/skills/self-retro \
-              plugins/learning/skills/self-retro/tests
-
-      - name: Run plugin tests
-        run: |
-          PYTHONDONTWRITEBYTECODE=1 \
-            python -m pytest plugins/memory/skills/memory-setup/tests -q -p no:cacheprovider
-          PYTHONDONTWRITEBYTECODE=1 \
-            python -m pytest \
-              plugins/productivity/skills/agent-ops-setup/tests \
-              plugins/productivity/skills/agent-ops-report/tests \
-              -q -p no:cacheprovider
-          PYTHONDONTWRITEBYTECODE=1 \
-            python -m pytest plugins/productivity/skills/todo/tests -q -p no:cacheprovider
-          PYTHONDONTWRITEBYTECODE=1 \
-            python -m pytest plugins/productivity/skills/productivity-setup/tests -q -p no:cacheprovider
-          PYTHONDONTWRITEBYTECODE=1 \
-            python -m pytest plugins/productivity/skills/standup/tests -q -p no:cacheprovider
-          PYTHONDONTWRITEBYTECODE=1 \
-            python -m pytest plugins/learning/skills/self-retro/tests -q -p no:cacheprovider
-          PYTHONDONTWRITEBYTECODE=1 \
-            python -m pytest \
-              plugins/local-ai/skills/pair-setup/tests \
-              plugins/local-ai/skills/local-model-pick/tests \
-              plugins/local-ai/skills/litellm-setup/tests \
-              -q -p no:cacheprovider
+            python -m compileall -q plugins
 
       - name: Validate Local AI shell scripts
         run: bash -n plugins/local-ai/skills/*/scripts/*.sh

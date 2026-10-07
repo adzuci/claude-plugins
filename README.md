@@ -1,6 +1,7 @@
 # claude-plugins
 
 [![CI](https://github.com/adzuci/claude-plugins/actions/workflows/ci.yml/badge.svg)](https://github.com/adzuci/claude-plugins/actions/workflows/ci.yml)
+[![Tests](https://github.com/adzuci/claude-plugins/actions/workflows/tests.yml/badge.svg)](https://github.com/adzuci/claude-plugins/actions/workflows/tests.yml)
 [![GitHub Pages](https://img.shields.io/badge/site-GitHub%20Pages-2359d1)](https://adzuci.github.io/claude-plugins/)
 
 Public Claude Code and Codex plugins for local-first AI workflows.
@@ -116,10 +117,11 @@ This skill is intentionally cautious because it touches personal knowledge and l
 - It keeps generated memory in plain Markdown.
 - It is designed to be rerunnable and idempotent where possible.
 
-The repo includes CI for the bundled Python scripts and plugin metadata:
+The repo includes CI for Python tests, bundled scripts, and plugin metadata:
 
-- compile all memory setup scripts and tests
-- run the pytest suite on Python 3.9 and 3.12
+- discover and run the full pytest suite on Python 3.9 and 3.11
+- install root, skill-script, and skill-test requirements automatically
+- compile all bundled Python under `plugins/`
 - validate marketplace and plugin JSON
 - verify the static site references existing assets
 
@@ -134,6 +136,7 @@ The repo includes CI for the bundled Python scripts and plugin metadata:
 .github/
   workflows/
     ci.yml
+    tests.yml
 docs/
   index.html          # blog landing page
   memory.html  productivity.html  learning.html  career.html
@@ -179,9 +182,8 @@ This repo is intentionally small, but the bar for changes is still: can someone 
 Run the skill tests:
 
 ```bash
-python3 -m pytest plugins/memory/skills/memory-setup/tests -q
-python3 -m pytest plugins/productivity/skills/todo/tests plugins/productivity/skills/productivity-setup/tests -q
-python3 -m pytest plugins/local-ai/skills/*/tests -q
+python3 -m pip install -r tests/requirements.txt
+python3 -m pytest -q
 ```
 
 Validate the plugin metadata with the CLI available in your environment:
@@ -201,7 +203,7 @@ If this workflow is useful, please open an issue or PR. The most valuable feedba
 - unsafe or surprising writes
 - compatibility fixes for Claude Code, Codex, Antigravity, Obsidian, or git
 
-Small, focused PRs are welcome. Please include the command you ran, the environment you tested on, and whether `python3 -m pytest plugins/memory/skills/memory-setup/tests -q` passed.
+Small, focused PRs are welcome. Please include the command you ran, the environment you tested on, and whether `python3 -m pytest -q` passed.
 
 ## License
 
