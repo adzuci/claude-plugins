@@ -52,6 +52,8 @@ runbooks or other prose-only support files there.
 
 See [SKILL_INVENTORY.md](SKILL_INVENTORY.md) for the full generated skill command inventory.
 
+Weekly OKR update: `/apollo-eng-leadership:okr-report --weekly <team>` (for example `--weekly devops` or `--weekly design-system`) drafts the team's weekly thread reply as a Slack draft for you to review. Add a team by copying `plugins/apollo-eng-leadership/skills/okr-report/references/weekly-teams/_template.md` and listing it in `plugins/apollo-eng-leadership/skills/okr-report/references/weekly-teams.md`.
+
 <!-- PLUGIN-INVENTORY-START -->
 
 | Plugin | Description | Skills |

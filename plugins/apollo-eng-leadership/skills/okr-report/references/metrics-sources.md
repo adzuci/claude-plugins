@@ -12,5 +12,4 @@ If the metric source is unavailable, behind auth, or does not expose the request
 
 ## Team-Specific Metric Notes
 
-- **DevOps Q2 KR**: "Maintain uptime > 99.93%, Apdex > 0.965, and at most 2 10min+ downtime incidents." Treat this as one reliability KR with three thresholds, not three unrelated KRs. Uptime, apdex, and 10min+ downtime incident count should each be checked against the same Q2 reporting window before assigning status.
-- For DevOps Q2 reports, use the [Engineering Q2 OKRs - DevOps tab](https://docs.google.com/spreadsheets/d/1On4W-vMS9Dv2P6IAAOIRFI6UGocbTj2V_oEl8csnmvE/edit?gid=443276456#gid=443276456) for the KR wording, then use the operational metric sources above only as supporting evidence.
+KR targets and metric mappings are team-specific and change every period. They live in the team files under `weekly-teams/` (for example `weekly-teams/devops.md`) with the period label and the date they were recorded. Treat them as last-known values and verify against the current OKR tracker before a status call. In OKR trackers, a "Baseline" or second target column is the prior period's baseline, never current status.

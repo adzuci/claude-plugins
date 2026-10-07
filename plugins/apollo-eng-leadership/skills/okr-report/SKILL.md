@@ -1,6 +1,7 @@
 ---
 name: okr-report
-description: Generate an engineering team OKR status report from Google Drive/Glean data and optional Jira evidence, with optional HTML output. Activate when a manager asks for an OKR report, OKR status, quarterly progress, key results update, HTML OKR report, or says "okr report".
+description: Generate an engineering team OKR status report from Google Drive/Glean and optional Jira evidence (optional HTML), or draft a team's weekly OKR update as a Slack thread reply. Activate for an OKR report, OKR status, quarterly progress, key results update, weekly OKR update, or "okr report".
+argument-hint: "[html] [--weekly <team>] [--routine] [--vault PATH]"
 ---
 
 # OKR Report
@@ -10,6 +11,11 @@ Generate a structured OKR status report for an engineering team by reading the c
 ## Arguments
 
 - `html`, `--html`, `format=html`, or "HTML version": generate a standalone HTML version of the report after the evidence audit passes. If the user provides a path, write the HTML there. If no path is provided, create `okr-report-<team>-<period>.html` in the current working directory when file writes are appropriate; otherwise return the HTML in a fenced `html` block.
+- `--weekly <team>`: draft the team's weekly OKR update reply as a Slack draft instead of a quarterly report. Follow [Weekly Mode](#weekly-mode); it replaces Steps 0-7.
+- `--routine`: with `--weekly`, run unattended. Never prompt; record gaps in the draft instead.
+- `--vault PATH`: with `--weekly`, save a copy of the draft to this Obsidian vault. Falls back to `OKR_REPORT_VAULT_DIR`, then `OBSIDIAN_VAULT`.
+
+With no arguments, run the quarterly report in Steps 0-7.
 
 ## Step 0 -- Check Data Access
 
@@ -58,7 +64,7 @@ OKRs are organized by objective, not by team. To filter:
 
 ### Determining the current quarter
 
-Look for the quarter in the spreadsheet title (e.g. "FY27Q1"), sheet headers, tab names, or column date ranges. Do not assume -- derive it from the data. If the sheet has multiple tabs, choose the tab matching the requested or current period; if ambiguous, list the tab names and ask the user which one to use.
+Look for the quarter in the spreadsheet title (for example a fiscal-year quarter code), sheet headers, tab names, or column date ranges. Do not assume -- derive it from the data. If the sheet has multiple tabs, choose the tab matching the requested or current period; if ambiguous, list the tab names and ask the user which one to use.
 
 If a linked Jira ticket, document, or search result points to a tracker from an earlier quarter, treat that tracker as historical context only. Do not generate the status report from old OKR rows unless the user explicitly asks for a historical report for that period.
 
@@ -88,9 +94,9 @@ If no matching Jira work is found, write "No linked Jira work found" rather than
 
 ## Step 4 -- Check Operational Metrics
 
-For DevOps, IT, infrastructure, reliability, or support-oriented OKRs, use `references/metrics-sources.md` to look for supporting evidence such as:
+For DevOps, IT, infrastructure, reliability, or support-oriented OKRs, use `references/metrics-sources.md` (and the team file in `references/weekly-teams/`, if one exists, for KR targets) to look for supporting evidence such as:
 
-- app apdex for `app.apollo.io` from Apollo admin performance monitoring
+- app performance score for `app.apollo.io` from Apollo admin performance monitoring
 - component-specific uptime for `app.apollo.io` from `status.apollo.io`
 - customer-visible `status.apollo.io` incidents affecting `app.apollo.io` with visible duration greater than 10 minutes during the reporting period
 
@@ -125,7 +131,7 @@ Before producing the final report, double-check the claims that could mislead a 
 - Re-check each objective, KR, owner, target, current value, progress percentage, Jira status, and operational metric against the source where it came from.
 - For each status call, confirm the evidence supports the label. If the tracker and Jira/metrics disagree, use Needs Review and explain the conflict.
 - Do not present snippets, search results, linked historical sheets, or Jira descriptions as the source of truth when a current tracker is unavailable.
-- Do not report exact numeric values, incident counts, apdex, uptime, or dates unless they were directly observed. Use "unavailable", "not visible", or "not verified" instead of estimating.
+- Do not report exact numeric values, incident counts, performance scores, uptime, or dates unless they were directly observed. Use "unavailable", "not visible", or "not verified" instead of estimating.
 - Keep an internal source map while drafting: claim -> source URL/tool result -> retrieval date -> confidence. Surface only meaningful data gaps in the final report.
 
 ## Step 7 -- Generate the Report
@@ -186,6 +192,12 @@ When the `html` argument is requested, generate a complete standalone HTML docum
 
 If both Markdown and HTML are useful, provide the Markdown summary in chat and link to the generated HTML file path. Do not let the HTML version contain claims that were removed or caveated in the Markdown report.
 
+## Weekly Mode
+
+`--weekly <team>` drafts the team's reply in its weekly OKR thread by copying the format of the team's own last human-written post. It replaces Steps 0-7. Read `references/weekly-mode.md` and follow W0-W6 exactly; everything team-specific comes from the team file listed in `references/weekly-teams.md`.
+
+Invariants: draft only (never `slack_send_message`), no invented numbers, no baseline presented as current, no em dashes, and `--routine` never prompts.
+
 ## Formatting
 
 - Use markdown tables for key results within each objective
@@ -193,7 +205,7 @@ If both Markdown and HTML are useful, provide the Markdown summary in chat and l
 - If data is missing or ambiguous, flag it rather than guessing
 - Note any data that appears stale or inconsistently formatted
 - Cite source sheet URLs and Jira ticket URLs when available
-- Do not write files or create artifacts unless the user explicitly asks
+- Do not write files or create artifacts unless the user explicitly asks (weekly mode: the Slack draft and the opt-in vault copy are expected)
 
 ## Example
 
@@ -201,4 +213,4 @@ See `references/example-report.md` for a complete example report.
 
 ## Known Sources
 
-See `references/okr-sources.md` for known OKR tracker links and `references/metrics-sources.md` for optional operational metric sources. Verify access and freshness at run time before treating any source as current.
+See `references/okr-sources.md` for known OKR tracker links and `references/metrics-sources.md` for optional operational metric sources. Weekly mode uses `references/weekly-teams.md` (index of per-team files in `references/weekly-teams/`) and `references/weekly-template-fallback.md`. Team-specific targets and notes live in the team files. Verify access and freshness at run time before treating any source as current.
