@@ -43,6 +43,7 @@ to capture what was learned.
 | `experiment-analytics-audit-beta` | Discovery, Execution | Before build: which events the experiment needs, which exist, what must be built, and which are at risk of meaning different things per arm. After build: whether the code matches that audit, with gaps fixed on approval and the audit brought up to date |
 | `experiment-exposure-design-beta` | Execution | Where exposure fires and who reaches it, planned or reviewed, with setup or fixes offered as a draft PR |
 | `experiment-aa-run-verification-beta` | Execution | Whether a running A/A dry run looks healthy: volume, split, and source agreement, as a verdict and a file |
+| `experiment-stage-gate-beta` | Gate per lifecycle stage | Whether the experiment is ready to pass a lifecycle gate: the gate's items checked against related artifacts, confirmed by the DRI, with the skill or role that closes each gap, in chat only |
 
 The skills are team-agnostic; the pre-analysis skill
 reads per-team standards from its `teams/` folder when one exists.

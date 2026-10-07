@@ -14,6 +14,7 @@ maintainer.
 | `experiment-analytics-audit-beta` | Discovery, Execution | chat findings or verdict, audit or verification file, offered Notion export, offered draft PR, offered audit update |
 | `experiment-exposure-design-beta` | Execution | chat findings, offered draft PR |
 | `experiment-aa-run-verification-beta` | Execution | chat verdict, verification file |
+| `experiment-stage-gate-beta` | Gate per experiment stage | chat summary |
 
 Each skill declares its stage in frontmatter as `metadata.lifecycle-stage`
 (`Discovery`, `Execution`, or `Discovery, Execution` for a skill with an entry
