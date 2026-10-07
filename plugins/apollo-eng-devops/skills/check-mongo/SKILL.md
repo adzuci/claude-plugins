@@ -32,11 +32,28 @@ Read-only triage of one **prod** Mongo cluster from Grafana Cloud metrics. It ne
 | `--gce` | off | Also run `scripts/gce_events.sh` (GCE operations, OOM log lines). Skipped if `gcloud` is missing. |
 | `--json` | off | Print evaluator JSON instead of the table. |
 
-Needs the Grafana MCP ([setup](../mongo-specialist/references/mcp-setup.md)); `--gce` needs
-`gcloud` ([setup](../mongo-specialist/references/gcloud-access.md)).
+## Preflight
+
+Check these before step 1. A missing or unauthorized dependency is the most common
+reason this skill stalls, and it is cheap to catch up front.
+
+| Need | Required for | Verify | If missing |
+| --- | --- | --- | --- |
+| Grafana MCP | every check | `mcp__grafana__query_prometheus` is in the tool list | **Stop.** [mcp-setup.md](../mongo-specialist/references/mcp-setup.md), then restart the session |
+| `gcloud` | `--gce` only | `command -v gcloud && gcloud auth list` | Run without `--gce` and list it under Couldn't verify. [gcloud-access.md](../mongo-specialist/references/gcloud-access.md) |
+| `gcx` | muting an alert after triage | `command -v gcx` | Not needed for triage. [gcx-setup.md](../mute-alert/references/gcx-setup.md) |
+
+Never run `gcloud auth login` or `gcx login` for the user. Print the command and let
+them run it in their own terminal.
+
+A call that is **refused by a permission prompt** is not the same as a dependency that
+is missing. Say which call was refused and name the settings rule that would allow it
+(e.g. `Bash(gcloud compute ssh <host>:*)`, `mcp__grafana__query_prometheus`). Never let
+a refusal turn into a silent UNKNOWN row.
 
 ## Flow
 
+1. Run [Preflight](#preflight). Grafana MCP not connected: stop and link the setup rather than reporting every check as UNKNOWN.
 1. Build queries: `python scripts/promql.py --cluster <cluster> --window <window> [--role <role>]`. Exit 2 = bad input; report and stop.
 1. Run **every** query with `mcp__grafana__query_prometheus` (uid `grafanacloud-prom`, `instant`, `endTime: now`). Never edit an expression or aggregate away `instance`.
 1. Save one JSON keyed by query `id` (value = returned series list) to the scratchpad. Use `[]` for a query that errors or is empty; that becomes UNKNOWN, never OK.

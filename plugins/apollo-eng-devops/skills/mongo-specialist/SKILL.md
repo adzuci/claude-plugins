@@ -24,6 +24,13 @@ database and cluster before making recommendations.
 
 ## Workflow
 
+1. Preflight the dependencies before doing anything else, and say which are ready:
+   Grafana MCP (`mcp__grafana__query_prometheus` present), `gcloud` (`command -v gcloud
+   && gcloud auth list`), `gcx` (`command -v gcx`, only for muting). Missing: point the
+   user at [`references/mcp-setup.md`](references/mcp-setup.md) and stop that line of
+   inquiry rather than guessing. Refused by a permission prompt: name the exact call and
+   the settings rule that would allow it. Never run `gcloud auth login` or `gcx login`
+   for the user.
 1. Classify the task: index creation, unused index cleanup, index discrepancy, sharding,
    **live incident** (currently paged / active outage), collection change audit, access,
    **PR/diff review** for general Mongo query/schema health, or architecture lookup.
@@ -53,14 +60,18 @@ database and cluster before making recommendations.
    For router restarts: check **all** routers (not just the alerting one), and classify each
    as kernel OOM kill (`status=9/KILL`) versus self-exit (`status=N`, plus mongos `HEALTH`
    log lines) using the human-run commands in
-   [`references/host-restart-triage.md`](references/host-restart-triage.md). Agents cannot
-   `ssh`; state root causes only when verified.
+   [`references/host-restart-triage.md`](references/host-restart-triage.md). Agents can `ssh` only where a
+   `Bash(gcloud compute ssh <host>:*)` allow rule exists; otherwise the call is refused,
+   so name the missing rule instead of guessing. State root causes only when verified.
 1. For a router restart, follow
    [`references/router-rolling-restart.md`](references/router-rolling-restart.md). This skill
    never executes restarts: it prints the exact commands and requires explicit user approval
    per router. Run `/apollo-eng-devops:check-mongo <cluster>` before and after.
 1. Load only the other reference files that are relevant:
    - `references/read-only-commands.md` for safe inspection commands.
+   - `references/ftdc-forensics.md` for pulling and decoding `diagnostic.data` (the
+     only host-level signal on these VMs), plus `scripts/ftdc_decode.py`. Note the ~74h
+     retention: pull early or the evidence is gone.
    - `references/mongo-clusters.md` for current known client/cluster mapping, the prod
      mongos cluster inventory (ports/counts/hostnames), pod→mongos distribution, and
      staging SRV endpoints.
@@ -115,6 +126,8 @@ Prefer the narrower skill when the task matches one:
   `mongo-pr-guard`
 - [`references/gcloud-access.md`](references/gcloud-access.md) — gcloud CLI, VM SSH, and
   read-only forensics
+- [`references/ftdc-forensics.md`](references/ftdc-forensics.md) — FTDC pull runbook,
+  decode gotchas, and how to read disk-hang vs disk-saturation
 - [`references/mcp-setup.md`](references/mcp-setup.md) — Grafana/Glean/Granola MCP setup
 - [`references/status-page.md`](references/status-page.md) — Better Stack status-page
   guidance
