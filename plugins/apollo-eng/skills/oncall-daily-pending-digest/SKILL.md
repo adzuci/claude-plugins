@@ -40,6 +40,8 @@ recipients by Slack user ID.
   instead, then send Ryan the observer DM.
 - A partial schedule-resolution failure does not invoke channel fallback when at least one
   DRI resolved. Record all resolution errors in the run log only.
+- When every section is empty, send nothing: no DRI DM, no observer DM, and no channel
+  fallback. Report the skip in the run log.
 - In `--dry-run`, render the message and intended recipient IDs without sending or
   triggering Pantheon.
 

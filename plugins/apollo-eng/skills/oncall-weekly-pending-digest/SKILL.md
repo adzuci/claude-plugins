@@ -34,7 +34,8 @@ clear primary schedules to show current primary DRI mentions; an unresolved DRI 
 coverage gap, not a delivery failure.
 
 Unless `--dry-run` is present, post exactly one message to the delivery channel without a
-confirmation gate. In a dry run, render the message and destination without posting or
+confirmation gate. When every section is empty, post nothing and report the skip in the run
+log. In a dry run, render the message and destination without posting or
 triggering Pantheon.
 
 ## Collect Outstanding Items
