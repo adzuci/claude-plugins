@@ -1,6 +1,6 @@
 {
   "name": "apollo-analytics",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Apollo Analytics Copilot — answers data questions using governed Snowflake metrics, runs product debriefs, generates account profiles, and surfaces weekly strategic insights. Built by the Analytics team.",
   "repository": "https://github.com/apolloio/claude-plugins",
   "license": "UNLICENSED",

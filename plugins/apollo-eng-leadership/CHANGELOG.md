@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-leadership-v1.5.1...apollo-eng-leadership-v1.6.0) (2026-10-08)
+
+
+### Features
+
+* **apollo-eng-leadership:** add weekly team update mode to okr-report ([#322](https://github.com/apolloio/claude-plugins/issues/322)) ([d430175](https://github.com/apolloio/claude-plugins/commit/d43017571188c0f488a6885a4d512ad4ee9418ea))
+
 ## [1.5.1](https://github.com/apolloio/claude-plugins/compare/apollo-eng-leadership-v1.5.0...apollo-eng-leadership-v1.5.1) (2026-09-18)
 
 

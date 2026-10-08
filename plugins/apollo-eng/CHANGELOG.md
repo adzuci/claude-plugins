@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.2](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.11.1...apollo-eng-v1.11.2) (2026-10-08)
+
+
+### Bug Fixes
+
+* **apollo-eng:** skip on-call digest messages when there is nothing to report ([#343](https://github.com/apolloio/claude-plugins/issues/343)) ([d6f1276](https://github.com/apolloio/claude-plugins/commit/d6f12767a3b437abe672f78e167f10a0f9355106))
+
 ## [1.11.1](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.11.0...apollo-eng-v1.11.1) (2026-10-07)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/apolloio/claude-plugins/compare/apollo-legal-v1.3.0...apollo-legal-v1.4.0) (2026-10-08)
+
+
+### Features
+
+* **apollo-legal:** add enrich mode for deal who's-who and Apollo contact enrichment ([#192](https://github.com/apolloio/claude-plugins/issues/192)) ([4534a37](https://github.com/apolloio/claude-plugins/commit/4534a37963be9448451ee10e4e79a7f233be197f))
+
 ## [1.3.0](https://github.com/apolloio/claude-plugins/compare/apollo-legal-v1.2.0...apollo-legal-v1.3.0) (2026-09-25)
 
 
