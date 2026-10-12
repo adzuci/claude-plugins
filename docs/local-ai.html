@@ -100,22 +100,28 @@
 
         <section class="install-block" id="install">
           <h2>Install the plugin</h2>
-          <p>Add the marketplace, install <code>local-ai</code>, and begin with the read-only PAIR verification.</p>
+          <p>Add the marketplace, install <code>local-ai</code>, then run the PAIR setup on the host Mac first.</p>
           <div class="install-grid">
             <section class="install-card">
               <h3>Claude Code</h3>
+              <p class="install-label">1. In your terminal</p>
               <pre><code>claude plugin marketplace add adzuci/claude-plugins
-claude plugin install local-ai@adzuci-plugins
-/local-ai:pair-setup host verify</code></pre>
+claude plugin install local-ai@adzuci-plugins</code></pre>
+              <p class="install-label">2. In a session, on the host Mac</p>
+              <pre><code>/local-ai:pair-setup host verify
+/local-ai:pair-setup host install</code></pre>
             </section>
             <section class="install-card">
               <h3>Codex</h3>
+              <p class="install-label">1. In your terminal</p>
               <pre><code>codex plugin marketplace add adzuci/claude-plugins
-codex plugin add local-ai@adzuci-plugins
-/local-ai:pair-setup host verify</code></pre>
+codex plugin add local-ai@adzuci-plugins</code></pre>
+              <p class="install-label">2. In a session, on the host Mac</p>
+              <pre><code>/local-ai:pair-setup host verify
+/local-ai:pair-setup host install</code></pre>
             </section>
           </div>
-          <p class="install-footnote">The PAIR installer currently targets Apple Silicon macOS. Model names, releases, and upstream limitations are checked again before mutation.</p>
+          <p class="install-footnote"><code>host verify</code> is read-only; on a fresh machine it should report a <code>FAIL</code> because PAIR is not installed yet. <code>host install</code> runs a read-only <code>--check</code> first, lists every planned write, and asks for your confirmation before applying anything. Then repeat on the client Mac with <code>client install</code> and <code>client verify</code>. Do not run <code>host install</code> for agent or tool-call workloads while <a href="https://github.com/NVIDIA/Personal-AI-Router/issues/94">issue #94</a> is open. The PAIR installer currently targets Apple Silicon macOS. Model names, releases, and upstream limitations are checked again before mutation.</p>
         </section>
       </article>
 
