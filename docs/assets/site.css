@@ -273,6 +273,16 @@
       font-size: 1rem;
     }
 
+    .install-label {
+      margin: 14px 0 6px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .install-card h3 + .install-label {
+      margin-top: 0;
+    }
+
     pre {
       max-width: 100%;
       overflow-x: visible;
