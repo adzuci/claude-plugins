@@ -1,7 +1,7 @@
 # HarnessBench Evaluations
 
 Use the package under `evals/harnessbench/` to compare the original and current
-`customer-problem-loop` skill on the same synthetic LeadGenie tasks used to calibrate `auto-pr`.
+`customer-problem-loop` skill on the same synthetic LeadGenie tasks.
 
 The experiment reports three separate results:
 

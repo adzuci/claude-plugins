@@ -16,7 +16,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - "plugins/apollo-eng/skills/auto-pr/**"
       - "plugins/apollo-eng/skills/customer-problem-loop/**"
       - "plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/**"
       - ".github/workflows/harnessbench.yml"
@@ -30,10 +29,9 @@ on:
         description: "Which experiment to score"
         type: choice
         options:
-          - leadgenie/auto-pr-smoke
           - leadgenie/customer-problem-loop-smoke
           - claude-plugins/wtf-smoke
-        default: leadgenie/auto-pr-smoke
+        default: leadgenie/customer-problem-loop-smoke
       pr_number:
         description: "PR that should receive the append-only scored-run summary"
         type: string
@@ -59,10 +57,6 @@ jobs:
           persist-credentials: false
       - name: Validate checkpoint and repair packages
         run: |
-          python3 \
-            plugins/apollo-eng/evals/harnessbench/scripts/validate_checkpoint_flow.py \
-            --contract plugins/apollo-eng/evals/harnessbench/checkpoint-flow-contract.json \
-            --scenarios plugins/apollo-eng/skills/auto-pr/evals/harnessbench/stateful-scenarios.json
           python3 \
             plugins/apollo-eng/evals/harnessbench/scripts/validate_checkpoint_flow.py \
             --contract plugins/apollo-eng/evals/harnessbench/checkpoint-flow-contract.json \
@@ -110,10 +104,6 @@ jobs:
       - name: Copy example experiment into workspace
         if: steps.access.outputs.available == 'true'
         run: |
-          cp plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml \
-            harnessbench/workspace/leadgenie/tasks/
-          cp -r plugins/apollo-eng/skills/auto-pr/evals/harnessbench/experiments/auto-pr-smoke \
-            harnessbench/workspace/leadgenie/experiments/
           cp plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/tasks/*.yaml \
             harnessbench/workspace/leadgenie/tasks/
           cp -r plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/experiments/customer-problem-loop-smoke \
@@ -123,24 +113,6 @@ jobs:
             harnessbench/workspace/claude-plugins/tasks/
           cp -r plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/experiments/wtf-smoke \
             harnessbench/workspace/claude-plugins/experiments/
-      - name: Generate variant patch from skill PR
-        if: steps.access.outputs.available == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.APOLLOIO_TOKEN }}
-        run: |
-          curl -sfL \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github.v3.diff" \
-            https://api.github.com/repos/apolloio/leadgenie/pulls/97782 \
-            > harnessbench/workspace/leadgenie/variants/auto-pr-v1.patch
-          V2_HEAD=$(curl -sfL -H "Authorization: Bearer $GH_TOKEN" \
-            https://api.github.com/repos/apolloio/leadgenie/pulls/97942 | \
-            python3 -c "import sys,json;print(json.load(sys.stdin)['head']['sha'])")
-          curl -sfL \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github.v3.diff" \
-            "https://api.github.com/repos/apolloio/leadgenie/compare/master...$V2_HEAD" \
-            > harnessbench/workspace/leadgenie/variants/auto-pr-v2.patch
       - name: Generate customer-problem-loop variant patches
         if: steps.access.outputs.available == 'true'
         run: |
@@ -170,7 +142,7 @@ jobs:
       - name: Align repository base with the pinned tasks
         if: steps.access.outputs.available == 'true'
         run: |
-          BASE_COMMIT=$(grep -h '^baseCommit:' plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml | head -1 | cut -d'"' -f2)
+          BASE_COMMIT=$(grep -h '^baseCommit:' plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/tasks/*.yaml | head -1 | cut -d'"' -f2)
           test -n "$BASE_COMMIT"
           sed -i "s|defaultBaseCommit: .*|defaultBaseCommit: \"$BASE_COMMIT\"|" harnessbench/workspace/leadgenie/repo.yaml
           WTF_BASE=$(grep -h '^baseCommit:' plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/tasks/*.yaml | head -1 | cut -d'"' -f2)
@@ -185,7 +157,6 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.APOLLO_REVIEW_BOT_ANTHROPIC_KEY || 'dry-run-placeholder' }}
         run: |
           set -o pipefail
-          npm run harnessbench -- run leadgenie/auto-pr-smoke --dry-run | tee dryrun-autopr.out
           npm run harnessbench -- run leadgenie/customer-problem-loop-smoke --dry-run | tee dryrun-loopbot.out
           npm run harnessbench -- run claude-plugins/wtf-smoke --dry-run | tee dryrun-wtf.out
       - name: Post one-line summary comment
@@ -210,10 +181,9 @@ jobs:
           if [ "$ACCESS" != "true" ]; then
             BODY="$MARKER"$'\n'"**harnessbench dry-run:** skipped — cross-repo token not configured; validation did not run."
           elif [ "$DRYRUN_OUTCOME" = "success" ]; then
-            AUTOPR_LINE=$(summarize_experiment "leadgenie/auto-pr-smoke" harnessbench/dryrun-autopr.out "plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml")
             LOOPBOT_LINE=$(summarize_experiment "leadgenie/customer-problem-loop-smoke" harnessbench/dryrun-loopbot.out "plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/tasks/*.yaml")
             WTF_LINE=$(summarize_experiment "claude-plugins/wtf-smoke" harnessbench/dryrun-wtf.out "plugins/apollo-eng-devops/skills/wtf-does-this-do/evals/harnessbench/tasks/*.yaml")
-            BODY="$MARKER"$'\n'"**harnessbench dry-run: schema + patch-apply validation**"$'\n\n'"$AUTOPR_LINE"$'\n'"$LOOPBOT_LINE"$'\n'"$WTF_LINE"$'\n'"- Schemas parse, patches apply cleanly — 0 tokens (dry-run runs no agents or judge)."$'\n'"- **To score A/B** (paid, ~hours): pick an experiment (\`leadgenie/auto-pr-smoke\`, \`leadgenie/customer-problem-loop-smoke\`, \`claude-plugins/wtf-smoke\`) and run:"$'\n'"\`\`\`"$'\n'"gh workflow run harnessbench.yml -f full_run=true -f experiment=<experiment> -f pr_number=$PR"$'\n'"\`\`\`"$'\n'"- Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            BODY="$MARKER"$'\n'"**harnessbench dry-run: schema + patch-apply validation**"$'\n\n'"$LOOPBOT_LINE"$'\n'"$WTF_LINE"$'\n'"- Schemas parse, patches apply cleanly — 0 tokens (dry-run runs no agents or judge)."$'\n'"- **To score A/B** (paid, ~hours): pick an experiment (\`leadgenie/customer-problem-loop-smoke\`, \`claude-plugins/wtf-smoke\`) and run:"$'\n'"\`\`\`"$'\n'"gh workflow run harnessbench.yml -f full_run=true -f experiment=<experiment> -f pr_number=$PR"$'\n'"\`\`\`"$'\n'"- Run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           else
             BODY="$MARKER"$'\n'"**harnessbench dry-run:** FAILED (schema or patch-apply error) — see the dry-run step log."
           fi
@@ -247,13 +217,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Validate checkpoint and repair package before paid execution
-        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
-        run: |
-          python3 \
-            plugins/apollo-eng/evals/harnessbench/scripts/validate_checkpoint_flow.py \
-            --contract plugins/apollo-eng/evals/harnessbench/checkpoint-flow-contract.json \
-            --scenarios plugins/apollo-eng/skills/auto-pr/evals/harnessbench/stateful-scenarios.json
       - name: Validate Loopbot checkpoint package before paid execution
         if: inputs.experiment == 'leadgenie/customer-problem-loop-smoke'
         run: |
@@ -323,38 +286,13 @@ jobs:
         # harnessbench's repo.yaml predates leadgenie's npm -> pnpm move: no package-lock.json at our base, so npm ci fails in every cell.
         if: startsWith(inputs.experiment, 'leadgenie/')
         run: |
-          BASE_COMMIT=$(grep -h '^baseCommit:' plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml | head -1 | cut -d'"' -f2)
+          BASE_COMMIT=$(grep -h '^baseCommit:' plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench/tasks/*.yaml | head -1 | cut -d'"' -f2)
           test -n "$BASE_COMMIT"
           sed -i "s|defaultBaseCommit: .*|defaultBaseCommit: \"$BASE_COMMIT\"|" \
             harnessbench/workspace/leadgenie/repo.yaml
           sed -i 's|installCmd: npm ci|installCmd: pnpm install --frozen-lockfile|' \
             harnessbench/workspace/leadgenie/repo.yaml
           grep -E 'defaultBaseCommit|installCmd' harnessbench/workspace/leadgenie/repo.yaml
-      - name: Copy auto-pr experiment into workspace
-        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
-        run: |
-          cp plugins/apollo-eng/skills/auto-pr/evals/harnessbench/tasks/*.yaml \
-            harnessbench/workspace/leadgenie/tasks/
-          cp -r plugins/apollo-eng/skills/auto-pr/evals/harnessbench/experiments/auto-pr-smoke \
-            harnessbench/workspace/leadgenie/experiments/
-      - name: Generate variant patch from skill PR
-        if: inputs.experiment == 'leadgenie/auto-pr-smoke'
-        env:
-          GH_TOKEN: ${{ secrets.APOLLOIO_TOKEN }}
-        run: |
-          curl -sfL \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github.v3.diff" \
-            https://api.github.com/repos/apolloio/leadgenie/pulls/97782 \
-            > harnessbench/workspace/leadgenie/variants/auto-pr-v1.patch
-          V2_HEAD=$(curl -sfL -H "Authorization: Bearer $GH_TOKEN" \
-            https://api.github.com/repos/apolloio/leadgenie/pulls/97942 | \
-            python3 -c "import sys,json;print(json.load(sys.stdin)['head']['sha'])")
-          curl -sfL \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github.v3.diff" \
-            "https://api.github.com/repos/apolloio/leadgenie/compare/master...$V2_HEAD" \
-            > harnessbench/workspace/leadgenie/variants/auto-pr-v2.patch
       - name: Copy customer-problem-loop experiment into workspace
         if: inputs.experiment == 'leadgenie/customer-problem-loop-smoke'
         run: |
@@ -412,15 +350,9 @@ jobs:
         run: |
           RUN_DIR=$(find "harnessbench/runs/$EXPERIMENT" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1)
           test -n "$RUN_DIR"
-          if [ "$EXPERIMENT" = "leadgenie/auto-pr-smoke" ]; then
-            SKILL_SLUG=auto-pr
-            EXPERIMENT_SLUG=auto-pr-smoke
-            RUBRIC=plugins/apollo-eng/skills/auto-pr/references/auto-pr-eval-rubric.md
-          else
-            SKILL_SLUG=customer-problem-loop
-            EXPERIMENT_SLUG=customer-problem-loop-smoke
-            RUBRIC=plugins/apollo-eng/skills/customer-problem-loop/references/harnessbench-evals.md
-          fi
+          SKILL_SLUG=customer-problem-loop
+          EXPERIMENT_SLUG=customer-problem-loop-smoke
+          RUBRIC=plugins/apollo-eng/skills/customer-problem-loop/references/harnessbench-evals.md
           export RUN_DIR SKILL_SLUG EXPERIMENT_SLUG RUBRIC
           python3 - <<'PY'
           import hashlib
@@ -486,11 +418,7 @@ jobs:
         run: |
           RUN_DIR=$(find "harnessbench/runs/$EXPERIMENT" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort | tail -1)
           test -n "$RUN_DIR"
-          if [ "$EXPERIMENT" = "leadgenie/auto-pr-smoke" ]; then
-            EVAL_ROOT=plugins/apollo-eng/skills/auto-pr/evals/harnessbench
-          else
-            EVAL_ROOT=plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench
-          fi
+          EVAL_ROOT=plugins/apollo-eng/skills/customer-problem-loop/evals/harnessbench
           python3 \
             "$EVAL_ROOT/scripts/audit_stage_adherence.py" \
             "$RUN_DIR" \

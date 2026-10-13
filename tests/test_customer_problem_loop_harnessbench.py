@@ -145,11 +145,10 @@ def test_variant_builder_emits_an_applicable_skill_patch(tmp_path: Path) -> None
     subprocess.run(["git", "apply", "--check", str(patch_path)], cwd=target, check=True)
 
 
-def test_workflow_routes_changes_and_manual_runs_for_both_skills() -> None:
+def test_workflow_routes_changes_and_manual_runs_for_customer_problem_loop() -> None:
     workflow = WORKFLOW.read_text(encoding="utf-8")
-    assert '"plugins/apollo-eng/skills/auto-pr/**"' in workflow
     assert '"plugins/apollo-eng/skills/customer-problem-loop/**"' in workflow
-    assert "leadgenie/auto-pr-smoke" in workflow
+    assert "auto-pr" not in workflow
     assert "leadgenie/customer-problem-loop-smoke" in workflow
     assert "customer-problem-loop-before.patch" in workflow
     assert "customer-problem-loop-current.patch" in workflow
