@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.6.0...apollo-eng-devops-v1.7.0) (2026-10-12)
+
+
+### Features
+
+* **apollo-eng-devops:** add renewal-radar skill ([#293](https://github.com/apolloio/claude-plugins/issues/293)) ([a55ac15](https://github.com/apolloio/claude-plugins/commit/a55ac15ba5107ea9fa06587822982b72e4c39950))
+
 ## [1.6.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.5.0...apollo-eng-devops-v1.6.0) (2026-10-07)
 
 

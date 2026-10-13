@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.11.2...apollo-eng-v1.12.0) (2026-10-12)
+
+
+### Features
+
+* **apollo-eng:** add best-model-for-use-case skill ([#168](https://github.com/apolloio/claude-plugins/issues/168)) ([c4aab3c](https://github.com/apolloio/claude-plugins/commit/c4aab3cb58db5b99e50b527c136aed9b2414227d))
+
 ## [1.11.2](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.11.1...apollo-eng-v1.11.2) (2026-10-08)
 
 
