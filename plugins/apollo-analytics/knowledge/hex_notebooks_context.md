@@ -334,7 +334,7 @@ If a Snowflake query disagrees with the Hex by more than rounding, the Hex wins.
 1. Locate the matching cell/chart/SQL in the Hex.
 1. Compare filters, joins, and date windows.
 1. Adjust the Snowflake query to match.
-1. Document the divergence in `worklog/henry_errors.jsonl` with the corrected logic.
+1. Document the divergence in `worklog/error_log.jsonl` with the corrected logic.
 
 ### Common pitfalls to avoid
 

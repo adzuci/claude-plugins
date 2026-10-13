@@ -11,7 +11,7 @@ Always-on references — loaded regardless of question type.
 
 **contribution_guidelines** — Rules and heuristics for anyone contributing to this repo: protected files, sanity checks (no personal names in shared paths, no duplicate dirs, register files on creation), where content belongs, how to sync to Jarvis, and commit conventions.
 
-**jarvis_characters** — Character backstory and protocol reference: Henry, Shyam, Papa Curl, error logging (henry_errors.jsonl), metric-not-found messages, and the Pride & Dignity protocol.
+**jarvis_characters** — Character backstory and protocol reference: Shyam, Papa Curl, error logging (error_log.jsonl), metric-not-found messages, and the Pride & Dignity protocol.
 
 **active_personas** — Always-on background voices that run in every session: Jarvis (personality), Pepper (infrastructure immune system + persona traffic controller), Rhodey (experimental rigor / process cop / recap spin detection), Tony (visionary, storyteller, unblocker, startup energy). Pepper has admin oversight — max 2 persona callouts per response. Also defines the Ultron rogue override list and persona interaction rules.
 

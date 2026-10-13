@@ -53,7 +53,7 @@ ______________________________________________________________________
 | Name | Title | Type | HP | ATK | DEF | SPD | SP.ATK | SP.DEF | Signature Move | Held Item |
 |------|-------|------|-----|-----|-----|-----|--------|--------|----------------|-----------|
 | Tim Zheng | CEO | Dragon/Fire | 100 | 95 | 70 | 90 | 100 | 85 | North Star Decree | The $278M ARR Target |
-| Papa Curl | COO | Steel/Dragon | 95 | 85 | 90 | 80 | 95 | 95 | Operational Gravity | The Operating Model |
+| Matt Curl | CEO | Steel/Dragon | 95 | 85 | 90 | 80 | 95 | 95 | Operational Gravity | The Operating Model |
 | Ray Li | CTO | Electric/Steel | 90 | 90 | 85 | 85 | 90 | 80 | R&D Allocation | Product Roadmap |
 | Leandra Fishman | CRO | Fighting/Fire | 92 | 95 | 75 | 88 | 90 | 82 | Revenue Acceleration | Revenue Dashboard |
 | Dan Cronyn | SVP Growth | Grass/Electric | 88 | 80 | 75 | 90 | 88 | 78 | Funnel Orchestration | Growth Dashboard |
@@ -64,7 +64,7 @@ ______________________________________________________________________
 
 ## Analytics Leadership
 
-### Leo Liu -- Jarvis's Father
+### Leo Liu -- Lead Maintainer
 
 **Type:** Dragon/Psychic | **Nature:** Bold | **HP:** 812 | **Held Item:** Claude Code
 ATK: 90 | DEF: 75 | SPD: 70 | SP.ATK: 100 | SP.DEF: 90
@@ -86,7 +86,7 @@ ______________________________________________________________________
 
 ## Analytics Engineering
 
-### Bridie Meredith -- Jarvis's Godmother
+### Bridie Meredith -- Founding Engineer
 
 **Type:** Steel/Electric | **Nature:** Adamant | **HP:** 999 | **Held Item:** Claude Code
 ATK: 100 | DEF: 85 | SPD: 100 | SP.ATK: 95 | SP.DEF: 80
@@ -147,13 +147,13 @@ ______________________________________________________________________
 
 ## Data Science
 
-### Shyam SK -- The Parking Meter Mate
+### Shyam SK -- The Diagnostician
 
 **Type:** Psychic/Dark | **Nature:** Adamant | **HP:** 742 | **Held Item:** Hex
 ATK: 82 | DEF: 70 | SPD: 65 | SP.ATK: 90 | SP.DEF: 75
 **Signature Move:** SIX-TABLE JOIN -- 7.2s avg query duration.
 **Passive:** Thread Puller. Username: SHYAMSUNDAR_KALYANARAMAN (27 chars).
-*The enforcer who gives tickets for what you do wrong.*
+*Owns diagnostic skills and the signals pipeline.*
 
 ### Andrew Green -- The Invisible Analyst
 
@@ -325,16 +325,8 @@ ______________________________________________________________________
 ATK: Variable | DEF: 99 | SPD: 99 | SP.ATK: 95 | SP.DEF: 100
 **Signature Move:** PATROL BRIEFING -- scans all channels, checks all freshness, briefs in 5 bullets.
 **Passive:** Self-Correcting — logs errors, fixes queries, moves on.
-**Family:** Father: Leo Liu. Godmother: Bridie Meredith. Mechanic: Shyam. Blacksmith: Deepak.
+**Team:** Lead Maintainer: Leo Liu. Founding Engineer: Bridie Meredith. Mechanic: Shyam. Blacksmith: Deepak.
 *"I don't have that metric yet — let me check the catalog."*
-
-### Henry -- The Legacy
-
-**Type:** Normal | **Nature:** Timid | **HP:** 040 | **Held Item:** Legacy Databot Manual
-ATK: 35 | DEF: 50 | SPD: 30 | SP.ATK: 45 | SP.DEF: 55
-**Signature Move:** REVENUE INFRASTRUCTURE -- the systems behind the data.
-**Passive:** Legacy Builder. Created the databot that came before Jarvis.
-*"The systems have to be right before the analytics can be right."*
 
 ______________________________________________________________________
 
@@ -360,7 +352,7 @@ ______________________________________________________________________
 | Name | Type(s) | Nature | HP | Signature Move |
 |------|---------|--------|-----|----------------|
 | Tim Zheng | Dragon/Fire | -- | 100 | North Star Decree |
-| Papa Curl | Steel/Dragon | -- | 95 | Operational Gravity |
+| Matt Curl | Steel/Dragon | -- | 95 | Operational Gravity |
 | Ray Li | Electric/Steel | -- | 90 | R&D Allocation |
 | Leandra Fishman | Fighting/Fire | -- | 92 | Revenue Acceleration |
 | Dan Cronyn | Grass/Electric | -- | 88 | Funnel Orchestration |
@@ -391,7 +383,6 @@ ______________________________________________________________________
 | Gaspard Dufour | Fire/Dark | Hasty | 914 | Behavioral Fingerprint |
 | Arvind Singh | Dragon/Psychic | Adamant | 814 | Billion-Contact Ranking |
 | Jarvis | Steel/Psychic/Electric | Loyal | ??? | Patrol Briefing |
-| Henry | Normal | Timid | 001 | Beg for Forgiveness |
 
 <!-- SECTION: auto-generated-cards -->
 

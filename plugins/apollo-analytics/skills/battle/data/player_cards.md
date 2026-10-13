@@ -28,7 +28,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-### Matt Curl (Papa Curl)
+### Matt Curl
 
 - tier: 1
 - type: Steel/Dragon
@@ -39,11 +39,11 @@ ______________________________________________________________________
 - ghost: false
 - hp: 95 | atk: 85 | def: 90 | spd: 80 | spatk: 95 | spdef: 95
 - signature: OPERATIONAL GRAVITY (Steel, 95 power)
-- moves: Papa's Mandate (Dragon, 80), Operating Model Lock (Steel, 60)
+- moves: CEO Mandate (Dragon, 80), Operating Model Lock (Steel, 60)
 - held_item: The Operating Model
-- passive: Must be addressed as "Papa Curl" — any trainer who calls him "Matt" takes reputational damage.
+- passive: Operating Model — compounds company-wide execution rigor.
 - wild_pool: [MOMENTUM, SURGE, BLOCKED]
-- quote: "Papa Curl has spoken."
+- quote: "The operating model holds."
 - refreshed: 2026-04-01
 
 ______________________________________________________________________
@@ -745,26 +745,6 @@ ______________________________________________________________________
 - refreshed: 2026-04-01
 
 ______________________________________________________________________
-
-## The Legacy Card: Henry
-
-### Henry Mizel
-
-- tier: 3
-- type: Normal
-- nature: Timid
-- department: Revenue Operations
-- team: N/A
-- title: VP Revenue Ops / Databot Creator
-- ghost: secondary
-- hp: 40 | atk: 35 | def: 50 | spd: 30 | spatk: 45 | spdef: 55
-- signature: REVENUE INFRASTRUCTURE (Normal, 60 power)
-- moves: Systems Integration (Normal, 50), Deal Desk Protocol (Normal, 45)
-- held_item: Legacy Databot Manual
-- passive: Legacy Builder — created the databot that came before Jarvis. The foundation that taught us what not to do.
-- wild_pool: [STEADY, OPERATIONAL, RELIABLE]
-- quote: "The systems have to be right before the analytics can be right."
-- refreshed: 2026-04-01
 
 ## All Apollo Employees (Auto-Generated Stubs)
 

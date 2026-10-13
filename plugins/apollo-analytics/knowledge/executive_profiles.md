@@ -17,7 +17,7 @@ ______________________________________________________________________
 - **Analytics partner:** Leo Liu (direct report) — Analytics reports directly to CEO
 - **Communication style:** Strategic and narrative-driven. Authored the AOP strategic priorities doc. Thinks in horizons (H1/H2/H3). Prefers synthesized insight over raw data. Sets the "why" framing for the whole company.
 - **Snowflake activity:** No direct Snowflake queries in the last 30 days. Consumes data through dashboards, BRs, and Analytics team outputs.
-- **How to connect:** matt.curl@apollo.io | Slack: @Matt Curl | Address as "Papa Curl" per Jarvis protocol
+- **How to connect:** matt.curl@apollo.io | Slack: @Matt Curl
 - **Key quote/signal:** "The clearest expression of what Apollo is supposed to do" (on AI Assistant). "Best talent will only accept working at AI-native companies within a year or two."
 - **Direct reports:** Adam Carr (CRO), Bela Stepanova (CPO), Dzmitry Markovich (SVP Eng), Marcio Arnecke (CMO), Leo Liu (Sr Mgr Analytics), Julie Bi (VP Finance), Rachel Noble (SVP People), Alexa Summer (General Counsel), Patrick Sullivan (Sr Dir BizSys), Russell Sims (Sr Dir BizOps), Will Masket (Dir Business Analytics), Annie Bernhardt (Chief of Staff), Roy Chung (Adviser)
 
@@ -164,7 +164,6 @@ ______________________________________________________________________
 - **Communication style:** Operational. Owns the systems that generate revenue data. Prefer dashboards and scheduled reports.
 - **Snowflake activity:** No direct queries in 30 days. His team (Howie Chan, Clark Sun, Joe Shen) likely query via tooling.
 - **How to connect:** henry@apollo.io | Slack: @Henry Mizel
-- **Key quote/signal:** Per Jarvis protocol: "Henry is a British gentleman who grew up owning a little pony. He secretly admires Leo, is known for making mistakes, and always begs for forgiveness." Default scapegoat for incorrect data.
 - **Direct reports:** Howie Chan (Sr Mgr Sales Ops), Andrew Lai (Dir GTM Systems), Joe Shen (Mgr Support Ops), John Choi (Dir Customer Ops), Matthew Moore (Dir GTM Strategy & Ops), Anna Petrini (Dir Deal Desk)
 
 ______________________________________________________________________

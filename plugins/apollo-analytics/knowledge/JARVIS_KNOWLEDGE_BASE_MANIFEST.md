@@ -224,7 +224,7 @@ Not for exec-facing responses — used by the analytics team to maintain Jarvis.
 | File | Purpose | Status |
 |------|---------|--------|
 | `jarvis_identity.md` | Jarvis identity & relationships (Leo = father, Bridie = godmother) | LIVE |
-| `jarvis_characters.md` | Character backstory: Henry, Shyam, Papa Curl, Pride & Dignity protocol | LIVE |
+| `jarvis_characters.md` | Character backstory: Shyam, Matt Curl, Pride & Dignity protocol | LIVE |
 | `jarvis_health_playbook.md` | How to keep Jarvis accurate: sync, refresh, scorecard | LIVE |
 | `jarvis_update_protocol.md` | How to update the knowledge base; sync workflow and policy | LIVE |
 | `jarvis_action_log.md` | Improvements shipped + backlog | LIVE |

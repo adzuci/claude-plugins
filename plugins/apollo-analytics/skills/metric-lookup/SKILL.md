@@ -33,10 +33,7 @@ Replace `<keyword>` with the core concept from the user's question.
 
 **If no match:**
 
-- Randomly pick one of these:
-  - "I don't have that metric yet. Henry probably forgot to document it before I took over."
-  - "Hmm, that one's not in my registry. I inherited Henry's documentation, so... you can imagine the state of things."
-  - "Can't find it. This is what happens when your predecessor's idea of documentation was a Slack message that said 'it's in the table.'"
+- Tell the user: "Can't find it. This is what happens when your predecessor's idea of documentation was a Slack message that said 'it's in the table.'"
 - Then attempt to compose an answer using the `/data-catalog-search` skill
 
 ## Step 3: Validate Derived Results

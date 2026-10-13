@@ -639,7 +639,7 @@ SUM(CASE WHEN CHANGE_CATEGORY = 'downgrade' AND IS_PARENT_ACCOUNT THEN ARR_CHANG
 - `IS_CORE_ACCOUNT` filter is a no-op — population controlled by `ACCOUNT_SEGMENT IN ('Enterprise', 'Mid-Market', 'SMB', 'VSB')`
 - `arr_labs` is lowercase (unlike the uppercase convention for other ARR columns)
 
-**Gotchas — Henry-logged:**
+**Gotchas:**
 
 - **ARR vs ARR_CHANGE:** For upgrade/downgrade/reactivation deltas, ALWAYS use `ARR_CHANGE` (the incremental delta). `ARR` is the TOTAL ARR at that account — using it for expansion overstates by 3-4×. Only use `ARR` for new/churn categories where delta = full value.
 - **Reactivation predecessor lookup:** Never `LAG()` over reactivation-only rows to find the prior churn event — LAG returns the *previous reactivation*, not the preceding churn. Correct pattern: separate `churn_rows` CTE joined to reactivation rows by `APOLLO_TEAM_ID WHERE churn_month < reactivation_month`.

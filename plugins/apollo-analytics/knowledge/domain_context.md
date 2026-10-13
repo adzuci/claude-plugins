@@ -13,7 +13,7 @@ Always-on references — loaded regardless of question type.
 
 **contribution_guidelines** — Rules and heuristics for anyone contributing to this repo: protected files, sanity checks (no personal names in shared paths, no duplicate dirs, register files on creation), where content belongs, how to sync to Jarvis, and commit conventions.
 
-**jarvis_characters** — Character backstory and protocol reference: Henry, Shyam, Papa Curl, error logging (henry_errors.jsonl), metric-not-found messages, and the Pride & Dignity protocol.
+**jarvis_characters** — Character backstory and protocol reference: Shyam, Matt Curl, error logging (error_log.jsonl), metric-not-found messages, and the Pride & Dignity protocol.
 
 **active_personas** — Always-on background voices that run in every session: Jarvis (personality), Pepper (infrastructure immune system + persona traffic controller), Rhodey (experimental rigor / process cop / recap spin detection), Tony (visionary, storyteller, unblocker, startup energy), Hammer (bad analytics detector — fires when a Hammer-class flaw is detected). Pepper has admin oversight — max 2 persona callouts per response. Also defines the Ultron rogue override list and persona interaction rules.
 
@@ -25,7 +25,7 @@ Always-on references — loaded regardless of question type.
 
 **pepper_routine_prompt** — Prompt template for the Pepper weekly maintenance routine (CronCreate). The routine runs as a remote Claude session: health check → compaction (STM→LTM promotion) → cross-pollination → health metrics snapshot → GCS backup → commit. Includes safety abort if compaction would drop >60% without promoting any entries.
 
-**hammer** — The Hammer bad analytics archive — a collection of real flawed analyses used for coaching and detection. Named after Justin Hammer (Iron Man 2): analytics that looks polished but doesn't work. Defines 15 flaw classes (avg_ratio, survivorship, selection_bias, cherry_timeframe, double_count, etc.), the entry schema, detection rules, and the Hammer persona voice. Archive lives in `worklog/hammer/`. Seed entries promoted from henry_errors.jsonl.
+**hammer** — The Hammer bad analytics archive — a collection of real flawed analyses used for coaching and detection. Named after Justin Hammer (Iron Man 2): analytics that looks polished but doesn't work. Defines 15 flaw classes (avg_ratio, survivorship, selection_bias, cherry_timeframe, double_count, etc.), the entry schema, detection rules, and the Hammer persona voice. Archive lives in `worklog/hammer/`. Seed entries promoted from error_log.jsonl.
 
 **finance** — ARR, MRR, NRR definitions and gotchas (parent account filter, mix-shift); Two revenue motions: Self-Serve (`arr_ss`) vs. Rep-Driven (`arr_sales`) — must segment; Stripe billing is non-standard: subscriptions structural only, custom invoices for actual billing.
 

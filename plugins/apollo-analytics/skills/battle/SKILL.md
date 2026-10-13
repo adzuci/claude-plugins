@@ -295,4 +295,4 @@ Cards are generated from real work activity by the Analytics team's company-wide
 
 **Card data is refreshed weekly** from the analytics-copilot repo. To learn more about how stats are calculated, ask for `/apollo-data:battle explain` after any battle.
 
-Built by the Analytics team. Leo is Jarvis's father. Bridie is Jarvis's godmother.
+Built by the Analytics team. Leo Liu is the lead maintainer. Bridie Meredith is the founding engineer.

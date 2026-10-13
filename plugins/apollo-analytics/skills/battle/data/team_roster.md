@@ -7,7 +7,7 @@ ______________________________________________________________________
 ## Analytics Leadership
 
 **Leo Liu** -- Senior Manager, Product Analytics | Dragon/Psychic | Bold
-Signature Move: Churn Deep-Dive. Jarvis's father. Strategic pattern recognition -- queries the WHOLE table. Built the copilot program. 515 queries, 2,225 GB, zero writes.
+Signature Move: Churn Deep-Dive. Lead maintainer of Jarvis. Strategic pattern recognition -- queries the WHOLE table. Built the copilot program. 515 queries, 2,225 GB, zero writes.
 
 **Kirk Hlavka** -- Manager II, Data Science | Psychic/Fighting | Careful
 Signature Move: Framework Forge (RQAV). First to say "Jarvis lives." Works through Hex and Cursor. 106 MCP queries. Voice of measured caution.
@@ -17,7 +17,7 @@ ______________________________________________________________________
 ## Analytics Engineering
 
 **Bridie Meredith** -- Analytics Engineer | Steel/Electric | Adamant
-Signature Move: Foundation Forge. Jarvis's godmother. Built the plugin, registry, catalog, guardrails, and automation. 21,454 queries. Ships directly to main.
+Signature Move: Foundation Forge. Founding engineer of Jarvis. Built the plugin, registry, catalog, guardrails, and automation. 21,454 queries. Ships directly to main.
 
 **Sai Sarvepalli** -- Senior Analytics Engineer II | Electric/Psychic | Jolly
 Signature Move: AI Retention Stats. Solo owner of AI product analytics. 7,825 queries. Bus factor risk -- nobody covers AI metrics.
@@ -42,10 +42,10 @@ ______________________________________________________________________
 ## Data Science
 
 **Shyam SK** -- Staff Data Scientist | Psychic/Dark | Adamant
-Signature Move: Six-Table Join. The enforcer (parking meter mate). Jarvis's mechanic. Breadth across enrichment, signals, churn, waterfall, API. 27-char Snowflake username.
+Signature Move: Six-Table Join. Owns diagnostic skills and signals pipeline for Jarvis. Breadth across enrichment, signals, churn, waterfall, API. 27-char Snowflake username.
 
 **Andrew Green** -- Senior Data Scientist II | Psychic/Normal | Quiet
-Signature Move: Registry Unblock. Completed all 3 blocked metric definitions. Jarvis's maths teacher. Always right about NRR cohort logic.
+Signature Move: Registry Unblock. Completed all 3 blocked metric definitions. Reference authority on NRR cohort logic.
 
 **Marie Ballenger** -- Senior Data Scientist II | Psychic/Water | Jolly
 Signature Move: Churn Signal. Bridges AI insights, credit refunds, and support friction. Proactive coordinator.

@@ -52,7 +52,7 @@ The SQL/ and JSON/ folders are created on first use — do not pre-create empty 
 
 **Never call any Snowflake MCP tool.** Do not call `mcp__apollo_snowflake__read_query`, `mcp__claude_ai_Snowflake__*`, or any other MCP-based Snowflake tool. No exceptions, no fallbacks, no "just this once." Never load Snowflake MCP tool schemas via ToolSearch. The MCP tools hang (18-minute timeout observed 2026-05-07), lack ALTER SESSION support, and have date serialization issues.
 
-All Snowflake queries go through the Python connector — direct connection only. **Never use `scripts/snowflake_query.py`.** It has henry guardrails that produce false positives and cannot be bypassed. Always connect directly using the canonical pattern below.
+All Snowflake queries go through the Python connector — direct connection only. **Never use `scripts/snowflake_query.py`.** It has guardrails that produce false positives and cannot be bypassed. Always connect directly using the canonical pattern below.
 
 ```python
 import snowflake.connector, pathlib, json, sys
