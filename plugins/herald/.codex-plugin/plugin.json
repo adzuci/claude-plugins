@@ -1,0 +1,15 @@
+{
+  "name": "herald",
+  "version": "1.0.0",
+  "description": "GTM launch package builder: kickoff, brief, positioning, and paid, content, social, and lifecycle artifacts for Apollo PLG launches, scaled by launch tier",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Herald",
+    "shortDescription": "Build a tier-scaled GTM launch package for Apollo PLG launches.",
+    "developerName": "Apollo",
+    "category": "Marketing",
+    "brandColor": "#1F2937"
+  }
+}

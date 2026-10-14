@@ -172,6 +172,13 @@
       "description": "Skills for admins managing engineers' Claude and Codex monthly spend limits",
       "category": "engineering",
       "tags": ["claude-code", "engineering", "admin"]
+    },
+    {
+      "name": "herald",
+      "source": "./plugins/herald",
+      "description": "GTM launch package builder: kickoff, brief, positioning, and paid, content, social, and lifecycle artifacts for Apollo PLG launches, scaled by launch tier",
+      "category": "marketing",
+      "tags": ["claude-code", "marketing", "gtm", "launch"]
     }
   ]
 }

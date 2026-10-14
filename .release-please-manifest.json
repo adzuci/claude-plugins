@@ -20,5 +20,6 @@
   "plugins/apollo-risk": "1.0.0",
   "plugins/apollo-rnd": "0.2.0",
   "plugins/apollo-support": "1.2.0",
-  "plugins/apollo-talent": "1.0.0"
+  "plugins/apollo-talent": "1.0.0",
+  "plugins/herald": "1.0.0"
 }

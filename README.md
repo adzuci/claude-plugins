@@ -82,6 +82,7 @@ Weekly OKR update: `/apollo-eng-leadership:okr-report --weekly <team>` (for exam
 | `apollo-eng-agentic-engineering` | Agentic Engineering team skills | 2 |
 | `apollo-eng-experimentation` | Amplitude experiment lifecycle skills for the leadgenie codebase: create, measure, and clean up A/B experiments | 8 |
 | `ai-overage-admins` | Skills for admins managing engineers' Claude and Codex monthly spend limits | 1 |
+| `herald` | GTM launch package builder: kickoff, brief, positioning, and paid, content, social, and lifecycle artifacts for Apollo PLG launches, scaled by launch tier | 7 |
 
 <!-- PLUGIN-INVENTORY-END -->
 

@@ -291,6 +291,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Engineering"
+    },
+    {
+      "name": "herald",
+      "source": {
+        "source": "local",
+        "path": "./plugins/herald"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Marketing"
     }
   ]
 }

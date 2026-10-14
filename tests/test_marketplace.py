@@ -42,6 +42,7 @@ EXPECTED_DISPLAY_NAMES = {
     "apollo-procurement": "Apollo Procurement",
     "apollo-accounting": "Apollo Accounting",
     "ai-overage-admins": "AI Overage Admins",
+    "herald": "Herald",
 }
 
 
