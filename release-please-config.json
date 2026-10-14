@@ -131,6 +131,38 @@
         }
       ]
     },
+    "plugins/apollo-growth": {
+      "release-type": "simple",
+      "component": "apollo-growth",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": ".codex-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
+    "plugins/apollo-growth-product": {
+      "release-type": "simple",
+      "component": "apollo-growth-product",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": ".codex-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
     "plugins/apollo-gtm": {
       "release-type": "simple",
       "component": "apollo-gtm",

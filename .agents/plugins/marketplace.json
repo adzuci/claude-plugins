@@ -281,6 +281,30 @@
       "category": "Engineering"
     },
     {
+      "name": "apollo-growth",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-growth"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Product"
+    },
+    {
+      "name": "apollo-growth-product",
+      "source": {
+        "source": "local",
+        "path": "./plugins/apollo-growth-product"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Product"
+    },
+    {
       "name": "ai-overage-admins",
       "source": {
         "source": "local",

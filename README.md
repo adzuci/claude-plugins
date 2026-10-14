@@ -81,6 +81,8 @@ Weekly OKR update: `/apollo-eng-leadership:okr-report --weekly <team>` (for exam
 | `apollo-accounting` | Accounting and finance skills for Apollo's Finance team — contract clause analysis, ASC 606 revenue recognition assessment, and Ironclad contract review workflows. | 1 |
 | `apollo-eng-agentic-engineering` | Agentic Engineering team skills | 2 |
 | `apollo-eng-experimentation` | Amplitude experiment lifecycle skills for the leadgenie codebase: create, measure, and clean up A/B experiments | 8 |
+| `apollo-growth` | Idea capture, brainstorm batching, weekly funnel reporting, and tooling to generalize a personal skill for sharing | 4 |
+| `apollo-growth-product` | Growth product workflows: experiment pitch, design, tracking and results, in-product copy, Jira tickets, and business review reporting | 9 |
 | `ai-overage-admins` | Skills for admins managing engineers' Claude and Codex monthly spend limits | 1 |
 | `herald` | GTM launch package builder: kickoff, brief, positioning, and paid, content, social, and lifecycle artifacts for Apollo PLG launches, scaled by launch tier | 7 |
 
@@ -134,6 +136,30 @@ You can also create or edit skills manually:
   ```
 
   If Codex is installed and exposes plugin validation, also run `codex plugin validate .`; otherwise note that Codex validation was unavailable.
+
+### Configurable Skills
+
+Some skills can't ship with working defaults because they point at one team's Notion databases, Jira projects, or Slack channels. Those skills use a `config.md` sidecar so the same skill works for every team.
+
+A configurable skill has three parts:
+
+- `SKILL.md` with `requires_config: true` in its frontmatter, a `## Configuration` section directly after the frontmatter, and `{{variable_name}}` placeholders wherever a team-specific value belongs.
+- `config.md` with a YAML frontmatter block holding every variable, `<UNSET>` for anything the installer must supply, and a Setup Guide below it documenting each one in plain language.
+- Optional `references/` files bundled with the skill so it works out of the box, such as a voice guide or a style rubric.
+
+Answers are saved to `~/.claude/plugin-config/<plugin>/<skill>.md`, not back into `config.md`. The shipped `config.md` is replaced whenever the plugin updates, so answers written there would be lost and the installer would be re-asked everything after every release.
+
+On first use the skill reads `config.md` for defaults, layers your saved answers over it, asks for anything still `<UNSET>`, and writes those answers to the user-owned file. An empty string is a real answer meaning "intentionally blank", so the skill won't keep asking about keys you left empty on purpose.
+
+When you write one:
+
+- Extract values an installer would **fill in** (a database ID, a project key, a channel). Leave values they'd **change their mind about** (a word limit, a formatting rule) as literals, since those are the skill's opinion and part of what makes it useful.
+- Write each Setup Guide entry for a stranger. Say what the value is, where to find it, and what happens when it's empty.
+- Give every placeholder a matching key. A `{{placeholder}}` with no config entry is a bug.
+- Don't put secrets in config. Both the shipped `config.md` and the saved answers under `~/.claude/plugin-config/` are plain text with no secret handling.
+- Never instruct a skill to write answers into its own `config.md`. That file belongs to the plugin, not the user.
+
+`/apollo-growth:skill-generalizer` automates most of this when you are converting an existing personal skill. It scans a skill folder for hardcoded values, walks you through which to extract, and writes the generalized skill, its `config.md`, and an installer README.
 
 ### Reviewing Prompts
 

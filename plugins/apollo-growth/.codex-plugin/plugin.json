@@ -1,0 +1,15 @@
+{
+  "name": "apollo-growth",
+  "version": "0.1.0",
+  "description": "Idea capture, brainstorm batching, weekly funnel reporting, and tooling to generalize a personal skill for sharing",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Growth",
+    "shortDescription": "Idea capture, brainstorm batching, weekly funnel reporting, and tooling to generalize a personal skill for sharing",
+    "developerName": "Apollo",
+    "category": "Product",
+    "brandColor": "#1F2937"
+  }
+}

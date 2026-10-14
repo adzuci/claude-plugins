@@ -25,6 +25,8 @@ EXPECTED_DISPLAY_NAMES = {
     "apollo-eng-experimentation": "Apollo Engineering Experimentation",
     "apollo-eng-fabric-surfaces": "Apollo Engineering Fabric Surfaces",
     "apollo-eng-leadership": "Apollo Engineering Leadership",
+    "apollo-growth": "Apollo Growth",
+    "apollo-growth-product": "Apollo Growth Product",
     "apollo-gtm": "Apollo Go-to-Market",
     "apollo-gtm-systems": "Apollo Go-to-Market Systems",
     "apollo-it": "Apollo Information Technology",

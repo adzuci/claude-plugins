@@ -22,6 +22,7 @@ This is Apollo's shared Claude Code and Codex skills marketplace. Skills live in
 - Keep both marketplace files in sync: `.claude-plugin/marketplace.json` for Claude Code and `.agents/plugins/marketplace.json` for Codex
 - Do not hand-bump `version` in either plugin manifest. `release-please` (`.github/workflows/release-please.yml`, `release-please-config.json`, `.release-please-manifest.json`) owns versioning per plugin via `extra-files` and bumps both manifests automatically from Conventional Commit messages on merge to `main`.
 - Repo-local `.claude/skills` must work for Claude Code users who do not have Codex installed. Do not make those skills depend on Codex-only commands.
+- If a skill needs team-specific values (Notion database IDs, Jira project keys, Slack channels, local output paths), use the `config.md` sidecar pattern instead of hardcoding them: set `requires_config: true`, put a `## Configuration` section right after the frontmatter, use `{{variable_name}}` placeholders, and document every variable in `config.md`. Skills read `config.md` for defaults but save the user's answers to `~/.claude/plugin-config/<plugin>/<skill>.md`, because the shipped file is replaced on every plugin update. See the README "Configurable Skills" section. `/apollo-growth:skill-generalizer` automates the conversion.
 
 ## Validation
 
