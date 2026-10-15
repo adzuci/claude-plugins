@@ -1,6 +1,6 @@
 {
   "plugins/apollo-accounting": "1.0.0",
-  "plugins/apollo-analytics": "2.0.1",
+  "plugins/apollo-analytics": "2.0.2",
   "plugins/apollo-corpsec": "1.0.0",
   "plugins/apollo-eng": "1.12.1",
   "plugins/apollo-eng-devops": "1.7.0",
