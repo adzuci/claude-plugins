@@ -23,8 +23,8 @@ jobs:
     uses: apolloio/.github/.github/workflows/cleanup-stale-pull-requests-reusable.yml@main
     with:
       dry-run: ${{ github.event_name == 'schedule' && vars.STALE_PR_AUTOCLOSE_ENABLED != 'true' || inputs.dry_run }}
-      commit-days: 7
-      ready-days: 7
+      commit-days: 10
+      ready-days: 10
       draft-days: 30
       extended-days: 35
       extended-label: flaky-test-fix

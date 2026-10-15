@@ -297,7 +297,7 @@ The README plugin inventory and `SKILL_INVENTORY.md` are auto-updated by CI on m
 
 The daily `Clean Up Stale Pull Requests` workflow calls the [reusable stale PR cleanup workflow](https://github.com/apolloio/.github/blob/main/.github/workflows/cleanup-stale-pull-requests-reusable.yml) in `apolloio/.github`, modeled on [leadgenie's cleanup](https://github.com/apolloio/leadgenie/blob/master/.github/workflows/cleanup-stale-branches.yml). It deletes same-repository branches after both the pull request and branch have been inactive long enough; deleting the branch closes its pull request.
 
-- Ready pull requests: 7 days
+- Ready pull requests: 10 days
 - Draft pull requests: 30 days
 - Pull requests labeled `flaky-test-fix`: 35 days
 - Pull requests labeled `keep-open`: never automatically closed
