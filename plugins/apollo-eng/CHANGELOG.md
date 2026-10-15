@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.1](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.12.0...apollo-eng-v1.12.1) (2026-10-14)
+
+
+### Bug Fixes
+
+* **apollo-eng:** remove auto-pr skill ([4d1eead](https://github.com/apolloio/claude-plugins/commit/4d1eeadca1b852b5ce4224d96a27da812fd33081))
+
 ## [1.12.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.11.2...apollo-eng-v1.12.0) (2026-10-12)
 
 

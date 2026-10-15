@@ -1,6 +1,6 @@
 {
   "name": "apollo-eng",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "Shared engineering skills for Apollo repos",
   "repository": "https://github.com/apolloio/claude-plugins",
   "license": "UNLICENSED",

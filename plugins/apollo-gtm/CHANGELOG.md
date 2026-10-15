@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.7.0...apollo-gtm-v0.8.0) (2026-10-14)
+
+
+### Features
+
+* **apollo-gtm:** add close-intervention-ces skill ([#364](https://github.com/apolloio/claude-plugins/issues/364)) ([53ae6c6](https://github.com/apolloio/claude-plugins/commit/53ae6c6871237922912c7ca8f3ef356ca0cc0b85))
+
 ## [0.7.0](https://github.com/apolloio/claude-plugins/compare/apollo-gtm-v0.6.0...apollo-gtm-v0.7.0) (2026-10-07)
 
 

@@ -1,7 +1,7 @@
 {
   "name": "apollo-growth-product",
   "displayName": "Apollo Growth Product",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Growth product workflows: experiment pitch, design, tracking and results, in-product copy, Jira tickets, and business review reporting",
   "license": "UNLICENSED"
 }
