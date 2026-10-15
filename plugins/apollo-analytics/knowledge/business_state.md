@@ -179,7 +179,7 @@ ______________________________________________________________________
 
 ## Data Quality & Gaps Impacting Strategy
 
-**All 12 executive measurement gaps now closed (Jun 2).** `domain/measurement_gap_tracker.md` confirms minimum-viable Snowflake coverage for every gap including trial conversion, partner sourcing, churn reason taxonomy, FTP cohorts, and M3 cohort NRR. New lookup tables: LU_INBOUND_TEAMS, LU_WEEKLY_INSIGHTS, LU_PARTNER_SOURCED_TEAMS, LU_FTP_COHORT_W2, LU_M3_COHORT_NRR, LU_TEAM_ACTIVATION_F14D, LU_INTERVENTION_ARR_ATTRIBUTION, LU_CHURN_REASON_TAXONOMY, PRODUCT_METRICS_DAILY.
+**All 12 executive measurement gaps now closed (Jun 2).** `domain/measurement_gap_tracker.md` confirms minimum-viable Snowflake coverage for every gap including trial conversion, partner sourcing, churn reason taxonomy, FTP cohorts, and M3 cohort NRR. New lookup tables: LU_INBOUND_TEAMS, LU_PARTNER_SOURCED_TEAMS, LU_FTP_COHORT_W2, LU_M3_COHORT_NRR, LU_TEAM_ACTIVATION_F14D, LU_INTERVENTION_ARR_ATTRIBUTION, LU_CHURN_REASON_TAXONOMY, PRODUCT_METRICS_DAILY.
 
 **Residual gaps (non-blocking):**
 

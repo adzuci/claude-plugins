@@ -255,7 +255,7 @@ ______________________________________________________________________
 | 2026-05-29 | daily shape | -- Daily ARR flows from FCT_DAILY_REVENUE for shape curve CDFs + current month pacing. |
 | 2026-05-29 | weekly flows | -- Weekly ARR flows from FCT_DAILY_REVENUE for trailing 26-week trend view. |
 | 2026-05-29 | monthly arr impact | -- GE-5110: Monthly ARR overstatement from duplicate Mid-Term Upsells |
-| 2026-06-03 | lu weekly insights | -- LU_WEEKLY_INSIGHTS — Weekly strategic recommendations from analytics deep-dives |
+| 2026-06-03 | lu weekly insights | -- LU_WEEKLY_INSIGHTS — DROPPED 2026-10-08. Weekly insights now served by LU_METRIC_SNAPSHOTS + INTELLIGENCE_SNAPSHOTS pipeline |
 | 2026-06-03 | lu business glossary | -- LU_BUSINESS_GLOSSARY — DE-owned business term definitions |
 | 2026-06-03 | lu saved metrics | -- LU_SAVED_METRICS — AE-owned canonical metric queries |
 | 2026-06-01 | mcp hex canonical queries | Source: \[v0 — MCP Product Operating Metrics & Health\](https://app.hex.tech/apollo/hex/v0-MCP-Product-Operating... |
