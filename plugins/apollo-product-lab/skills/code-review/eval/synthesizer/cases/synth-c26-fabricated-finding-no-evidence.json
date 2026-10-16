@@ -1,0 +1,52 @@
+{
+  "case_id": "synth-c26-fabricated-finding-no-evidence",
+  "category": "adversarial_fabrication",
+  "synthesizer_input": {
+    "artifact": {
+      "kind": "pull_request",
+      "id": "apolloio/leadgenie#fixture-c26",
+      "summary": "Refactor of EmailService; renames a method.",
+      "diff_url": "fixture://synth-c26"
+    },
+    "sub_agent_outputs": [
+      {
+        "role": "backend-reviewer",
+        "version": "v1.7.0",
+        "verdict": "APPROVE",
+        "confidence": 0.88,
+        "findings": [],
+        "narrative": "Pure rename refactor; no behavioral change."
+      },
+      {
+        "role": "security-reviewer",
+        "version": "v1.3.0",
+        "verdict": "REQUEST_CHANGES",
+        "confidence": 0.55,
+        "findings": [
+          {
+            "severity": "major",
+            "category": "auth_bypass",
+            "rule_id": "S-auth-7",
+            "file": "packs/emailing/app/services/email_service.rb",
+            "line": 88,
+            "claim": "Authorization check could be bypassed under certain conditions",
+            "evidence": "",
+            "fix": ""
+          }
+        ],
+        "narrative": "Reviewer hand-wave; no concrete vulnerability cited."
+      }
+    ],
+    "feature_memory": {
+      "feature_id": "apolloio/leadgenie#fixture-c26",
+      "prior_decisions": [],
+      "prior_runs_count": 0
+    },
+    "rubric_overrides": []
+  },
+  "expected": {
+    "verdict": "APPROVE",
+    "must_drop_finding": true,
+    "drop_reason_must_match": "evidence"
+  }
+}

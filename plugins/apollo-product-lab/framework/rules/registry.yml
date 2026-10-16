@@ -1,0 +1,2533 @@
+{
+  "schema": 1,
+  "rules": [
+    {
+      "id": "B1",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B2",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B3",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B4",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B5",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B6",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B7",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B8",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B9",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B10",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B11",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B12",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B13",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B14",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B15",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B16",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B17",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B18",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B19",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 4,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B20",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B21",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B22",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B23",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B24",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 5,
+        "hits": 0,
+        "false_positives": 3,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B25",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 4,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B26",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B27",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B28",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 13,
+        "hits": 0,
+        "false_positives": 1,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B29",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B30",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B31",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 2,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B32",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B33",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 3,
+        "hits": 0,
+        "false_positives": 1,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B34",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B35",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 12,
+        "hits": 0,
+        "false_positives": 1,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B36",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B37",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 11,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B38",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B39",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B40",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B41",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B42",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B43",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B44",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B45",
+      "agent": "backend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "B46",
+      "agent": "backend-reviewer",
+      "status": "shadow",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F1",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F2",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F3",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F4",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F5",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F6",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F7",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F8",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F9",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F10",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F11",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F12",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F13",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F14",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F15",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F16",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F17",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F18",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F19",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F20",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 2,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F21",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 4,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F22",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F23",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F24",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 9,
+        "hits": 0,
+        "false_positives": 1,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F25",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F26",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 2,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F27",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F28",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F29",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "F30",
+      "agent": "frontend-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "H1",
+      "agent": "supervisor-hygiene",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "H2",
+      "agent": "supervisor-hygiene",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "H3",
+      "agent": "supervisor-hygiene",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP1",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP2",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP3",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP4",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP5",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 2,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP6",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP7",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP8",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 3,
+        "hits": 0,
+        "false_positives": 1,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP9",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP10",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 5,
+        "hits": 0,
+        "false_positives": 1,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP11",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP12",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP13",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP14",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 5,
+        "hits": 0,
+        "false_positives": 3,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP15",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP16",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 4,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP17",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 7,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "IP18",
+      "agent": "infra-lens",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M1",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M2",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M3",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M4",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M5",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M6",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M7",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M8",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M9",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M10",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M11",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M12",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M13",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M14",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M15",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M16",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M17",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M18",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M19",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M20",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M21",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M22",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M30",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 2,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M31",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M32",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 13,
+        "hits": 0,
+        "false_positives": 1,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M33",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M34",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M35",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 2,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M36",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 2,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M37",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 3,
+        "hits": 0,
+        "false_positives": 1,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M38",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M39",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M40",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M41",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 2,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M42",
+      "agent": "db-perf",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M43",
+      "agent": "db-perf",
+      "status": "shadow",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "M44",
+      "agent": "db-perf",
+      "status": "shadow",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S1",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S2",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S3",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S4",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S5",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S6",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S7",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S8",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S9",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S10",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S11",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S12",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S13",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S14",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S15",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S16",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S17",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S18",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S19",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S20",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S21",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 1,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S22",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 5,
+        "hits": 0,
+        "false_positives": 3,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S23",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    },
+    {
+      "id": "S24",
+      "agent": "security-reviewer",
+      "status": "active",
+      "added": "2026-10-16",
+      "source": [
+        "seed"
+      ],
+      "replay": {
+        "cases": 0,
+        "hits": 0,
+        "false_positives": 0,
+        "last_scored": null
+      },
+      "notes": "Seeded from the current reviewer prompt. Cases count fixed/deferred replay evidence; hits remain zero until a scored replay."
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://apollo.io/leadgenie/${CLAUDE_PLUGIN_ROOT}/framework/eval/replay/cases.schema.json",
+  "title": "Apollo Skill Eval — cases.json",
+  "description": "Schema for per-skill eval/cases.json files. Each skill MUST have one cases.json conforming to this schema. The replay-eval scorer reads this to drive narrative_doc-based description-match scoring.",
+  "type": "object",
+  "required": ["skill", "version", "description_match_threshold", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "skill": {
+      "type": "string",
+      "description": "Skill name. Must match the directory under .claude/skills/<skill>/ and the `name:` field in SKILL.md frontmatter.",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Cases-file schema version. Bump when the case schema (not the skill) changes."
+    },
+    "description_match_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Minimum description-match score (0..1) for a case verdict to count as `pass`. Default suggested: 0.35. Calibration evidence in eval/replay/threshold-calibration.md."
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 5,
+      "description": "Eval cases. Skill MUST have ≥5 cases (4 positive + ≥1 negative) to pass support gate.",
+      "items": { "$ref": "#/$defs/case" }
+    },
+    "gate": {
+      "$ref": "#/$defs/gate",
+      "description": "Optional explicit gate block. If absent, framework defaults are applied (precision ≥0.85, FPR ≤0.15, support ≥5; destructive lane raises precision floor to 0.95)."
+    }
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "required": ["id", "input", "expected", "anti_expected", "trigger_phrases_must_match_one_of", "weight"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+          "description": "Stable case ID. Convention: `<skill>-c<N>-<short-name>`."
+        },
+        "narrative_doc": {
+          "type": ["string", "null"],
+          "description": "Filename of the narrative_doc relative to eval/. Required for positive cases (cases that should activate the skill). Null only for negative / out-of-scope cases."
+        },
+        "input": {
+          "type": "object",
+          "required": ["user_message"],
+          "additionalProperties": true,
+          "properties": {
+            "user_message": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The exact message a user would send to trigger (or attempt to trigger) the skill."
+            }
+          }
+        },
+        "expected": {
+          "type": "object",
+          "required": ["should_activate"],
+          "additionalProperties": true,
+          "properties": {
+            "should_activate": {
+              "type": "boolean",
+              "description": "Whether the skill SHOULD activate on this input. Negative cases set this false."
+            }
+          },
+          "description": "Expected behaviors. All non-`should_activate` keys are skill-specific assertions verified by the scorer against the narrative_doc."
+        },
+        "anti_expected": {
+          "type": "object",
+          "additionalProperties": { "type": "boolean" },
+          "description": "Behaviors that MUST NOT happen. All values must be `false` (the boolean is the assertion that the behavior did not occur)."
+        },
+        "trigger_phrases_must_match_one_of": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Activation phrases. For positive cases, the skill's activation matcher must match ONE of these against `input.user_message`. For negative cases, this is typically empty."
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Case weight in the aggregate score. Default 1.0. Use ≥2.0 for high-stakes / destructive cases (e.g., refusal of sensitive operations)."
+        },
+        "purpose": {
+          "type": "string",
+          "description": "Optional one-line description of what behavior this case is testing. Especially valuable for negative cases."
+        }
+      },
+      "if": {
+        "properties": { "expected": { "properties": { "should_activate": { "const": true } } } }
+      },
+      "then": {
+        "required": ["narrative_doc"],
+        "properties": {
+          "narrative_doc": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "review_replay_case": {
+      "type": "object",
+      "description": "One line of a reviewer replay cases.jsonl (see ads-m1-human-reviews/). Separate from the skill `case` def: it describes a past human review comment an AI reviewer should have caught.",
+      "required": ["id", "pr", "comment_id", "comment_kind", "url", "reviewer", "path", "line", "commit_id", "base_sha", "excerpt", "category", "expected_rules", "rule_gap", "match"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "pr": { "type": "integer" },
+        "comment_id": { "type": "integer" },
+        "comment_kind": { "enum": ["line", "review", "issue"] },
+        "url": { "type": "string" },
+        "reviewer": { "type": "string" },
+        "path": { "type": ["string", "null"] },
+        "line": { "type": ["integer", "null"] },
+        "commit_id": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "base_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "excerpt": { "type": "string", "description": "At most 40 words." },
+        "category": { "type": "string" },
+        "expected_rules": { "type": "array", "items": { "type": "string" } },
+        "rule_gap": { "type": "boolean", "description": "True when no checklist rule covered the comment at mining time." },
+        "match": {
+          "type": "object",
+          "required": ["same_file", "line_tolerance", "any_of"],
+          "properties": {
+            "same_file": { "type": "boolean" },
+            "line_tolerance": { "type": ["integer", "null"] },
+            "rules_only": { "type": "boolean" },
+            "any_of": {
+              "type": "object",
+              "required": ["rules", "category"],
+              "properties": {
+                "rules": { "type": "array", "items": { "type": "string" } },
+                "category": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "precision_min": { "type": "number", "minimum": 0, "maximum": 1 },
+        "fpr_max":       { "type": "number", "minimum": 0, "maximum": 1 },
+        "support_min":   { "type": "integer", "minimum": 1 },
+        "destructive_lane": {
+          "type": "boolean",
+          "description": "If true, framework enforces precision_min ≥ 0.95 regardless of explicit `precision_min`."
+        }
+      }
+    }
+  }
+}

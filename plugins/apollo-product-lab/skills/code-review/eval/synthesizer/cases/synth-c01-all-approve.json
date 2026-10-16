@@ -1,0 +1,51 @@
+{
+  "case_id": "synth-c01-all-approve",
+  "category": "agreement",
+  "synthesizer_input": {
+    "artifact": {
+      "kind": "pull_request",
+      "id": "apolloio/leadgenie#fixture-c01",
+      "summary": "Trivial typo fix in CHANGELOG.md and one comment in foo.ts.",
+      "diff_url": "fixture://synth-c01"
+    },
+    "sub_agent_outputs": [
+      {
+        "role": "frontend-reviewer",
+        "version": "v2.1.0",
+        "verdict": "APPROVE",
+        "confidence": 0.95,
+        "findings": [],
+        "narrative": "Single-line comment fix in foo.ts. No semantic change."
+      },
+      {
+        "role": "backend-reviewer",
+        "version": "v1.7.0",
+        "verdict": "APPROVE",
+        "confidence": 0.95,
+        "findings": [],
+        "narrative": "No backend files changed. Skipping."
+      },
+      {
+        "role": "security-reviewer",
+        "version": "v1.3.0",
+        "verdict": "APPROVE",
+        "confidence": 1.0,
+        "findings": [],
+        "narrative": "No controllers, services, or APIs touched."
+      }
+    ],
+    "feature_memory": {
+      "feature_id": "apolloio/leadgenie#fixture-c01",
+      "prior_decisions": [],
+      "prior_runs_count": 0
+    },
+    "rubric_overrides": []
+  },
+  "expected": {
+    "verdict": "APPROVE",
+    "confidence_min": 0.85,
+    "findings_kept_count": 0,
+    "findings_dropped_count": 0,
+    "escalated": false
+  }
+}

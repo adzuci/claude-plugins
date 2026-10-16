@@ -1,0 +1,15 @@
+{
+  "name": "apollo-product-lab",
+  "version": "1.0.0",
+  "description": "Product-development harness: multi-lens council on different model families, deterministic stage snapshots, onboarding per persona.",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Product Lab",
+    "shortDescription": "Product-development harness: multi-lens council on different model families, deterministic stage snapshots, onboarding per persona.",
+    "developerName": "Apollo",
+    "category": "Engineering",
+    "brandColor": "#1F2937"
+  }
+}

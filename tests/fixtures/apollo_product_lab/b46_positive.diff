@@ -1,0 +1,6 @@
+diff --git a/packs/ads/app/workers/sweep.rb b/packs/ads/app/workers/sweep.rb
+@@ -10,2 +10,4 @@
+ records.each do |record|
++  next unless Record.where(id: record.id, state: "ready").update_all(state: "sent") == 1
++  deliver(record)
+ end

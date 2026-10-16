@@ -193,6 +193,13 @@
       "description": "GTM launch package builder: kickoff, brief, positioning, and paid, content, social, and lifecycle artifacts for Apollo PLG launches, scaled by launch tier",
       "category": "marketing",
       "tags": ["claude-code", "marketing", "gtm", "launch"]
+    },
+    {
+      "name": "apollo-product-lab",
+      "source": "./plugins/apollo-product-lab",
+      "description": "Product-development harness: multi-lens council on different model families, deterministic stage snapshots, onboarding per persona.",
+      "category": "engineering",
+      "tags": ["claude-code", "engineering", "product", "harness"]
     }
   ]
 }

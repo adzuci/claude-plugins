@@ -23,5 +23,6 @@
   "plugins/apollo-rnd": "0.2.0",
   "plugins/apollo-support": "1.2.0",
   "plugins/apollo-talent": "1.0.0",
-  "plugins/herald": "1.1.0"
+  "plugins/herald": "1.1.0",
+  "plugins/apollo-product-lab": "1.0.0"
 }

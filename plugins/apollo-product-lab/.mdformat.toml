@@ -1,0 +1,2 @@
+# Keep ordered lists numbered 1, 2, 3 (mdformat defaults to 1, 1, 1). Applies to this plugin only.
+number = true

@@ -1,0 +1,376 @@
+{
+  "$schema": "../../../../.ai/claude-skills-framework/eval-schema.json",
+  "corpus": "pr-tech-lead-synthesizer",
+  "version": "v0.2.0",
+  "last_authored": "2026-04-29",
+  "cases": [
+    {
+      "case_id": "synth-c01-all-approve",
+      "category": "agreement",
+      "description": "All 3 routed sub-agents APPROVE; trivial typo-fix PR.",
+      "synthesizer_input_ref": "cases/synth-c01-all-approve.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "confidence_min": 0.85,
+        "findings_kept_count": 0,
+        "findings_dropped_count": 0,
+        "escalated": false
+      }
+    },
+    {
+      "case_id": "synth-c02-fe-be-approve-dbperf-not-routed",
+      "category": "agreement",
+      "description": "FE + BE approve; db-perf not routed (no Mongo signals in diff).",
+      "synthesizer_input_ref": "cases/synth-c02-fe-be-approve-dbperf-not-routed.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "confidence_min": 0.85,
+        "escalated": false
+      }
+    },
+    {
+      "case_id": "synth-c03-all-approve-with-low-conf-dbperf",
+      "category": "agreement",
+      "description": "All approve, but db-perf at confidence 0.65 (below calibration floor). Synthesizer caps verdict confidence at ≤0.80.",
+      "synthesizer_input_ref": "cases/synth-c03-all-approve-with-low-conf-dbperf.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "confidence_max": 0.80,
+        "escalated": false
+      }
+    },
+    {
+      "case_id": "synth-c04-all-approve-with-nit-findings",
+      "category": "agreement",
+      "description": "All approve; FE emits 2 nits and BE emits 1 nit. Nits are kept but verdict stays APPROVE.",
+      "synthesizer_input_ref": "cases/synth-c04-all-approve-with-nit-findings.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "confidence_min": 0.85,
+        "findings_kept_count": 3,
+        "escalated": false
+      }
+    },
+    {
+      "case_id": "synth-c05-fe-approve-be-approve-security-not-routed",
+      "category": "agreement",
+      "description": "Pure model-layer change; security not routed, db-perf not routed. Two-reviewer agreement.",
+      "synthesizer_input_ref": "cases/synth-c05-fe-approve-be-approve-security-not-routed.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "confidence_min": 0.80,
+        "escalated": false
+      }
+    },
+    {
+      "case_id": "synth-c06-four-reviewer-all-approve-large-diff",
+      "category": "agreement",
+      "description": "All 4 reviewers routed; all approve on a 600-line refactor with no findings.",
+      "synthesizer_input_ref": "cases/synth-c06-four-reviewer-all-approve-large-diff.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "confidence_min": 0.85,
+        "findings_kept_count": 0,
+        "escalated": false
+      }
+    },
+    {
+      "case_id": "synth-c07-all-approve-truncated-diff",
+      "category": "agreement",
+      "description": "Diff truncated at 1000 lines per supervisor rule; review_truncated nit recorded but all approve.",
+      "synthesizer_input_ref": "cases/synth-c07-all-approve-truncated-diff.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "confidence_max": 0.80,
+        "rationale_must_match": "truncated|partial",
+        "escalated": false
+      }
+    },
+    {
+      "case_id": "synth-c08-three-reviewers-approve-with-minor-finding",
+      "category": "agreement",
+      "description": "All 3 approve; BE flags one major-but-not-blocker (missing index hint) but votes APPROVE because risk is mitigated by tier-1 collection size. Synthesizer keeps the finding as informational.",
+      "synthesizer_input_ref": "cases/synth-c08-three-reviewers-approve-with-minor-finding.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "confidence_min": 0.80,
+        "findings_kept_count": 1,
+        "escalated": false
+      }
+    },
+    {
+      "case_id": "synth-c09-all-approve-overlapping-nits",
+      "category": "agreement",
+      "description": "FE and BE both flag i18n nit on same .messages.ts file. Synthesizer dedupes to 1 finding.",
+      "synthesizer_input_ref": "cases/synth-c09-all-approve-overlapping-nits.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "confidence_min": 0.85,
+        "findings_kept_count": 1,
+        "findings_dropped_count": 1,
+        "must_consolidate": true
+      }
+    },
+    {
+      "case_id": "synth-c10-all-request-changes-overlap",
+      "category": "agreement",
+      "description": "FE and BE both flag the same i18n issue (overlapping category); synthesizer consolidates.",
+      "synthesizer_input_ref": "cases/synth-c10-all-request-changes-overlap.json",
+      "expected": {
+        "verdict": "REQUEST_CHANGES",
+        "confidence_min": 0.80,
+        "findings_kept_count": 1,
+        "findings_dropped_count": 1,
+        "must_consolidate": true
+      }
+    },
+    {
+      "case_id": "synth-c11-mixed-fe-approve-be-request-minor",
+      "category": "minor_disagreement",
+      "description": "FE approves; BE requests changes on a minor finding. Synthesizer should REQUEST_CHANGES with low_confidence flag.",
+      "synthesizer_input_ref": "cases/synth-c11-mixed-fe-approve-be-request-minor.json",
+      "expected": {
+        "verdict": "REQUEST_CHANGES",
+        "confidence_min": 0.55,
+        "confidence_max": 0.85,
+        "must_flag_low_confidence": true
+      }
+    },
+    {
+      "case_id": "synth-c12-mixed-be-approve-security-request-major",
+      "category": "minor_disagreement",
+      "description": "BE approves a service change; security flags a major (input not sanitized in JSON body). No file overlap because security looked at controller, BE looked at service. REQUEST_CHANGES, low_confidence.",
+      "synthesizer_input_ref": "cases/synth-c12-mixed-be-approve-security-request-major.json",
+      "expected": {
+        "verdict": "REQUEST_CHANGES",
+        "confidence_max": 0.85,
+        "must_flag_low_confidence": true,
+        "findings_kept_count": 1
+      }
+    },
+    {
+      "case_id": "synth-c13-mixed-dbperf-request-fe-approve",
+      "category": "minor_disagreement",
+      "description": "db-perf requests changes (missing index hint); FE approves. No file overlap. Synthesizer REQUEST_CHANGES.",
+      "synthesizer_input_ref": "cases/synth-c13-mixed-dbperf-request-fe-approve.json",
+      "expected": {
+        "verdict": "REQUEST_CHANGES",
+        "confidence_max": 0.85,
+        "findings_kept_count": 1
+      }
+    },
+    {
+      "case_id": "synth-c14-mixed-different-categories",
+      "category": "minor_disagreement",
+      "description": "FE flags accessibility (major); BE flags Sorbet sigil missing (major). Different categories, different files. Both kept.",
+      "synthesizer_input_ref": "cases/synth-c14-mixed-different-categories.json",
+      "expected": {
+        "verdict": "REQUEST_CHANGES",
+        "findings_kept_count": 2,
+        "findings_dropped_count": 0,
+        "must_flag_low_confidence": true
+      }
+    },
+    {
+      "case_id": "synth-c15-mixed-overlapping-line-different-claim",
+      "category": "minor_disagreement",
+      "description": "FE and BE flag the same line but with different claims. Synthesizer keeps both, since they're not duplicates.",
+      "synthesizer_input_ref": "cases/synth-c15-mixed-overlapping-line-different-claim.json",
+      "expected": {
+        "verdict": "REQUEST_CHANGES",
+        "findings_kept_count": 2,
+        "findings_dropped_count": 0
+      }
+    },
+    {
+      "case_id": "synth-c16-mixed-confidence-spread",
+      "category": "minor_disagreement",
+      "description": "BE confidence 0.82 REQUEST_CHANGES; FE confidence 0.45 APPROVE. Confidence delta >0.30 — escalation trigger fires per rule 4.",
+      "synthesizer_input_ref": "cases/synth-c16-mixed-confidence-spread.json",
+      "expected": {
+        "verdict": "ESCALATE_HUMAN",
+        "must_render_escalation_payload": true,
+        "escalation_reason_includes": "confidence delta"
+      }
+    },
+    {
+      "case_id": "synth-c17-mixed-three-reviewers-two-disagree",
+      "category": "minor_disagreement",
+      "description": "FE approve, BE request_changes, security approve. Mixed non-blocker. REQUEST_CHANGES with low_confidence.",
+      "synthesizer_input_ref": "cases/synth-c17-mixed-three-reviewers-two-disagree.json",
+      "expected": {
+        "verdict": "REQUEST_CHANGES",
+        "confidence_max": 0.85,
+        "must_flag_low_confidence": true
+      }
+    },
+    {
+      "case_id": "synth-c18-mixed-fe-major-be-nit",
+      "category": "minor_disagreement",
+      "description": "FE flags major (a11y). BE flags nit (style). Both REQUEST_CHANGES but only FE's is kept at major; BE's stays as nit.",
+      "synthesizer_input_ref": "cases/synth-c18-mixed-fe-major-be-nit.json",
+      "expected": {
+        "verdict": "REQUEST_CHANGES",
+        "findings_kept_count": 2
+      }
+    },
+    {
+      "case_id": "synth-c19-mixed-overlap-and-non-overlap",
+      "category": "minor_disagreement",
+      "description": "FE and BE flag same i18n issue (consolidated to 1) AND BE flags an additional Sorbet issue. Total 2 findings kept, 1 dropped.",
+      "synthesizer_input_ref": "cases/synth-c19-mixed-overlap-and-non-overlap.json",
+      "expected": {
+        "verdict": "REQUEST_CHANGES",
+        "findings_kept_count": 2,
+        "findings_dropped_count": 1,
+        "must_consolidate": true
+      }
+    },
+    {
+      "case_id": "synth-c20-dbperf-block-be-approve-contradiction",
+      "category": "hard_disagreement",
+      "description": "db-perf reports BLOCK on T0 sharded read with confidence 0.92; backend-reviewer APPROVES. Synthesizer must ESCALATE_HUMAN.",
+      "synthesizer_input_ref": "cases/synth-c20-dbperf-block-be-approve-contradiction.json",
+      "expected": {
+        "verdict": "ESCALATE_HUMAN",
+        "must_render_escalation_payload": true,
+        "escalation_reason_includes": "contradicting hard verdicts"
+      }
+    },
+    {
+      "case_id": "synth-c21-security-block-fe-approve-no-overlap",
+      "category": "hard_disagreement",
+      "description": "Security reviewer reports BLOCK on IDOR; FE approves a frontend file. Verdicts contradict in scope but not in domain — synthesizer should still BLOCK (rule 1), not escalate, because FE didn't endorse the security file.",
+      "synthesizer_input_ref": "cases/synth-c21-security-block-fe-approve-no-overlap.json",
+      "expected": {
+        "verdict": "BLOCK",
+        "confidence_min": 0.85,
+        "escalated": false
+      }
+    },
+    {
+      "case_id": "synth-c22-security-block-be-explicit-endorse",
+      "category": "hard_disagreement",
+      "description": "Security says BLOCK on a service file; BE narrative explicitly states 'authorization is correct'. Per rule 4 sub-trigger, this is contradicting endorsement → ESCALATE_HUMAN.",
+      "synthesizer_input_ref": "cases/synth-c22-security-block-be-explicit-endorse.json",
+      "expected": {
+        "verdict": "ESCALATE_HUMAN",
+        "must_render_escalation_payload": true,
+        "escalation_reason_includes": "explicitly endorses"
+      }
+    },
+    {
+      "case_id": "synth-c23-dbperf-block-fe-approve-no-overlap",
+      "category": "hard_disagreement",
+      "description": "db-perf BLOCKs a backend file; FE approves an unrelated frontend file. No domain overlap — synthesizer should BLOCK (rule 1), not escalate.",
+      "synthesizer_input_ref": "cases/synth-c23-dbperf-block-fe-approve-no-overlap.json",
+      "expected": {
+        "verdict": "BLOCK",
+        "confidence_min": 0.85,
+        "escalated": false
+      }
+    },
+    {
+      "case_id": "synth-c24-two-blocks-different-files",
+      "category": "hard_disagreement",
+      "description": "Both security and db-perf BLOCK on different files. Both at high confidence. Synthesizer BLOCK; no escalation; both findings kept.",
+      "synthesizer_input_ref": "cases/synth-c24-two-blocks-different-files.json",
+      "expected": {
+        "verdict": "BLOCK",
+        "confidence_min": 0.85,
+        "findings_kept_count": 2,
+        "escalated": false
+      }
+    },
+    {
+      "case_id": "synth-c25-low-confidence-block-downgrade",
+      "category": "hard_disagreement",
+      "description": "db-perf emits BLOCK with confidence 0.70 (below threshold). Per rubric rule 1, BLOCK requires confidence ≥0.85 — synthesizer downgrades to REQUEST_CHANGES.",
+      "synthesizer_input_ref": "cases/synth-c25-low-confidence-block-downgrade.json",
+      "expected": {
+        "verdict": "REQUEST_CHANGES",
+        "confidence_max": 0.80
+      }
+    },
+    {
+      "case_id": "synth-c26-fabricated-finding-no-evidence",
+      "category": "adversarial_fabrication",
+      "description": "One sub-agent emits a finding with empty `evidence` field. Synthesizer must drop it with `dropped_reason` mentioning evidence.",
+      "synthesizer_input_ref": "cases/synth-c26-fabricated-finding-no-evidence.json",
+      "expected": {
+        "must_drop_finding": true,
+        "drop_reason_must_match": "evidence"
+      }
+    },
+    {
+      "case_id": "synth-c27-fabricated-finding-wrong-file",
+      "category": "adversarial_fabrication",
+      "description": "Sub-agent reports finding on a file not in the diff. Synthesizer drops it.",
+      "synthesizer_input_ref": "cases/synth-c27-fabricated-finding-wrong-file.json",
+      "expected": {
+        "must_drop_finding": true,
+        "drop_reason_must_match": "file_not_in_diff|fabricated|missing"
+      }
+    },
+    {
+      "case_id": "synth-c28-prior-decision-not-re-raised",
+      "category": "prior_decision_citation",
+      "description": "feature_memory.prior_decisions includes a kept_finding the author addressed in this commit. Synthesizer must NOT re-raise it.",
+      "synthesizer_input_ref": "cases/synth-c28-prior-decision-not-re-raised.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "must_not_include_finding_id": "prior_run_finding_42",
+        "rationale_must_cite_prior": true
+      }
+    },
+    {
+      "case_id": "synth-c29-prior-decision-reversal-with-citation",
+      "category": "prior_decision_citation",
+      "description": "Prior run was REQUEST_CHANGES; current diff resolves the cited issue. Synthesizer flips to APPROVE and explicitly cites the reversal.",
+      "synthesizer_input_ref": "cases/synth-c29-prior-decision-reversal-with-citation.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "rationale_must_cite_prior": true,
+        "rationale_must_match": "reversing|addressed"
+      }
+    },
+    {
+      "case_id": "synth-c30-single-reviewer-degenerate",
+      "category": "agreement",
+      "description": "Only frontend-reviewer routed (docs+TS-only PR). Synthesizer must produce a verdict and flag `single_reviewer: true`.",
+      "synthesizer_input_ref": "cases/synth-c30-single-reviewer-degenerate.json",
+      "expected": {
+        "verdict": "APPROVE",
+        "confidence_max": 0.60,
+        "must_flag_single_reviewer": true
+      }
+    },
+    {
+      "case_id": "synth-c31-malformed-finding-missing-severity",
+      "category": "adversarial_fabrication",
+      "description": "Sub-agent emits finding without `severity` field. Synthesizer drops as malformed.",
+      "synthesizer_input_ref": "cases/synth-c31-malformed-finding-missing-severity.json",
+      "expected": {
+        "must_drop_finding": true,
+        "drop_reason_must_match": "malformed|missing required field"
+      }
+    },
+    {
+      "case_id": "synth-c32-self-confidence-below-threshold",
+      "category": "hard_disagreement",
+      "description": "All sub-agents report low confidence (<0.65); synthesizer's own derived confidence falls below 0.60 → escalate.",
+      "synthesizer_input_ref": "cases/synth-c32-self-confidence-below-threshold.json",
+      "expected": {
+        "verdict": "ESCALATE_HUMAN",
+        "must_render_escalation_payload": true,
+        "escalation_reason_includes": "synthesizer confidence"
+      }
+    }
+  ],
+  "notes": [
+    "32 cases authored. Per synthesizer-contract.md, the corpus must reach ≥30 before Phase F MVP exit. Distribution: 10 agreement, 9 minor_disagreement, 7 hard_disagreement, 4 adversarial_fabrication, 2 prior_decision_citation. Total ≥30 ✓.",
+    "Each case_id maps to a sibling file in `cases/<case_id>.json` containing the full synthesizer_input envelope. A representative subset (synth-c01, synth-c10, synth-c20, synth-c26, synth-c28) is authored as fully-specified envelope files; the remaining cases are stubbed and will be authored before the first replay-eval CI run.",
+    "Replay-eval CI reads this index, dereferences each `synthesizer_input_ref`, runs the synthesizer, and asserts each `expected` block.",
+    "Gates per synthesizer-contract.md: verdict precision ≥0.85; disagreement-escalation precision ≥0.95; fabrication detection ≥0.90; confidence calibration ±0.15 ≥0.80."
+  ]
+}

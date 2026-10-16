@@ -18,6 +18,7 @@ UPDATE_INVENTORY_SCRIPT = REPO / ".github" / "scripts" / "update-skill-inventory
 PLUGIN_NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SEMVER_RE = re.compile(r"^\d+\.\d+\.\d+$")
 EXPECTED_DISPLAY_NAMES = {
+    "apollo-product-lab": "Apollo Product Lab",
     "apollo-analytics": "Apollo Analytics",
     "apollo-eng": "Apollo Engineering",
     "apollo-eng-agentic-engineering": "Apollo Engineering Agentic Engineering",

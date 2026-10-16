@@ -1,0 +1,6 @@
+diff --git a/packs/ads/app/services/archive.rb b/packs/ads/app/services/archive.rb
+@@ -4,2 +4,5 @@
+ records.each do |record|
++  record.archived = true
++  record.save! # Runs validations and the after_save audit callback.
+ end

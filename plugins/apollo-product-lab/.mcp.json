@@ -1,0 +1,14 @@
+{
+  "_notes": "Remote MCP servers the harness uses. Each asks for your own OAuth login on first call; nothing here holds a credential. Playwright is opt-in (it starts a local npx process every session): claude mcp add playwright -- npx -y @playwright/mcp@latest. If a server is already configured for you, disable one copy; /harness-onboard checks for duplicates.",
+  "mcpServers": {
+    "notion": { "type": "http", "url": "https://mcp.notion.com/mcp" },
+    "atlassian": { "type": "http", "url": "https://mcp.atlassian.com/v1/mcp" },
+    "slack": { "type": "http", "url": "https://mcp.slack.com/mcp" },
+    "glean": { "type": "http", "url": "https://apollo-io-be.glean.com/mcp/default" },
+    "figma": { "type": "http", "url": "https://mcp.figma.com/mcp" },
+    "claude-design": { "type": "http", "url": "https://api.anthropic.com/v1/design/mcp" },
+    "sentry": { "type": "http", "url": "https://mcp.sentry.dev/mcp/apolloio" },
+    "amplitude": { "type": "http", "url": "https://mcp.amplitude.com/mcp" },
+    "grafana": { "type": "http", "url": "https://grafana-mcp.ops-gcp.apollo.io/mcp" }
+  }
+}

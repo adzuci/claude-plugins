@@ -1,0 +1,80 @@
+# Document graph for an initiative. Copy to .ai/<initiative>/document-graph.yml
+#
+# The edges are the whole point. This skill only compares pairs you declare here,
+# because all-pairs comparison is quadratic in cost and generates noise between
+# artifacts that were never meant to agree. Declaring an edge is you asserting
+# "these two should be consistent, and I want to know when they aren't."
+
+initiative: <slug>
+owner: <email>          # who adjudicates findings
+
+artifacts:
+  - id: <short-id>      # referenced by edges
+    kind: prd           # prd | estimate | constraint-register | design | plan | tracker
+    source: notion      # notion | jira | url | file
+    ref: <page-id, issue key, URL, or repo path>
+    authority: medium   # high | medium | low
+                        # Higher authority means presumed correct in a conflict, BUT
+                        # authority never beats recency. A high-authority artifact can
+                        # be the stale one. The skill reports both and does not pick.
+    # --- Independence signals. REQUIRED. ---
+    #
+    # "Three documents beat three models" only holds if the documents fail
+    # INDEPENDENTLY. Same team, same week, same assumptions = one blind spot
+    # wearing three hats: they agree with each other, all wrong, and the
+    # cross-check reports clean.
+    #
+    # Proven on a real run: a rollup declaring itself derived from an estimate
+    # matched it on every number — while the estimate contained two conflicting
+    # internal figures and the rollup had faithfully copied one. Agreement
+    # between a document and its own source is transcription, not corroboration.
+    author: <name or team>
+    derived_from: []      # ids of artifacts this one summarises or restates.
+                          # Agreement across a derived_from edge is weighted ZERO.
+    independence: primary # primary   — independently authored
+                          # derived   — restates another artifact (see derived_from)
+                          # co-authored — same author/window as another artifact;
+                          #               agreement is discounted, not zeroed
+    as_of: YYYY-MM-DD   # REQUIRED for any staleness determination.
+                        # The fetch path returns only a retrieval timestamp, never
+                        # last_edited_time, so recency cannot be detected automatically.
+                        # For a constraint-register use its own stated verification
+                        # date, not its last edit — that is the figure that matters.
+                        # Omit it and the skill makes no staleness call for any edge
+                        # touching this artifact, and says so.
+    # optional:
+    # covers: [<topic tags>]   # helps freshness comparison find same-fact overlaps
+    # known_unreachable: true  # suppresses repeat noise, still reported once
+
+edges:
+  - compare: [<id-a>, <id-b>]
+    reason: <what consistency you expect between these two>
+    # Be specific. "PRD flow must satisfy every M1-gating legal decision" produces
+    # useful findings. "These are related" produces noise.
+
+# Keep edges under 10. Each one costs a sub-agent. If you need more than 10,
+# the initiative probably has two document sets and wants two configs.
+
+# Curated analytics events for this initiative. REQUIRED before any
+# user-evidence research runs.
+#
+# Why this is not optional: Amplitude returns an EMPTY CHART for an
+# unrecognised event name rather than erroring. So a guessed or misspelled
+# name produces a confident "no signal here" finding that is actually a typo
+# — the worst kind of research output, because it looks like evidence of
+# absence. The specialist may only query events declared here. An event it
+# needs but cannot find is a question for the human, never a guess.
+events:
+  project_id: <amplitude appId>
+  # Verify each name against the project's taxonomy before adding it.
+  funnel:                 # ordered steps of the flow under investigation
+    - <Event Name>
+  signals:                # individual events worth segmenting on
+    - <Event Name>
+  cohorts:                # numeric cohort IDs — names do not resolve
+    - <id>
+  # Events deliberately excluded, with the reason, so nobody re-adds them.
+  excluded:
+    - name: <Event Name>
+      reason: <why>
+

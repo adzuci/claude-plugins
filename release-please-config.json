@@ -402,6 +402,22 @@
           "jsonpath": "$.version"
         }
       ]
+    },
+    "plugins/apollo-product-lab": {
+      "release-type": "simple",
+      "component": "apollo-product-lab",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": ".codex-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
     }
   }
 }

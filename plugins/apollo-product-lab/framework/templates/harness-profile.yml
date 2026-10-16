@@ -1,0 +1,54 @@
+# ~/.claude/harness-profile.yml (or, on claude.ai, the private Notion page "Harness profile (<name>)", doc 45 §4) — written by /harness-onboard; read by every harness skill at session start.
+
+# Nothing secret lives here. Re-run /harness-onboard to refresh.
+
+persona: {{pm | designer | engineer | qa | researcher | em | end-to-end}}
+host: {{claude-code | claude-code-cloud | claude-ai-chat | codex}}
+surface: {{terminal | desktop-code | claude-code-cloud | claude-ai-chat}} # onboarding question 0 (doc 45)
+storage: {{local | notion}} # where run records live; local = .ai/ in the product repo, notion = record pages under notion_records_root (doc 45 §3)
+notion_records_root: {{url of the "Harness record: <initiative>" page, or none in local mode}}
+base_model: {{claude-fable-5-1 | gpt-6-astra | kept: <the model the person chose to keep>}}
+second_family: installed | declined <date> | n/a-cloud | n/a-design # default installed for non-design personas (onboarding q6): Codex plugin + shunt on Claude Code, claude CLI on Codex; n/a-design = a designer or researcher who does not code (no shunt, no probe)
+design_workbench: {{fabric-studio | claude-design | figma-mcp}} # designers; default fabric-studio
+collaboration: {{solo | team}} # team = others work on the same initiative; git sync rules in doc 41 apply
+name: {{display name}}
+initiatives:
+  - {{initiative slug, e.g. ads-builder}}
+default_run: {{initiative}}-run1
+council_budget: 600000 # tokens per council round incl. one retry; the council stops and asks above this
+build_review_budget: 200000 # tokens per build or review pass incl. one retry; doc 46's 15,000-character prompt target is separate
+connectors: # present | unauthenticated | absent, as CONFIRMED BY A CALL on {{date}}; required ones must be present before the profile is written
+  notion: present
+  figma: absent
+  glean: present
+  atlassian: present
+  slack: present
+  amplitude: present
+  enterpret: unauthenticated
+  sentry: unauthenticated
+  grafana: present
+  playwright: present
+notion_parent: {{url of the initiative's Notion parent page; every human-facing record publishes under it}}
+updates:
+  tracker: {{jira | notion | both}}   # defaults: engineer/qa jira; pm/em/end-to-end both; designer/researcher notion
+  jira_project: {{KEY | none}}        # required when tracker is jira or both
+  jira_issue: {{KEY-123 | none}}      # optional default epic or ticket
+  notion_parent: {{reuse the notion_parent value above}}
+  tracker_blocked: {{jira | none}}    # jira only while the Atlassian connector is unavailable; use Notion until connected
+tools:
+  claude_code: present
+  codex_cli: {{present|absent}}
+  shunt: {{running|installed|absent}}
+  fabric_studio_clone: {{path|absent}}
+  gh: {{present|absent}}
+  px0: {{<version> | declined <date> | n/a-cloud | n/a-design}} # opt-in for code-review personas; PR review links (doc 20 §8f)
+  docker_rails: {{running|absent}}
+approvals: {} # tickets or links only, never a secret; one key per approved vendor use case. Empty today: Gemini is Glean-only, DeepSeek has no lane.
+models:
+  routes_available: [anthropic, openai] # from the registry status + shunt probe
+  routes_pending: [] # google = glean-only, deepseek = unavailable (registry)
+focus: # what this persona sees first; decisions still go through the council
+  lenses: [{{e.g. design, product}}]
+  gate_owned: {{G2b}}
+  first_command: "{{/harness-council <initiative> design '<branch>'}}"
+onboarded_at: {{ISO date}}

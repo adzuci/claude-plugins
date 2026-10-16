@@ -1,0 +1,112 @@
+# Harness model registry. Read by harness-council and product-harness-init; explained in 32-model-registry.md.
+# ids are what the host resolves; families decide independence; routes say how a host reaches the model.
+version: 2026-10-14
+# context_window: tokens the route can accept; tier P/S/U is the sourcing of that number. selection.by_input_size uses it.
+families:
+  anthropic:
+    models:
+      fable-5-1:  { id: claude-fable-5-1,             tier: frontier, context_window: 200000, cw_tier: U, notes: "most capable GA model; careful literal reviewer" }
+      opus-5-5:   { id: claude-opus-5-5,              tier: frontier, context_window: 200000, cw_tier: U, notes: "deep reasoning, long multi-file; the implementer for complex slices (doc 48 §2)" }
+      sonnet-5-5: { id: claude-sonnet-5-5,            tier: strong,   context_window: 200000, cw_tier: U, notes: "the default implementer (doc 48 §2)" }
+      haiku-4-5:  { id: claude-haiku-4-5-20251001,    tier: cheap,    context_window: 200000, cw_tier: U, notes: "mechanical: routing, scoring, checks" }
+    routes:
+      claude-code: native
+      claude-cli: native
+      codex-cli: unsupported
+  openai:
+    models:
+      gpt-6-astra:  { id: gpt-6-astra,  tier: frontier, efforts: [low, medium, high, xhigh], default_effort: xhigh, context_window: 400000, cw_tier: U, notes: "adversarial review at xhigh; ADR-P2 ERD review 2026-09-18; council adversary + synthesizer 2026-09-19. 400k is the CLAUDE_CODE_MAX_CONTEXT_TOKENS we run with, not a vendor figure" }
+      gpt-5-6-sol:  { id: gpt-5.6-sol,  tier: strong,   efforts: [low, medium, high], default_effort: medium, context_window: 400000, cw_tier: U, notes: "the everyday OpenAI model: PR adversary at medium, research digests at low; Astra is for the decisions that are expensive to get wrong" }
+    effort: "shunt sets effort per route: gpt-6-astra xhigh and gpt-5.6-sol medium; a lens that needs a different effort runs through codex exec with -c model_reasoning_effort=<level>"
+    routes:
+      claude-code: { via: shunt, provider: codex, base_url: "http://127.0.0.1:3001", start: "brew install pleaseai/tap/shunt && brew services start shunt", shell: "export ANTHROPIC_BASE_URL=http://127.0.0.1:3001 in the shell that launches claude" }
+      claude-cli:  { via: shunt, env: [CLAUDE_CODE_DISABLE_UNKNOWN_MODEL_WINDOW_ENFORCEMENT=1, CLAUDE_CODE_MAX_CONTEXT_TOKENS=400000], flags: ["--allowedTools 'Read,Grep,Glob,Bash(git *),Bash(rg *)' for repo access, or --tools '' for excerpt-only", "--max-turns 6", "prompt on stdin"], detach: true, repo_access_verified: 2026-09-19 }
+      codex-cli:   { via: native, effort_flag: "-c model_reasoning_effort=<low|medium|high|xhigh>" }
+    status: wired
+    data_handling: "code and design review approved in leadgenie; anything else needs a use-case approval (doc 13 §4)"
+  glean:
+    assistant_model: unknown   # 2026-09-22: Glean Assistant runs on GPT-5, Claude Sonnet or Gemini per the admin's Model Hub setting (docs.glean.com/administration/llm-key-feature-availability). AI Tooling to confirm; until then a Glean adversary is `independence: unknown`. See reviews/glean-adversary-probe-2026-09-22.md
+    # Third family, reached through Apollo's Glean connector. Apollo has no direct Gemini or DeepSeek account
+    # (decision 2026-09-20); Glean is how their models are used here. Glean chooses the model, so the family is
+    # "glean", the served model is recorded as glean reports it, and it never claims to be Gemini or DeepSeek.
+    models:
+      glean-assistant: { id: glean-assistant, tier: strong, context_window: null, cw_tier: U, notes: "RAG over Slack, Docs, GitHub, Jira, Confluence + web search; the model behind it is Glean's choice" }
+    capabilities:
+      research:   [glean_default.chat, glean_default.search, glean_default.read_document, glean_default.Brave_Actions_web_search]
+      people:     [glean_default.employee_search]
+      image:      [glean_default.create_image, glean_default.edit_image]
+      publish:    [glean_default.upload_artifact (HTML_CODE | PAPER | SLIDE | SPREADSHEET), glean_default.share_artifact]
+      memory:     [glean_default.memory]
+    routes:
+      claude-code: { via: mcp glean_default, status: connected 2026-09-10 }
+      codex-cli:   { via: mcp glean_default, status: "same server; add it to the Codex MCP config" }
+    status: wired
+    independence: "counts as a distinct family for the research and competitive lenses; not for code review (no repository tools)"
+    data_handling: "covered by Apollo's Glean approval; internal documents may be sent; customer PII stays out of prompts"
+  deepseek:
+    # No official account and not offered through Glean: no lane. Placeholder for a future vendor approval.
+    models: {}
+    routes: {}
+    status: unavailable
+hosts:
+  # The framework is host-independent: the same skills run in Claude Code and in Codex. What changes per host is
+  # which family is the base model and which is therefore the "other" family for the adversary.
+  claude-code:
+    base_model_recommended: anthropic/fable-5-1     # onboarding recommends it; the person may keep their current model
+    adversary_family: openai                        # via shunt
+    second_family_setup: "brew install pleaseai/tap/shunt; cp shunt.toml.example ~/.config/shunt/shunt.toml; brew services start shunt; export ANTHROPIC_BASE_URL=http://127.0.0.1:3001 before launching claude; codex login once"
+  codex-cli:
+    base_model_recommended: openai/gpt-6-astra      # effort xhigh for design and review work; medium for routine slices
+    adversary_family: anthropic                     # via `claude -p --model claude-fable-5-1` with read-only tools
+    second_family_setup: "npm i -g @anthropic-ai/claude-code; claude login; lenses run as detached claude -p calls whose input and output are files"
+dispatch:
+  # doc 44: resolve the role, dispatch through the agent whose model matches, never general-purpose for a lens,
+  # then confirm the served model (scripts/served-models.sh for shunt; codex stderr header for codex exec).
+  rule: "role -> agent with matching model: frontmatter -> record served_by; no served evidence = independence: unknown"
+  check: scripts/served-models.sh
+selection:
+  # Pick the model for a discrete call by input size, then by role. Estimate tokens = words × 1.35 (or bytes / 4).
+  by_input_size:
+    rule: "choose the role's primary unless input_tokens > 0.6 × primary.context_window; then the role's long_window alternative; then chunk by file and run the lens per chunk with a merge step; never silently truncate"
+    long_window_preference: [openai/gpt-6-astra, openai/gpt-5-6-sol]   # 400k; above that, chunk (doc 37 §2). No 1M lane exists.
+    log: "write the estimate, the chosen model and the reason into the snapshot frontmatter (produced_by + input_tokens)"
+  independence:
+    rule: "reviewer.family != author.family; synthesizer.family != majority(lens families); otherwise tag independence: same-family. Families: anthropic, openai, glean. Per host, the adversary family is hosts.<host>.adversary_family."
+
+roles:
+  route.labelling:            { primary: anthropic/haiku-4-5 }
+  find.audit.deterministic:   { primary: anthropic/haiku-4-5 }
+  find.audit.contradiction:   { primary: anthropic/opus-5-5 }
+  find.research.codebase:     { primary: anthropic/opus-5-5 }
+  find.research.external:     { primary: glean/glean-assistant, web: glean_default.Brave_Actions_web_search, long_window: openai/gpt-5-6-sol (effort low), corroborate: glean/glean-assistant, output_cap: "each tool result ≤ 4k tokens; write rows to the snapshot after every question (doc 33)" }
+  find.opportunity.ai:        { primary: anthropic/opus-5-5, market_examples: glean/glean-assistant, second_opinion: openai/gpt-5-6-sol (effort medium), agent: product-reviewer (AI-opportunity mode), output: "doc 42 opportunity table + one now/next/never question per row; statuses set only by harness-council decide" }
+  find.opportunity.platform:  { primary: anthropic/opus-5-5, internal_record: glean/glean-assistant, second_opinion: openai/gpt-5-6-sol (effort medium), agent: product-reviewer (platform mode), trigger: "only when the intake's quick sibling check finds the same or a near-same capability elsewhere; otherwise a recorded skip", output: "doc 47 platform table (feature parity / shared flow / shared backend) + one platformize now / do locally and record / never question per row; statuses set only by harness-council decide" }
+  decide.design.peer:         { primary: anthropic/opus-5-5, agent: product-reviewer (peer-design mode), trigger: "prd and design kinds (doc 34 §2b)", output: "peer critique: hierarchy, flow, IA, one alternative per weak screen, consistency with existing Apollo patterns; never rules on constraint rows" }
+  decide.research.ux-evidence: { primary: anthropic/opus-5-5, sources: "doc 16 §6 connectors where reachable (Amplitude, Intercom, Enterpret Wisdom, Gong, Sprig)", agent: product-reviewer (UX-research mode), trigger: "prd and design kinds (doc 34 §2b)", output: "one row per user claim: supporting or contradicting evidence with source, date and tier, or no evidence; reuses the FIND snapshot, never re-runs discovery" }
+  decide.feasibility.engineering: { primary: anthropic/opus-5-5, agent: "initiative <x>-architect / <x>-backend / <x>-frontend owners, else backend-reviewer / frontend-reviewer with explore-leadgenie", trigger: "prd and design kinds (doc 34 §2b)", output: "per requirement or screen: existing models/APIs/components that carry it, size with reason, what is missing, what to cut or stage, one recommendation" }
+  find.research.competitive:  { primary: glean/glean-assistant, web: glean_default.Brave_Actions_web_search, second_opinion: openai/gpt-5-6-sol (effort medium), output: "competitor comparison table + pros/cons + options, doc 34 competitive lens" }
+  decide.specify.analyst:     { primary: anthropic/opus-5-5 }
+  decide.specify.author:      { primary: anthropic/opus-5-5, skill: "/apollo-rnd:prd-one-pager", precondition: "B research + competitive lens snapshots exist" }
+  decide.design.generator:    { primary: anthropic/sonnet-5-5, workbench: "fabric-studio (default) | claude-design | figma-mcp; profile.design_workbench decides" }
+  decide.design.checker:      { primary: anthropic/fable-5-1 }
+  decide.architect:           { primary: anthropic/opus-5-5 }
+  decide.architect.reviewer:  { primary: openai/gpt-6-astra (effort xhigh), fallback: anthropic/fable-5-1, independence: "family != author.family", lens: "doc 17 §6.1 roadmap lens + scale posture" }
+  build.reuse-scan:           { primary: anthropic/sonnet-5-5, agent: implementer (reuse-scan step) or explore-leadgenie, trigger: "every slice and every design, before new code is written (doc 48 §1); skipped only for a one-line fix, with the reason recorded", output: "doc 48 reuse table: need / existing candidate with path / reused, extended or not reused with reason" }
+  build.implement:            { primary: anthropic/sonnet-5-5, agent: implementer, escalate_to: build.implement.complex, escalate_when: "any doc 48 §2 trigger, or two failed attempts on the same slice" }
+  build.implement.complex:    { primary: anthropic/opus-5-5, agent: implementer-complex, trigger: "doc 48 §2: unknown runtime semantics across packs, concurrency or idempotency design, money/consent/deletion, a design-affecting change, or Sonnet failed twice" }
+  build.slice-owner:          { primary: anthropic/sonnet-5-5, agent: implementer, note: "same as build.implement; a slice escalates per doc 48 §2" }
+  build.contract-keeper:      { primary: anthropic/opus-5-5 }
+  build.integrator:           { primary: anthropic/opus-5-5 }
+  review.code.generic:        { primary: anthropic/sonnet-5-5, agents: [backend-reviewer, db-perf], brief: "paste the IP check lines of apollo-infra-patterns.md into the brief (doc 44 §5)" }
+  review.code.security:       { primary: anthropic/fable-5-1, agent: security-reviewer, independence: "family != slice-owner.family OR model != slice-owner.model" }
+  review.code.synthesis:      { primary: anthropic/sonnet-5-5, agent: pr-tech-lead-synthesizer, tools: "Read, Grep, Glob; never writes" }
+  review.infra:               { primary: openai/gpt-6-astra (effort xhigh for erd/plan via shunt; high for pr via codex exec), agent: infra-lens, fallback: anthropic/fable-5-1 tagged same-family, reads: "apollo-infra-patterns.md, platform-rules.md, the ERD Load model (doc 17 §6.2)", added: 2026-10-08 }
+  review.design.cross_family: { primary: openai/gpt-6-astra (effort xhigh), agent: "council-adversary or infra-lens via shunt; codex exec recipe in doc 44 §3", required_for: "every design change: new ERD, ERD version, architecture decision, design-affecting PR change (doc 17 §6.3)", fallback: anthropic/fable-5-1 tagged same-family + human told, added: 2026-10-08 }
+  review.adversary:           { primary: openai/gpt-6-astra (effort xhigh for erd/plan/prd; gpt-5-6-sol effort medium for pr kind), agent: council-adversary, long_window: openai/gpt-6-astra (chunk above 400k), fallback_order_prd_design: "openai via shunt → /codex:adversarial-review → glean/glean-assistant (chat: brief + artifact text, chunk above ~6k words; independence per glean.assistant_model, unknown today) → anthropic/fable-5-1 tagged same-family", fallback_order_erd_plan_pr: "openai via shunt → /codex:adversarial-review → anthropic/fable-5-1 tagged same-family; Glean is NOT an adversary here (head-to-head 2026-09-22: 5 of 10 code-grounded defects, 2 false objections, operator-chosen excerpts) but may be appended as an optional second reading labelled as such", fallback: anthropic/fable-5-1, independence: "family != author.family", repo_access: "yes via the agent file (tools Read/Grep/Glob/Bash through shunt); the detached claude -p path is excerpt-only and is the fallback when shunt is down" }
+  review.compliance.judgment: { primary: human }
+  verify.qa:                  { primary: anthropic/sonnet-5-5 }
+  synthesize.council:         { primary: openai/gpt-6-astra (effort high), agent: council-synthesizer, fallback: anthropic/opus-5-5, independence: "family != majority of lens families when reachable" }
+  corroborate.internal:       { primary: glean/glean-assistant }
+  produce.image:              { primary: glean/glean-assistant, tool: glean_default.create_image, note: "diagrams, mocks, deck images" }
+  produce.publish:            { primary: glean/glean-assistant, tool: glean_default.upload_artifact, note: "HTML dashboards, PAPER docs, SLIDE decks when the audience is outside Claude; Notion stays the record" }
+  produce.notion:             { primary: anthropic/sonnet-5-5, tool: Notion MCP, note: "every human-facing snapshot, memo and gap list (doc 33 mirrors rule)" }

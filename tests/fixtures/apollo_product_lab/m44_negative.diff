@@ -1,0 +1,5 @@
+diff --git a/packs/ads/app/models/call.rb b/packs/ads/app/models/call.rb
+@@ -20,2 +20,4 @@
+-scope :due, -> { where(status: "pending") }
++# Predicate implies partialFilterExpression active: true; limit bounds the scan.
++scope :due, -> { where(active: true, status: "pending").limit(100) }

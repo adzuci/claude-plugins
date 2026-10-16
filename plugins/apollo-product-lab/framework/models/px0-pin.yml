@@ -1,0 +1,10 @@
+# Pinned px0 release for the fetch-and-verify install path in `harness-onboard`.
+# Bump both fields together: fetch the new installer, record its SHA-256 here, and
+# only then ship the bump. Security sign-off is required before first use.
+version: "0.0.0"
+sha256: "0000000000000000000000000000000000000000000000000000000000000000"
+installer_url_template: "https://px0.ai/install/{version}/install.sh"
+notes: |
+  Placeholder values. Replace once Security has signed off on a specific px0 release
+  and recorded its SHA-256. The onboard skill refuses to install if these are left
+  at the zero placeholder; it also refuses on any checksum mismatch.

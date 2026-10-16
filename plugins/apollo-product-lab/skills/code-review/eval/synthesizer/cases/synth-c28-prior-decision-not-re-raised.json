@@ -1,0 +1,57 @@
+{
+  "case_id": "synth-c28-prior-decision-not-re-raised",
+  "category": "prior_decision_citation",
+  "synthesizer_input": {
+    "artifact": {
+      "kind": "pull_request",
+      "id": "apolloio/leadgenie#fixture-c28",
+      "summary": "Author addressed prior REQUEST_CHANGES finding by adding the missing team_id scope.",
+      "diff_url": "fixture://synth-c28"
+    },
+    "sub_agent_outputs": [
+      {
+        "role": "backend-reviewer",
+        "version": "v1.7.0",
+        "verdict": "APPROVE",
+        "confidence": 0.92,
+        "findings": [],
+        "narrative": "Author added team_id scope to Contact.where call."
+      },
+      {
+        "role": "db-perf",
+        "version": "v0.9.3",
+        "verdict": "APPROVE",
+        "confidence": 0.92,
+        "findings": [],
+        "narrative": "Shard-key prefix now present."
+      }
+    ],
+    "feature_memory": {
+      "feature_id": "apolloio/leadgenie#fixture-c28",
+      "prior_decisions": [
+        {
+          "run_id": "pr-review-bot-2026-04-25-abc",
+          "synthesizer_verdict": "REQUEST_CHANGES",
+          "kept_findings": [
+            {
+              "id": "prior_run_finding_42",
+              "rule_id": "M3",
+              "category": "sharded_read_without_shard_key",
+              "file": "packs/contacts/app/services/contact_finder_service.rb",
+              "line": 47,
+              "claim": "Missing team_id prefix on Contact.where"
+            }
+          ],
+          "author_response": "addressed in commit abc1234"
+        }
+      ],
+      "prior_runs_count": 1
+    },
+    "rubric_overrides": []
+  },
+  "expected": {
+    "verdict": "APPROVE",
+    "must_not_include_finding_id": "prior_run_finding_42",
+    "rationale_must_cite_prior": true
+  }
+}

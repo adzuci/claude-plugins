@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Harness delegation ledger record",
+  "description": "One record per delegation. Append-only, one JSON object per line (.jsonl). This is the training signal for outcome-weighted agent selection (14-orchestration.md \u00a78) AND the corpus for replay-eval (Q1). Outcome history cannot be reconstructed retroactively, so record from the first delegation.",
+  "type": "object",
+  "_minimum_write": "A perfect schema that nothing writes to loses to an ugly one that does. REQUIRED is therefore the minimum viable write: trace id, stage/task, producing agent, outcome. Everything else is recommended and can be backfilled \u2014 except run_id/event_id/parent_id, which cannot be reconstructed later and are the reason the trace fields are in the required set at all. Ledger writes on every rejection are a HARD PRECONDITION for running beyond the two-stage pilot: without them this is a pipeline that runs once, not a harness.",
+  "required": [
+    "ts",
+    "run_id",
+    "event_id",
+    "task_class",
+    "agent",
+    "outcome"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the delegation resolved, not when it started."
+    },
+    "run_id": {
+      "type": "string",
+      "description": "One id per harness run, stamped at FIND. Groups every event in the run."
+    },
+    "event_id": {
+      "type": "string",
+      "description": "One id per recorded step. Attribution attaches to an event, not to a stage \u2014 the stage is derived from whoever owned this event."
+    },
+    "parent_id": {
+      "type": "string",
+      "description": "The event this one derives from. Walking parent_id backward from a failing verdict to the earliest event whose output later events consumed unchanged gives the FIRST DIVERGENCE mechanically. This is what converts blame attribution from a judgement into a lookup. MUST be stamped at FIND \u2014 it cannot be reconstructed from rejection text afterwards."
+    },
+    "evidence_available": {
+      "type": "boolean",
+      "description": "Was the evidence needed to avoid this defect present in the stage's inputs? If FALSE this is a harness or contract finding caused by evidence starvation, and it MUST be excluded from agent weighting regardless of attribution \u2014 weighting away from a starved agent is the wrong correction, because the replacement inherits the same starvation. Answerable from the trace rather than by judgement, which is why it supersedes attribution_confidence as the primary exclusion rule."
+    },
+    "initiative": {
+      "type": "string",
+      "description": "Slug matching .ai/<initiative>/. 'harness' for framework-level work."
+    },
+    "task_class": {
+      "type": "string",
+      "pattern": "^([A-H][0-9]?\\.[a-z0-9-]+|RUN\\.[a-z0-9-]+|council\\.[a-z0-9-]+)$",
+      "description": "The routing key, and the aggregation unit. Format <stage>.<work-or-finding-type>, e.g. 'A.mutually-exclusive-claim', 'C.scope-slicing', 'F.slice-implement', 'G.spec-gap'. A free-text value here makes the whole ledger unaggregatable, which is why the pattern is enforced. `council.<slug>` is allowed for harness-council lenses and memos (doc 34)."
+    },
+    "surface": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+(\\.[a-z0-9-]+)*$",
+      "description": "Dotted surface the work was routed on, matching an agent's `surfaces:` entry. Dotted so prefixes are matchable: 'ads.audience-sync' is covered by an agent declaring 'ads'."
+    },
+    "agent": {
+      "type": "string",
+      "description": "Resolved agent name, or 'skill:<name>' when resolution step 1 applied, or 'none' when no delegation was needed. Council lenses use 'council.<lens>'."
+    },
+    "resolution_step": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Which step of the resolution order picked this. Step 5 (new agent proposed) should be rare; a rising share of step 5 is the sprawl warning signal."
+    },
+    "outcome": {
+      "enum": [
+        "resolved-clean",
+        "resolved-after-rejection",
+        "rejected",
+        "escalated",
+        "abandoned"
+      ],
+      "description": "resolved-clean is the only positive weight. 'escalated' means the cycle budget was exhausted."
+    },
+    "cycle": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Iteration number within the current gate. >2 should not occur; the budget is two before escalation."
+    },
+    "rejected_by": {
+      "type": "string",
+      "description": "The gate (G1-G5) or stage that rejected. Distinct from where the rejection was routed."
+    },
+    "routed_to": {
+      "type": "string",
+      "description": "The stage judged to have PRODUCED the defect, per the \u00a75 routing table. Not the stage that found it."
+    },
+    "attribution": {
+      "enum": [
+        "agent-event",
+        "missing-gate",
+        "unknown"
+      ],
+      "description": "What this rejection is attributable to. 'agent-event' \u2014 the agent owning the first-divergence event produced the defect. 'missing-gate' \u2014 a check that would have caught the defect in transit did not exist; this is a HARNESS defect, routed to the harness, and it must not dilute any agent's weight. 'unknown' \u2014 first divergence could not be located, usually meaning the trace is incomplete. Replaces the earlier 'shared' value, which was a modelling artifact of missing instrumentation: what looked like shared blame decomposes into two sole attributions at different layers, and conflating them discarded records that were recoverable."
+    },
+    "exploration": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when the orchestrator deliberately took a non-top candidate. Keeps a worse outcome attributable rather than mysterious, and prevents exploration from being read as a regression."
+    },
+    "human": {
+      "type": "string",
+      "description": "Who adjudicated, when a human gate was involved. Enables tracking per-reviewer approval rate, which is the habituation health metric."
+    },
+    "human_rationale": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "WHY the human decided as they did, not just what they decided. The gates are the reliability backstop and the least-designed surface in the framework: a human arriving at '14 green checks, agents raised nothing' is primed exactly the way the 93pp detection-collapse study describes. Recording rationale makes gate quality reviewable instead of assumed."
+    },
+    "gate_override": {
+      "type": "boolean",
+      "description": "Did the human decide against what the agents recommended? Tracked as a CALIBRATION signal: a near-zero override rate is not evidence of trust, it may be rubber-stamping. This is the human-side twin of 'high inter-reviewer agreement is a warning, not a pass'."
+    },
+    "source_as_of": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "For a finding: the `as_of` of every source it depends on, keyed by artifact id. FIND establishes truth at T; BUILD lands weeks later. This project's own legal register went stale in FOUR DAYS \u2014 verified on the 21st, overtaken by a platform answer on the 25th, still reading 'not yet requested'. A gate re-validates whether these sources moved before proceeding, so DECIDE cannot commit against a FIND that is no longer true."
+    },
+    "model": {
+      "type": "string",
+      "description": "Model actually served, not requested. For Pantheon runs read this from the run.started event, NOT runs.model, which records the request."
+    },
+    "tokens": {
+      "type": "integer",
+      "description": "Output tokens for this delegation. Feeds per-stage cost attribution and the auto-pause caps."
+    },
+    "minutes": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Wall-clock minutes for this delegation, from tool timestamps. With tokens it makes slow build, test, mutation and review loops visible (46-build-and-review-loop-budget.md \u00a76)."
+    },
+    "prompt_chars": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Characters in the prompt sent to a reviewer (wc -c of the brief). Target 15,000 or fewer: the diff, the question and file pointers, no pasted file bodies (doc 46 \u00a75)."
+    },
+    "eval_candidate": {
+      "type": "boolean",
+      "default": false,
+      "description": "True when an earlier stage should have caught this and did not \u2014 e.g. a spec gap surfaced at Verify that Audit missed. These are the highest-value replay-eval cases and the reason the ledger doubles as the eval corpus."
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 1200,
+      "description": "One or two sentences of why. Not a transcript."
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Snapshot paths, URLs, or commits this event rests on. The snapshot path is the one that links doc 33 records to the ledger."
+    }
+  }
+}

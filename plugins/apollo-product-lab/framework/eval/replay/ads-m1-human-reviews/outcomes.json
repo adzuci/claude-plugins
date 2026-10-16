@@ -1,0 +1,2294 @@
+[
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4193644396",
+  "our_reply": "Fixed in ba911be10eb on #107058: `belongs_to :connected_by_user, class_name: 'User'`. The stored field is still connected_by_user_id.",
+  "outcome": "fixed",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4193644396"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4193641795",
+  "our_reply": "Fixed in ba911be10eb on #107058: nil had no meaning, so it is now required. A new connection gets 540 and the update endpoint rejects anything outside 1 to 540.",
+  "outcome": "fixed",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4193641795"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "B25",
+   "IP16"
+  ],
+  "id": "ads-m1-4205503652",
+  "our_reply": "The Label delete hook (label.rb:433) calls ChangeNotifier.list_deleted, which adds the id with $addToSet, pauses the sync if no list is left, and queues a persisted job that re-checks the people who w",
+  "outcome": "unknown",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4205503652"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B23",
+   "IP13"
+  ],
+  "id": "ads-m1-4205503158",
+  "our_reply": "They change at different times. last_run is reset when each run starts (runs.rb:32); latest_result comes from Google's answers, which can land up to a day later, after the next run has started (run_su",
+  "outcome": "unknown",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4205503158"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4193923757",
+  "our_reply": "Fixed in ba911be10eb on #107058: `belongs_to :created_by_user` and `:attested_by_user` (class_name User), and the same for SyncOperation's retried_by_user. Field names are unchanged.",
+  "outcome": "fixed",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4193923757"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B37",
+   "B21"
+  ],
+  "id": "ads-m1-4193996823",
+  "our_reply": "Fixed in ba911be10eb on #107058: is_live is true or unset. Ending and deleting a sync now $unset it, and the model rejects false, same as in_call on the ledger.",
+  "outcome": "fixed",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4193996823"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B23",
+   "IP13"
+  ],
+  "id": "ads-m1-4193999804",
+  "our_reply": "It is the value the Google audience was created with, so a later change to the account setting (which only applies to new audiences) does not change how we time re-uploads for this one. It is nil unti",
+  "outcome": "unknown",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4193999804"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4194014509",
+  "our_reply": "Fixed in ba911be10eb on #107058: `belongs_to :contact`. The batch reads still go through SyncPages.contacts_for with team_id, since the relation reader looks up by _id only.",
+  "outcome": "fixed",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4194014509"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B23",
+   "IP13"
+  ],
+  "id": "ads-m1-4194447032",
+  "our_reply": "A sync can have several lists. on_list_ids tells us whether someone leaving one list or a deleted list must be removed or is still on another (ledger_check.rb:297), and the Members tab shows it.",
+  "outcome": "unknown",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4194447032"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B23",
+   "IP13"
+  ],
+  "id": "ads-m1-4194457744",
+  "our_reply": "No separate run record. Runs.start! makes the id (runs.rb:27) and keeps it in the sync's last_run.run_id, and the run's calls carry it as run_id. The ledger row stores the run that last saw the person",
+  "outcome": "unknown",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4194457744"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B23",
+   "IP13"
+  ],
+  "id": "ads-m1-4194662254",
+  "our_reply": "It is the restart number of the run's Elasticsearch read. The check job stamps it with the run id (ledger_check.rb:427) and ignores writes from an older restart (ledger_check.rb:441). After a complete",
+  "outcome": "unknown",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4194662254"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4194688615",
+  "our_reply": "Fixed in ba911be10eb on #107058: renamed to source (source_cd), so a phone row can use it later. The JSON key is unchanged.",
+  "outcome": "fixed",
+  "overridden": true,
+  "override_reason": "Reply starts with Fixed and describes the rename; later is part of the change rationale.",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4194688615"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "P13"
+  ],
+  "id": "ads-m1-4205503515",
+  "our_reply": "Good point on new teams landing on the top chunk. The catch is the two unique indexes on this table, which must start with the shard key; I want be-platform to confirm they work with a hashed prefix, ",
+  "outcome": "unknown",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4205503515"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B23",
+   "IP13"
+  ],
+  "id": "ads-m1-4194162950",
+  "our_reply": "We do move it: on merge the entry is rewritten onto the surviving contact (change_hooks.rb:160). old_subject_keys is what still matches ledger rows and in-flight calls that hold the merged contact's i",
+  "outcome": "unknown",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4194162950"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B35",
+   "F24",
+   "IP10"
+  ],
+  "id": "ads-m1-4194198006",
+  "our_reply": "Dropping undo_history in this PR. Undo isn't in M1; when we build it, undos will be recorded in UserAction.",
+  "outcome": "declined",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4194198006"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B23",
+   "IP13"
+  ],
+  "id": "ads-m1-4194201136",
+  "our_reply": "changed_at is when the entry last changed, and the pre-send guard reads it. done_at is when every sync of the team confirmed the removal; it is cleared when the entry changes again (opt_out_applier.rb",
+  "outcome": "unknown",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4194201136"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4194185922",
+  "our_reply": "Fixed in ba911be10eb on #107058: renamed to source (source_cd), including the keyword on ChangeNotifier.opt_out.",
+  "outcome": "fixed",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4194185922"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "P10",
+   "P13"
+  ],
+  "id": "ads-m1-4194703533",
+  "our_reply": "Intentional.  These five serve the cross-team sweep jobs (status refresh, reconcile of stuck or ready calls, sends waiting on not_before, expired send locks, and rows still to update).",
+  "outcome": "declined",
+  "pr": 106144,
+  "url": "https://github.com/apolloio/leadgenie/pull/106144#discussion_r4194703533"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B35",
+   "F24",
+   "IP10"
+  ],
+  "id": "ads-m1-4206329039",
+  "our_reply": "I looked. The closest one, sanitize_email_plus_and_dot, strips \"+\" for every domain, but Google only normalizes gmail.com and googlemail.com, so jane+ads@acme.com would hash differently from what Goog",
+  "outcome": "unknown",
+  "pr": 106751,
+  "url": "https://github.com/apolloio/leadgenie/pull/106751#discussion_r4206329039"
+ },
+ {
+  "category": "API contract FE<->BE mismatch",
+  "expected_rules": [],
+  "id": "ads-m1-4205502047",
+  "our_reply": "Yes, that is how Google's REST API works: GAQL takes snake_case field names and the JSON response comes back in lowerCamelCase. We cannot pick either side.",
+  "outcome": "unknown",
+  "pr": 106751,
+  "url": "https://github.com/apolloio/leadgenie/pull/106751#discussion_r4205502047"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4206329891",
+  "our_reply": "Both can be set only when the address is still the vendor's. When someone types a different address, ContactUpsert clears third_party_data_provider_id and waterfall_enriched_at (contact_upsert.rb:1194",
+  "outcome": "unknown",
+  "pr": 106754,
+  "url": "https://github.com/apolloio/leadgenie/pull/106754#discussion_r4206329891"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4206329938",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106754,
+  "url": "https://github.com/apolloio/leadgenie/pull/106754#discussion_r4206329938"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4206329915",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106754,
+  "url": "https://github.com/apolloio/leadgenie/pull/106754#discussion_r4206329915"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B36",
+   "M39",
+   "IP16"
+  ],
+  "id": "ads-m1-4206329886",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106754,
+  "url": "https://github.com/apolloio/leadgenie/pull/106754#discussion_r4206329886"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4206329910",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106754,
+  "url": "https://github.com/apolloio/leadgenie/pull/106754#discussion_r4206329910"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B37",
+   "M30",
+   "M36"
+  ],
+  "id": "ads-m1-4205502249",
+  "our_reply": "Fixed in 2d87d867264 on #107058: order_by(created_at: :asc) in the query, no Ruby sort.",
+  "outcome": "fixed",
+  "pr": 106759,
+  "url": "https://github.com/apolloio/leadgenie/pull/106759#discussion_r4205502249"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4205502292",
+  "our_reply": "Fixed in 2d87d867264 on #107058: the controller only parses the number; the range lives in the model, and a model error on that field still returns invalid_membership_duration_days, which the frontend",
+  "outcome": "fixed",
+  "pr": 106759,
+  "url": "https://github.com/apolloio/leadgenie/pull/106759#discussion_r4205502292"
+ },
+ {
+  "category": "security/permission",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4205502299",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106759,
+  "url": "https://github.com/apolloio/leadgenie/pull/106759#discussion_r4205502299"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "B36",
+   "M39",
+   "IP16"
+  ],
+  "id": "ads-m1-4205502257",
+  "our_reply": "Yes: one call to list the accounts, one per account, and one per manager account for its clients. One unreadable account is skipped and the rest still show (available_accounts.rb:36). If Google refuse",
+  "outcome": "unknown",
+  "pr": 106759,
+  "url": "https://github.com/apolloio/leadgenie/pull/106759#discussion_r4205502257"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4205502284",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106759,
+  "url": "https://github.com/apolloio/leadgenie/pull/106759#discussion_r4205502284"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4205502274",
+  "our_reply": "The tokens are encrypted by the Mongoid field option on save (ad_connection.rb:21), so a raw bulk_write would write them in plain text. It is also only the handful of accounts the user ticked, so I ke",
+  "outcome": "unknown",
+  "pr": 106759,
+  "url": "https://github.com/apolloio/leadgenie/pull/106759#discussion_r4205502274"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4205502262",
+  "our_reply": "It is the race between two connects for the same account: both see no row, both insert, the unique index rejects one. The retry reads again, finds the row the other request made, and updates it instea",
+  "outcome": "unknown",
+  "pr": 106759,
+  "url": "https://github.com/apolloio/leadgenie/pull/106759#discussion_r4205502262"
+ },
+ {
+  "category": "security/permission",
+  "expected_rules": [
+   "S21",
+   "B37"
+  ],
+  "id": "ads-m1-4205502690",
+  "our_reply": "Fixed in 2d87d867264 on #107058: except: [:index, :show], so a new action needs the permission by default.",
+  "outcome": "fixed",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4205502690"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4205502631",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4205502631"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4205502657",
+  "our_reply": "Fixed in 2d87d867264 on #107058: dropped bounded_param. The service is the one check for name, frequency and account id, with the same error codes.",
+  "outcome": "fixed",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4205502657"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4205502665",
+  "our_reply": "Fixed in 2d87d867264 on #107058: create reads the lists once and the response is built from that read.",
+  "outcome": "fixed",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4205502665"
+ },
+ {
+  "category": "naming/readability",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4205502647",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4205502647"
+ },
+ {
+  "category": "API contract FE<->BE mismatch",
+  "expected_rules": [
+   "B43"
+  ],
+  "id": "ads-m1-4205502670",
+  "our_reply": "Added since this commit: each row has lists with id and name (audience_sync_presenter.rb:30), and a deleted list stays in missingListIds.",
+  "outcome": "fixed",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4205502670"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4205502652",
+  "our_reply": "Fixed in 2d87d867264 on #107058: removed, only deleting maps to removing.",
+  "outcome": "fixed",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4205502652"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B35",
+   "F24",
+   "IP10"
+  ],
+  "id": "ads-m1-4206330560",
+  "our_reply": "That's how it is computed, at check time (ledger_check.rb:347), and we keep it because the removal logic needs it once a list is deleted and its id is gone from label_ids. On the Members tab I'd rathe",
+  "outcome": "unknown",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4206330560"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B33",
+   "M37",
+   "IP8"
+  ],
+  "id": "ads-m1-4205502639",
+  "our_reply": "On purpose (ERD 4.6). A deleting sync can still have people in the Google audience until the remove-all call succeeds, so the table shows it as Removing. Only deleted is hidden.",
+  "outcome": "declined",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4205502639"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "B37",
+   "M30",
+   "M36"
+  ],
+  "id": "ads-m1-4205502684",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4205502684"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B37",
+   "M30",
+   "M36"
+  ],
+  "id": "ads-m1-4205502699",
+  "our_reply": "Fixed in 2d87d867264 on #107058: order_by(created_at: :desc) before the limit. Sorting after the limit could also have dropped the newest syncs once the cap bound.",
+  "outcome": "fixed",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4205502699"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B35",
+   "F24",
+   "IP10"
+  ],
+  "id": "ads-m1-4206330549",
+  "our_reply": "I looked at it. MongoSearcher pages with skip and per_page and counts the whole result for every page (base/core.rb:68). A sync's ledger can hold 250,000 rows, so deep pages and the count get slow. He",
+  "outcome": "unknown",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4206330549"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B37",
+   "M30",
+   "M36"
+  ],
+  "id": "ads-m1-4206330575",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106779,
+  "url": "https://github.com/apolloio/leadgenie/pull/106779#discussion_r4206330575"
+ },
+ {
+  "category": "naming/readability",
+  "expected_rules": [
+   "B19",
+   "C7"
+  ],
+  "id": "ads-m1-4194677163",
+  "our_reply": "Done in 509984201d5: added LOAD_STATUS (loading/error/ready) next to useAdsConnections and used it here and in the hook. FE-4/FE-5 reuse it for the audience syncs and members lists.",
+  "outcome": "fixed",
+  "pr": 106832,
+  "url": "https://github.com/apolloio/leadgenie/pull/106832#discussion_r4194677163"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4194680507",
+  "our_reply": "Done in 509984201d5: InfoTooltip is now Fabric IconButton (tertiary, xxsmall) with the Tooltip via renderTooltip, and its scss is gone. In this PR the account settings field uses FormField's help inst",
+  "outcome": "fixed",
+  "pr": 106832,
+  "url": "https://github.com/apolloio/leadgenie/pull/106832#discussion_r4194680507"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4194714981",
+  "our_reply": "Done in 509984201d5: moved to the Fabric Form (useFormStore + FormField/FormSelect/FormInput/FormLayout). Busy comes from formState.isSubmitting, the bad manager id and the backend's invalid_parent_ac",
+  "outcome": "fixed",
+  "pr": 106832,
+  "url": "https://github.com/apolloio/leadgenie/pull/106832#discussion_r4194714981"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "F26"
+  ],
+  "id": "ads-m1-4194713909",
+  "our_reply": "Kept the guard, now on the single busy state (509984201d5): it stops Escape or click-outside from closing the modal while the PATCH is in flight, otherwise the save still lands after the user thinks t",
+  "outcome": "unknown",
+  "pr": 106832,
+  "url": "https://github.com/apolloio/leadgenie/pull/106832#discussion_r4194713909"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "F26"
+  ],
+  "id": "ads-m1-4194738153",
+  "our_reply": "Done in 509984201d5: one state. The ref is not needed: loading/disabled on the Fabric buttons blocks a second click once React commits the click's update, which it does synchronously for discrete even",
+  "outcome": "fixed",
+  "pr": 106832,
+  "url": "https://github.com/apolloio/leadgenie/pull/106832#discussion_r4194738153"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4194778779",
+  "our_reply": "Done in 509984201d5: removed both [class*=...] overrides. The account name is passed to Radio's label as a span with the primary colour, and the indicator keeps Radio's default alignment. Same fix for",
+  "outcome": "fixed",
+  "pr": 106832,
+  "url": "https://github.com/apolloio/leadgenie/pull/106832#discussion_r4194778779"
+ },
+ {
+  "category": "naming/readability",
+  "expected_rules": [
+   "B19",
+   "C7"
+  ],
+  "id": "ads-m1-4194797199",
+  "our_reply": "Done in 509984201d5: stages are a STAGE constant and busy is BUSY_STAGES.has(stage), both at module level.",
+  "outcome": "fixed",
+  "pr": 106832,
+  "url": "https://github.com/apolloio/leadgenie/pull/106832#discussion_r4194797199"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "F26"
+  ],
+  "id": "ads-m1-4194800981",
+  "our_reply": "Removed in 509984201d5, you are right. Closing unmounts the dialog, and the popup hook's cleanup resolves the pending OAuth as cancelled, so nothing runs after unmount. The linking ref went too; the s",
+  "outcome": "fixed",
+  "pr": 106832,
+  "url": "https://github.com/apolloio/leadgenie/pull/106832#discussion_r4194800981"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B35",
+   "F24",
+   "IP10"
+  ],
+  "id": "ads-m1-4198089077",
+  "our_reply": "Switched to `classnames` (the `import classnames from 'classnames'` form already used in FirstPartyExplainer) for every hand-joined class name in packages/ads: FE-3 in 686f7ac2bb6, and the same patter",
+  "outcome": "fixed",
+  "pr": 106844,
+  "url": "https://github.com/apolloio/leadgenie/pull/106844#discussion_r4198089077"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4198103118",
+  "our_reply": "Searched fabric-core/icons (IntentDataIcon, SignalsIcon, ColumnChartIcon), apollo-icons font (intent-data, signals), and assets/packages for buying-intent glyphs. The in-app buying intent bars are `co",
+  "outcome": "unknown",
+  "pr": 106844,
+  "url": "https://github.com/apolloio/leadgenie/pull/106844#discussion_r4198103118"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "F20",
+   "E4"
+  ],
+  "id": "ads-m1-4218799318",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106849,
+  "url": "https://github.com/apolloio/leadgenie/pull/106849#discussion_r4218799318"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "F25"
+  ],
+  "id": "ads-m1-4218799299",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106849,
+  "url": "https://github.com/apolloio/leadgenie/pull/106849#discussion_r4218799299"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "F25"
+  ],
+  "id": "ads-m1-4218799313",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106849,
+  "url": "https://github.com/apolloio/leadgenie/pull/106849#discussion_r4218799313"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "F25"
+  ],
+  "id": "ads-m1-4218799307",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106849,
+  "url": "https://github.com/apolloio/leadgenie/pull/106849#discussion_r4218799307"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "C9",
+   "C1"
+  ],
+  "id": "ads-m1-4218942006",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106856,
+  "url": "https://github.com/apolloio/leadgenie/pull/106856#discussion_r4218942006"
+ },
+ {
+  "category": "naming/readability",
+  "expected_rules": [
+   "B19",
+   "C7"
+  ],
+  "id": "ads-m1-4218941994",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106856,
+  "url": "https://github.com/apolloio/leadgenie/pull/106856#discussion_r4218941994"
+ },
+ {
+  "category": "API contract FE<->BE mismatch",
+  "expected_rules": [
+   "F27"
+  ],
+  "id": "ads-m1-4218941972",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106856,
+  "url": "https://github.com/apolloio/leadgenie/pull/106856#discussion_r4218941972"
+ },
+ {
+  "category": "API contract FE<->BE mismatch",
+  "expected_rules": [
+   "F27"
+  ],
+  "id": "ads-m1-4218941983",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106856,
+  "url": "https://github.com/apolloio/leadgenie/pull/106856#discussion_r4218941983"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4218942003",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106856,
+  "url": "https://github.com/apolloio/leadgenie/pull/106856#discussion_r4218942003"
+ },
+ {
+  "category": "API contract FE<->BE mismatch",
+  "expected_rules": [
+   "F27"
+  ],
+  "id": "ads-m1-4218941987",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106856,
+  "url": "https://github.com/apolloio/leadgenie/pull/106856#discussion_r4218941987"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "C9",
+   "C1"
+  ],
+  "id": "ads-m1-4218942010",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 106856,
+  "url": "https://github.com/apolloio/leadgenie/pull/106856#discussion_r4218942010"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "B27",
+   "IP18"
+  ],
+  "id": "ads-m1-6060257506",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#issuecomment-6060257506"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4222804920",
+  "our_reply": "No. `external_account_id` is the Google Ads customer id of the linked account (a string we get from Google), stored dashed and sent to Google as digits. The Mongo document is the connection itself.",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4222804920"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B37"
+  ],
+  "id": "ads-m1-4222802412",
+  "our_reply": "No. `parent_account_id` is the Google Ads customer id (a string such as `123-456-7890`) of the manager account at Google that this account sits under. It is not a Mongo document, so there is nothing f",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4222802412"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "P13"
+  ],
+  "id": "ads-m1-4222838248",
+  "our_reply": "A team has one connection per Google account it links, so a handful (1 to 5 is typical, 10 would be unusual), and each document is small. One team can never outgrow a chunk, so I kept `team_id` hashed",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4222838248"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "P13"
+  ],
+  "id": "ads-m1-4222848540",
+  "our_reply": "Same reasoning. A team has tens of syncs, a few hundred at the very most, and each document is small (the member rows live in a separate collection). Every query has `team_id`, so keeping one team's s",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4222848540"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "P13"
+  ],
+  "id": "ads-m1-4222855146",
+  "our_reply": "Done in 900a0bff2c4: `team_id` hashed, then `subject_kind_cd` and `subject_key`, the same fields as the unique index. Opt-outs are never deleted, so a big team can collect millions of entries. Single-",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4222855146"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "P13"
+  ],
+  "id": "ads-m1-4222858767",
+  "our_reply": "Done in 900a0bff2c4, with `audience_sync_id` instead of `request_key` and `retry_number`: `team_id` hashed, then `audience_sync_id`. `audience_sync_id` is on every call, and a team's call history grow",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4222858767"
+ },
+ {
+  "category": "concurrency/idempotency",
+  "expected_rules": [
+   "B31",
+   "M35",
+   "IP5"
+  ],
+  "id": "ads-m1-4217173805",
+  "our_reply": "Moved to AdConnection in 19bdc8e8545. calls_day and calls_count are updated with one atomic pipeline update per claimed call (back to one on a later day, plus one otherwise, so a late call stamped jus",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217173805"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B23",
+   "IP13"
+  ],
+  "id": "ads-m1-4219078037",
+  "our_reply": "Fair. I dropped the field in 277b18a303e. It only did real work for the three calls a sync makes once (create the audience, remove all, delete the audience), where the unique index is what stops two r",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4219078037"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4219413829",
+  "our_reply": "It created one record per build. The loop only retried when two builders picked the same upload number and hit a duplicate `request_key`, and builders already take turns per sync under the ledger lock",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4219413829"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B23",
+   "IP13"
+  ],
+  "id": "ads-m1-4219443845",
+  "our_reply": "They answer different questions. `consent` is the current decision for the person with its evidence, and the check rewrites it whenever something changes. `sent_consent` is what we actually told Googl",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4219443845"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4220164375",
+  "our_reply": "Only for counting, and the real request is built again at send time. `seal` now counts people and emails from the call's rows with `SendGuard.counts` (ten emails to a person, as Google allows) without",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4220164375"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "M5",
+   "M15",
+   "B14"
+  ],
+  "id": "ads-m1-4220323203",
+  "our_reply": "A call is capped at 5,000 people (an env setting), so 5,000 to 10,000 rows read 1,000 at a time. Three changes in 277b18a303e: the request is built page by page keeping only each contact's hashes and ",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4220323203"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4214826185",
+  "our_reply": "Fixed in 7cee848a0af: one batch per team.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4214826185"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4214831760",
+  "our_reply": "Fixed in 7cee848a0af: one batch per team.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4214831760"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4214822798",
+  "our_reply": "Fixed in 7cee848a0af: a team's deleted contacts are saved in one batch.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4214822798"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4215197086",
+  "our_reply": "Fixed in 7cee848a0af: the moved entries go in one batch too.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4215197086"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4207458207",
+  "our_reply": "Fixed in 7cee848a0af (on top of a5a1a10cbcc). Each hook now saves a team's opt-outs as one bulk write and one read, and queues one job per 100 entries.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4207458207"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B32",
+   "IP6"
+  ],
+  "id": "ads-m1-4207269280",
+  "our_reply": "Fixed in cb559251264. The hook now compares secondary emails with the copy ContactUpsert keeps before the change, and the two dead keys are gone. Sequence status already has its own hooks in the sched",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4207269280"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B30",
+   "M34",
+   "IP4"
+  ],
+  "id": "ads-m1-4215097335",
+  "our_reply": "Fixed in 7cee848a0af. Since perform_persisted pushes the args to Redis too, I cut each job to 100 ids, for contacts and for opt-out entries, with a spec on the batch size. That keeps the payload small",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4215097335"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4214872640",
+  "our_reply": "Fixed in e9c0e002b0c: every sync of the list is written in one update, the listless ones are paused in one more, and one job walks them.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4214872640"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B27",
+   "IP18"
+  ],
+  "id": "ads-m1-4215132862",
+  "our_reply": "Fixed in b7d78ab716e. The job checks too now: a change job stops, and an opt-out job marks its entries done while keeping them active. The hooks still save the entry for every team, so a sync made lat",
+  "outcome": "fixed",
+  "overridden": true,
+  "override_reason": "Reply starts with Fixed and describes the job change; keeping describes preserved behavior.",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4215132862"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4214877127",
+  "our_reply": "Fixed in e9c0e002b0c, same change: the syncs that lost every list are paused with one update_all.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4214877127"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B29",
+   "M33",
+   "IP3"
+  ],
+  "id": "ads-m1-4217005134",
+  "our_reply": "I kept the sweep starting the runs, because the read slots (two across Apollo) are what bounds starts, and handing them out from one place under the sweep lock is what keeps them safe; a job per sync ",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217005134"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "B33",
+   "M37",
+   "IP8"
+  ],
+  "id": "ads-m1-4217014196",
+  "our_reply": "Done in 7cb9e94ef4c. The due query now filters on status, so only launching and active syncs come back, and pausing or ending a sync clears next_run_at and next_full_check_at, so they leave those inde",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217014196"
+ },
+ {
+  "category": "comments policy",
+  "expected_rules": [
+   "B44"
+  ],
+  "id": "ads-m1-4244980511",
+  "our_reply": "Removed in 9132f3227af. The sentence comes back with the check in #107522.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4244980511"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4207665184",
+  "our_reply": "Fixed in 4de91dc6f38. The claim is one update_many across all the syncs, then one read of the rows that carry our claim id, so two round trips whatever the number of syncs.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4207665184"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4208038202",
+  "our_reply": "Fixed in 4de91dc6f38. Existing rows are claimed once, before the first read; the second step only claims the rows it inserts.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4208038202"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4207928662",
+  "our_reply": "Fixed in 4de91dc6f38, together with the claim above: the missing rows of all syncs go in one bulk write, and one find reads them back.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4207928662"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4208003705",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4208003705"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4208047791",
+  "our_reply": "Fixed in 4de91dc6f38. Only the contacts that just got a row are read again; the rest keep the first read, which was taken after their claim. A normal run reads once. The first run of a new sync still ",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4208047791"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B33",
+   "M37",
+   "IP8"
+  ],
+  "id": "ads-m1-4208088647",
+  "our_reply": "The overwrite is deliberate. When something changes mid-check, the new check takes the claim, and the older check's save no longer matches its claim id, so a stale read can't win. If we skipped rows w",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4208088647"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4208144614",
+  "our_reply": "We only insert rows for contacts on the sync's active lists. A change check can hand us a sync whose lists the contacts have just left and were never in, or a list that was deleted from the sync, or c",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4208144614"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B33",
+   "M37",
+   "IP8"
+  ],
+  "id": "ads-m1-4208228307",
+  "our_reply": "Fixed in 4de91dc6f38. The reread now filters on checking and an unexpired claim, so an expired row is not planned at all, which also stops it promoting a carrier.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4208228307"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4208597066",
+  "our_reply": "Fixed in 4de91dc6f38. The query now excludes the batch's own rows, and Plan gets the rows we already reread under the lock plus the others, so the cap only counts other contacts.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4208597066"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4208576194",
+  "our_reply": "Fixed in 4de91dc6f38: it reads limit + 1 and warns only when it's over.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4208576194"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B35",
+   "F24",
+   "IP10"
+  ],
+  "id": "ads-m1-4217826874",
+  "our_reply": "Done in 8c2eb98a564. `ListScanner#page` now builds `EsSearcher::ContactSearcher` with `current_team_id`, `prospected_by_current_team: 'yes'`, `contact_label_ids`, sorted by `contact_id` asc with no ti",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217826874"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "M41"
+  ],
+  "id": "ads-m1-4217917981",
+  "our_reply": "Removed in 8c2eb98a564. No PIT is opened, kept alive or closed anywhere in ads now (scan state, the preview count worker and the lock comment too). Nothing is held open on the search cluster between p",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217917981"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4221158009",
+  "our_reply": "Agreed. The call status is now `partial_success`, matching Google's `PARTIAL_SUCCESS` (277b18a303e): model, request-status mapping, call rows, run summary, presenter and specs. The run result keeps `p",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4221158009"
+ },
+ {
+  "category": "concurrency/idempotency",
+  "expected_rules": [
+   "B34",
+   "M38",
+   "IP9"
+  ],
+  "id": "ads-m1-4217239243",
+  "our_reply": "No, only the Elasticsearch read is limited: two at once across Apollo and one per team (ERD section 12), to keep open point-in-time readers off the cluster the Lists page uses. Sending, removals and r",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217239243"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4217071940",
+  "our_reply": "Fixed in a449c6bfaca. All the slots' syncs are read in one query now.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217071940"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4217545956",
+  "our_reply": "Yes, it was the same keyset as SyncPages. Fixed in d48f7e29fcd; the search reuses `SyncPages.keyset` now.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217545956"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4217557019",
+  "our_reply": "I looked at it. The page has to give back its last row for the cursor (many rows share one reupload_by, since one call sets them all), so a `$group` would need a `$facet` for that and isn't simpler. T",
+  "outcome": "declined",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217557019"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4217616529",
+  "our_reply": "Fixed in d48f7e29fcd. One query for the syncs and one for their accounts, across teams.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217616529"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4217384724",
+  "our_reply": "Fixed in d48f7e29fcd. One read for all requested catch-ups, one SREM for the ones done.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217384724"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4218417644",
+  "our_reply": "Fixed in 1f2213f5a32. The filter is now one expression, `replaceable_result_filter`: latest_result exists, and its run id is missing or not newer than this run. The nil case is the separate first writ",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4218417644"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4218431854",
+  "our_reply": "Fixed in 1f2213f5a32 and 5ff0a5007af. `finish!` takes the result and writes it in its own update, so refusing a too-large run is one write to the sync (the spec records the commands and expects one `f",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4218431854"
+ },
+ {
+  "category": "concurrency/idempotency",
+  "expected_rules": [
+   "B38"
+  ],
+  "id": "ads-m1-4218242269",
+  "our_reply": "Fixed differently in 8c15167b8d1 and c90a99131b3. The not-seen pass now renews the lock on every page, so a pass longer than 30 minutes keeps it (spec fails without it; a page whose renewal matches no",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4218242269"
+ },
+ {
+  "category": "concurrency/idempotency",
+  "expected_rules": [
+   "B38"
+  ],
+  "id": "ads-m1-4218535183",
+  "our_reply": "Same as 4218242269. Kept in `complete_scan!` for the queue wait before the first page of the pass; each page of the pass renews after that (c90a99131b3, 8c15167b8d1).",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4218535183"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4217261874",
+  "our_reply": "Fixed in a37697c7be4. The sweep ends every sync past its end date in one write before it starts anything.",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217261874"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4214799837",
+  "our_reply": "Fixed in a5a1a10cbcc. It's one find_one_and_update with an upsert now; the pipeline keeps the insert-only fields and only strengthens the reason. The batch path used by the hooks is two bulk writes (u",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4214799837"
+ },
+ {
+  "category": "concurrency/idempotency",
+  "expected_rules": [
+   "B31",
+   "M35",
+   "IP5"
+  ],
+  "id": "ads-m1-4215122494",
+  "our_reply": "It wasn't, good catch. Fixed in e9c0e002b0c: list_deleted rebuilds the watch set, and the rebuild leaves out deleted lists. Whether the team has a sync is now its own marker, so a team whose syncs los",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4215122494"
+ },
+ {
+  "category": "concurrency/idempotency",
+  "expected_rules": [
+   "B38"
+  ],
+  "id": "ads-m1-4221318062",
+  "our_reply": "Good catch, and it was a real bug, though not in the exact case you describe. A call locked a minute ago is safe: reconcile only takes locks that already expired, and an unknown call keeps its rows. T",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4221318062"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B33",
+   "M37",
+   "IP8"
+  ],
+  "id": "ads-m1-4244980506",
+  "our_reply": "Fixed in 9132f3227af: `stale` now filters on `not_before` empty or past in the query, so calls waiting on Retry-After no longer take up the page. Added a spec where a full page of future-dated calls d",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4244980506"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4221280849",
+  "our_reply": "Yes. In 277b18a303e the sweep only finds work: entries whose job looks lost are applied again as before, and the other open entries are grouped by team and queued in bulk as progress jobs of up to 100",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4221280849"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B33",
+   "M37",
+   "IP8"
+  ],
+  "id": "ads-m1-4217136031",
+  "our_reply": "They aren't any more (7cb9e94ef4c). STARTABLE_STATUSES is gone; the sweep only starts syncs that can add, and Runs.start! refuses paused and ended syncs as well.",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217136031"
+ },
+ {
+  "category": "concurrency/idempotency",
+  "expected_rules": [
+   "B34",
+   "M38",
+   "IP9"
+  ],
+  "id": "ads-m1-4217337533",
+  "our_reply": "No. One sweep starts up to two new Elasticsearch reads (the read-slot limit, one per team) and comes back a minute later while syncs are waiting; syncs past their read keep sending in parallel. The li",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217337533"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4217147783",
+  "our_reply": "Kept, with a one-line comment in 6d6fa8d76d3. It's this sync's own run lock, which also covers sending and re-upload runs that hold no read slot; ReadSlots only looks at other syncs' reads. start! tak",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217147783"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B33",
+   "M37",
+   "IP8"
+  ],
+  "id": "ads-m1-4217188947",
+  "our_reply": "After 7cb9e94ef4c every sync that gets here can add (launching or active, flag on, before its end date), so the removal-only case is gone. The check that's left only holds a first run while its Google",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4217188947"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "M41"
+  ],
+  "id": "ads-m1-4218033136",
+  "our_reply": "Done in 8c2eb98a564. Each page reads after the last confirmed `contact_id`. The cursor only moves when job 2 confirms the page, so a retry reads the same page. Without a snapshot: a contact on the lis",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4218033136"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "R14"
+  ],
+  "id": "ads-m1-4218821675",
+  "our_reply": "It does run later, but not through Sidekiq's scheduled set. `perform_persisted_in` saves a `SidekiqPersisted::Event` in MongoDB with `next_attempt_at = now + delay`, and the poller enqueues it when du",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4218821675"
+ },
+ {
+  "category": "naming/readability",
+  "expected_rules": [
+   "B19",
+   "C7"
+  ],
+  "id": "ads-m1-4219252451",
+  "our_reply": "Agreed. Added `Runs::FIRST_KIND` and `Runs::SCHEDULED_KIND` next to `REUPLOAD_KIND` and used them here, in `Runs.kind_for` and in the presenter (277b18a303e).",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4219252451"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B45"
+  ],
+  "id": "ads-m1-4221043018",
+  "our_reply": "Done in 277b18a303e. `Ads::StatusRefreshWorker.enqueue` is the cron entry point (with the transaction trace the cron config spec requires) and `perform(team_id, call_id)` refreshes one call. The produ",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4221043018"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B29",
+   "M33",
+   "IP3"
+  ],
+  "id": "ads-m1-4221061705",
+  "our_reply": "Done in 277b18a303e. The sweep plucks the due call ids, claims them in one conditional `update_all` (still only calls that are sent or unknown and due, moving the next check 10 minutes out and stampin",
+  "outcome": "fixed",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4221061705"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B40"
+  ],
+  "id": "ads-m1-4215268354",
+  "our_reply": "These are the Ads crons for staging, and staging needs them for testing: without them nothing schedules the Ads jobs there. Production has its own entries in production/cron/values.yaml. With the flag",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4215268354"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B40"
+  ],
+  "id": "ads-m1-4206475007",
+  "our_reply": "This one is staging only. It puts the five Ads queues on the shared staging processor so the jobs run there. Production has its own entries in production/sidekiq-workers/values.yaml with dedicated wor",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4206475007"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B41"
+  ],
+  "id": "ads-m1-4223023641",
+  "our_reply": "This is prod, so both are on in 1f1bf87652d. `enforce_privacy: true` needed one public constant: `Ads::ChangeHooks` is the only Ads constant other packs call in production code (crm_platform, email_me",
+  "outcome": "fixed",
+  "overridden": true,
+  "override_reason": "Previously audited as fixed.",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4223023641"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B41"
+  ],
+  "id": "ads-m1-4226080589",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4226080589"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B27",
+   "IP18"
+  ],
+  "id": "ads-m1-4219110259",
+  "our_reply": "Thanks Nithin. `changed?` is false after `save!` because Mongoid clears the dirty state on save, so with the suggestion as written the hook would never fire. That is why the value is read into `defini",
+  "outcome": "unknown",
+  "pr": 107058,
+  "url": "https://github.com/apolloio/leadgenie/pull/107058#discussion_r4219110259"
+ },
+ {
+  "category": "naming/readability",
+  "expected_rules": [
+   "B19",
+   "C7"
+  ],
+  "id": "ads-m1-4227824297",
+  "our_reply": "`SYNC_TO_GOOGLE_ADS_CTA` is exported next to `openSyncToGoogleAds` and used by the cell and bulk bar; `'contacts'` uses `LABEL_MODALITY.contacts` in all three. Fixed in a44200fb42d.",
+  "outcome": "fixed",
+  "pr": 107303,
+  "url": "https://github.com/apolloio/leadgenie/pull/107303#discussion_r4227824297"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4227824305",
+  "our_reply": "Removed. The Ads components take `className` and render nothing when the gate fails, so there is no empty wrapper. Fixed in a44200fb42d.",
+  "outcome": "fixed",
+  "pr": 107303,
+  "url": "https://github.com/apolloio/leadgenie/pull/107303#discussion_r4227824305"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "C9",
+   "C1"
+  ],
+  "id": "ads-m1-4227824290",
+  "our_reply": "Typed: `onSuccess?: (result, createLabelResponse: CreateLabelResponse | undefined)`, cast removed. Fixed in a44200fb42d.",
+  "outcome": "fixed",
+  "pr": 107303,
+  "url": "https://github.com/apolloio/leadgenie/pull/107303#discussion_r4227824290"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "F25"
+  ],
+  "id": "ads-m1-4227824275",
+  "our_reply": "Good catch. `contactCount` is left out now, so the review step uses the preview size. The CSV drawer test stubs a 37-person preview and asserts \"37 contacts\". Fixed in a44200fb42d.",
+  "outcome": "fixed",
+  "pr": 107303,
+  "url": "https://github.com/apolloio/leadgenie/pull/107303#discussion_r4227824275"
+ },
+ {
+  "category": "performance FE",
+  "expected_rules": [
+   "F25"
+  ],
+  "id": "ads-m1-4227824284",
+  "our_reply": "Agreed. The gate keeps its last answer while rows remount and asks again, so the action no longer blinks on page/sort/filter. The kept answer is scoped to the signed-in user, so an in-app logout/login",
+  "outcome": "unknown",
+  "pr": 107303,
+  "url": "https://github.com/apolloio/leadgenie/pull/107303#discussion_r4227824284"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4252135876",
+  "our_reply": "Yes, they'd fail later in Sidekiq retries and then die, so I extended it. `enqueue` now checks every job, and `enqueue_bulk` checks one job of each argument length.",
+  "outcome": "unknown",
+  "pr": 107522,
+  "url": "https://github.com/apolloio/leadgenie/pull/107522#discussion_r4252135876"
+ },
+ {
+  "category": "test quality",
+  "expected_rules": [
+   "B26",
+   "T22",
+   "IP15"
+  ],
+  "id": "ads-m1-4252113277",
+  "our_reply": "Good catch, added a spec for the delayed persisted path (too few args raises, nothing saved).",
+  "outcome": "unknown",
+  "pr": 107522,
+  "url": "https://github.com/apolloio/leadgenie/pull/107522#discussion_r4252113277"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4260160137",
+  "our_reply": "Kept lookup here: it's the package's helper for server enums (sync status, frequency and not-sent reasons use it too). It types the key as a plain string so the fallback isn't dead code under strict T",
+  "outcome": "declined",
+  "pr": 107797,
+  "url": "https://github.com/apolloio/leadgenie/pull/107797#discussion_r4260160137"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B35",
+   "F24",
+   "IP10"
+  ],
+  "id": "ads-m1-4269614086",
+  "our_reply": "Done in 4ff144a: sync creation calls `EnrichmentValidationHelper.validate_waterfall_enrichment`, which checks user permission, team permission, consent (with the new-experience waiver) and that a temp",
+  "outcome": "fixed",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269614086"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B23",
+   "IP13"
+  ],
+  "id": "ads-m1-4269075203",
+  "our_reply": "It is used one line above where you commented, in `consent_key_for`. It makes syncs with enrichment on and off get different keys, so they don't share cached eligibility results (enriched emails are a",
+  "outcome": "unknown",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269075203"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4267703834",
+  "our_reply": "A user can have their own credit limit, set by an admin, and it is computed separately from the team pool (`User#num_lead_credits_remaining`). It can be above or below what the team has left, and with",
+  "outcome": "unknown",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4267703834"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4269564058",
+  "our_reply": "When credits cut a page short, the page sets `stop_error` and the walk ends there (`release!` finishes it), so the cursor isn't read again in this walk. The next run's walk starts from the beginning (",
+  "outcome": "declined",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269564058"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4269791730",
+  "our_reply": "When the claim write fails it is either because the sync stopped adding during the step, or because another worker claimed the page first. The reload tells the two apart: stop in the first case, do no",
+  "outcome": "unknown",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269791730"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4269732906",
+  "our_reply": "Each of those writes is a conditional write fenced on the page's job id or cursor; that's what lets any step be repeated after a crash without spending twice. Merging them would mean one write that ha",
+  "outcome": "unknown",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269732906"
+ },
+ {
+  "category": "concurrency/idempotency",
+  "expected_rules": [
+   "B8",
+   "R10",
+   "R15"
+  ],
+  "id": "ads-m1-4269766396",
+  "our_reply": "Done in 4ff144a, without parsing the string (the job only keeps free text, the error code is lost). On a refused job the walk re-runs the shared pre-flight. If credits are short now, the members go ba",
+  "outcome": "fixed",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269766396"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B23",
+   "IP13"
+  ],
+  "id": "ads-m1-4269721620",
+  "our_reply": "I'd keep this one. The id is generated at claim time and saved in `enrichment_pending` before the job exists, so a crash between creating the job and recording its id can't create a second job and spe",
+  "outcome": "unknown",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269721620"
+ },
+ {
+  "category": "concurrency/idempotency",
+  "expected_rules": [
+   "B8",
+   "R10",
+   "R15"
+  ],
+  "id": "ads-m1-4269808358",
+  "our_reply": "No. It re-queues only when the job never started (`progress` still -1) an hour after it was queued. `EntityProgressJobWorker` takes a lock, then returns if `progress >= 1`, so a duplicate either waits",
+  "outcome": "unknown",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269808358"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "F24",
+   "IP10"
+  ],
+  "id": "ads-m1-4269911264",
+  "our_reply": "Done in 4ff144a: reuses `EligibilityPreview::MISSING_CONTACT_INFORMATION_REASONS`, `Waterfall::Constants::TARGET_FIELDS[:emails]` and `EmailVerifyRequest.pending`.",
+  "outcome": "fixed",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269911264"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4269752458",
+  "our_reply": "It's guarded: `release!` returns early unless `released.modified_count.positive?` (and the walk isn't done), and `advance` checks `moved.modified_count.positive?`. A failed write doesn't queue the nex",
+  "outcome": "declined",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269752458"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "R14"
+  ],
+  "id": "ads-m1-4269914013",
+  "our_reply": "Done in 4ff144a: a page waiting on its job is polled after 1, 2, 5, 15 and 30 minutes, then hourly until the 6 h timeout. The count is kept per page in enrichment_pending, so it survives restarts and ",
+  "outcome": "fixed",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269914013"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4269748490",
+  "our_reply": "Yes. `Handoff` maps EnrichMembersWorker to the check stage, and `from` names the stage that queues the job, not the class. A check-stage worker queuing its own next page passes `Check`; anything else ",
+  "outcome": "unknown",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269748490"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "IP17"
+  ],
+  "id": "ads-m1-4269463102",
+  "our_reply": "Different rows. `enrichable?` looks at one ledger row; a contact can have several rows in a sync (one per source list). This query looks at the contact's other rows, so a contact with a usable email o",
+  "outcome": "unknown",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269463102"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4269439540",
+  "our_reply": "Changed to `row.opted_out == false` in 4ff144a. I kept nil out on purpose: a row with no recorded opt-out value is not enriched, so credits are never spent on an unknown opt-out state. Every row eligi",
+  "outcome": "fixed",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269439540"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B30",
+   "M34",
+   "IP4"
+  ],
+  "id": "ads-m1-4269384803",
+  "our_reply": "Same as the other Ads hand-offs: the persisted queue keeps the step if Redis loses the job, and the walk has no other trigger until the next run. `EventProxyWorker` has `retry: false`, which is why re",
+  "outcome": "unknown",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269384803"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B39"
+  ],
+  "id": "ads-m1-4269907820",
+  "our_reply": "Done in 64f5b7e (no behaviour change): the walk is in `Ads::EnrichmentWalk` (`start`, `stop!`, `step`), the job's create, queue, cancel and state live in `EnrichmentVendorWork`, and `EnrichMembersWork",
+  "outcome": "fixed",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269907820"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "B33",
+   "M37",
+   "IP8"
+  ],
+  "id": "ads-m1-4269605977",
+  "our_reply": "Good catch, done in 4ff144a: the walk uses `Runs.adds_allowed?`, so a sync past its end date or with the feature gate off stops without spending.",
+  "outcome": "unknown",
+  "pr": 107840,
+  "url": "https://github.com/apolloio/leadgenie/pull/107840#discussion_r4269605977"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B35",
+   "F24",
+   "IP10"
+  ],
+  "id": "ads-m1-4269019292",
+  "our_reply": "Checked: the closest is `calculateEstimatedSourceCreditsAnyData` in the enrichment package, but it estimates an expected cost from each source's fill rate, which this step doesn't have. This step show",
+  "outcome": "unknown",
+  "pr": 107869,
+  "url": "https://github.com/apolloio/leadgenie/pull/107869#discussion_r4269019292"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4269000368",
+  "our_reply": "Good call, the hand-built button is gone (a15dbfa). The design (Terrence's step 3) is two side-by-side cards with a title, caption, an icon on the right and a tinted selected state. Neither Fabric Cor",
+  "outcome": "unknown",
+  "pr": 107869,
+  "url": "https://github.com/apolloio/leadgenie/pull/107869#discussion_r4269000368"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-6193886374",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 108134,
+  "url": "https://github.com/apolloio/leadgenie/pull/108134#issuecomment-6193886374"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F28"
+  ],
+  "id": "ads-m1-4284279227",
+  "our_reply": "There's no generic chart-series semantic token: the data-viz ones are feature-specific, and Fabric's charts use the primitive ocean-50, which our stylelint rejects. Kept the links token (ocean-60) and",
+  "outcome": "unknown",
+  "pr": 108134,
+  "url": "https://github.com/apolloio/leadgenie/pull/108134#discussion_r4284279227"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4284233842",
+  "our_reply": "Checked. Fabric's ColumnChart plots one value per bar, but each bar here has to span the range Google reports (e.g. 41-50%), which is a Legal-constrained display. Faking it with a transparent stacked ",
+  "outcome": "unknown",
+  "pr": 108134,
+  "url": "https://github.com/apolloio/leadgenie/pull/108134#discussion_r4284233842"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "B25",
+   "IP16"
+  ],
+  "id": "ads-m1-4284100957",
+  "our_reply": "Fixed in d651708ef16: the connection is marked after fail_launch!. If the worker stops in between, the next run reaches the failed-call branch and ends the sync (new spec).",
+  "outcome": "fixed",
+  "pr": 108148,
+  "url": "https://github.com/apolloio/leadgenie/pull/108148#discussion_r4284100957"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "B25",
+   "IP16"
+  ],
+  "id": "ads-m1-4284093447",
+  "our_reply": "Fixed in d651708ef16: a launching sync shows check_overdue while the unknown-call alert is fresh. Resending an unknown create call stays manual; lost uploads and removals get resent automatically in #",
+  "outcome": "fixed",
+  "pr": 108148,
+  "url": "https://github.com/apolloio/leadgenie/pull/108148#discussion_r4284093447"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "B25",
+   "IP16"
+  ],
+  "id": "ads-m1-4284108229",
+  "our_reply": "2: yes, removal_failed now wins over removing (d651708ef16). 1: clearing removal_error once the sync's removals succeed with nothing still escalated is in the stacked #108197.",
+  "outcome": "unknown",
+  "pr": 108148,
+  "url": "https://github.com/apolloio/leadgenie/pull/108148#discussion_r4284108229"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "B25",
+   "IP16"
+  ],
+  "id": "ads-m1-4284081752",
+  "our_reply": "Fixed in d651708ef16. Launching and paused syncs past their end date now end too; the daily repair ends paused ones, since no run is ever due for them. Creating a sync on the same lists ends a stale l",
+  "outcome": "fixed",
+  "pr": 108148,
+  "url": "https://github.com/apolloio/leadgenie/pull/108148#discussion_r4284081752"
+ },
+ {
+  "category": "repo convention",
+  "expected_rules": [
+   "B35",
+   "F24",
+   "IP10"
+  ],
+  "id": "ads-m1-4284088355",
+  "our_reply": "1: done in d651708ef16, the CRM branch now uses existence_level, and a missing team hides CRM imports. 2: Eligibility loads the team at most once per batch of up to 1,000, and only if the batch has a ",
+  "outcome": "unknown",
+  "pr": 108148,
+  "url": "https://github.com/apolloio/leadgenie/pull/108148#discussion_r4284088355"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B25",
+   "IP16"
+  ],
+  "id": "ads-m1-4284103876",
+  "our_reply": "Fixed in d651708ef16: a capped next run or check is floored at now.",
+  "outcome": "fixed",
+  "pr": 108148,
+  "url": "https://github.com/apolloio/leadgenie/pull/108148#discussion_r4284103876"
+ },
+ {
+  "category": "naming/readability",
+  "expected_rules": [
+   "C9",
+   "C1"
+  ],
+  "id": "ads-m1-4282524915",
+  "our_reply": "Applied in e7041ff.",
+  "outcome": "unknown",
+  "pr": 108160,
+  "url": "https://github.com/apolloio/leadgenie/pull/108160#discussion_r4282524915"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4282538957",
+  "our_reply": "Right, a run makes at most 251 calls, so a truncated read always spans several runs. Simplified to `groups.pop if truncated` in e7041ff.",
+  "outcome": "unknown",
+  "pr": 108160,
+  "url": "https://github.com/apolloio/leadgenie/pull/108160#discussion_r4282538957"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B24",
+   "IP14",
+   "S22"
+  ],
+  "id": "ads-m1-4282549950",
+  "our_reply": "A run that sent nothing leaves no calls, so without this the latest run would be missing (e.g. a run that found no changes, or one that hasn't made its first call yet). Only the latest run is stored o",
+  "outcome": "unknown",
+  "pr": 108160,
+  "url": "https://github.com/apolloio/leadgenie/pull/108160#discussion_r4282549950"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F28"
+  ],
+  "id": "ads-m1-4283809447",
+  "our_reply": "Done in 05edffe29ef.",
+  "outcome": "fixed",
+  "pr": 108169,
+  "url": "https://github.com/apolloio/leadgenie/pull/108169#discussion_r4283809447"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4283944529",
+  "our_reply": "The Fabric empty-states pattern is still in progress with no component behind it yet. This follows its \"no data yet\" guidance (invite to create).",
+  "outcome": "unknown",
+  "pr": 108169,
+  "url": "https://github.com/apolloio/leadgenie/pull/108169#discussion_r4283944529"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4283904927",
+  "our_reply": "List is a role=grid with roving focus for row collections. Each tile is a card with a stats grid and three buttons, so the grid keyboard model would hide those buttons behind arrow keys. Kept the plai",
+  "outcome": "unknown",
+  "pr": 108169,
+  "url": "https://github.com/apolloio/leadgenie/pull/108169#discussion_r4283904927"
+ },
+ {
+  "category": "correctness/logic bug",
+  "expected_rules": [
+   "B26",
+   "T22",
+   "IP15"
+  ],
+  "id": "ads-m1-4283781576",
+  "our_reply": null,
+  "outcome": "unknown",
+  "pr": 108169,
+  "url": "https://github.com/apolloio/leadgenie/pull/108169#discussion_r4283781576"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4283822457",
+  "our_reply": "Fabric's GoogleIcon is single-colour (currentColor); the design uses the four-colour G, Google's brand mark. Will confirm with the designer whether mono is acceptable.",
+  "outcome": "unknown",
+  "pr": 108169,
+  "url": "https://github.com/apolloio/leadgenie/pull/108169#discussion_r4283822457"
+ },
+ {
+  "category": "design-system/Fabric/UI fidelity",
+  "expected_rules": [
+   "F21",
+   "F24"
+  ],
+  "id": "ads-m1-4283955336",
+  "our_reply": "Default Link applies text-body-lg-regular and the secondary colour. This link sits inline in a body-sm sentence in the primary colour, so it uses variant=unstyled plus the colour and underline.",
+  "outcome": "unknown",
+  "pr": 108169,
+  "url": "https://github.com/apolloio/leadgenie/pull/108169#discussion_r4283955336"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "B28",
+   "M32"
+  ],
+  "id": "ads-m1-4282666416",
+  "our_reply": "Yes, it was one write and one job per call. In b92813d81cf it claims all of them in one write and queues one bulk push, like the status sweep. A lost job is picked up by the sweep when the claim expir",
+  "outcome": "unknown",
+  "pr": 108176,
+  "url": "https://github.com/apolloio/leadgenie/pull/108176#discussion_r4282666416"
+ },
+ {
+  "category": "dead code/duplication/over-engineering",
+  "expected_rules": [
+   "B35",
+   "F24",
+   "IP10"
+  ],
+  "id": "ads-m1-4286213671",
+  "our_reply": "Yes, this is the lists-index table. Moved it onto the existing embeddedFieldsConfig path in 7346a7072c6: ListsWrapperPage registers the field behind the ads flag, and it renders through fields.map(tab",
+  "outcome": "fixed",
+  "pr": 108185,
+  "url": "https://github.com/apolloio/leadgenie/pull/108185#discussion_r4286213671"
+ },
+ {
+  "category": "test quality",
+  "expected_rules": [
+   "F29"
+  ],
+  "id": "ads-m1-4286248944",
+  "our_reply": null,
+  "outcome": "fixed",
+  "pr": 108185,
+  "url": "https://github.com/apolloio/leadgenie/pull/108185#discussion_r4286248944"
+ },
+ {
+  "category": "performance FE",
+  "expected_rules": [
+   "F20"
+  ],
+  "id": "ads-m1-4286288529",
+  "our_reply": "Gone in 7346a7072c6. The store was there because Fabric's memoized cells didn't see late data passed from the table level. With the RTK hook inside the cell, each cell subscribes itself and re-renders",
+  "outcome": "unknown",
+  "pr": 108185,
+  "url": "https://github.com/apolloio/leadgenie/pull/108185#discussion_r4286288529"
+ },
+ {
+  "category": "missing-state/edge case",
+  "expected_rules": [
+   "F20",
+   "E4"
+  ],
+  "id": "ads-m1-4286267754",
+  "our_reply": "Added a Fabric Core Skeleton in people-list cells while the page's statuses load, including after a page change, so we never flash the previous page's values (7346a7072c6).",
+  "outcome": "fixed",
+  "pr": 108185,
+  "url": "https://github.com/apolloio/leadgenie/pull/108185#discussion_r4286267754"
+ },
+ {
+  "category": "performance FE",
+  "expected_rules": [
+   "F20"
+  ],
+  "id": "ads-m1-4286283135",
+  "our_reply": "Switched to an RTK Query endpoint injected into apiSlice (7346a7072c6). All cells on a page share one cache key, so it's one request per page, deduped and cached.",
+  "outcome": "fixed",
+  "pr": 108185,
+  "url": "https://github.com/apolloio/leadgenie/pull/108185#discussion_r4286283135"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "M43",
+   "IP2"
+  ],
+  "id": "ads-m1-4294474986",
+  "our_reply": null,
+  "outcome": "fixed",
+  "pr": 108221,
+  "url": "https://github.com/apolloio/leadgenie/pull/108221#discussion_r4294474986"
+ },
+ {
+  "category": "data model/index/query perf",
+  "expected_rules": [
+   "M44",
+   "IP12"
+  ],
+  "id": "ads-m1-4294465092",
+  "our_reply": null,
+  "outcome": "fixed",
+  "pr": 108221,
+  "url": "https://github.com/apolloio/leadgenie/pull/108221#discussion_r4294465092"
+ },
+ {
+  "category": "observability",
+  "expected_rules": [
+   "B46"
+  ],
+  "id": "ads-m1-4294522479",
+  "our_reply": null,
+  "outcome": "fixed",
+  "pr": 108221,
+  "url": "https://github.com/apolloio/leadgenie/pull/108221#discussion_r4294522479"
+ }
+]

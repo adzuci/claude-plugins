@@ -1,0 +1,20 @@
+# ~/.config/shunt/shunt.toml — Claude Code LLM gateway (https://github.com/pleaseai/shunt)
+# Only ids listed under [[routes]] are diverted; every claude-* id passes through to Anthropic.
+# Start: `brew services start shunt`; in the shell that launches Claude Code:
+#   export ANTHROPIC_BASE_URL=http://127.0.0.1:3001
+# Then an agent with `model: gpt-6-astra` in its frontmatter runs on OpenAI via your `codex login`.
+
+[[routes]]
+model = "gpt-6-astra"
+provider = "codex"
+effort = "xhigh"
+
+[[routes]]
+model = "gpt-5.6-sol"     # the everyday OpenAI model for PR adversaries and research digests
+provider = "codex"
+effort = "medium"
+
+[providers.codex]
+
+# Gemini and DeepSeek: no shunt routes. Apollo has no official account with either vendor (decision
+# 2026-09-20); Gemini is reached only through Glean as the internal-record lane. See doc 37 §3.

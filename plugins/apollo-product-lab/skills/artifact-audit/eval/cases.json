@@ -1,0 +1,117 @@
+{
+  "$schema": "../../../../${CLAUDE_PLUGIN_ROOT}/framework/eval/replay/cases.schema.json",
+  "skill": "artifact-audit",
+  "version": "0.1.0-scaffold",
+  "description": "Scaffold, NOT a validated corpus. See caveat below and Q1 in ${CLAUDE_PLUGIN_ROOT}/framework/12-product-harness.md. D4's gate (>=90% activation precision, <=15% FPR over 50 historical PRs) does not map to a document auditor: there is no labelled corpus of artifact sets with known contradictions. Until Q1 is answered these cases test activation and anti-behaviour only, not contradiction recall. This skill must not be promoted to apolloio/claude-plugins on the strength of this file.",
+  "description_match_threshold": 0.6,
+  "cases": [
+    {
+      "id": "artifact-audit-c1-activation-explicit",
+      "input": {
+        "user_message": "audit the docs for ads-builder"
+      },
+      "expected": {
+        "should_activate": true,
+        "reads_config_before_fetching": true,
+        "config_path_resolved": ".ai/ads-builder/document-graph.yml",
+        "deterministic_phases_run_before_model_phase": true,
+        "reports_unreachable_design_artifact": true
+      },
+      "anti_expected": {
+        "compares_undeclared_pairs": false,
+        "spawns_subagent_per_artifact_rather_than_per_edge": false,
+        "silently_skips_unreachable_artifact": false
+      },
+      "trigger_phrases_must_match_one_of": [
+        "audit the docs",
+        "artifact-audit"
+      ],
+      "weight": 1.0
+    },
+    {
+      "id": "artifact-audit-c2-two-quote-rule",
+      "input": {
+        "user_message": "check the PRD against legal for ads-builder"
+      },
+      "expected": {
+        "should_activate": true,
+        "every_finding_has_two_verbatim_quotes": true,
+        "every_finding_has_location_per_quote": true,
+        "reports_authority_and_recency_without_picking_winner": true
+      },
+      "anti_expected": {
+        "emits_finding_without_quotable_evidence": false,
+        "emits_recommendations_or_prioritisation_advice": false,
+        "mutates_source_documents": false,
+        "writes_to_jira": false
+      },
+      "trigger_phrases_must_match_one_of": [
+        "check the PRD against legal",
+        "are these specs consistent"
+      ],
+      "weight": 1.0
+    },
+    {
+      "id": "artifact-audit-c3-clean-set-no-invention",
+      "input": {
+        "user_message": "are these specs consistent? config at .ai/_fixtures/consistent-set/document-graph.yml"
+      },
+      "expected": {
+        "should_activate": true,
+        "reports_no_findings_explicitly": true,
+        "lists_what_was_checked_and_found_clean": true
+      },
+      "anti_expected": {
+        "invents_findings_to_appear_useful": false,
+        "reports_style_or_formatting_as_finding": false,
+        "reports_absence_of_unrequired_section": false
+      },
+      "trigger_phrases_must_match_one_of": [
+        "are these specs consistent"
+      ],
+      "weight": 1.5,
+      "notes": "Highest-weighted case. Over-reporting is the dominant failure mode for review-shaped agents, and a clean-set case is the only way to detect it. Fixture does not exist yet — see Q1."
+    },
+    {
+      "id": "artifact-audit-c4-no-config-asks",
+      "input": {
+        "user_message": "audit the docs for inbound-v2-pricing"
+      },
+      "expected": {
+        "should_activate": true,
+        "asks_for_artifact_set": true
+      },
+      "anti_expected": {
+        "guesses_at_artifact_set": false,
+        "searches_notion_and_assumes_relevance": false
+      },
+      "trigger_phrases_must_match_one_of": [
+        "audit the docs"
+      ],
+      "weight": 1.0,
+      "notes": "No document-graph.yml exists for this initiative. Guessing an artifact set produces a confident audit of the wrong documents, which is worse than refusing."
+    },
+    {
+      "id": "artifact-audit-c5-non-activation",
+      "input": {
+        "user_message": "review my PR for DB perf"
+      },
+      "expected": {
+        "should_activate": false
+      },
+      "anti_expected": {
+        "activates_on_code_review_request": false
+      },
+      "trigger_phrases_must_match_one_of": [],
+      "weight": 1.0
+    }
+  ],
+  "gate": {
+    "status": "not-gating",
+    "reason": "Scaffold only. Activation precision and FPR are measurable from these cases; contradiction recall is not, because no labelled corpus exists. Do not treat a green run here as satisfying D4.",
+    "precision_min": 0.85,
+    "fpr_max": 0.15,
+    "support_min": 5,
+    "blocked_on": "Q1 — define the document-artifact analogue of a replay corpus"
+  }
+}

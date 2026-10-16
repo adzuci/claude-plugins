@@ -1,0 +1,59 @@
+{
+  "case_id": "synth-c20-dbperf-block-be-approve-contradiction",
+  "category": "hard_disagreement",
+  "synthesizer_input": {
+    "artifact": {
+      "kind": "pull_request",
+      "id": "apolloio/leadgenie#fixture-c20",
+      "summary": "Adds new query path on Contact collection without shard-key prefix.",
+      "diff_url": "fixture://synth-c20"
+    },
+    "sub_agent_outputs": [
+      {
+        "role": "backend-reviewer",
+        "version": "v1.7.0",
+        "verdict": "APPROVE",
+        "confidence": 0.82,
+        "findings": [],
+        "narrative": "Service follows pack pattern. Mongoid query is well-formed; uses where with email scope. Sorbet sigil present. Spec covers happy + error path. No backend invariant violations.",
+        "handoff_signals": {
+          "needs_db_perf_review": true
+        }
+      },
+      {
+        "role": "db-perf",
+        "version": "v0.9.3",
+        "verdict": "BLOCK",
+        "confidence": 0.92,
+        "findings": [
+          {
+            "severity": "blocker",
+            "category": "sharded_read_without_shard_key",
+            "rule_id": "M3",
+            "file": "packs/contacts/app/services/contact_finder_service.rb",
+            "line": 47,
+            "claim": "Contact.where(email: x) without team_id prefix on T0 sharded collection — scatter-gather across all shards under load",
+            "evidence": "shard key: { team_id: 1, _id: 1 } per db-indexes/contacts.rb; query is missing team_id",
+            "fix": "Add team_id scope: Contact.where(team_id: team.id, email: x)"
+          }
+        ],
+        "narrative": "T0 collection (contacts: ~12B docs). Shard-key prefix missing. RCA-2024-1842 documents the same anti-pattern caused a P1.",
+        "extras": {
+          "rca_links": ["https://incident.io/rca-2024-1842"],
+          "runtime_links": ["https://grafana/d/mongo-shards"]
+        }
+      }
+    ],
+    "feature_memory": {
+      "feature_id": "apolloio/leadgenie#fixture-c20",
+      "prior_decisions": [],
+      "prior_runs_count": 0
+    },
+    "rubric_overrides": []
+  },
+  "expected": {
+    "verdict": "ESCALATE_HUMAN",
+    "must_render_escalation_payload": true,
+    "escalation_reason_includes": "contradicting hard verdicts"
+  }
+}

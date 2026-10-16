@@ -85,6 +85,7 @@ Weekly OKR update: `/apollo-eng-leadership:okr-report --weekly <team>` (for exam
 | `apollo-growth-product` | Growth product workflows: experiment pitch, design, tracking and results, in-product copy, Jira tickets, and business review reporting | 9 |
 | `ai-overage-admins` | Skills for admins managing engineers' Claude and Codex monthly spend limits | 1 |
 | `herald` | GTM launch package builder: kickoff, brief, positioning, and paid, content, social, and lifecycle artifacts for Apollo PLG launches, scaled by launch tier | 7 |
+| `apollo-product-lab` | Product-development harness: multi-lens council on different model families, deterministic stage snapshots, onboarding per persona. | 11 |
 
 <!-- PLUGIN-INVENTORY-END -->
 

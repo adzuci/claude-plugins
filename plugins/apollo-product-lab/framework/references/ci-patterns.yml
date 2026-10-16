@@ -1,0 +1,18 @@
+{
+  "knapsack_empty_queue": {
+    "patterns": ["\\b0 examples\\b", "ENOENT[^\\n]*knapsack[^\\n]*report", "knapsack[^\\n]*report[^\\n]*ENOENT"],
+    "next": "push a new commit; reruns replay an empty queue"
+  },
+  "sensitive_file_approval": {
+    "patterns": ["sensitive[-_ ]files?", "sensitive_file_approval", "verify-job-runs-on-sensitive-files-approval"],
+    "next": "human approval gate, not a CI failure; ask the owning team"
+  },
+  "policy-bot": {
+    "patterns": ["policy-bot", "policy bot"],
+    "next": "human approval gate, not a CI failure; ask the owning team"
+  },
+  "flaky_known": {
+    "patterns": [],
+    "next": "rerun the check and link the known-flake record"
+  }
+}

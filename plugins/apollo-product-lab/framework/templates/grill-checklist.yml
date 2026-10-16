@@ -1,0 +1,42 @@
+pm:
+  - problem and who has it
+  - success metric
+  - scope out
+  - launch gate
+designer:
+  - user flows covered
+  - states (empty/loading/error/permission)
+  - design-system components
+  - open copy
+engineer:
+  - data model and ownership
+  - failure and retry behaviour
+  - rollout and flag
+  - observability
+  - migration/backfill
+qa:
+  - acceptance criteria
+  - test environments and data
+  - regression scope
+em:
+  - owners per slice
+  - timeline and checkpoints
+  - cross-team dependencies
+  - risk
+researcher:
+  - question
+  - sources
+  - decision the research serves
+end-to-end:
+  - problem and who has it
+  - success metric
+  - scope out
+  - launch gate
+  - data model and ownership
+  - failure and retry behaviour
+  - rollout and flag
+  - observability
+  - migration/backfill
+  - acceptance criteria
+  - test environments and data
+  - regression scope

@@ -1,0 +1,7 @@
+diff --git a/packs/ads/app/workers/sweep.rb b/packs/ads/app/workers/sweep.rb
+@@ -10,2 +10,5 @@
+ records.each do |record|
++  # A zero match is an expected idempotent no-op when another worker won the claim.
++  claimed = Record.where(id: record.id, state: "ready").update_all(state: "sent") == 1
++  Metrics.increment("sweep.claim_miss") unless claimed
+ end

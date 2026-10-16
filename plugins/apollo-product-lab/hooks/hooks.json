@@ -1,0 +1,28 @@
+{
+  "description": "First-run nudge for the product harness, and the pr-ready review gate on PR-readiness gh commands. The session-start script is non-fatal; the pr-ready gate fails closed in block mode and adds a warning in warn mode.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT:-$CLAUDE_PLUGIN_DIR}/scripts/session-start.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT:-$CLAUDE_PLUGIN_DIR}/scripts/pr-ready.py\" --hook",
+            "timeout": 20
+          }
+        ]
+      }
+    ]
+  }
+}

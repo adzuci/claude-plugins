@@ -1,0 +1,16 @@
+{
+  "description": "Storage detection cases for scripts/storage.py detect (framework doc 45 §2). Each case builds the environment it names in a temp directory and expects the storage mode for records and for the profile. Run by tests/test_apollo_product_lab_web_mode.py.",
+  "cases": [
+    {"id": "chat-always-notion", "surface": "claude-ai-chat", "repo": "git+ai", "expected": {"storage": "notion", "profile_store": "notion"}},
+    {"id": "cloud-default-notion", "env": {"CLAUDE_CODE_REMOTE": "true"}, "repo": "git+ai", "expected": {"storage": "notion", "profile_store": "notion", "surface": "claude-code-cloud"}},
+    {"id": "cloud-local-override-with-ai", "env": {"CLAUDE_CODE_REMOTE": "true"}, "repo": "git+ai", "profile_storage": "local", "expected": {"storage": "local", "profile_store": "notion"}},
+    {"id": "cloud-local-override-without-ai", "env": {"CLAUDE_CODE_REMOTE": "true"}, "repo": "git", "profile_storage": "local", "expected": {"storage": "notion", "profile_store": "notion"}},
+    {"id": "terminal-harness-repo", "repo": "git+ai", "expected": {"storage": "local", "profile_store": "local", "surface": "terminal"}},
+    {"id": "terminal-bare-repo", "repo": "git", "expected": {"storage": "local", "profile_store": "local"}},
+    {"id": "terminal-no-repo-goes-to-notion", "repo": "none", "expected": {"storage": "notion", "profile_store": "local"}},
+    {"id": "terminal-notion-override", "repo": "git+ai", "profile_storage": "notion", "expected": {"storage": "notion", "profile_store": "local"}},
+    {"id": "terminal-local-override-without-repo", "repo": "none", "profile_storage": "local", "expected": {"storage": "notion"}},
+    {"id": "home-not-writable", "repo": "git+ai", "home_writable": false, "expected": {"storage": "local", "profile_store": "notion"}},
+    {"id": "desktop-code-tab", "surface": "desktop-code", "repo": "git+ai", "expected": {"storage": "local", "profile_store": "local", "skip_mentions": "fabric-studio"}}
+  ]
+}

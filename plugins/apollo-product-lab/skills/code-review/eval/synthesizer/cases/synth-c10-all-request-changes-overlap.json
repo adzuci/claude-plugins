@@ -1,0 +1,65 @@
+{
+  "case_id": "synth-c10-all-request-changes-overlap",
+  "category": "agreement",
+  "synthesizer_input": {
+    "artifact": {
+      "kind": "pull_request",
+      "id": "apolloio/leadgenie#fixture-c10",
+      "summary": "Adds new component with hardcoded English strings; both FE and BE flag i18n.",
+      "diff_url": "fixture://synth-c10"
+    },
+    "sub_agent_outputs": [
+      {
+        "role": "frontend-reviewer",
+        "version": "v2.1.0",
+        "verdict": "REQUEST_CHANGES",
+        "confidence": 0.88,
+        "findings": [
+          {
+            "severity": "major",
+            "category": "i18n",
+            "rule_id": "F-i18n-1",
+            "file": "assets/app/components/foo/Foo.tsx",
+            "line": 42,
+            "claim": "Hardcoded English string in JSX; not wrapped in <FormattedMessage>",
+            "evidence": "<button>Save changes</button>",
+            "fix": "Wrap with <FormattedMessage id... /> and add to .messages.ts"
+          }
+        ],
+        "narrative": "One i18n violation; standard fix."
+      },
+      {
+        "role": "backend-reviewer",
+        "version": "v1.7.0",
+        "verdict": "REQUEST_CHANGES",
+        "confidence": 0.85,
+        "findings": [
+          {
+            "severity": "major",
+            "category": "i18n",
+            "rule_id": "B-i18n-1",
+            "file": "assets/app/components/foo/Foo.tsx",
+            "line": 43,
+            "claim": "Hardcoded user-facing string at Foo.tsx:43",
+            "evidence": "<span>Save changes</span> equivalent on adjacent line",
+            "fix": "Use FormattedMessage"
+          }
+        ],
+        "narrative": "Cross-cutting i18n nit on the same file flagged by FE."
+      }
+    ],
+    "feature_memory": {
+      "feature_id": "apolloio/leadgenie#fixture-c10",
+      "prior_decisions": [],
+      "prior_runs_count": 0
+    },
+    "rubric_overrides": []
+  },
+  "expected": {
+    "verdict": "REQUEST_CHANGES",
+    "confidence_min": 0.80,
+    "findings_kept_count": 1,
+    "findings_dropped_count": 1,
+    "must_consolidate": true
+  }
+}

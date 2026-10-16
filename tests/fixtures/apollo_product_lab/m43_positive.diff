@@ -1,0 +1,5 @@
+diff --git a/packs/ads/app/services/bulk_archive.rb b/packs/ads/app/services/bulk_archive.rb
+@@ -4,2 +4,4 @@
+ ids.each do |id|
++  Record.where(id: id, state: "ready").update_one(archived: true)
+ end

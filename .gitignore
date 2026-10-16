@@ -15,3 +15,6 @@ repowise-*.sha256
 
 # machine-local MCP registration (contains absolute paths); force-add if a shared one is ever agreed
 .mcp.json
+# the harness plugin ships a credential-free connector list (remote OAuth servers only)
+!plugins/apollo-product-lab/.mcp.json
+/dist/
