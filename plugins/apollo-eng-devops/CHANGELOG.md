@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.7.0...apollo-eng-devops-v1.8.0) (2026-10-16)
+
+
+### Features
+
+* add DevOps office-hours skill ([#129](https://github.com/apolloio/claude-plugins/issues/129)) ([cfb4b58](https://github.com/apolloio/claude-plugins/commit/cfb4b58ea20afc1bb68c4367b60d6d2b0b8723a4))
+
 ## [1.7.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.6.0...apollo-eng-devops-v1.7.0) (2026-10-12)
 
 
