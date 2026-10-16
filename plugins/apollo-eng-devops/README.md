@@ -28,6 +28,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 | `/apollo-eng-devops:mongo-specialist` | Shared Apollo MongoDB operations context: clusters, channels, TapData, consult targets, and read-only commands |
 | `/apollo-eng-devops:mute-alert` | Create, verify, and expire time-boxed Grafana alert silences for planned maintenance |
 | `/apollo-eng-devops:news-feed` | Weekly vendor announcement triage for DevOps-relevant AI, security, observability, platform, and infrastructure changes |
+| `/apollo-eng-devops:office-hours` | Draft DevOps office-hours announcements and transcript-backed recap proposals for #xfn-h-devops |
 | `/apollo-eng-devops:oncall` | DevOps + Platform PagerDuty schedule, review, swap, and override companion |
 | `/apollo-eng-devops:oncall-handoff` | Daily or weekly DevOps PD handoff focused on the outgoing caller's on-call shift |
 | `/apollo-eng-devops:sidekiq-worker-specialist` | Tune Sidekiq worker Helm values — max_workers, resources, autoscaling |
@@ -51,6 +52,7 @@ These skills are designed to be enabled simultaneously. Each skill handles a dom
 - **Live Mongo incident**: `mongo-specialist` (live-incident-mode) + `incident-response` for SEV/comms
 - **Mongo index creation**: `create-mongo-index` + `mongo-specialist` for shared cluster/channel context
 - **Mongo operations lookup**: `mongo-specialist` + the narrower Mongo skill for the task
+- **Office-hours recap**: `office-hours` + `devops` (for reliability framing)
 - **Architecture design review**: `devops` (design review path)
 - **Postmortem writing**: `incident-response`
 - **Elasticsearch latency investigation**: `/apollo-eng-devops:es-specialist` + `devops` for cluster context
@@ -75,6 +77,7 @@ the actual prompt, so a differently-worded question may route elsewhere.
 | "Review unassigned production incidents" | — | `/apollo-eng-devops:incident-triage` |
 | "Who is on DevOps on-call next week?" | — | `/apollo-eng-devops:oncall` |
 | "Run a MongoDB failover tabletop" | — | `/apollo-eng-devops:gameday` |
+| "Draft a DevOps office-hours recap for #xfn-h-devops" | — | `/apollo-eng-devops:office-hours` |
 | "I'm paged for Mongo::Error::NoServerAvailable right now" | incident-response and/or systematic-debugging | `/apollo-eng-devops:mongo-specialist` (live-incident-mode) |
 | "Is the main Mongo cluster healthy? A Mongo host restarted" | — | `/apollo-eng-devops:check-mongo main` |
 | "Plan creating a Mongo index on LoginAttempt" | — | `/apollo-eng-devops:create-mongo-index` |
@@ -104,6 +107,8 @@ the actual prompt, so a differently-worded question may route elsewhere.
 **`check-cloudflare`** — Invoke directly as `/apollo-eng-devops:check-cloudflare` when checking Cloudflare edge health, bot/challenge behavior, throughput/errors, Workers, or cloudflared tunnel health during incidents or routine reviews. Pair with `grafana-observability` when the finding should feed dashboard, alert, SLO, or runbook improvements.
 
 **`logs-ingestion-rate`** — Invoke directly via `/apollo-eng-devops:logs-ingestion-rate` for Grafana Cloud logs ingestion spikes or alert `eetj859g01kw0f`. Confirms applicability first, then attributes log volume and recommends whether the alert should be tuned.
+
+**`office-hours`** — Invoke directly when drafting DevOps office-hours announcements or when summarizing office-hours notes/transcripts into a proposed `#xfn-h-devops` update. It drafts and proposes only; Slack posting requires explicit review approval.
 
 **`incident-response`** — Enable when declaring an incident, running a war room, writing stakeholder comms, or conducting a postmortem. Provides severity model, comms templates, and blameless postmortem structure.
 
