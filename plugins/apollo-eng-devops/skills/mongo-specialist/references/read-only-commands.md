@@ -14,6 +14,17 @@ kubectl run <YOUR-NAME>-rails-api --rm -it --restart=Never -n leadgenie \
   --overrides="$(kubectl get deployment rails-api -n leadgenie -o json | jq '.spec.template.spec | {spec:{serviceAccountName: "rails",serviceAccount: "rails", containers: [{name: "rails-api", image: .containers[0].image, env: .containers[0].env, volumeMounts: .containers[0].volumeMounts, command:["./bin/rails", "console"], stdin: true, stdinOnce: true, tty: true}], volumes: .volumes}}')"
 ```
 
+## Non-interactive Rails runner output
+
+Rails boot logs bury stdout JSON. Write a tagged line to `$stderr`; use Bash process
+substitution to keep other runner output visible on stderr and preserve the runner's exit
+status:
+
+```bash
+bin/rails runner '$stderr.puts("IDXCHECK " + { est: LoginAttempt.estimated_count }.to_json)' \
+  2> >(awk '/^IDXCHECK / { print; next } { print > "/dev/stderr" }')
+```
+
 ## Model, collection, database, cluster
 
 Run inside Rails console:
@@ -41,6 +52,13 @@ for it:
 
 ```ruby
 LoginAttempt.count
+```
+
+No-exec size proxy via Grafana (Prometheus). Aggregate, since the label set includes
+`instance`, `role`, and `workload`. Chunk count is a rough proxy, not a document count:
+
+```promql
+max by (cluster, database, collection) (mongodb_shards_collection_chunks_count{collection=~".*<name>.*"})
 ```
 
 ## Index existence
