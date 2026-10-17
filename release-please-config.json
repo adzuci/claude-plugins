@@ -115,6 +115,22 @@
         }
       ]
     },
+    "plugins/apollo-eng-fraud": {
+      "release-type": "simple",
+      "component": "apollo-eng-fraud",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": ".claude-plugin/plugin.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": ".codex-plugin/plugin.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    },
     "plugins/apollo-eng-leadership": {
       "release-type": "simple",
       "component": "apollo-eng-leadership",

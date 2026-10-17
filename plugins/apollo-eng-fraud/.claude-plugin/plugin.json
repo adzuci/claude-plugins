@@ -1,0 +1,7 @@
+{
+  "name": "apollo-eng-fraud",
+  "displayName": "Apollo Engineering Fraud",
+  "version": "1.0.0",
+  "description": "Fraud/abuse-ring investigation skills for Apollo engineering — track blocked-domain abuse rings over time and identify+block new ones with an evidence-backed PR proposal.",
+  "license": "UNLICENSED"
+}

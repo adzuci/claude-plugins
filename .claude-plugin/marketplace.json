@@ -27,6 +27,13 @@
       "tags": ["claude-code", "operations", "claudathon"]
     },
     {
+      "name": "apollo-eng-fraud",
+      "source": "./plugins/apollo-eng-fraud",
+      "description": "Fraud/abuse-ring investigation skills for Apollo engineering — track blocked-domain abuse rings over time and identify+block new ones with an evidence-backed PR proposal",
+      "category": "engineering",
+      "tags": ["claude-code", "engineering", "fraud", "security"]
+    },
+    {
       "name": "apollo-eng-leadership",
       "source": "./plugins/apollo-eng-leadership",
       "description": "Cowork skills for engineering leadership and customer-care rotation support",

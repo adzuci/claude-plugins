@@ -1,0 +1,15 @@
+{
+  "name": "apollo-eng-fraud",
+  "version": "1.0.0",
+  "description": "Fraud/abuse-ring investigation skills for Apollo engineering — track blocked-domain abuse rings over time and identify+block new ones with an evidence-backed PR proposal.",
+  "repository": "https://github.com/apolloio/claude-plugins",
+  "license": "UNLICENSED",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Apollo Engineering Fraud",
+    "shortDescription": "Fraud/abuse-ring investigation skills for Apollo engineering",
+    "developerName": "Apollo",
+    "category": "Engineering",
+    "brandColor": "#1F2937"
+  }
+}
