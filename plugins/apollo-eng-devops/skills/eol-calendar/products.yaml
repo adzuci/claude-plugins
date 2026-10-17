@@ -1,0 +1,136 @@
+# What Apollo runs, per product. Dates come from endoflife.date (slug) unless
+# overridden with start/end here. Mark `running: true` for versions in prod/stage
+# today, `planned: true` for committed upgrade targets. Update when upgrades land.
+# Inventory last verified 2026-10-14: Cloud SQL from live `gcloud sql instances list`
+# (prod, stage, ops, ai-tooling, data platform; other projects had no Cloud SQL API or no access),
+# GKE from the cluster inventory, OS from the VM log, languages from leadgenie master.
+# Mark `running: true` only with evidence from a live system or a repo that ships to prod.
+# The verification date records historical evidence; re-check it before relying on current state.
+chart:
+  sheet_name: Support Windows
+  start_year: 2025
+  end_year: 2029
+
+products:
+  - name: Ubuntu
+    slug: ubuntu
+    color: "#d95f2b"
+    versions:
+      - {cycle: "20.04", running: true, note: "data-catalog may have upgraded to 24.04 while the base image stays stale; verify on the VM. Mail servers moved to 24.04.", source: "gcloud compute instances list 2026-10-15", tickets: [INFRA-1869, INFRA-1835], state: "UNKNOWN"}
+      - {cycle: "22.04", running: true, note: "~500 VMs across projects (VM log dated 2026-03-27, not re-counted live)", source: devops/gcp_instances_os_versions.log}
+      - {cycle: "24.04", running: true, note: "~430 VMs (2026-03-27 log); Pritunl nodes, mail-server-*-v2", source: devops/gcp_instances_os_versions.log}
+      - {cycle: "26.04"}
+
+  - name: Debian
+    slug: debian
+    color: "#a81d33"
+    versions:
+      - {cycle: "11", running: true, note: "bastion-prod (apollo-data-platform-prod) and bastion-stg (databricks-apolloio), both running; a stopped ad-hoc VM also uses it", source: "gcloud compute instances list 2026-10-15", tickets: []}
+      - {cycle: "12", running: true, note: "scratchpad + 1 stage VM; bookworm base images", source: devops/gcp_instances_os_versions.log}
+      - {cycle: "13", tickets: []}
+
+  - name: GKE
+    slug: google-kubernetes-engine
+    color: "#1a73e8"
+    versions:
+      - {cycle: "1.33"}
+      - {cycle: "1.34", running: true, label: "1.34 (1.34.11)", note: "Only the 3 Redpanda-managed clusters (apollo-cdc x2, apollo-hermes-prod); standard support ended 2026-10-01. Redpanda Cloud (BYOC) likely controls their upgrades (unconfirmed). INFRA-1953 is Closed and does not mention them", source: wiki/sre/gke-cluster-inventory.md}
+      - {cycle: "1.35", running: true, label: "1.35 (1.35.6)", note: "prod, ops, staging, mimir, kafka-connect, ai-tooling; 1.35.8 on databricks; older terraform min_master_version pins (1.27) are stale. INFRA-1953 (1.35+) is Closed; INFRA-2282 (1.36+) tracks the next upgrade", source: wiki/sre/gke-cluster-inventory.md 2026-10-05, tickets: [INFRA-2282]}
+      - {cycle: "1.36", running: true, label: "1.36 (1.36.4)", note: "agent-platform cluster only (REGULAR channel)", source: wiki/sre/gke-cluster-inventory.md}
+
+  - name: MongoDB
+    slug: mongodb
+    color: "#13aa52"
+    versions:
+      - {cycle: "6.0", running: true, label: "6.0 (6.0.27)", note: "Main cluster + Pritunl backend; EOL'd 2025-07-31", source: INFRA-1528, tickets: [INFRA-1528, INFRA-1958]}
+      - {cycle: "7.0", planned: true, note: "Target; 7.0.43 images built, staging validation INFRA-1958", source: INFRA-1958, tickets: [INFRA-1528, INFRA-1958]}
+      - {cycle: "8.0"}
+
+  - name: PostgreSQL
+    slug: postgresql
+    color: "#336791"
+    versions:
+      - {cycle: "13", running: true, note: "cdc-iceberg-catalog (apollo-data-platform-prod, databricks-apolloio); the only 13 found live", source: "gcloud sql instances list 2026-10-14"}
+      - {cycle: "15", running: true, note: "ds-adoption-db (stage-23704)", source: "gcloud sql instances list 2026-10-14"}
+      - {cycle: "16", running: true, note: "ai-tooling (ai-apps, pantheon), data platform (dapi, data-platform, astro-cloudsql)", source: "gcloud sql instances list 2026-10-14"}
+      - {cycle: "17"}
+      - {cycle: "18", running: true, note: "airbyte-pgsql (prod + stage), ops-pgsql", source: "gcloud sql instances list 2026-10-14"}
+
+  - name: Redis
+    slug: redis
+    color: "#b71c1c"
+    versions:
+      - {cycle: "8.2", running: true, note: "Redis Cloud redis-cache (prod + staging); upgraded from 6.2", source: INFRA-1855}
+      - {cycle: "7.2", running: true, label: "7.2 (self-hosted)", note: "redis-db, redis-db-replica, redis-ratelimiter VMs: devops ansible/playbooks/prod/*.yml pin 7.2.12 (desired state; live version not checked). Notion records a 6.2.16 to 7.2.12 upgrade plan. Sidekiq Redis is being replaced by Dragonfly (INFRA-1776).", source: "devops ansible/playbooks/prod/redis-db.yml; INFRA-1776", tickets: [INFRA-1776, INFRA-2262]}
+
+  - name: Dragonfly
+    color: "#e0457b"
+    versions:
+      - {cycle: "cloud", unverified: true, state: "NO EOL", label: "Cloud BYOC (staging)", note: "Dragonfly Cloud BYOC in project apollo-dragonfly; the staging datastore backs leadgenie's staging Sidekiq Redis (leadgenie#106319). Dragonfly Cloud manages the server version, which is not recorded in Terraform; prod is not provisioned yet. Check the Dragonfly Cloud console and record it.", source: "devops terraform/gcp/apollo-dragonfly/README.md"}
+
+  - name: Elasticsearch
+    slug: elasticsearch
+    color: "#00a9a5"
+    versions:
+      - {cycle: "8.15", unverified: true, state: "LIKELY EOL", label: "8.15 (Siren 8.15.3)", note: "Siren Federate 8.15.3-37.3 pins the ES version. endoflife.date has no 8.15 row, but 8.16-8.18 are all EOL, so 8.15 is out of Elastic support. Confirm with Siren. Client gem is 7.17.11.", source: "Slack #devops Siren thread", tickets: []}
+      - {cycle: "8.19"}
+      - {cycle: "9.0"}
+
+  - name: Ruby
+    slug: ruby
+    color: "#cc342d"
+    versions:
+      - {cycle: "3.3"}
+      - {cycle: "3.4", running: true, label: "3.4 (3.4.9 master)", note: "leadgenie master .ruby-version 3.4.9; PLAT-1370 history reverted to 3.4.4 once", source: leadgenie}
+      - {cycle: "4.0"}
+
+  - name: Rails
+    slug: rails
+    color: "#7a1f1f"
+    versions:
+      - {cycle: "7.1", running: true, label: "7.1 (7.1.6)", note: "leadgenie Gemfile.lock; Rails 7.1 is past EOL and no 7.2/8.x upgrade ticket exists. Mongoid 8.1.5 blocks it (needs Mongoid 9 for Rails 8.1); a rough estimate is L, ~2 engineers for 3-5 months", source: leadgenie, tickets: []}
+      - {cycle: "7.2"}
+      - {cycle: "8.0"}
+      - {cycle: "8.1"}
+
+  - name: Python
+    slug: python
+    color: "#d4a900"
+    versions:
+      - {cycle: "3.10", running: true, note: "devops ansible/docker/ci", source: devops, tickets: [INFRA-2279]}
+      - {cycle: "3.11", running: true, note: "Cloud Functions (e.g. kandji orchestrator)", source: Glean}
+      - {cycle: "3.12", note: "Glean mentions 3.12 in some services; not verified, so not marked running", source: Glean}
+      - {cycle: "3.13"}
+
+  - name: Node
+    slug: nodejs
+    color: "#2e7d32"
+    versions:
+      - {cycle: "20", running: true, note: "GitHub Actions still on Node 20; INFRA-1853 epic is To Do and unstarted (GitHub forces Node 24 from 2026-06-02)", source: INFRA-1853, tickets: [INFRA-1853, INFRA-1956]}
+      - {cycle: "22"}
+      - {cycle: "24", running: true, label: "24 (24.4.1)", note: "leadgenie .nvmrc", source: leadgenie}
+
+  - name: Rust
+    slug: rust
+    color: "#8d4a1f"
+    versions:
+      - {cycle: "1.98", running: true, state: "ROLLING", label: "1.98 (1.98.1)", note: "Pinned in apollo-brain/indexing rust-toolchain.toml. Rust has no long support window: each release is supported ~6 weeks, so only the newest is supported. Other Rust repos: engineering-portal (Tauri), hermes-local (Tauri), apollo-map backend (edition 2024), sidekiq-benchmark (rust:1-alpine, floating tag). Local clones only; no production Rust workload confirmed.", source: "apolloio repos Cargo.toml / rust-toolchain.toml 2026-10-15"}
+      - {cycle: "1.99"}
+
+  - name: Terraform
+    slug: terraform
+    color: "#7b42bc"
+    versions:
+      - {cycle: "1.14", running: true, label: "1.14 (1.14.7)", note: "devops CLAUDE.md pin; modules allow >= 1.5.2", source: devops CLAUDE.md, tickets: []}
+
+  - name: Ansible core
+    slug: ansible-core
+    color: "#2b2b2b"
+    versions:
+      - {cycle: "2.17", running: true, label: "2.17 (Ansible 10.6.0)", note: "devops CLAUDE.md pin", source: devops CLAUDE.md, tickets: []}
+      - {cycle: "2.18"}
+
+  - name: Pritunl
+    color: "#5c6bc0"
+    versions:
+      - {cycle: "server", unverified: true, state: "NO EOL", label: "server (pritunl-2: v1.32.4512.98)", note: "pritunl-2 reported v1.32.4512.98 by Hari on 2026-10-15 (INFRA-1755 target was 1.32.4400.99). pritunl-0 and pritunl-1 versions not confirmed; run `pritunl version` on each. INFRA-1755 is Completed (2026-02-02) but its text covers pritunl-0 at v1.30.3354.99, not pritunl-2. Pritunl publishes no EOL dates (upstream supports latest only). 3 nodes on Ubuntu 24.04, Mongo 6.0.27 backend.", source: "Slack #devops 2026-10-15; INFRA-1755; terraform/gcp/prod/pritunl/README.md", tickets: [INFRA-1755]}

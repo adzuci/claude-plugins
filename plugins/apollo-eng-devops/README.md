@@ -18,6 +18,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 | `/apollo-eng-devops:cron-oom-remediation` | Diagnose a cron OOMKilled alert and ship the right fix — limit bump vs streaming/projection/chunking |
 | `/apollo-eng-devops:create-mongo-index` | Safe read-only planning and DevOps handoff for Apollo MongoDB index creation |
 | `/apollo-eng-devops:devops` | SRE devops — applies reliability engineering to any production task |
+| `/apollo-eng-devops:eol-calendar` | Refresh Apollo's support-windows (EOL) calendar Sheet: bars per version, past-EOL status tab, paste or Sheets API push |
 | `/apollo-eng-devops:es-specialist` | Read-only Elasticsearch performance investigation and RCA guidance |
 | `/apollo-eng-devops:gameday` | MongoDB incident gameday drills for on-call practice |
 | `/apollo-eng-devops:grafana-observability` | Grafana dashboard design and alert quality specialist |
