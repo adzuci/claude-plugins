@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "snapshot": {
+    "effective_at": null,
+    "generated_at": null,
+    "owner": null,
+    "reviewed_by": null,
+    "source_sha256": null,
+    "source_url": null,
+    "status": "UNCONFIGURED"
+  },
+  "tools": []
+}

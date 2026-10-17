@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/apolloio/claude-plugins/tool-intake-report.schema.json",
+  "title": "Apollo Tool Intake Report",
+  "type": "object",
+  "required": ["tool", "approval", "verdict"],
+  "properties": {
+    "tool": {
+      "type": "object",
+      "required": ["name", "primary_classification"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "target": {"type": "string"},
+        "primary_classification": {
+          "enum": ["CLI", "SaaS", "OSS", "library", "extension", "MCP", "hybrid"]
+        },
+        "publisher": {"type": "string"},
+        "homepage_url": {"type": "string", "format": "uri"},
+        "logo_url": {"type": "string", "format": "uri"},
+        "version": {"type": "string"},
+        "related_components": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/linkItem"}
+        }
+      },
+      "additionalProperties": true
+    },
+    "approval": {
+      "type": "object",
+      "required": ["status", "summary"],
+      "properties": {
+        "status": {
+          "enum": [
+            "APPROVED",
+            "APPROVED_WITH_CONDITIONS",
+            "RESTRICTED_OR_DENIED",
+            "STALE_RECONFIRM",
+            "NO_MATCH_REVIEW_REQUIRED"
+          ]
+        },
+        "summary": {"type": "string"},
+        "scope": {"type": "string"},
+        "snapshot_version": {"type": "string"},
+        "owner": {"type": "string"},
+        "channel_url": {"type": "string", "format": "uri"},
+        "apps_db_url": {"type": "string", "format": "uri"},
+        "initial_request_url": {"type": "string", "format": "uri"},
+        "source_url": {"type": "string", "format": "uri"}
+      },
+      "additionalProperties": true
+    },
+    "verdict": {
+      "type": "object",
+      "required": ["action", "summary"],
+      "properties": {
+        "action": {
+          "enum": [
+            "USE_WITHIN_SCOPE",
+            "ISOLATED_EXPLORATION",
+            "PREPARE_ZIP_INTAKE",
+            "LEGAL_SECURITY_REVIEW",
+            "PAUSE_FOR_REVIEW"
+          ]
+        },
+        "summary": {"type": "string"},
+        "action_url": {"type": "string", "format": "uri"}
+      },
+      "additionalProperties": true
+    },
+    "safe_test": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/textOrEvidence"}
+    },
+    "open_source": {"type": "object"},
+    "company": {"type": "object"},
+    "market": {"type": "object"},
+    "evidence": {"$ref": "#/$defs/itemList"},
+    "risks": {"$ref": "#/$defs/itemList"},
+    "policies": {"$ref": "#/$defs/itemList"},
+    "brand_risks": {"$ref": "#/$defs/itemList"},
+    "apollo_alternatives": {"$ref": "#/$defs/itemList"},
+    "related_requests": {"$ref": "#/$defs/itemList"},
+    "gaps": {"$ref": "#/$defs/itemList"},
+    "intake_packet": {"type": "object"},
+    "sources": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/linkItem"}
+    },
+    "generated_at": {"type": "string", "format": "date-time"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "approval": {
+            "properties": {
+              "status": {"enum": ["NO_MATCH_REVIEW_REQUIRED", "STALE_RECONFIRM"]}
+            },
+            "required": ["status"]
+          }
+        }
+      },
+      "then": {"required": ["safe_test"]}
+    }
+  ],
+  "$defs": {
+    "linkItem": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "title": {"type": "string"},
+        "url": {"type": "string", "format": "uri"},
+        "role": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "textOrEvidence": {
+      "oneOf": [
+        {"type": "string"},
+        {
+          "type": "object",
+          "properties": {
+            "label": {"type": "string"},
+            "claim": {"type": "string"},
+            "source_url": {"type": "string", "format": "uri"}
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "itemList": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/textOrEvidence"}
+    }
+  },
+  "additionalProperties": true
+}

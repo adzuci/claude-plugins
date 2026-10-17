@@ -1,0 +1,10 @@
+# Codex display metadata for this skill. The skill instructions remain authoritative.
+interface:
+  display_name: "Tool Intake"
+  short_description: "Check tool approval, risk, and next steps"
+  icon_small: "../assets/apollo-icon-stone.png"
+  icon_large: "../assets/apollo-icon-stone.png"
+  brand_color: "#F8FF2C"
+  default_prompt: "Use $tool-intake to check this tool's approval evidence, risks, Apollo alternatives, and safest next step."
+policy:
+  allow_implicit_invocation: false
