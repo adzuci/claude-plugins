@@ -59,7 +59,7 @@ Weekly OKR update: `/apollo-eng-leadership:okr-report --weekly <team>` (for exam
 | Plugin | Description | Skills |
 | --- | --- | ---: |
 | `apollo-eng` | Shared engineering skills for Apollo repos | 34 |
-| `apollo-eng-devops` | DevOps, SRE, and production reliability skills for Apollo engineers | 32 |
+| `apollo-eng-devops` | DevOps, SRE, and production reliability skills for Apollo engineers | 33 |
 | `apollo-analytics` | Apollo Analytics Copilot — answers data questions using governed Snowflake metrics, runs product debriefs, generates account profiles, and surfaces weekly strategic insights. | 11 |
 | `apollo-eng-leadership` | Cowork skills for engineering leadership and customer-care rotation support | 9 |
 | `apollo-gtm` | Go-to-market strategy, sales enablement, and demand generation | 11 |
