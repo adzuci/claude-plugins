@@ -1,12 +1,18 @@
 ---
 name: check-cloudflare
-description: Check Cloudflare edge health, bot/challenge signals, throughput/errors, Workers, and tunnel health.
+description: Check Cloudflare edge, bot/challenge, Worker, and tunnel health.
 disable-model-invocation: true
 ---
 
 # Check Cloudflare
 
 Run this skill as `/apollo-eng-devops:check-cloudflare [args]`.
+
+```text
+/apollo-eng-devops:check-cloudflare                       # general health check
+/apollo-eng-devops:check-cloudflare <incident context>    # incident mode
+/apollo-eng-devops:check-cloudflare opportunities [--since 30d] [--notes <vendor-notes-doc-url>] [--save <dir>]
+```
 
 Use this skill to check Apollo's Cloudflare health from Grafana data and, when available, Cloudflare Observability MCP data. Use [`grafana-observability`](../grafana-observability/SKILL.md) alongside this skill when the task includes dashboard design, alert tuning, alert actionability, or SLO/runbook quality.
 
@@ -18,6 +24,7 @@ Start by choosing one mode:
 
 - **Incident mode**: use when the prompt includes an incident or alert thread, endpoint, host, CF-RAY, status code, tunnel, Worker, customer report, time window, or impact.
 - **General mode**: use when no incident context is provided.
+- **Opportunities mode**: use when the args start with `opportunities` or the prompt asks what is new in Cloudflare, which features Apollo is not using, or what to raise with the Cloudflare account team. Skip the health sections and follow [Opportunities Mode](#opportunities-mode).
 
 If the context is ambiguous, proceed in general mode and say which missing details would sharpen the check.
 
@@ -95,6 +102,61 @@ Report the key health areas:
 - `Cloudflare Workers and cloudflared tunnel pods`: Worker inventory/config only when relevant; cloudflared HA connections, request errors, concurrent requests, response status rates, pod CPU, and pod memory pressure.
 
 End with a short offer to check a specific route, CF-RAY, customer report, tunnel, Worker, status code, bot/challenge reason, or Cloudflare vendor status.
+
+## Opportunities Mode
+
+Find new Cloudflare releases worth acting on and assess them against Apollo's needs. Read-only: never change Cloudflare configuration, rules, or account settings in this mode.
+
+### Inputs
+
+- `--since`: lookback window, default `30d`.
+- `--notes`: optional vendor notes doc (e.g. the shared Cloudflare + Apollo call notes). When given, read it for open TODOs, prior asks, and roadmap items Cloudflare already pitched.
+- `--save`: optional directory for a dated Markdown copy of the report (e.g. a personal notes vault). Without it, write nothing to disk.
+
+### Gather
+
+1. List releases in the window from the [Cloudflare changelog](https://developers.cloudflare.com/changelog/) and [Cloudflare blog](https://blog.cloudflare.com/). Keep only products Apollo plausibly uses or could use: application security (WAF, bot management, Turnstile, AI Crawl Control, account abuse protection), CDN and caching, Workers, Tunnels and Zero Trust, logs and analytics (Logpush, Log Explorer), and Cloudflare MCP/agent tooling.
+1. For each kept item, use `search_cloudflare_documentation` to confirm what it does, plan or entitlement requirements, and GA/beta status. Mark unconfirmed details as unconfirmed.
+1. If `--notes` is given, match items to open TODOs and earlier asks. Mark an item `already raised` instead of re-pitching it, and note what is still unanswered.
+
+If the changelog, blog, or docs MCP is unreachable, say which source was missing and treat the result as partial.
+
+### Assess
+
+Score each kept item in one table, at most 5 rows, ranked by verdict then fit:
+
+| Item | Fit to Apollo pain | Effort | Cost/contract impact | Risk and rollback | Likely owner | Verdict |
+| ---- | ------------------ | ------ | -------------------- | ----------------- | ------------ | ------- |
+
+- **Fit**: name the specific pain it addresses, such as agent vs human traffic segmentation, AI crawler volume on app/API/asset paths, noisy WAF or challenge rules, tunnel load, Worker cost, or faster debugging from logs. "General improvement" is not fit.
+- **Effort**: S (config toggle), M (rule or dashboard work), L (new integration or code).
+- **Cost/contract impact**: whether it is included, add-on, or usage-billed, and which contracted volume it could move (requests, bandwidth, Worker CPU). Say "unknown, ask account team" rather than guessing prices.
+- **Risk and rollback**: what could break (SEO, legitimate crawlers, customer traffic) and how to turn it off.
+- **Verdict**: `adopt` (clear fit, low risk), `trial` (scoped test first), `learn` (needs a demo or deeper read before deciding), or `skip`. These are recommendations for human review, not decisions. An `adopt` or `trial` recommendation may inform a ticket draft, but never create one without explicit approval.
+
+List remaining relevant items in one `Watch:` line. Prefer path- or host-scoped trials over zone-wide changes, consistent with [Guardrails](#guardrails).
+
+### Vendor Call Prep
+
+Draft an agenda for the next account-team call:
+
+- Questions that would move `learn` items to a decision.
+- Demo or tech-talk requests for `learn` items.
+- Follow-ups on open TODOs from `--notes`, with owner and status if known.
+
+Show the agenda as a draft. Do not edit the notes doc.
+
+### Output
+
+```text
+Cloudflare opportunities (<since window>, sources: <changelog|blog|docs|notes>)
+<scored table>
+Watch: <item, item, ...>
+Next-call agenda (draft): <bullets>
+Suggested tickets: <one line per adopt/trial item>
+```
+
+Link each item to its changelog, blog, or docs source. If `--save` is given, also write the same report to `<dir>/YYYY-MM-DD-cloudflare-opportunities.md`. Offer ticket drafts for `adopt` and `trial` items, and create them only after explicit approval.
 
 ## Baselines and Rates
 
