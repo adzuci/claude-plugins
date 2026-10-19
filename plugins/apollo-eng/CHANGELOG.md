@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.12.1...apollo-eng-v1.13.0) (2026-10-17)
+
+
+### Features
+
+* **apollo-eng:** add tool intake security workflow ([#179](https://github.com/apolloio/claude-plugins/issues/179)) ([d220f55](https://github.com/apolloio/claude-plugins/commit/d220f557c577a69a2c8a26d8895a8f7ec3327f16))
+
 ## [1.12.1](https://github.com/apolloio/claude-plugins/compare/apollo-eng-v1.12.0...apollo-eng-v1.12.1) (2026-10-14)
 
 

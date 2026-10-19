@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.9.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.8.0...apollo-eng-devops-v1.9.0) (2026-10-17)
+
+
+### Features
+
+* **apollo-eng-devops:** add EOL calendar skill ([#367](https://github.com/apolloio/claude-plugins/issues/367)) ([8386655](https://github.com/apolloio/claude-plugins/commit/8386655f1702c7bdc0099ca0d4267454b7d70e64))
+* **apollo-eng-devops:** add idle-disk-review skill ([#373](https://github.com/apolloio/claude-plugins/issues/373)) ([949d85b](https://github.com/apolloio/claude-plugins/commit/949d85b8e8325df89656e688f83ae8b506d4060e))
+* **apollo-eng-devops:** add opportunities mode to check-cloudflare ([#374](https://github.com/apolloio/claude-plugins/issues/374)) ([e040d57](https://github.com/apolloio/claude-plugins/commit/e040d577a1cec55c96379f810f8bebbf2459b98e))
+* **apollo-eng-devops:** harden create-mongo-index for very large sharded collections ([#306](https://github.com/apolloio/claude-plugins/issues/306)) ([d841ecd](https://github.com/apolloio/claude-plugins/commit/d841ecd688de1c1be0650e6864bf9ccc1f4eb692))
+
 ## [1.8.0](https://github.com/apolloio/claude-plugins/compare/apollo-eng-devops-v1.7.0...apollo-eng-devops-v1.8.0) (2026-10-16)
 
 
