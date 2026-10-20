@@ -1,0 +1,157 @@
+{
+ "format_version": "1.2",
+ "resource_drift": [
+  {
+   "address": "google_compute_firewall.allow_ssh",
+   "mode": "managed",
+   "change": {
+    "actions": [
+     "update"
+    ],
+    "before": {
+     "name": "allow-ssh",
+     "source_ranges": [
+      "10.0.0.0/8"
+     ],
+     "priority": 1000,
+     "labels": {
+      "a": "1"
+     }
+    },
+    "after": {
+     "name": "allow-ssh",
+     "source_ranges": [
+      "0.0.0.0/0"
+     ],
+     "priority": 900,
+     "labels": {
+      "a": "1"
+     }
+    },
+    "after_unknown": {}
+   }
+  },
+  {
+   "address": "google_service_account.ci",
+   "mode": "managed",
+   "change": {
+    "actions": [
+     "delete"
+    ],
+    "before": {
+     "account_id": "ci"
+    },
+    "after": null,
+    "after_unknown": {}
+   }
+  },
+  {
+   "address": "data.google_project.p",
+   "mode": "data",
+   "change": {
+    "actions": [
+     "update"
+    ],
+    "before": {
+     "x": 1
+    },
+    "after": {
+     "x": 2
+    },
+    "after_unknown": {}
+   }
+  },
+  {
+   "address": "google_storage_bucket.logs",
+   "mode": "managed",
+   "change": {
+    "actions": [
+     "update"
+    ],
+    "before": {
+     "etag": "a",
+     "updated": "t1"
+    },
+    "after": {
+     "etag": "b",
+     "updated": "t2"
+    },
+    "after_unknown": {}
+   }
+  }
+ ],
+ "resource_changes": [
+  {
+   "address": "google_compute_firewall.allow_ssh",
+   "mode": "managed",
+   "change": {
+    "actions": [
+     "update"
+    ],
+    "before": {
+     "source_ranges": [
+      "0.0.0.0/0"
+     ],
+     "priority": 900
+    },
+    "after": {
+     "source_ranges": [
+      "10.0.0.0/8"
+     ],
+     "priority": 1000
+    },
+    "after_unknown": {}
+   }
+  },
+  {
+   "address": "google_service_account.ci",
+   "mode": "managed",
+   "change": {
+    "actions": [
+     "create"
+    ],
+    "before": null,
+    "after": {
+     "account_id": "ci"
+    },
+    "after_unknown": {
+     "email": true,
+     "unique_id": true
+    }
+   }
+  },
+  {
+   "address": "google_kms_crypto_key.k",
+   "mode": "managed",
+   "change": {
+    "actions": [
+     "delete",
+     "create"
+    ],
+    "before": {
+     "name": "k",
+     "purpose": "A"
+    },
+    "after": {
+     "name": "k",
+     "purpose": "B"
+    },
+    "after_unknown": {
+     "id": true
+    }
+   }
+  },
+  {
+   "address": "google_storage_bucket.logs",
+   "mode": "managed",
+   "change": {
+    "actions": [
+     "no-op"
+    ],
+    "before": {},
+    "after": {},
+    "after_unknown": {}
+   }
+  }
+ ]
+}

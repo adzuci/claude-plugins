@@ -32,6 +32,7 @@ These skills are grounded in the Google SRE Book and Apollo's internal operation
 | `/apollo-eng-devops:office-hours` | Draft DevOps office-hours announcements and transcript-backed recap proposals for #xfn-h-devops |
 | `/apollo-eng-devops:oncall` | DevOps + Platform PagerDuty schedule, review, swap, and override companion |
 | `/apollo-eng-devops:oncall-handoff` | Daily or weekly DevOps PD handoff focused on the outgoing caller's on-call shift |
+| `/apollo-eng-devops:resolve-drift` | Weekly read-only Terraform drift check of key TFC workspaces; Slack report plus codify/revert/ignore triage |
 | `/apollo-eng-devops:sidekiq-worker-specialist` | Tune Sidekiq worker Helm values — max_workers, resources, autoscaling |
 | `/apollo-eng-devops:systematic-debugging` | Four-phase root-cause debugging methodology (investigate → pattern → hypothesize → implement) |
 | `/apollo-eng-devops:wtf-does-this-do` | First-pass explanation of unfamiliar skills, plugins, repos, or scripts |
@@ -81,6 +82,7 @@ the actual prompt, so a differently-worded question may route elsewhere.
 | "Draft a DevOps office-hours recap for #xfn-h-devops" | — | `/apollo-eng-devops:office-hours` |
 | "I'm paged for Mongo::Error::NoServerAvailable right now" | incident-response and/or systematic-debugging | `/apollo-eng-devops:mongo-specialist` (live-incident-mode) |
 | "Is the main Mongo cluster healthy? A Mongo host restarted" | — | `/apollo-eng-devops:check-mongo main` |
+| "Has anyone changed prod infra outside Terraform?" | — | `/apollo-eng-devops:resolve-drift` |
 | "Plan creating a Mongo index on LoginAttempt" | — | `/apollo-eng-devops:create-mongo-index` |
 | "Who should I ask about a Mongo balancer issue?" | — | `/apollo-eng-devops:mongo-specialist` |
 | "Postmortem for Feb 14 incident" | incident-response postmortem template | — |
@@ -126,6 +128,8 @@ the actual prompt, so a differently-worded question may route elsewhere.
 **`mongo-specialist`** - Invoke directly for shared Apollo MongoDB context: cluster/client lookup, escalation channels, TapData/Mason guidance, consult targets, and read-only inspection commands. Other Mongo skills should reference this instead of duplicating stale-prone Mongo facts. Also carries the live-incident-mode playbook (PagerDuty/Grafana/Tempo triage, watcher subagents, known traps) for an active Mongo page — pair with `incident-response` for SEV/comms.
 
 **`check-mongo`** - Invoke directly for a read-only first-pass health check of one prod Mongo cluster (restarts, routers, replication lag, oplog window, balancer). It scores Grafana metrics with a tested script and, on ESCALATE, prints the exact `mongo-specialist` command to run next. Use it first when a Mongo alert fires, such as "MongoDB Host has restarted".
+
+**`resolve-drift`** - Invoke directly (or as a weekly routine / Apollo Operator job with `--headless`) to find drift between live infra and the last applied Terraform config. A tested script queues plan-only TFC runs, ignores refresh-only churn (etags, timestamps), and prints a short Slack report with addresses and attribute names only. Pass a workspace to triage each drifted resource as codify, revert, or ignore. Never applies.
 
 **`create-mongo-index`** - Invoke directly when planning a Mongo index creation. It performs read-only triage, applies size/timing gates, drafts `#xfn-h-devops` handoff text, and routes execution to approved human operators. It relies on `mongo-specialist` for shared Mongo context.
 

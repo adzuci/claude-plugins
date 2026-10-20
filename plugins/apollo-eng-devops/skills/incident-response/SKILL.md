@@ -145,3 +145,4 @@ ______________________________________________________________________
 
 - [`references/comms-templates.md`](references/comms-templates.md) — Ready-to-use Slack and stakeholder communication templates
 - [`references/postmortem-template.md`](references/postmortem-template.md) — Complete blameless postmortem template
+- [`resolve-drift`](../resolve-drift/SKILL.md) — Plan-only Terraform drift detection for suspected unauthorized IAM, firewall, or DNS changes

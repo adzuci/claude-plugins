@@ -1,0 +1,12 @@
+{
+ "organization": "apolloio",
+ "_note": "Key workspaces checked weekly. Picked for blast radius: prod network/compute, IAM, security, ops tooling, org foundation, edge DNS/WAF. Huge per-cluster Mongo/ES workspaces are left out to keep runs short; check them on demand with --workspaces.",
+ "workspaces": [
+  {"name": "gcp-prod", "path": "terraform/gcp/prod", "why": "prod network, GKE, LBs"},
+  {"name": "gcp-iam", "path": "terraform/gcp/iam", "why": "org IAM bindings"},
+  {"name": "gcp-secops", "path": "terraform/gcp/secops", "why": "security tooling, logging sinks"},
+  {"name": "gcp-ops", "path": "terraform/gcp/ops", "why": "ops/monitoring infra"},
+  {"name": "gcp-foundation", "path": "terraform/gcp/foundation", "why": "folders, projects, org policy"},
+  {"name": "cloudflare-apolloio", "path": "terraform/cloudflare/apolloio", "why": "DNS, WAF, edge rules"}
+ ]
+}
