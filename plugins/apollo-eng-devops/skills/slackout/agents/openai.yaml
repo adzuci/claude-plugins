@@ -1,0 +1,7 @@
+# Codex display metadata for this skill. The skill instructions remain authoritative.
+interface:
+  display_name: "Slackout"
+  short_description: "Send approved work to Apollo Slack bots"
+  default_prompt: "Use $slackout to send an approved task to an Apollo Slack bot and return the thread link."
+policy:
+  allow_implicit_invocation: false
