@@ -2,14 +2,46 @@
 
 # Pure helpers and reviewed constants for the pair-setup skill.
 
-PAIR_APP="${PAIR_APP:-/Applications/PAIR.app}"
+# PAIR 1.0 and its auto-updater install as "NVIDIA PAIR.app"; 0.1.x was "PAIR.app".
+if [ -z "${PAIR_APP:-}" ]; then
+  if [ -d "/Applications/NVIDIA PAIR.app" ]; then
+    PAIR_APP="/Applications/NVIDIA PAIR.app"
+  else
+    PAIR_APP="/Applications/PAIR.app"
+  fi
+fi
 PAIR_VERSION="0.1.1"
-PAIR_DMG_URL="https://github.com/NVIDIA/Personal-AI-Router/releases/download/v${PAIR_VERSION}/NVPAIR-Setup-${PAIR_VERSION}-arm64.dmg"
-PAIR_DMG_SHA256="ee719fd699308c87e289f799cd780b799636343865638e8af65a57b953cb3f44"
+PAIR_DMG_BASE="https://github.com/NVIDIA/Personal-AI-Router/releases/download/v${PAIR_VERSION}"
 PAIR_EXPECT_ID="com.nvidia.nvpair"
 PAIR_EXPECT_TEAM="6KR3T733EC"
 PAIR_PROXY_PORT=11434
 PAIR_ENGINE_PORT=11435
+# Node-to-node pairing and discovery service (mDNS-advertised). Peers must reach
+# this TCP port; ping and 11434/11435 are not valid peer checks.
+PAIR_NODE_PORT=14318
+
+# Map `uname -m` to the release asset architecture suffix.
+pair_arch() {
+  case "${1:-}" in
+    arm64) echo arm64 ;;
+    x86_64) echo x64 ;;
+    *) return 1 ;;
+  esac
+}
+
+# SHA-256 of the reviewed disk image for an asset architecture.
+pair_dmg_sha256() {
+  case "${1:-}" in
+    arm64) echo "ee719fd699308c87e289f799cd780b799636343865638e8af65a57b953cb3f44" ;;
+    x64) echo "fc1679d50fd94dab892b637ae3a5db482837b3c5d13861b22df88cd4bbf97fb4" ;;
+    *) return 1 ;;
+  esac
+}
+
+pair_dmg_url() {
+  [ -n "${1:-}" ] || return 1
+  echo "${PAIR_DMG_BASE}/NVPAIR-Setup-${PAIR_VERSION}-$1.dmg"
+}
 
 parse_mount_point() {
   printf '%s' "${1:-}" | python3 -c '
@@ -57,7 +89,7 @@ validate_role() {
 
 classify_listener() {
   case "${1:-}" in
-    ollama-proxy) echo ok ;;
+    ollama-proxy|nvpair-proxy) echo ok ;;
     ollama) echo bypassed ;;
     "") echo absent ;;
     *) echo foreign ;;
