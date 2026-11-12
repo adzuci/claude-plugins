@@ -79,6 +79,14 @@ The self-retro idea is [Harshit Pandey's](https://www.linkedin.com/in/harshit-pa
 
 The agent is read-only against email and calendar, never sends or deletes anything, and keeps all secrets out of config files and chat. See `plugins/house/README.md`.
 
+## What the `tools` Plugin Does
+
+| Skill | Purpose |
+| --- | --- |
+| `/tools:tailscale-setup` | Check, install, verify, and use Tailscale on macOS so your own machines (including NVIDIA PAIR peers) can reach each other over a private tailnet. Sign-in is always done by you in the app; the bundled doctor script is read-only. |
+
+See `plugins/tools/README.md`.
+
 ## What the `local-ai` Plugin Does
 
 | Skill | Purpose |
@@ -115,7 +123,7 @@ Then invoke the setup skill:
 /memory:memory-setup
 ```
 
-The other plugins install the same way (`claude plugin install productivity@adzuci-plugins`, `claude plugin install learning@adzuci-plugins`, `claude plugin install career@adzuci-plugins`, `claude plugin install local-ai@adzuci-plugins`, `claude plugin install house@adzuci-plugins`).
+The other plugins install the same way (`claude plugin install productivity@adzuci-plugins`, `claude plugin install learning@adzuci-plugins`, `claude plugin install career@adzuci-plugins`, `claude plugin install local-ai@adzuci-plugins`, `claude plugin install house@adzuci-plugins`, `claude plugin install tools@adzuci-plugins`).
 
 ## Safety Model
 
@@ -191,6 +199,12 @@ plugins/
     skills/
       house-setup/         # SKILL.md, scripts/, agents/, tests/
       hm/                  # SKILL.md, agents/
+  tools/
+    .claude-plugin/plugin.json
+    .codex-plugin/plugin.json
+    README.md
+    skills/
+      tailscale-setup/     # SKILL.md, scripts/, agents/, tests/
 ```
 
 ## Development

@@ -12,42 +12,105 @@
       "source": "./plugins/memory",
       "description": "Set up a local Obsidian-backed memory vault with session capture for Claude Code, Codex, and Antigravity.",
       "category": "productivity",
-      "tags": ["claude-code", "codex", "memory", "obsidian"]
+      "tags": [
+        "claude-code",
+        "codex",
+        "memory",
+        "obsidian"
+      ]
     },
     {
       "name": "local-ai",
       "source": "./plugins/local-ai",
       "description": "Set up NVIDIA PAIR, choose local Ollama models, and scaffold LiteLLM routing for personal local-inference workflows.",
       "category": "productivity",
-      "tags": ["claude-code", "codex", "local-ai", "ollama", "nvidia-pair", "litellm"]
+      "tags": [
+        "claude-code",
+        "codex",
+        "local-ai",
+        "ollama",
+        "nvidia-pair",
+        "litellm"
+      ]
     },
     {
       "name": "career",
       "source": "./plugins/career",
       "description": "Job market intelligence sweep for senior technical candidates. Produces a tier-ranked report in your vault, runs an automated recruiter review, and offers weekly scheduling.",
       "category": "productivity",
-      "tags": ["claude-code", "job-search", "career", "market-research"]
+      "tags": [
+        "claude-code",
+        "job-search",
+        "career",
+        "market-research"
+      ]
     },
     {
       "name": "productivity",
       "source": "./plugins/productivity",
       "description": "Portable standups, Slack response monitoring, productivity setup, Obsidian todo capture, session hygiene, daily planning, AI coaching, and agent operations.",
       "category": "productivity",
-      "tags": ["claude-code", "codex", "obsidian", "standup", "slack", "response-monitoring", "jira", "setup", "todo", "daily-wrapup", "ai-coach", "agent-operations"]
+      "tags": [
+        "claude-code",
+        "codex",
+        "obsidian",
+        "standup",
+        "slack",
+        "response-monitoring",
+        "jira",
+        "setup",
+        "todo",
+        "daily-wrapup",
+        "ai-coach",
+        "agent-operations"
+      ]
     },
     {
       "name": "learning",
       "source": "./plugins/learning",
       "description": "A weekly engineering self-retro that reflects your own work back as a ranked learning plan. Runs locally from Claude Code sessions or as a cloud/web routine from GitHub, Jira, and Glean signals.",
       "category": "productivity",
-      "tags": ["claude-code", "codex", "obsidian", "self-retro", "learning", "reflection", "github", "jira", "schedule"]
+      "tags": [
+        "claude-code",
+        "codex",
+        "obsidian",
+        "self-retro",
+        "learning",
+        "reflection",
+        "github",
+        "jira",
+        "schedule"
+      ]
     },
     {
       "name": "house",
       "source": "./plugins/house",
       "description": "A weekly house-manager agent: scans email and calendar for household items, reads Nest thermostats, writes a vault digest, and can text or call you for urgent items.",
       "category": "productivity",
-      "tags": ["claude-code", "codex", "house", "nest", "gmail", "calendar", "twilio", "obsidian"]
+      "tags": [
+        "claude-code",
+        "codex",
+        "house",
+        "nest",
+        "gmail",
+        "calendar",
+        "twilio",
+        "obsidian"
+      ]
+    },
+    {
+      "name": "tools",
+      "source": "./plugins/tools",
+      "description": "Small, safe setup skills for everyday tools, starting with Tailscale setup and verification for reaching your own machines (including NVIDIA PAIR peers) over a private tailnet.",
+      "category": "productivity",
+      "tags": [
+        "claude-code",
+        "codex",
+        "tailscale",
+        "networking",
+        "vpn",
+        "pair"
+      ]
     }
   ]
 }

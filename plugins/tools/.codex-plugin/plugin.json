@@ -1,0 +1,15 @@
+{
+  "name": "tools",
+  "version": "0.1.0",
+  "description": "Small, safe setup skills for everyday tools: start with Tailscale setup and verification for reaching your own machines (including NVIDIA PAIR peers) over a private tailnet.",
+  "repository": "https://github.com/adzuci/claude-plugins",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Tools",
+    "shortDescription": "Safe setup skills for everyday tools, starting with Tailscale",
+    "developerName": "Adzuci",
+    "category": "Productivity",
+    "brandColor": "#1D4ED8"
+  }
+}
