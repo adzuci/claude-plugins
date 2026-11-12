@@ -1,0 +1,15 @@
+{
+  "name": "house",
+  "version": "0.1.0",
+  "description": "A weekly house-manager agent: scans email and calendar for household items, reads Nest thermostats, writes a vault digest, and can text or call you for urgent items.",
+  "repository": "https://github.com/adzuci/claude-plugins",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "House",
+    "shortDescription": "Weekly house-manager agent with Nest and alerts",
+    "developerName": "Adzuci",
+    "category": "Productivity",
+    "brandColor": "#B45309"
+  }
+}

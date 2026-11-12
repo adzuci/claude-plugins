@@ -40,6 +40,8 @@ jobs:
           python -m json.tool plugins/local-ai/.codex-plugin/plugin.json >/dev/null
           python -m json.tool plugins/productivity/.claude-plugin/plugin.json >/dev/null
           python -m json.tool plugins/learning/.claude-plugin/plugin.json >/dev/null
+          python -m json.tool plugins/house/.claude-plugin/plugin.json >/dev/null
+          python -m json.tool plugins/house/.codex-plugin/plugin.json >/dev/null
 
       - name: Validate static site asset references
         run: |

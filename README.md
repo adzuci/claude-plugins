@@ -6,7 +6,7 @@
 
 Public Claude Code and Codex plugins for local-first AI workflows.
 
-The flagship plugin is **`memory`**: a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions. The **`productivity`** plugin builds on that vault with task capture, session hygiene, daily planning, and a weekly AI coach; **`learning`** adds a weekly engineering self-retro that reflects your own work back as a ranked learning plan; **`career`** adds a job-market intelligence sweep; and **`local-ai`** helps experiment with local models across hardware you control.
+The flagship plugin is **`memory`**: a setup skill for creating a local, git-backed Obsidian vault that captures durable notes from AI working sessions. The **`productivity`** plugin builds on that vault with task capture, session hygiene, daily planning, and a weekly AI coach; **`learning`** adds a weekly engineering self-retro that reflects your own work back as a ranked learning plan; **`career`** adds a job-market intelligence sweep; **`local-ai`** helps experiment with local models across hardware you control; and **`house`** runs a weekly house-manager agent over your email, calendar, and Nest thermostats.
 
 The [companion site](https://adzuci.github.io/claude-plugins/) has a post per plugin: [Memory as reliability practice](https://adzuci.github.io/claude-plugins/memory.html) · [An operating loop for AI-assisted work](https://adzuci.github.io/claude-plugins/productivity.html) · [Reflecting your own work back as a learning plan](https://adzuci.github.io/claude-plugins/learning.html) · [Two Macs, one local model pool](https://adzuci.github.io/claude-plugins/local-ai.html)
 
@@ -68,6 +68,17 @@ It also ships `create-agent` and the `agent-ops-setup`/`agent-ops-report` pair f
 
 The self-retro idea is [Harshit Pandey's](https://www.linkedin.com/in/harshit-pandey-84779114a/): keep the retro focused on where you actually spend your time and end in concrete next steps. Reports are report-only and cite specific session or PR evidence for every claim. See `plugins/learning/README.md` and `plugins/learning/skills/self-retro/references/web-routine.md` for the cloud-routine prompt.
 
+## What the `house` Plugin Does
+
+| Skill | Purpose |
+| --- | --- |
+| `/house:house-setup` | Install the managed `/hm` skill, helper scripts, a vault agent note, and a weekly schedule. |
+| `/house:house-setup nest` | Connect Nest thermostats via Google's Smart Device Management API; tokens go to the macOS Keychain. |
+| `/house:house-setup notify` | Connect the Twilio CLI for urgent SMS or one-way voice alerts. |
+| `/house:hm` | Run the weekly digest on demand (also installed as a local `/hm`). |
+
+The agent is read-only against email and calendar, never sends or deletes anything, and keeps all secrets out of config files and chat. See `plugins/house/README.md`.
+
 ## What the `local-ai` Plugin Does
 
 | Skill | Purpose |
@@ -104,7 +115,7 @@ Then invoke the setup skill:
 /memory:memory-setup
 ```
 
-The other plugins install the same way (`claude plugin install productivity@adzuci-plugins`, `claude plugin install learning@adzuci-plugins`, `claude plugin install career@adzuci-plugins`, `claude plugin install local-ai@adzuci-plugins`).
+The other plugins install the same way (`claude plugin install productivity@adzuci-plugins`, `claude plugin install learning@adzuci-plugins`, `claude plugin install career@adzuci-plugins`, `claude plugin install local-ai@adzuci-plugins`, `claude plugin install house@adzuci-plugins`).
 
 ## Safety Model
 
@@ -173,6 +184,13 @@ plugins/
       learning-setup/      # SKILL.md, agents/
   career/
     skills/market-sweep/
+  house/
+    .claude-plugin/plugin.json
+    .codex-plugin/plugin.json
+    README.md
+    skills/
+      house-setup/         # SKILL.md, scripts/, agents/, tests/
+      hm/                  # SKILL.md, agents/
 ```
 
 ## Development

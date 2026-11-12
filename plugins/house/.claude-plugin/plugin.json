@@ -1,0 +1,8 @@
+{
+  "name": "house",
+  "version": "0.1.0",
+  "description": "A weekly house-manager agent: scans email and calendar for household items, reads Nest thermostats, writes a vault digest, and can text or call you for urgent items.",
+  "author": {
+    "name": "adzuci"
+  }
+}

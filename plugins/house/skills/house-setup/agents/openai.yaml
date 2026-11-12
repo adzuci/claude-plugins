@@ -1,0 +1,4 @@
+interface:
+  display_name: "House Setup"
+  short_description: "Set up the house-manager agent, Nest, and alerts"
+  default_prompt: "Use $house-setup to install the house-manager agent and its /hm skill, then run the nest argument to connect my Nest thermostats."
