@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tailscale Setup"
+  short_description: "Install, verify, and use Tailscale between your Macs"
+  default_prompt: "Use $tailscale-setup to check Tailscale on this Mac, then verify it can reach my other Mac's NVIDIA PAIR node over the tailnet."

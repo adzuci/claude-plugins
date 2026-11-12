@@ -1,0 +1,8 @@
+{
+  "name": "tools",
+  "version": "0.1.0",
+  "description": "Small, safe setup skills for everyday tools: start with Tailscale setup and verification for reaching your own machines (including NVIDIA PAIR peers) over a private tailnet.",
+  "author": {
+    "name": "adzuci"
+  }
+}
