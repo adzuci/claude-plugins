@@ -68,6 +68,14 @@ It also ships `create-agent` and the `agent-ops-setup`/`agent-ops-report` pair f
 
 The self-retro idea is [Harshit Pandey's](https://www.linkedin.com/in/harshit-pandey-84779114a/): keep the retro focused on where you actually spend your time and end in concrete next steps. Reports are report-only and cite specific session or PR evidence for every claim. See `plugins/learning/README.md` and `plugins/learning/skills/self-retro/references/web-routine.md` for the cloud-routine prompt.
 
+## What the `tools` Plugin Does
+
+| Skill | Purpose |
+| --- | --- |
+| `/tools:tailscale-setup` | Check, install, verify, and use Tailscale on macOS so your own machines (including NVIDIA PAIR peers) can reach each other over a private tailnet. Sign-in is always done by you in the app; the bundled doctor script is read-only. |
+
+See `plugins/tools/README.md`.
+
 ## What the `local-ai` Plugin Does
 
 | Skill | Purpose |
@@ -104,7 +112,7 @@ Then invoke the setup skill:
 /memory:memory-setup
 ```
 
-The other plugins install the same way (`claude plugin install productivity@adzuci-plugins`, `claude plugin install learning@adzuci-plugins`, `claude plugin install career@adzuci-plugins`, `claude plugin install local-ai@adzuci-plugins`).
+The other plugins install the same way (`claude plugin install productivity@adzuci-plugins`, `claude plugin install learning@adzuci-plugins`, `claude plugin install career@adzuci-plugins`, `claude plugin install local-ai@adzuci-plugins`, `claude plugin install tools@adzuci-plugins`).
 
 ## Safety Model
 
@@ -173,6 +181,12 @@ plugins/
       learning-setup/      # SKILL.md, agents/
   career/
     skills/market-sweep/
+  tools/
+    .claude-plugin/plugin.json
+    .codex-plugin/plugin.json
+    README.md
+    skills/
+      tailscale-setup/     # SKILL.md, scripts/, agents/, tests/
 ```
 
 ## Development
