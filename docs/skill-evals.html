@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Testing Skills the Way They Actually Run</title>
-  <meta name="description" content="An engineering note on why AI skills need behavioral evals, not just unit tests: a GitHub Action that runs the standup skill against fixture cases and grades the transcript, kept separate from the hermetic test job.">
+  <title>Testing Skills the Way They Run</title>
+  <meta name="description" content="An engineering note on why AI skills need behavioral evals as well as unit tests: a GitHub Action that runs the standup skill against fixture cases and grades the transcript, kept separate from the hermetic test job.">
   <link rel="stylesheet" href="assets/site.css">
   <style>
     .spec-table { width: 100%; border-collapse: collapse; margin: 22px 0; font-size: 0.98rem; }
@@ -30,8 +30,8 @@
     <header class="hero">
       <section class="hero-copy">
         <p class="eyebrow">Evals · CI for AI skills · local-first AI tooling</p>
-        <h1>Testing skills the way they actually run</h1>
-        <p class="dek">A unit test proves the checker function is correct. It says nothing about whether the skill behaves once a model is driving it. This is the eval I added to close that gap for one skill, and the reasons I kept it deliberately small.</p>
+        <h1>Testing skills the way they run</h1>
+        <p class="dek">A unit test proves the checker function is correct. It says nothing about whether the skill behaves once a model is driving it. This is the eval I added for one skill, and why I kept it small.</p>
         <p class="install-footnote">Part four of a series. Start with <a href="memory.html">Memory as reliability practice</a>, then the <a href="productivity.html">operating loop</a> and the <a href="learning.html">learning plan</a>.</p>
         <div class="meta-grid" aria-label="Article metadata">
           <div class="meta-card"><strong>Role lens</strong>Engineering manager (SRE background)</div>
@@ -43,20 +43,20 @@
 
     <main>
       <article>
-        <p class="lead">The <a href="productivity.html">standup skill</a> already had tests. A Python checker enforces the brevity contract, and a pytest suite pins its boundary cases. That is real coverage, and it catches a real class of bug. It also quietly misses the class I care about more.</p>
+        <p class="lead">The <a href="productivity.html">standup skill</a> already had tests. A Python checker enforces the brevity contract, and a pytest suite pins its boundary cases. That catches one class of bug and misses the class I care about more.</p>
 
-        <p>A skill is not a function. It is a prompt that a model reads and then acts on, with tools and a working directory and its own judgment about what to do. My checker can prove that a 91-word draft gets rejected. It cannot prove that the model produces the right headings for <code>weekly</code> versus <code>custom</code>, degrades gracefully when Jira is missing, or honors the one rule that actually matters: never post or transition a ticket on its own. Those are behaviors, and behaviors drift when you edit the instructions, not when you edit the code.</p>
+        <p>A skill is a prompt that a model reads and acts on, with tools, a working directory and its own judgment. My checker can prove that a 91-word draft gets rejected. It cannot prove that the model produces the right headings for <code>weekly</code> versus <code>custom</code>, falls back to the backlog when Jira is missing, or keeps the rule that matters most: never post or transition a ticket on its own. Those are behaviors, and they drift when you edit the instructions, not the code.</p>
 
         <div class="pullquote">A unit test guards the checker. An eval guards the skill. Editing a Markdown instruction can break the second while every unit test stays green.</div>
 
         <h2>Two kinds of wrong</h2>
-        <p>It helps to name the two failure modes separately, because they need different tools.</p>
-        <p>The first is a <strong>format bug</strong>: the output violates a rule you can express in code. Word count, bullet count, a required heading. Deterministic, cheap, and a unit test is exactly right for it. The standup checker lives here and should stay here.</p>
-        <p>The second is <strong>behavior drift</strong>: the skill still passes every deterministic check but does the wrong thing. It invents a Jira key it was never given. It quietly claims it posted the update. It picks up work from outside the requested date range. No assertion in my checker sees any of this, because the checker only reads the copy block, not the intent behind it. Catching drift means running the skill and reading what it did.</p>
+        <p>The two failure modes need different tools.</p>
+        <p>The first is a <strong>format bug</strong>: the output violates a rule you can express in code. Word count, bullet count, a required heading. It is deterministic and cheap to check, so a unit test is the right tool. The standup checker covers it.</p>
+        <p>The second is <strong>behavior drift</strong>: the skill still passes every deterministic check but does the wrong thing. It invents a Jira key it was never given. It claims it posted the update. It picks up work from outside the requested date range. No assertion in my checker sees any of this, because the checker reads only the copy block. Catching drift means running the skill and reading what it did.</p>
 
         <h2>What the eval runs</h2>
         <p>The eval is a set of YAML cases that live next to the skill, under <code>evals/</code>. Each case is a prompt, an optional set of fixture files, and a list of plain-language criteria. A GitHub Action runs the skill against each prompt, then grades the resulting transcript against the criteria and posts the scorecard on the pull request.</p>
-        <p>The fixtures matter more than they look. The skill reads a live Obsidian vault and Jira, and a CI runner has neither. So each case ships a small fake vault as files (a <code>backlog.md</code>, a couple of dated session notes) and tells the skill that Jira is unavailable. That is not a workaround; it is the point. "Jira is down, fall back to the backlog and say so" is a documented behavior, and now it has a test.</p>
+        <p>The fixtures do real work. The skill reads a live Obsidian vault and Jira, and a CI runner has neither. So each case ships a small fake vault as files (a <code>backlog.md</code>, a couple of dated session notes) and tells the skill that Jira is unavailable. "Jira is down, fall back to the backlog and say so" is a documented behavior, and now it has a test.</p>
 
         <div class="spec-scroll">
         <table class="spec-table">
@@ -73,15 +73,15 @@
         </div>
 
         <h2>Design guardrails</h2>
-        <p>The same instinct as the rest of this repo: make the new thing safe to leave running, and easy to remove.</p>
-        <p>The eval is a <strong>separate workflow</strong> from the main CI. The existing job is hermetic: it runs pytest and a static-site validator, needs no secrets, and never calls a model. I did not want to compromise that. The eval job carries the one API key, makes paid calls, and tolerates a little non-determinism, so it gets its own file and its own trigger. It only runs on pull requests that touch the skill, so most changes never pay for it. The third-party action is <strong>pinned to a commit</strong> rather than a moving tag, and the whole thing is one file you can delete to roll back.</p>
+        <p>As elsewhere in this repo, the eval has to be safe to leave running and easy to remove.</p>
+        <p>The eval is a <strong>separate workflow</strong> from the main CI. The existing job is hermetic: it runs pytest and a static-site validator, needs no secrets, and never calls a model. I wanted to keep it that way. The eval job carries the one API key, makes paid calls, and tolerates a little non-determinism, so it gets its own file and its own trigger. It only runs on pull requests that touch the skill, so most changes never pay for it. The third-party action is <strong>pinned to a commit</strong> rather than a moving tag, and the whole thing is one file you can delete to roll back.</p>
 
-        <h2>Honest limitations</h2>
-        <p>The grader is a model, so the pass rate is not a straight line. I run against a threshold rather than demanding a perfect score, and I keep the criteria coarse enough that an honest response passes and a drifting one fails. Two, treating exact word counts as a grading criterion is a bad idea; the deterministic checker still owns that, and the eval stays on behavior.</p>
-        <p>The bigger caveat: this measures spec-compliance, not quality. It can tell me the standup has the right shape and broke none of its rules. It cannot tell me the standup is <em>good</em>, that it surfaced the work a manager would actually care about. That is a heavier kind of eval, one that compares a change against a baseline on real tasks, and it is not what belongs in a per-pull-request gate. This is the cheap, fast check that runs every time. It is not the whole story, and it is not trying to be.</p>
+        <h2>Limitations</h2>
+        <p>The grader is a model, so the pass rate varies between runs. I run against a threshold instead of requiring a perfect score, and keep the criteria coarse enough that a correct response passes and a drifting one fails. Exact word counts make bad grading criteria; the deterministic checker owns those, and the eval stays on behavior.</p>
+        <p>The bigger caveat: this measures compliance with the spec, not quality. It can tell me the standup has the right shape and broke none of its rules. It cannot tell me the standup is <em>good</em>: that it surfaced the work a manager would care about. That takes a heavier eval, one that compares a change against a baseline on real tasks, and it does not belong in a per-pull-request gate. This one is the cheap check that runs every time.</p>
 
         <div class="note">
-          <p><strong>The practical test:</strong> if this is working, a well-meaning edit to the skill's instructions that breaks a guardrail fails CI before it merges, and the failing criterion tells you which behavior you lost.</p>
+          <p><strong>How to tell it is working:</strong> an edit to the skill's instructions that breaks a guardrail fails CI before it merges, and the failing criterion names the behavior you lost.</p>
         </div>
 
         <section class="install-block" id="adopt">
@@ -149,7 +149,7 @@ criteria:
     </main>
 
     <footer>
-      Drafted as a personal blog article and public note on evaluating the <code>productivity</code> plugin's standup skill.
+      Companion post on evaluating the <code>productivity</code> plugin's standup skill.
     </footer>
   </div>
 </body>
