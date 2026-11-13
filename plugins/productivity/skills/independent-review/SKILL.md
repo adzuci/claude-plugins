@@ -12,16 +12,18 @@ You verify. You do not author. The value of this review is that it comes from so
 ## Usage
 
 ```text
-/independent-review pr <number or URL> [--post]
-/independent-review branch <name> [--base <branch>]
-/independent-review diff
-/independent-review check
+/productivity:independent-review pr <number or URL> [--post]
+/productivity:independent-review branch <name> [--base <branch>]
+/productivity:independent-review diff
+/productivity:independent-review check
 ```
 
 - `pr`: review a pull request. The verdict is printed in chat. It is posted on the pull request only with `--post` or when the user asks for that in words.
 - `branch`: review a local or remote branch against its base (the repository's default branch unless `--base` is given).
-- `diff`: review the uncommitted and unpushed changes in the current checkout.
+- `diff`: review the uncommitted and unpushed changes in the current checkout. This mode reads the checkout in place, because a separate worktree cannot hold uncommitted changes.
 - `check`: run the repository checks only, with no review.
+
+Installed through the plugin, the command is `/productivity:independent-review`. Installed as a standalone skill, it is `/independent-review`.
 
 ## Repository Checks
 
@@ -33,15 +35,15 @@ You verify. You do not author. The value of this review is that it comes from so
 ## Reviewing A Change
 
 1. **Get the whole change.** For a pull request: `gh pr view <n> --json title,body,author,baseRefName,headRefName,files` and `gh pr diff <n>`. For a branch: `git diff <base>...<branch>` and `git log <base>..<branch>`. Read every changed file in full, not only the hunks.
-2. **Work apart from the author.** Check the change out in a separate temporary worktree (`git worktree add <temporary path> <ref>`). Do not switch branches in, or write to, the checkout the author is using.
-3. **Run the repository checks** on that worktree.
+2. **Work apart from the author.** For `pr` and `branch`, check the change out in a separate temporary worktree (`git worktree add <temporary path> <ref>`). Do not switch branches in, or write to, the checkout the author is using. For `diff`, there is no worktree: read the change with `git status`, `git diff HEAD`, and `git log @{u}..HEAD` (or `git log <base>..HEAD` when the branch has no upstream), and change nothing in the checkout.
+3. **Run the repository checks** on that worktree. For `diff`, run them in the checkout, and only the ones that do not rewrite tracked files (tests, linters in check mode); report any formatter or generator you skipped for that reason as `not run`.
 4. **Review for:**
    - **Correctness** against what the change says it does (its description, linked issue, and any design or contract document in the repository).
    - **Security:** secrets and tokens, permissions, injection from untrusted input, new network calls, new dependencies and whether they are pinned, changes to CI workflows.
    - **Tests:** would a test fail if this change were reverted or broken?
    - **Scope:** does it touch only what it claims to, with no unrelated edits riding along?
 5. **Decide.** Require changes only for defects that make merging unsafe or wrong. Style preferences and nice-to-haves go under follow-ups.
-6. **Clean up.** Remove the temporary worktree (`git worktree remove <temporary path>`).
+6. **Clean up.** Remove the temporary worktree, if you made one (`git worktree remove <temporary path>`).
 
 ## Verdict Format
 
@@ -65,7 +67,7 @@ Not verified:
 - <anything you could not check, and why>
 ```
 
-A verdict covers one head commit. If the branch moves, the verdict is stale: say so and review again.
+A verdict covers one head commit. If the branch moves, the verdict is stale: say so and review again. In `diff` mode, give the current `HEAD` and add `plus uncommitted changes` when there are any; that verdict is stale as soon as the checkout changes.
 
 When asked to post, use `gh pr review <n> --comment --body-file <file>` so the review is a comment. Do not use `--approve` or `--request-changes`: the written verdict line is the record, and it reads the same whether or not the reviewer shares an account with the author.
 

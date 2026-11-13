@@ -10,9 +10,11 @@ Judge a run that nobody watched, the morning after, in about ten minutes. Score 
 ## Usage
 
 ```text
-/unattended-run-review
-/unattended-run-review --since "yesterday 22:00" --until "today 08:00" --repo <owner/name> [--repo ...] [--save <path>]
+/productivity:unattended-run-review
+/productivity:unattended-run-review --since "yesterday 22:00" --until "today 08:00" --repo <owner/name> [--repo ...] [--save <path>]
 ```
+
+Installed through the plugin, the command is `/productivity:unattended-run-review`. Installed as a standalone skill, it is `/unattended-run-review`.
 
 By default the scorecard is printed in chat and nothing is written. With `--save`, or when the user asks, write it to the path they name.
 
@@ -117,7 +119,7 @@ Sources: the provider's usage console or a local usage dashboard, session logs, 
 gh pr view <n> -R <repo> --json reviews,comments | grep -oiE 'verdict: ?(approve|changes required)'
 ```
 
-The first match is the first-review result when reviews follow the `/independent-review` verdict format.
+The first match is the first-review result when reviews follow the `/productivity:independent-review` verdict format.
 
 - **1:** More than half the sessions or tokens went on housekeeping; unchanged code was reviewed repeatedly; more than a quarter of the window was lost to stalls and limits; spend went over the cap.
 - **3:** Housekeeping took a third to a half of sessions; about half the changes were reworked, with review catching real defects; under ten percent of the window was lost.
@@ -183,5 +185,5 @@ Rank improvements by how many dimensions they lift and how often the problem wil
 
 ## Related Skills
 
-- `/premortem` before a run: find the failures in the plan and its guardrails.
-- `/independent-review` during or after a run: check each change by something other than its author.
+- `/productivity:premortem` before a run: find the failures in the plan and its guardrails.
+- `/productivity:independent-review` during or after a run: check each change by something other than its author.

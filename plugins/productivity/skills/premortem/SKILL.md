@@ -10,9 +10,11 @@ Start from the assumption that the plan was carried out and it went badly. Work 
 ## Usage
 
 ```text
-/premortem <pasted plan, file path, or a pointer to the plan in this conversation>
-/premortem
+/productivity:premortem <pasted plan, file path, or a pointer to the plan in this conversation>
+/productivity:premortem
 ```
+
+Installed through the plugin, the command is `/productivity:premortem`. Installed as a standalone skill, it is `/premortem`.
 
 With no argument, ask in one line what to examine. Read a named file before judging it; do not review a plan from its title.
 
