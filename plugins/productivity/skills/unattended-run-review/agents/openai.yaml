@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unattended Run Review"
+  short_description: "Score an overnight agent run from its records"
+  default_prompt: "Use $unattended-run-review to score last night's unattended run and list the top improvements."

@@ -56,6 +56,9 @@ Current support note: the setup flow has been tested on macOS. Linux and Windows
 | `/productivity:daily-wrapup` | End-of-day review, tomorrow preview, and goal capture into the vault session note. |
 | `/productivity:budgetclaw-setup` | Claude Code spend monitoring with local macOS notifications. |
 | `/productivity:setup-ccflare` | Install public local Claude usage analytics on macOS; no Apollo access required. |
+| `/productivity:premortem` | Assume a plan or unattended job already failed, rank the specific ways it failed, and give a fix or stop rule for each. Read-only. |
+| `/productivity:independent-review` | Review a pull request, branch, or diff you did not write: run the repo's own checks and return a fixed-format `APPROVE` or `CHANGES REQUIRED` verdict. |
+| `/productivity:unattended-run-review` | Score an overnight or unattended agent run out of 35 from its records, across seven dimensions, and turn the two lowest into improvements. |
 
 It also ships `create-agent` and the `agent-ops-setup`/`agent-ops-report` pair for privacy-safe scheduled-agent operations. See `plugins/productivity/README.md` for details.
 
@@ -167,6 +170,7 @@ plugins/
       productivity-setup/  todo/  ai-coach/  slack-response-monitor/
       wrapup/  daily-wrapup/  budgetclaw-setup/  setup-ccflare/
       create-agent/  agent-ops-setup/  agent-ops-report/
+      premortem/  independent-review/  unattended-run-review/
   local-ai/
     .claude-plugin/plugin.json
     .codex-plugin/plugin.json
