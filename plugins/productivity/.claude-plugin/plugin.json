@@ -1,7 +1,7 @@
 {
   "name": "productivity",
-  "version": "0.5.0",
-  "description": "Portable standups, task capture, Slack response monitoring, session hygiene, daily planning, AI coaching, setup, spend and usage monitoring, and privacy-safe agent operations.",
+  "version": "0.6.0",
+  "description": "Portable standups, task capture, Slack response monitoring, session hygiene, daily planning, AI coaching, setup, spend and usage monitoring, privacy-safe agent operations, and premortem, independent-review, and scoring skills for unattended agent runs.",
   "author": {
     "name": "adzuci"
   }

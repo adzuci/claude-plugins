@@ -1,0 +1,4 @@
+interface:
+  display_name: "Independent Review"
+  short_description: "Review a change you did not write and return a verdict"
+  default_prompt: "Use $independent-review to review this pull request and give me a verdict without posting it."
