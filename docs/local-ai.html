@@ -24,7 +24,7 @@
       <section class="hero-copy">
         <p class="eyebrow">Local inference · reused hardware · explicit trust boundaries</p>
         <h1>Two Macs, one local model pool</h1>
-        <p class="dek">NVIDIA PAIR can let an older Mac hold the model while a newer one keeps the editor, browser, and build tools. The useful part is not raw speed. It is separating two workloads that fight over the same memory.</p>
+        <p class="dek">NVIDIA PAIR can let an older Mac hold the model while a newer one keeps the editor, browser, and build tools. The gain is memory, not speed: the two workloads stop competing for the same RAM.</p>
         <div class="meta-grid" aria-label="Article metadata">
           <div class="meta-card"><strong>Client</strong>Apps talk only to localhost</div>
           <div class="meta-card"><strong>Host</strong>Engine and model weights</div>
@@ -39,7 +39,7 @@
 
         <p>The client sends an Ollama-compatible or OpenAI-compatible request to its own loopback interface. PAIR can forward that request over the LAN to a paired host, where an inference engine owns the model weights. The application still sees one local endpoint; the expensive memory footprint lives elsewhere.</p>
 
-        <div class="pullquote">The point is resource separation: keep the model on the machine that has spare memory, and keep interactive work on the machine in front of you.</div>
+        <div class="pullquote">Keep the model on the machine with spare memory, and interactive work on the machine in front of you.</div>
 
         <h2 id="architecture">The request path</h2>
         <div class="hook-flow" aria-label="PAIR request path between two Macs">
@@ -82,7 +82,7 @@
           </section>
         </div>
 
-        <h2 id="limits">The limits matter more than the happy path</h2>
+        <h2 id="limits">Limits to know before installing</h2>
         <p><strong>Structured tool calls are currently broken through PAIR.</strong> The upstream proxy can return an intended tool invocation as ordinary text instead of a structured <code>tool_calls</code> object. That makes plain completions useful, but blocks the agent workflow most people are tempted to try first. Check <a href="https://github.com/NVIDIA/Personal-AI-Router/issues/94">issue #94</a> before installing for an agent use case.</p>
 
         <p><strong>A healthy endpoint is not routing proof.</strong> Bare Ollama can answer <code>/v1/models</code> on the same port. The authoritative evidence is a real request followed by a PAIR Jobs card that says <code>Ran on</code> and names the other machine.</p>
@@ -131,7 +131,7 @@ codex plugin add local-ai@adzuci-plugins</code></pre>
           <p><strong>Repo:</strong> <a href="https://github.com/adzuci/claude-plugins">adzuci/claude-plugins</a></p>
           <p><strong>Plugin:</strong> <code>local-ai</code></p>
           <p><strong>Skills:</strong> PAIR setup, model selection, LiteLLM setup</p>
-          <p><strong>Principle:</strong> verify the route, not just the endpoint.</p>
+          <p><strong>Principle:</strong> a healthy endpoint does not prove the route.</p>
         </section>
 
         <section class="side-panel" id="references">

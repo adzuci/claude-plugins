@@ -22,7 +22,7 @@
       <section class="hero-copy">
         <p class="eyebrow">Engineering leadership · local-first AI tooling</p>
         <h1>Local-first AI tooling</h1>
-        <p class="dek">Notes from an engineering manager (SRE background) on making AI-assisted work durable: plain files, explicit writes, small loops you can inspect. Each post ships with a working plugin.</p>
+        <p class="dek">Notes from an engineering manager (SRE background) on making AI-assisted work durable: plain files, explicit writes, small loops you can inspect. Each post comes with a plugin or workflow you can install.</p>
       </section>
     </header>
 
@@ -33,27 +33,27 @@
           <div class="install-grid">
             <section class="install-card">
               <h3><a href="memory.html">Memory as reliability practice</a></h3>
-              <p>Why a good AI session should leave durable residue, and a setup skill that scaffolds a git-backed Obsidian vault to hold it. Start here; the other posts build on this vault.</p>
+              <p>Session hooks write a recap of every AI session into a git-backed Obsidian vault, so you can query your own work history. Start here; the other posts build on this vault.</p>
               <p class="install-footnote"><code>memory</code> plugin</p>
             </section>
             <section class="install-card">
               <h3><a href="productivity.html">An operating loop for AI-assisted work</a></h3>
-              <p>Jira-backed standups, task capture, session hygiene, daily planning, and a Friday report-only AI coach: small loops that turn the vault from a filing cabinet into an operating system.</p>
+              <p>Five skills on top of the vault: task capture, a check before <code>/clear</code>, Jira-backed standups, an end-of-day review, and a Friday coach that only writes a report.</p>
               <p class="install-footnote"><code>productivity</code> plugin</p>
             </section>
             <section class="install-card">
               <h3><a href="learning.html">Reflecting your own work back as a learning plan</a></h3>
-              <p>A weekly engineering self-retro that reads your own sessions (or your shipped GitHub and Jira work in a cloud routine) and returns a small, evidence-cited, ranked learning plan.</p>
+              <p>A weekly self-retro that reads your own sessions (or your GitHub and Jira work, in a cloud routine) and returns a short, ranked learning plan with the evidence cited.</p>
               <p class="install-footnote"><code>learning</code> plugin</p>
             </section>
             <section class="install-card">
               <h3><a href="local-ai.html">Two Macs, one local model pool</a></h3>
-              <p>A cautious path for sharing local inference across two Macs with NVIDIA PAIR, choosing a model that fits, and adding a loopback LiteLLM route.</p>
+              <p>Share local inference across two Macs with NVIDIA PAIR, pick a model that fits in memory, and add a loopback LiteLLM route. Plain completions only for now.</p>
               <p class="install-footnote"><code>local-ai</code> plugin</p>
             </section>
             <section class="install-card">
-              <h3><a href="skill-evals.html">Testing skills the way they actually run</a></h3>
-              <p>Unit tests prove the checker; an eval proves the skill. A GitHub Action runs the standup skill against fixture cases and grades the transcript, kept separate from the hermetic test job.</p>
+              <h3><a href="skill-evals.html">Testing skills the way they run</a></h3>
+              <p>Unit tests cover the checker; an eval covers the skill. A GitHub Action runs the standup skill against fixture cases and grades the transcript, in a job separate from the hermetic tests.</p>
               <p class="install-footnote">CI workflow · <code>skill-eval.yml</code></p>
             </section>
           </div>
@@ -61,7 +61,7 @@
 
         <section class="install-block" id="install">
           <h2>Install the plugins</h2>
-          <p>Everything described in these posts is a public plugin. Add the marketplace once, then install what you want.</p>
+          <p>Add the marketplace once, then install the plugins you want.</p>
           <div class="install-grid">
             <section class="install-card">
               <h3>Claude Code</h3>
@@ -81,7 +81,7 @@ codex plugin add memory@adzuci-plugins</code></pre>
       <aside>
         <section class="side-panel">
           <h3>About</h3>
-          <p>I manage infrastructure teams and use these plugins daily. The through-line: if AI is becoming part of how I think, build, and manage, the context layer should not be accidental, and it should stay mine.</p>
+          <p>I manage infrastructure teams and use these plugins daily. They keep the context from my AI sessions in plain files I own, where I can read it, search it and delete it.</p>
           <p><strong>Repo:</strong> <a href="https://github.com/adzuci/claude-plugins">adzuci/claude-plugins</a></p>
           <p><strong>Principle:</strong> local, inspectable continuity across assistants.</p>
         </section>

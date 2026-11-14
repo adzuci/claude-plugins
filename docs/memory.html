@@ -25,9 +25,9 @@
       <section class="hero-copy">
         <p class="eyebrow">Engineering leadership · operational memory · local-first AI tooling</p>
         <h1>Memory as reliability practice</h1>
-        <p class="dek">The first big win from a simple Karpathy-style LLM wiki is being able to ask questions about my past AI sessions, so I can improve how I work and track whether the time and tokens are producing useful outcomes.</p>
+        <p class="dek">A Karpathy-style LLM wiki lets me ask questions about my past AI sessions: what I keep redoing, and whether the time and tokens paid off.</p>
         <div class="meta-grid" aria-label="Article metadata">
-          <div class="meta-card"><strong>First unlock</strong>Query past sessions</div>
+          <div class="meta-card"><strong>First use</strong>Query past sessions</div>
           <div class="meta-card"><strong>Foundation</strong>Git-backed Markdown</div>
           <div class="meta-card"><strong>Capture</strong>Hooks and importers</div>
         </div>
@@ -36,19 +36,19 @@
 
     <main>
       <article>
-        <p class="lead">A good AI session should become evidence I can use later, not another conversation I vaguely remember having.</p>
+        <p class="lead">A good AI session should leave a record I can use later.</p>
 
-        <p>This post stays intentionally basic: what a Karpathy-style LLM wiki unlocks, how the capture hooks work, and one way to set it up. After only a few days of session recaps, you can ask useful questions across your work history. The foundation is simply a small, navigable collection of Markdown.</p>
+        <p>This post covers three things: what the wiki is good for, how the capture hooks work, and one way to set it up. A few days of session recaps is enough to start asking questions across your work history. Underneath, it is a small collection of Markdown files with an index.</p>
 
-        <div class="pullquote">The wiki is not the product. The first product is being able to ask, “What does my own work history say I should improve?”</div>
+        <div class="pullquote">The first question worth asking it: what does my own work history say I should improve?</div>
 
-        <h2>The first unlock: question your own work history</h2>
-        <p>Once session recaps are durable, I can ask questions that are difficult to answer from memory or from one chat transcript: Where am I repeating the same manual work? Which tools consistently help? What did I leave half-finished? Which expensive sessions produced a shipped artifact, saved time, or reduced risk?</p>
+        <h2>Question your own work history</h2>
+        <p>With recaps on disk, I can ask things I cannot answer from memory or from one transcript. Where am I repeating the same manual work? Which tools keep helping? What did I leave half-finished? Which expensive sessions ended in something shipped, time saved, or a risk removed?</p>
 
-        <p>That turns session history into a process-improvement and ROI dataset. The answers are imperfect, but they are grounded in work I actually did instead of generic productivity theory.</p>
+        <p>The answers are imperfect, but they come from work I did, which makes them more useful than general productivity advice.</p>
 
-        <h2 id="hooks">The hooks are the capture layer</h2>
-        <p>Obsidian does not listen to AI sessions. It is the readable interface over the Markdown. Capture happens in each AI client, then every path converges on the same daily note.</p>
+        <h2 id="hooks">How capture works</h2>
+        <p>Obsidian only displays the Markdown. Capture happens in each AI client, and every path ends in the same daily note.</p>
 
         <div class="hook-flow" aria-label="Session capture paths into the Obsidian vault">
           <div class="hook-path">
@@ -85,12 +85,12 @@
           </section>
           <section class="hook-card">
             <p class="hook-label">2 · Summarize cheaply</p>
-            <h3>Keep the useful residue</h3>
+            <h3>Then a short summary</h3>
             <p>For a substantive session, a detached Haiku call reads only the last 20 KB of user and assistant prose, not tool results or hidden reasoning, and appends at most eight bullets under Did, Decisions, Blockers, and Next.</p>
           </section>
           <section class="hook-card">
             <p class="hook-label">3 · Recall on demand</p>
-            <h3>Do not inject everything</h3>
+            <h3>Read only what is relevant</h3>
             <p>A managed instruction block points future Claude sessions to the vault index. The assistant reads only the notes relevant to the current task; raw transcripts stay outside the default context path.</p>
           </section>
         </div>
@@ -99,18 +99,18 @@
           <p><strong>Guardrails:</strong> trivial sessions skip the model call; summarization runs with MCP disabled and a ten-cent ceiling; a recursion flag stops the summarizer from logging itself. Codex uses a pull importer when no true session-end hook is available and tracks imported IDs so retries do not duplicate entries.</p>
         </div>
 
-        <h2>Why I trust this shape</h2>
-        <p>The system behaves like infrastructure I would trust: local-first, inspectable, reversible, and explicit about writes. The setup skill runs read-only preflight checks, asks before touching dotfiles, backs up settings, and leaves the hook as a normal shell script you can read or remove.</p>
+        <h2>Why I trust it</h2>
+        <p>It is built the way I want any infrastructure built: local, readable, reversible, and explicit about what it writes. The setup skill runs read-only preflight checks, asks before touching dotfiles, backs up settings, and leaves the hook as a normal shell script you can read or remove.</p>
 
-        <p>The result is the public <code>memory</code> plugin. <code>/memory:memory-setup</code> scaffolds the vault, installs the useful Obsidian pieces, wires Claude session capture, and offers compatible Codex and Antigravity importers. Optional sync keeps the vault converged across machines; optional git-crypt encryption keeps sensitive directories readable locally while the remote sees ciphertext.</p>
+        <p>All of this ships as the public <code>memory</code> plugin. <code>/memory:memory-setup</code> scaffolds the vault, installs the useful Obsidian pieces, wires Claude session capture, and offers compatible Codex and Antigravity importers. Optional sync keeps the vault converged across machines; optional git-crypt encryption keeps sensitive directories readable locally while the remote sees ciphertext.</p>
 
-        <p>The operating pattern matters more than the folder names: capture broadly, start from a small index, keep raw exhaust out of the default context, and promote only durable facts, decisions, references, and preferences.</p>
+        <p>The folder names are incidental. The pattern is: capture everything, start each session from a small index, keep raw transcripts out of the default context, and promote only durable facts, decisions, references and preferences.</p>
 
-        <h2 id="phase-two">What compounds later</h2>
-        <p>After a few days, an ad hoc retrospective can find recurring friction or missed follow-ups. With more history, scheduled reports can compare cost with visible outcomes, daily wrap-ups can recover half-finished work, and a publishing funnel can turn a small number of non-proprietary lessons into useful writing. Most captured context should never leave the vault.</p>
+        <h2 id="phase-two">What more history gives you</h2>
+        <p>After a few days, a one-off retrospective can find recurring friction and missed follow-ups. With more history, scheduled reports can compare cost with outcomes, daily wrap-ups can recover half-finished work, and a few non-proprietary lessons can become posts like this one. Most of what is captured should never leave the vault.</p>
 
         <div class="note">
-          <p><strong>The practical test:</strong> future sessions need less preamble, fewer repeated explanations, and fewer “where did we decide that?” searches.</p>
+          <p><strong>How to tell it is working:</strong> new sessions need less preamble, and you stop searching for where a decision was made.</p>
         </div>
 
         <section class="install-block" id="install">
@@ -148,7 +148,7 @@ gh auth login</code></pre>
         </details>
 
         <div class="note">
-          <p><strong>Next:</strong> <a href="productivity.html">An operating loop for AI-assisted work</a> adds task capture, session hygiene, daily planning, and a weekly coach on top of this vault. Then <a href="learning.html">Reflecting your own work back as a learning plan</a> turns the same history into a weekly self-retro. Finally, <a href="skill-evals.html">Testing skills the way they actually run</a> covers behavioral evaluation.</p>
+          <p><strong>Next:</strong> <a href="productivity.html">An operating loop for AI-assisted work</a> adds task capture, session hygiene, daily planning, and a weekly coach on top of this vault. Then <a href="learning.html">Reflecting your own work back as a learning plan</a> turns the same history into a weekly self-retro. Finally, <a href="skill-evals.html">Testing skills the way they run</a> covers behavioral evaluation.</p>
         </div>
       </article>
 
@@ -168,7 +168,7 @@ gh auth login</code></pre>
 
         <section class="side-panel" id="references">
           <h3>References</h3>
-          <p>Official and primary references that shaped the “visible machinery” framing.</p>
+          <p>Karpathy's own material, for background.</p>
           <div class="link-list">
             <a href="https://karpathy.ai/">Karpathy official site</a>
             <a href="https://karpathy.ai/zero-to-hero.html">Neural Networks: Zero to Hero</a>
@@ -180,7 +180,7 @@ gh auth login</code></pre>
     </main>
 
     <footer>
-      Drafted as a personal blog article and public note for the <code>memory</code> plugin.
+      Companion post for the <code>memory</code> plugin.
     </footer>
   </div>
 </body>
