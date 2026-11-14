@@ -29,6 +29,18 @@
       "category": "Productivity"
     },
     {
+      "name": "house",
+      "source": {
+        "source": "local",
+        "path": "./plugins/house"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
       "name": "tools",
       "source": {
         "source": "local",

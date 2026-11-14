@@ -1,0 +1,4 @@
+interface:
+  display_name: "House Manager"
+  short_description: "Run the weekly house-manager digest"
+  default_prompt: "Use $hm to run my house-manager weekly digest."
