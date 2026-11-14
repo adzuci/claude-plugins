@@ -88,6 +88,7 @@ def test_validate_role_rejects_unknown_roles(role: str):
     "command,expected",
     [
         ("ollama-proxy", "ok"),
+        ("nvpair-proxy", "ok"),
         ("ollama", "bypassed"),
         ("", "absent"),
         ("nginx", "foreign"),
@@ -108,6 +109,32 @@ def test_installer_pins_reviewed_release_and_digest():
     )
     assert "read-only default" in installer
     assert "--apply" in installer
+
+
+@pytest.mark.parametrize(
+    "machine,expected", [("arm64", "arm64"), ("x86_64", "x64")]
+)
+def test_pair_arch_maps_supported_machines(machine: str, expected: str):
+    assert sh(f'pair_arch "{machine}"').stdout.strip() == expected
+
+
+@pytest.mark.parametrize("machine", ["", "i386", "aarch64", "ppc"])
+def test_pair_arch_rejects_unknown_machines(machine: str):
+    assert sh(f'pair_arch "{machine}"').returncode != 0
+
+
+def test_each_architecture_has_a_pinned_digest_and_url():
+    for arch in ("arm64", "x64"):
+        digest = sh(f'pair_dmg_sha256 "{arch}"').stdout.strip()
+        assert len(digest) == 64
+        url = sh(f'pair_dmg_url "{arch}"').stdout.strip()
+        assert url.endswith(f"-0.1.1-{arch}.dmg")
+        assert "/releases/download/v0.1.1/" in url
+    assert sh('pair_dmg_sha256 "ppc"').returncode != 0
+
+
+def test_peer_flag_requires_a_value():
+    assert run_script("pair_doctor.sh", "--peer").returncode == 2
 
 
 @pytest.mark.parametrize("script", ["pair_install.sh", "pair_doctor.sh"])
@@ -142,3 +169,8 @@ def test_scripts_are_valid_bash():
 def test_executable_scripts_have_execute_bit():
     for script in (SCRIPTS / "pair_install.sh", SCRIPTS / "pair_doctor.sh"):
         assert script.stat().st_mode & 0o111
+
+
+def test_doctor_listener_handles_app_paths_with_spaces():
+    doctor = (SCRIPTS / "pair_doctor.sh").read_text()
+    assert "awk 'NR == 1 {print $1}'" not in doctor

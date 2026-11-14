@@ -1,6 +1,6 @@
 ---
 name: pair-setup
-description: Manual-invocation only. Install, pair, verify, or remove NVIDIA Personal AI Router on two Apple Silicon Macs for local inference. Run via /local-ai:pair-setup.
+description: Manual-invocation only. Install, pair, verify, or remove NVIDIA Personal AI Router on two Macs (Apple Silicon or Intel) for local inference. Run via /local-ai:pair-setup.
 argument-hint: host|client [install|pair|verify|uninstall]
 disable-model-invocation: true
 ---
@@ -8,7 +8,8 @@ disable-model-invocation: true
 # PAIR Setup
 
 Set up [NVIDIA Personal AI Router](https://github.com/NVIDIA/Personal-AI-Router)
-(PAIR) across two Apple Silicon Macs. The host stores model weights and runs the
+(PAIR) across two Macs. Apple Silicon and Intel (x64) are both supported; the
+installer picks the pinned disk image and digest for the machine's architecture. The host stores model weights and runs the
 inference engine. The client sends requests to its own loopback address and PAIR
 can forward them to the host over the LAN.
 
@@ -38,7 +39,7 @@ structured `tool_calls`.
 
 Stop when either machine:
 
-- is not macOS on Apple Silicon;
+- is not macOS on Apple Silicon or Intel;
 - is not owned by the user or explicitly authorized for this installation;
 - is connected through an untrusted or isolated network; or
 - cannot accept a persistent privileged helper and firewall changes.
@@ -53,6 +54,20 @@ an unauthenticated public reverse proxy in front of them.
 
 PAIR installs a privileged helper. Dragging the app to Trash is not a complete
 uninstall. Use the bundled uninstaller and verify that the helper is gone.
+
+## Auto-update
+
+PAIR updates itself. A pinned 0.1.1 install may become 1.0.0 and move from
+`PAIR.app` to `NVIDIA PAIR.app` (same bundle ID and signing team), and its proxy
+process is then `nvpair-proxy`. The doctor handles both layouts. Do not "fix" a
+newer valid install by reinstalling the older pinned release.
+
+## Hardware Notes
+
+- Intel Macs have no GPU acceleration for inference and vLLM is unavailable.
+  Use small models (1-4B parameters, for example `llama3.2:3b`) and make the
+  Apple Silicon machine the host.
+- Check free disk before pulling models and warn when under about 10 GB free.
 
 ## Actions
 
@@ -93,7 +108,30 @@ changing sleep settings, or pulling a model. Use `/local-ai:local-model-pick`
 for the model choice. The client should not run its own engine because that can
 cause requests to stay local.
 
+Install the engine from PAIR's own **Install** button next to Ollama, not with
+`brew install ollama`: on Intel Macs Homebrew may compile cmake from source and
+saturate the CPU for a long time, and PAIR expects its engine on port 11435.
+LM Studio's installer can fail with a 404 from `llmster.lmstudio.ai`; that is an
+upstream download problem, so use Ollama. Pull a model through the engine port:
+
+```bash
+curl -s http://127.0.0.1:11435/api/pull -d '{"model":"llama3.2:3b","stream":false}'
+```
+
+The proxy on 11434 can take about 20 seconds to list a newly pulled model.
+
 ### Pair
+
+PAIR's node service listens on TCP **14318** and advertises over mDNS. Ping and
+ports 11434/11435 are not valid peer checks: ICMP is often blocked, and the
+others are local endpoints. Check reachability with:
+
+```bash
+scripts/pair_doctor.sh --role host --peer <other-mac-ip>
+```
+
+If **Add node** lists the peer but `--peer` reports it unreachable, the peer's
+firewall or router client isolation is blocking TCP 14318.
 
 Confirm the user controls both machines and is on a trusted private LAN. Open
 PAIR on both machines, choose **Add node**, and exchange the six-digit PIN while
