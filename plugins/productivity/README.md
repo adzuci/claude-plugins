@@ -56,6 +56,20 @@ Initializes private local tracking for scheduled agents. It references explicitl
 
 Builds an on-demand operational report from agent run ledgers and optional Claude or Codex JSONL/session artifacts. It reports status, duration, measured tokens, source coverage, and explicit data gaps without emitting prompt content, response content, or absolute session paths.
 
+### `/productivity:premortem`
+
+Stress-tests a plan, a goal, a set of guardrails, or an unattended job before it runs. It assumes the plan already failed, lists up to ten specific failure modes (contradictions, gaps, loops, irreversible actions, injected instructions, environment, observability), ranks them, and gives a concrete fix or stop rule for each, ending in a one-line verdict. Read-only: it offers fixes and waits.
+
+### `/productivity:independent-review`
+
+Reviews a pull request, branch, or local diff that someone else (a person or another agent) wrote. It refuses to review its own session's work, runs the repository's own checks in a temporary worktree, and returns a fixed-format verdict (`APPROVE` or `CHANGES REQUIRED`) for one head commit, with every check reported as passed, failed, or not run. It posts the verdict on the pull request only when asked, and never merges or pushes.
+
+### `/productivity:unattended-run-review`
+
+Scores an unattended or overnight agent run the morning after, from records only (commits, pull requests, CI runs, your task tracker, notification logs, usage data). Seven dimensions are rated 1 to 5 against written anchors: verified output, continuity, escalation, what the owner was told, tracker truth, cost and waste, and safety. The total out of 35 maps to a recommendation on running unattended again, and the two lowest dimensions become ranked improvements. You name the records; anything missing is marked partly unmeasured, not guessed.
+
+Use `/productivity:premortem` before an unattended run, `/productivity:independent-review` on what it produces, and `/productivity:unattended-run-review` to judge the run afterwards.
+
 ## Install
 
 ```

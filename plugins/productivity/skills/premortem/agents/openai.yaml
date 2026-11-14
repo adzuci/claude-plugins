@@ -1,0 +1,4 @@
+interface:
+  display_name: "Premortem"
+  short_description: "Assume a plan failed and turn each cause into a fix"
+  default_prompt: "Use $premortem to stress-test this plan before I let it run unattended."
