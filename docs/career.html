@@ -24,7 +24,7 @@
       <section class="hero-copy">
         <p class="eyebrow">Career strategy · structured research · local-first AI tooling</p>
         <h1>Job search as market intelligence</h1>
-        <p class="dek">Scrolling job boards is sampling without a model. A senior search goes better when it is run like research: explicit criteria, a repeatable sweep, and a report you can compare week over week.</p>
+        <p class="dek">Run a senior job search like research: written criteria, a repeatable sweep, and a report you can compare week over week.</p>
         <div class="meta-grid" aria-label="Article metadata">
           <div class="meta-card"><strong>Audience</strong>Staff / Director / Principal candidates</div>
           <div class="meta-card"><strong>Artifact</strong><code>career</code> plugin</div>
@@ -35,24 +35,24 @@
 
     <main>
       <article>
-        <p class="lead">The senior job market is opaque in a specific way: the roles exist, but the signal about level, compensation, and real remote eligibility is scattered and stale. That is a research problem, and research problems respond to structure.</p>
+        <p class="lead">Senior roles exist, but the facts about level, pay and remote eligibility are scattered and often stale. Finding them is research, so I gave it a structure.</p>
 
-        <p>The <code>career</code> plugin has one skill, <code>/career:market-sweep</code>. It runs a job market intelligence sweep for a senior technical candidate and writes the result into your vault as a dated Markdown report. That is market intelligence, not a job board dump.</p>
+        <p>The <code>career</code> plugin has one skill, <code>/career:market-sweep</code>. It runs a job market intelligence sweep for a senior technical candidate and writes the result into your vault as a dated Markdown report.</p>
 
         <h2>How a sweep works</h2>
         <p>It starts from a criteria file (<code>career/search-criteria.md</code> in your vault): target titles, location and compensation floor, stack keywords, seniority signals, any priority filter, domain bonuses, and hard exclusions. The first run collects these; later runs confirm and reuse them, which is what makes the reports comparable over time.</p>
 
-        <p>The sweep itself covers market conditions for your level, priority companies with confirmed active roles, additional strong matches, stack trends in senior job descriptions, and compensation benchmarks. Claims get verified rather than repeated: a "women-led" filter, for example, means checking who the CEO actually is, and a "Remote US" label means checking the careers page, not the aggregator.</p>
+        <p>The sweep itself covers market conditions for your level, priority companies with confirmed active roles, additional strong matches, stack trends in senior job descriptions, and compensation benchmarks. Claims are checked at the source: a "women-led" filter means checking who the CEO is, and a "Remote US" label means checking the company's careers page, not the aggregator.</p>
 
-        <div class="pullquote">The report is the product. The rank ordering forces the question a spreadsheet of links never asks: which five of these are worth an hour this week?</div>
+        <div class="pullquote">The ranking answers one question: which five of these are worth an hour this week?</div>
 
-        <p>After the report is written, the skill runs an automated recruiter-review pass over its own output and improves the report in place, the same trick as code review applied to a research artifact. It then offers to schedule a weekly repeat so the market view stays current instead of being a one-time snapshot.</p>
+        <p>After writing the report, the skill reviews it as a recruiter would and revises it in place. It then offers to schedule a weekly repeat.</p>
 
-        <h2>Honest limitations</h2>
-        <p>It is built on web research, so it inherits the web's noise: compensation data is directional (Levels.fyi, Built In, Glassdoor), listings go stale, and a sweep is a starting point for judgment, not a substitute for it. The defaults are opinionated (remote US, $150k+ base, senior engineering/data titles), though the criteria step generalizes to other disciplines. And the reports land in a local vault on purpose: a job search is exactly the kind of context that should stay in plain files you own.</p>
+        <h2>Limitations</h2>
+        <p>It runs on web research. Compensation figures (Levels.fyi, Built In, Glassdoor) are rough, listings go stale, and you still have to judge each role yourself. The defaults assume remote US, $150k+ base and senior engineering or data titles; the criteria step lets you change them for other disciplines. Reports stay in your local vault, because a job search is private.</p>
 
         <div class="note">
-          <p><strong>The practical test:</strong> if this is working, week three's report should read differently from week one's: tighter criteria, fewer but better-ranked companies, and a visible trend line instead of a fresh anxiety spiral.</p>
+          <p><strong>How to tell it is working:</strong> week three's report has tighter criteria and fewer, better-ranked companies than week one's, and you can see what changed.</p>
         </div>
 
         <section class="install-block" id="install">
@@ -96,7 +96,7 @@ codex plugin add career@adzuci-plugins
     </main>
 
     <footer>
-      Drafted as a personal blog article and public note for the <code>career</code> plugin.
+      Companion post for the <code>career</code> plugin.
     </footer>
   </div>
 </body>

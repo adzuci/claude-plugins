@@ -477,7 +477,7 @@
       .shell { padding: 24px 16px 52px; }
       .topbar { align-items: flex-start; flex-direction: column; }
       .topbar nav { justify-content: flex-start; }
-      .hero, main { grid-template-columns: 1fr; }
+      .hero, main { grid-template-columns: minmax(0, 1fr); }
       .hero { min-height: auto; }
       .hero-visual img { height: auto; }
       .meta-grid, .two-lane, .install-grid, .hook-grid { grid-template-columns: 1fr; }
