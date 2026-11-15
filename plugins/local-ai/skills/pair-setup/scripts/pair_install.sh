@@ -18,6 +18,9 @@ DEVICE=""
 OWNED_TMP=""
 STAGE=""
 BACKUP=""
+ARCH=""
+PAIR_DMG_URL=""
+PAIR_DMG_SHA256=""
 
 note() { printf '  %s\n' "$*"; }
 die() { printf 'FAIL: %s\n' "$*" >&2; exit 1; }
@@ -75,7 +78,10 @@ verify_bundle() {
 
 preflight_platform() {
   [ "$(uname -s)" = "Darwin" ] || die "PAIR setup currently supports macOS only"
-  [ "$(uname -m)" = "arm64" ] || die "this installer is pinned to the Apple Silicon release"
+  ARCH="$(pair_arch "$(uname -m)")" \
+    || die "unsupported CPU architecture: $(uname -m) (need arm64 or x86_64)"
+  PAIR_DMG_URL="$(pair_dmg_url "$ARCH")"
+  PAIR_DMG_SHA256="$(pair_dmg_sha256 "$ARCH")"
 }
 
 main() {
@@ -105,7 +111,7 @@ main() {
   else
     note "installed: none"
   fi
-  note "reviewed release: v$PAIR_VERSION"
+  note "reviewed release: v$PAIR_VERSION ($ARCH)"
   note "download: $PAIR_DMG_URL"
   note "sha256: $PAIR_DMG_SHA256"
 

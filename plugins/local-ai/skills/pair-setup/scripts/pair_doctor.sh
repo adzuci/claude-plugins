@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Read-only health check for one PAIR node.
-# Usage: pair_doctor.sh --role host|client [--probe]
+# Usage: pair_doctor.sh --role host|client [--probe] [--peer IP]
 
 set -uo pipefail
 
@@ -11,6 +11,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 ROLE=""
 PROBE=0
+PEER=""
 FAILURES=0
 WARNINGS=0
 
@@ -19,14 +20,14 @@ warn() { printf '  WARN  %s\n' "$*"; WARNINGS=$((WARNINGS + 1)); }
 fail() { printf '  FAIL  %s\n' "$*"; FAILURES=$((FAILURES + 1)); }
 info() { printf '        %s\n' "$*"; }
 heading() { printf '\n%s\n' "$*"; }
-usage() { printf '%s\n' "Usage: pair_doctor.sh --role host|client [--probe]"; }
+usage() { printf '%s\n' "Usage: pair_doctor.sh --role host|client [--probe] [--peer IP]"; }
 
 listener() {
   local pid command
   pid="$(lsof -nP -iTCP:"$1" -sTCP:LISTEN -Fp 2>/dev/null \
     | sed -n 's/^p//p' | head -1)"
   [ -n "$pid" ] || return 0
-  command="$(ps -p "$pid" -o comm= 2>/dev/null | awk 'NR == 1 {print $1}')"
+  command="$(ps -p "$pid" -o comm= 2>/dev/null | sed -n '1p')"
   [ -n "$command" ] && basename "$command"
 }
 
@@ -40,6 +41,12 @@ main() {
         shift 2
         ;;
       --probe) PROBE=1; shift ;;
+      --peer)
+        [ "$#" -ge 2 ] && [ -n "${2:-}" ] \
+          || { printf '%s\n' "--peer requires an IP address" >&2; exit 2; }
+        PEER="$2"
+        shift 2
+        ;;
       -h|--help) usage; exit 0 ;;
       *) printf 'unknown argument: %s\n' "$1" >&2; exit 2 ;;
     esac
@@ -78,11 +85,15 @@ main() {
 
   heading "Ports"
   case "$(classify_listener "$(listener "$PAIR_PROXY_PORT")")" in
-    ok) pass "$PAIR_PROXY_PORT is owned by ollama-proxy" ;;
+    ok) pass "$PAIR_PROXY_PORT is owned by the PAIR proxy" ;;
     bypassed) fail "$PAIR_PROXY_PORT is owned by bare Ollama; PAIR is bypassed" ;;
     absent) fail "$PAIR_PROXY_PORT has no listener" ;;
     foreign) fail "$PAIR_PROXY_PORT is owned by an unexpected process" ;;
   esac
+
+  [ -n "$(listener "$PAIR_NODE_PORT")" ] \
+    && pass "$PAIR_NODE_PORT has the PAIR node service" \
+    || warn "$PAIR_NODE_PORT has no PAIR node service; is PAIR running?"
 
   if [ "$ROLE" = "host" ]; then
     [ -n "$(listener "$PAIR_ENGINE_PORT")" ] \
@@ -103,6 +114,19 @@ main() {
     [ "${sleep_value:-}" = "0" ] \
       && pass "AC sleep disabled" \
       || warn "AC sleep is '${sleep_value:-unknown}'"
+  fi
+
+  if [ -n "$PEER" ]; then
+    heading "Peer reachability ($PEER)"
+    if nc -z -G 3 "$PEER" "$PAIR_NODE_PORT" >/dev/null 2>&1; then
+      pass "$PEER:$PAIR_NODE_PORT is reachable"
+    else
+      fail "$PEER:$PAIR_NODE_PORT is not reachable"
+      info "mDNS can list the peer while this TCP port is blocked. Check that"
+      info "PAIR is running there, its firewall allows incoming connections,"
+      info "and the router is not isolating Wi-Fi clients."
+    fi
+    info "Ping and ports 11434/11435 are not valid peer checks."
   fi
 
   if [ "$PROBE" = "1" ]; then
